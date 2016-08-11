@@ -25,13 +25,14 @@ endif
 
 # misc
 OBJS += src/libretro/libretro.o
+OBJS += src/bomberman/Bomberman.o
 CFLAGS += -DHAVE_LIBRETRO
 
 %.o: %.S
 	$(CC_AS) $(CFLAGS) -c $^ -o $@
 
 %.o: %.cpp
-	$(CXX) $(CXXFLAGS) -c -o $@ $<
+	$(CXX) $(CXXFLAGS) $(CFLAGS) -c -o $@ $<
 
 
 
@@ -41,7 +42,7 @@ $(TARGET): $(OBJS)
 ifeq ($(STATIC_LINKING), 1)
 	$(AR) rcs $@ $(OBJS)
 else
-	$(CC_LINK) -o $@ $^ $(LDFLAGS) $(LDLIBS) $(EXTRA_LDFLAGS)
+	$(CC_LINK) -o $@ $^ $(LDFLAGS) $(LDLIBS) $(LIBS) 	$(EXTRA_LDFLAGS)
 endif
 
 clean: $(PLAT_CLEAN) 

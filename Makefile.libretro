@@ -13,6 +13,8 @@ ifeq ($(platform),)
 	endif
 endif
 
+platform = osx
+
 CC ?= gcc
 CXX ?= g++
 AS ?= as
@@ -27,10 +29,20 @@ LIBDL := -ldl
 MMAP_WIN32=0
 EXTRA_LDFLAGS =
 
+ifeq ($(GLES), 1)
+   CXXFLAGS += -DGLES
+   LIBS += -lGLESv2
+else
+   LIBS += $(GL_LIB)
+endif
+
+
 # Unix
 ifeq ($(platform), unix)
 	TARGET := $(TARGET_NAME)_libretro.so
 	fpic := -fPIC
+	GL_LIB := -lGL $(shell ${PKG_CONFIG} glew --libs)
+	LDFLAGS = -lSDL $(sdl-config --static-libs) -lm
 	SHARED := -shared -Wl,--version-script=libretro/link.T
 
 else ifeq ($(platform), linux-portable)
@@ -46,10 +58,12 @@ else ifeq ($(platform), linux-portable)
 else ifeq ($(platform), osx)
 	TARGET := $(TARGET_NAME)_libretro.dylib
 	fpic := -fPIC
+	CFLAGS += -I/Library/Frameworks/SDL2.framework/Headers/ -I/Library/Frameworks/SDL2_image.framework/Headers/ -F/Library/Frameworks/
 	SHARED := -dynamiclib
+	GL_LIB := -framework OpenGL -framework GLUT -F/Library/Frameworks -framework SDL2 -framework SDL2_image
 	OSXVER = `sw_vers -productVersion | cut -d. -f 2`
 	OSX_LT_MAVERICKS = `(( $(OSXVER) <= 9)) && echo "YES"`
-	fpic += -mmacosx-version-min=10.1
+	fpic += -mmacosx-version-min=10.5
 
 # iOS
 else ifneq (,$(findstring ios,$(platform)))
@@ -252,6 +266,7 @@ else
 	CC = gcc
 	fpic := -fPIC
 	LD_FLAGS := -fPIC
+	GL_LIB := -L. -lglew32 -lopengl32
 	SHARED := -shared -static-libgcc -static-libstdc++ -s -Wl,--version-script=libretro/link.T
 	CFLAGS += -D__WIN32__ -D__WIN32_LIBRETRO__
 	MMAP_WIN32=1
