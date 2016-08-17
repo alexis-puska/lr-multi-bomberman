@@ -17,6 +17,19 @@
 #include "../include/libretro_common.h"
 #include "../include/pad.h"
 
+
+#ifdef __APPLE__
+	#include <OpenGL/gl.h>
+	#include <OpenGL/glu.h>
+#else
+#ifdef _WIN32
+	#include <windows.h>
+#endif
+	#include <GL/gl.h>
+	#include <GL/glu.h>
+	#include <GL/glut.h>
+#endif
+
 #include <SDL2/SDL.h>
 #include <SDL2_image/SDL_image.h>
 
@@ -34,7 +47,7 @@ static retro_input_poll_t input_poll_cb;
 static retro_input_state_t input_state_cb;
 static struct retro_rumble_interface rumble;
 static bool support_no_game = true;
-
+static struct retro_hw_render_callback hw_render;
 
 int in_type[16] =  { 
 	PSE_PAD_TYPE_STANDARD, PSE_PAD_TYPE_STANDARD,
@@ -48,8 +61,121 @@ int in_type[16] =  {
 };
 unsigned short in_keystate[16];
 
-SDL_Surface *image;
-static int framecount;
+
+
+
+
+
+
+
+//OpenGL
+#define ARRAY_SIZE(a) (sizeof(a) / sizeof((a)[0]))
+static struct retro_hw_render_callback hw_render;
+
+#if defined(HAVE_PSGL)
+#define RARCH_GL_FRAMEBUFFER GL_FRAMEBUFFER_OES
+#define RARCH_GL_FRAMEBUFFER_COMPLETE GL_FRAMEBUFFER_COMPLETE_OES
+#define RARCH_GL_COLOR_ATTACHMENT0 GL_COLOR_ATTACHMENT0_EXT
+#elif defined(OSX_PPC)
+#define RARCH_GL_FRAMEBUFFER GL_FRAMEBUFFER_EXT
+#define RARCH_GL_FRAMEBUFFER_COMPLETE GL_FRAMEBUFFER_COMPLETE_EXT
+#define RARCH_GL_COLOR_ATTACHMENT0 GL_COLOR_ATTACHMENT0_EXT
+#else
+#define RARCH_GL_FRAMEBUFFER GL_FRAMEBUFFER
+#define RARCH_GL_FRAMEBUFFER_COMPLETE GL_FRAMEBUFFER_COMPLETE
+#define RARCH_GL_COLOR_ATTACHMENT0 GL_COLOR_ATTACHMENT0
+#endif
+
+
+
+static unsigned width  = 1920;
+static unsigned height = 1080;
+static unsigned frame_count;
+
+static GLuint prog;
+static GLuint vbo;
+static const char *vertex_shader[] = {
+   "uniform mat4 uMVP;",
+   "attribute vec2 aVertex;",
+   "attribute vec4 aColor;",
+   "varying vec4 color;",
+   "void main() {",
+   "  gl_Position = uMVP * vec4(aVertex, 0.0, 1.0);",
+   "  color = aColor;",
+   "}",
+};
+
+static const char *fragment_shader[] = {
+   "#ifdef GL_ES\n",
+   "precision mediump float;\n",
+   "#endif\n",
+   "varying vec4 color;",
+   "void main() {",
+   "  gl_FragColor = color;",
+   "}",
+};
+
+static void compile_program(void)
+{
+   prog = glCreateProgram();
+   GLuint vert = glCreateShader(GL_VERTEX_SHADER);
+   GLuint frag = glCreateShader(GL_FRAGMENT_SHADER);
+
+   glShaderSource(vert, ARRAY_SIZE(vertex_shader), vertex_shader, 0);
+   glShaderSource(frag, ARRAY_SIZE(fragment_shader), fragment_shader, 0);
+   glCompileShader(vert);
+   glCompileShader(frag);
+
+   glAttachShader(prog, vert);
+   glAttachShader(prog, frag);
+   glLinkProgram(prog);
+   glDeleteShader(vert);
+   glDeleteShader(frag);
+}
+
+
+static void setup_vao(void)
+{
+   static const GLfloat vertex_data[] = {
+      -0.5, -0.5,
+      0.5, -0.5,
+      -0.5,  0.5,
+      0.5,  0.5,
+      1.0, 1.0, 1.0, 1.0,
+      1.0, 1.0, 0.0, 1.0,
+      0.0, 1.0, 1.0, 1.0,
+      1.0, 0.0, 1.0, 1.0,
+   };
+   
+   glUseProgram(prog);
+
+   glGenBuffers(1, &vbo);
+   glBindBuffer(GL_ARRAY_BUFFER, vbo);
+   glBufferData(GL_ARRAY_BUFFER, sizeof(vertex_data), vertex_data, GL_STATIC_DRAW);
+
+   glBindBuffer(GL_ARRAY_BUFFER, 0);
+   glUseProgram(0);
+}
+
+
+
+
+static void context_reset(void)
+{
+   fprintf(stderr, "Context reset!\n");
+   compile_program();
+   setup_vao();
+}
+
+static void context_destroy(void)
+{
+   fprintf(stderr, "Context destroy!\n");
+   glDeleteBuffers(1, &vbo);
+   vbo = 0;
+   glDeleteProgram(prog);
+   prog = 0;
+}
+
 
 
 
@@ -77,6 +203,7 @@ void retro_set_input_state(retro_input_state_t cb){
 }
 
 void retro_set_video_refresh(retro_video_refresh_t cb){
+	fprintf(stderr, "refresh!\n");
 	video_cb = cb;
 }
 
@@ -128,6 +255,29 @@ void retro_cheat_reset(void){
 void retro_cheat_set(unsigned index, bool enabled, const char *code){
 }
 
+
+static bool retro_init_hw_context(void)
+{
+    fprintf(stderr, "Context initialisation\n");
+#ifdef GLES
+    hw_render.context_type = RETRO_HW_CONTEXT_OPENGLES2;
+    fprintf(stderr, "RETRO_HW_CONTEXT_OPENGLES2!\n");
+#else
+    hw_render.context_type = RETRO_HW_CONTEXT_OPENGL;
+    fprintf(stderr, "RETRO_HW_CONTEXT_OPENGL!\n");
+#endif
+    hw_render.context_reset = context_reset;
+    hw_render.context_destroy = context_destroy;
+    hw_render.depth = true;
+    hw_render.stencil = true;
+    hw_render.bottom_left_origin = true;
+    if (!environ_cb(RETRO_ENVIRONMENT_SET_HW_RENDER, &hw_render)){
+        fprintf(stderr, "false!\n");
+        return false;
+    }
+    return true;
+    fprintf(stderr, "true!\n");
+}
 
 bool retro_load_game(const struct retro_game_info *info){
 	struct retro_input_descriptor desc[] = {
@@ -261,7 +411,11 @@ bool retro_load_game(const struct retro_game_info *info){
 		return false;
 	}
     
-   
+    if (!retro_init_hw_context())
+    {
+        fprintf(stderr, "HW Context could not be initialized, exiting...\n");
+        return false;
+    }
 	
 	return true;
 }
@@ -330,28 +484,86 @@ void retro_run(void){
 		}
 	}
 
-	framecount++;
-   
+	
+    char *image_path = "./resource/test2.png";
+    SDL_Surface *image = IMG_Load( image_path );
     
     if(image != NULL){
-    	fprintf(stderr, "image ->w : %i %i",image->w, framecount);
+    	fprintf(stderr, "image ->w : %i",image->w);
     }
 	
 	
     
-   	
     
-    video_cb(image->pixels, VOUT_WIDTH, VOUT_HEIGHT, 0);
+   frame_count++;
+   glBindFramebuffer(RARCH_GL_FRAMEBUFFER, hw_render.get_current_framebuffer());
+
+   glClearColor(0.3, 0.4, 0.5, 1.0);
+   glViewport(0, 0, width, height);
+   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+
+
+
+
+
+   glUseProgram(prog);
+
+   glEnable(GL_DEPTH_TEST);
+
+   glBindBuffer(GL_ARRAY_BUFFER, vbo);
+   int vloc = glGetAttribLocation(prog, "aVertex");
+   glVertexAttribPointer(vloc, 2, GL_FLOAT, GL_FALSE, 0, (void*)0);
+   glEnableVertexAttribArray(vloc);
+   int cloc = glGetAttribLocation(prog, "aColor");
+   glVertexAttribPointer(cloc, 4, GL_FLOAT, GL_FALSE, 0, (void*)(8 * sizeof(GLfloat)));
+   glEnableVertexAttribArray(cloc);
+   glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+   int loc = glGetUniformLocation(prog, "uMVP");
+
+   float angle = frame_count / 100.0;
+   float cos_angle = cos(angle);
+   float sin_angle = sin(angle);
+
+   const GLfloat mvp[] = {
+      cos_angle, -sin_angle, 0, 0,
+      sin_angle, cos_angle, 0, 0,
+      0, 0, 1, 0,
+      0, 0, 0, 1,
+   };
+   glUniformMatrix4fv(loc, 1, GL_FALSE, mvp);
+   glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+
+   cos_angle *= 0.9;
+   sin_angle *= 0.9;
+   const GLfloat mvp2[] = {
+      cos_angle, -sin_angle, 0, 0.0,
+      sin_angle, cos_angle, 0, 0.0,
+      0, 0, 1, 0,
+      0.4, 0.4, 0.2, 1,
+   };
+
+		
+ 
+    
+
+   glUniformMatrix4fv(loc, 1, GL_FALSE, mvp2);
+   glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+   glDisableVertexAttribArray(vloc);
+   glDisableVertexAttribArray(cloc);
+	glUseProgram(0); 
+
+    
+
+	
+    
+    video_cb(RETRO_HW_FRAME_BUFFER_VALID, VOUT_WIDTH, VOUT_HEIGHT, 0);
 	fprintf(stderr, "retro_run!\n");
 }
 
 
 
 void retro_init(void){
-	
-	 char *image_path = "./resource/test.png";
-     image = IMG_Load( image_path );
-	
 	video_out_buf = malloc(VOUT_MAX_WIDTH * VOUT_MAX_HEIGHT);
 	environ_cb(RETRO_ENVIRONMENT_GET_RUMBLE_INTERFACE, &rumble);
 	unsigned level = 6;
