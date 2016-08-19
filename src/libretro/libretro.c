@@ -14,17 +14,8 @@
 
 
 #include "libretro.h"
+#include "../bomberman/MyWrapper.h"
 #include "../include/libretro_common.h"
-#include "../include/pad.h"
-
-#include <SDL2/SDL.h>
-#include <SDL2_image/SDL_image.h>
-
-#define VOUT_MAX_WIDTH 1920
-#define VOUT_MAX_HEIGHT 1080
-#define VOUT_WIDTH 1920
-#define VOUT_HEIGHT 1080
-
 
 static retro_video_refresh_t video_cb;
 static retro_audio_sample_t audio_cb;
@@ -35,23 +26,26 @@ static retro_input_state_t input_state_cb;
 static struct retro_rumble_interface rumble;
 static bool support_no_game = true;
 
+static SDL_Surface *screen;
+static void *audio_out_buf;
 
-int in_type[16] =  { 
-	PSE_PAD_TYPE_STANDARD, PSE_PAD_TYPE_STANDARD,
-	PSE_PAD_TYPE_STANDARD, PSE_PAD_TYPE_STANDARD,
-	PSE_PAD_TYPE_STANDARD, PSE_PAD_TYPE_STANDARD,
-	PSE_PAD_TYPE_STANDARD, PSE_PAD_TYPE_STANDARD,
-	PSE_PAD_TYPE_STANDARD, PSE_PAD_TYPE_STANDARD,
-	PSE_PAD_TYPE_STANDARD, PSE_PAD_TYPE_STANDARD,
-	PSE_PAD_TYPE_STANDARD, PSE_PAD_TYPE_STANDARD,
-	PSE_PAD_TYPE_STANDARD, PSE_PAD_TYPE_STANDARD
+static const unsigned short retro_psx_map[] = {
+	[RETRO_DEVICE_ID_JOYPAD_B]	= 1 << DKEY_CROSS,
+	[RETRO_DEVICE_ID_JOYPAD_Y]	= 1 << DKEY_SQUARE,
+	[RETRO_DEVICE_ID_JOYPAD_SELECT]	= 1 << DKEY_SELECT,
+	[RETRO_DEVICE_ID_JOYPAD_START]	= 1 << DKEY_START,
+	[RETRO_DEVICE_ID_JOYPAD_UP]	= 1 << DKEY_UP,
+	[RETRO_DEVICE_ID_JOYPAD_DOWN]	= 1 << DKEY_DOWN,
+	[RETRO_DEVICE_ID_JOYPAD_LEFT]	= 1 << DKEY_LEFT,
+	[RETRO_DEVICE_ID_JOYPAD_RIGHT]	= 1 << DKEY_RIGHT,
+	[RETRO_DEVICE_ID_JOYPAD_A]	= 1 << DKEY_CIRCLE,
+	[RETRO_DEVICE_ID_JOYPAD_X]	= 1 << DKEY_TRIANGLE,
+	[RETRO_DEVICE_ID_JOYPAD_L]	= 1 << DKEY_L1,
+	[RETRO_DEVICE_ID_JOYPAD_R]	= 1 << DKEY_R1,
+	[RETRO_DEVICE_ID_JOYPAD_L2]	= 1 << DKEY_L2,
+	[RETRO_DEVICE_ID_JOYPAD_R2]	= 1 << DKEY_R2,
 };
-unsigned short in_keystate[16];
-
-SDL_Surface *image;
-static int framecount;
-
-
+#define RETRO_PSX_MAP_LEN (sizeof(retro_psx_map) / sizeof(retro_psx_map[0]))
 
 
 
@@ -127,7 +121,6 @@ void retro_cheat_reset(void){
 
 void retro_cheat_set(unsigned index, bool enabled, const char *code){
 }
-
 
 bool retro_load_game(const struct retro_game_info *info){
 	struct retro_input_descriptor desc[] = {
@@ -259,36 +252,9 @@ bool retro_load_game(const struct retro_game_info *info){
 	if (!environ_cb(RETRO_ENVIRONMENT_SET_PIXEL_FORMAT, &fmt)){
 		fprintf(stderr, "XRGB8888 is not supported.\n");
 		return false;
-	}
-    
-   
-	
+	}	
 	return true;
 }
-
-
-
-
-
-
-
-static const unsigned short retro_psx_map[] = {
-	[RETRO_DEVICE_ID_JOYPAD_B]	= 1 << DKEY_CROSS,
-	[RETRO_DEVICE_ID_JOYPAD_Y]	= 1 << DKEY_SQUARE,
-	[RETRO_DEVICE_ID_JOYPAD_SELECT]	= 1 << DKEY_SELECT,
-	[RETRO_DEVICE_ID_JOYPAD_START]	= 1 << DKEY_START,
-	[RETRO_DEVICE_ID_JOYPAD_UP]	= 1 << DKEY_UP,
-	[RETRO_DEVICE_ID_JOYPAD_DOWN]	= 1 << DKEY_DOWN,
-	[RETRO_DEVICE_ID_JOYPAD_LEFT]	= 1 << DKEY_LEFT,
-	[RETRO_DEVICE_ID_JOYPAD_RIGHT]	= 1 << DKEY_RIGHT,
-	[RETRO_DEVICE_ID_JOYPAD_A]	= 1 << DKEY_CIRCLE,
-	[RETRO_DEVICE_ID_JOYPAD_X]	= 1 << DKEY_TRIANGLE,
-	[RETRO_DEVICE_ID_JOYPAD_L]	= 1 << DKEY_L1,
-	[RETRO_DEVICE_ID_JOYPAD_R]	= 1 << DKEY_R1,
-	[RETRO_DEVICE_ID_JOYPAD_L2]	= 1 << DKEY_L2,
-	[RETRO_DEVICE_ID_JOYPAD_R2]	= 1 << DKEY_R2,
-};
-#define RETRO_PSX_MAP_LEN (sizeof(retro_psx_map) / sizeof(retro_psx_map[0]))
 
 bool retro_load_game_special(unsigned game_type, const struct retro_game_info *info, size_t num_info){
 	return false;
@@ -310,11 +276,55 @@ size_t retro_get_memory_size(unsigned id){
 }
 
 void retro_reset(void){
-
 }
 
 
 
+
+
+
+
+
+
+void retro_init(void){
+	
+	Uint32 rmask, gmask, bmask, amask;
+
+/* SDL interprets each pixel as a 32-bit number, so our masks must depend
+   on the endianness (byte order) of the machine */
+#if SDL_BYTEORDER == SDL_BIG_ENDIAN
+    rmask = 0xff000000;
+    gmask = 0x00ff0000;
+    bmask = 0x0000ff00;
+    amask = 0x000000ff;
+#else
+    rmask = 0x000000ff;
+    gmask = 0x0000ff00;
+    bmask = 0x00ff0000;
+    amask = 0xff000000;
+#endif
+
+	//image = SDL_CreateRGBSurface(0, 1920, 1080, 32, rmask, gmask, bmask, amask);
+	
+	//SDL_FillRect(image, NULL, SDL_MapRGB(image->format, 255, 255, 255));
+	
+	
+	fprintf(stderr, "before call C++!\n");
+    screen = IMG_Load( background );
+    
+
+	//struct BombermanStruct* bomberman = newBomberman();
+        
+
+	environ_cb(RETRO_ENVIRONMENT_GET_RUMBLE_INTERFACE, &rumble);
+	unsigned level = 6;
+	environ_cb(RETRO_ENVIRONMENT_SET_PERFORMANCE_LEVEL, &level);
+	environ_cb(RETRO_ENVIRONMENT_SET_SUPPORT_NO_GAME, &support_no_game);
+	fprintf(stderr, "Loaded game!\n");
+}
+
+void retro_deinit(void){	
+}
 
 void retro_run(void){
 	// reset all keystate, query libretro for keystate
@@ -330,45 +340,15 @@ void retro_run(void){
 		}
 	}
 
-	framecount++;
-   
-    
-    if(image != NULL){
-    	fprintf(stderr, "image ->w : %i %i",image->w, framecount);
-    }
+
+	fprintf(stderr, "retro_run!\n");	
+	
+	if(screen != NULL)
+	fprintf(stderr, "screen->w: %i!\n",screen->w);
+	else
+	fprintf(stderr, "screen null");
 	
 	
-    
-   	
-    
-    video_cb(image->pixels, VOUT_WIDTH, VOUT_HEIGHT, 0);
-	fprintf(stderr, "retro_run!\n");
+	video_cb(screen->pixels, VOUT_WIDTH, VOUT_HEIGHT, 0);
+
 }
-
-
-
-void retro_init(void){
-	
-	 char *image_path = "./resource/test.png";
-     image = IMG_Load( image_path );
-	
-	video_out_buf = malloc(VOUT_MAX_WIDTH * VOUT_MAX_HEIGHT);
-	environ_cb(RETRO_ENVIRONMENT_GET_RUMBLE_INTERFACE, &rumble);
-	unsigned level = 6;
-	environ_cb(RETRO_ENVIRONMENT_SET_PERFORMANCE_LEVEL, &level);
-    environ_cb(RETRO_ENVIRONMENT_SET_SUPPORT_NO_GAME, &support_no_game);
-    fprintf(stderr, "Loaded game!\n");
-}
-
-void retro_deinit(void){
-	
-}
-
-
-
-
-
-
-
-
-

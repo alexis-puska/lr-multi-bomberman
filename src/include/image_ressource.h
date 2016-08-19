@@ -1,0 +1,1 @@
+const static char *background = "./resource/test.png";
