@@ -12,6 +12,7 @@
 
 
 static SDL_Surface *screen;
+
 static unsigned short in_keystate[16];
 static int in_type[16] =  { 
 	PSE_PAD_TYPE_STANDARD, PSE_PAD_TYPE_STANDARD,

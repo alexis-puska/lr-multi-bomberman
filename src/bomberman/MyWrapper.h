@@ -3,17 +3,19 @@
 #include <SDL2/SDL.h>
 #include <SDL2_image/SDL_image.h>
 
+
+
 #ifdef __cplusplus
 extern "C" {
 #endif
 
 typedef struct Bomberman Bomberman;
 
-Bomberman* _newBomberman();
+Bomberman* newBomberman();
 
-void _bomberman_getScreen(Bomberman* v);
+SDL_Surface * bomberman_getScreen(Bomberman* v);
 
-void _deleteBomberman(Bomberman* v);
+void deleteBomberman(Bomberman* v);
 
 #ifdef __cplusplus
 }

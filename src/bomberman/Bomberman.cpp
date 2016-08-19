@@ -2,8 +2,8 @@
 
 Bomberman::Bomberman()
 {
-	screen = IMG_Load( background );
-	fprintf(stderr, "call C++ %i %i\n", screen->w, screen->h);
+	image = IMG_Load( background );
+	fprintf(stderr, "call C++ %i %i\n", image->w, image->h);
 	fprintf(stderr, "after call C++ \n");
 }
 
@@ -11,6 +11,7 @@ Bomberman::~Bomberman()
 {
 }
 
-void Bomberman::getScreen(){
-	//screen = IMG_Load( background );
+SDL_Surface * Bomberman::getScreen(){
+	//SDL_Surface * img = IMG_Load( background );
+	return image;
 }

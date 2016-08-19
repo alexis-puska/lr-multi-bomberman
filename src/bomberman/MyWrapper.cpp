@@ -6,8 +6,8 @@ extern "C" {
                 return new Bomberman();
         }
 
-        void bomberman_getScreen(Bomberman* v) {
-                v->getScreen();
+        SDL_Surface * bomberman_getScreen(Bomberman* v) {
+                return v->getScreen();
         }
 
         void deleteBomberman(Bomberman* v) {

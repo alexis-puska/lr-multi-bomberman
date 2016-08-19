@@ -2,6 +2,8 @@
 #include <SDL2_image/SDL_image.h>
 #include "../include/libretro_common.h"
 
+#include <stdio.h>
+
 
 
 #ifndef __MYCLASS_H
@@ -12,9 +14,9 @@ class Bomberman
 public:
 	Bomberman();
     ~Bomberman();
-    void getScreen();	
+    SDL_Surface * getScreen();	
 private:
-	//SDL_Surface *image;
+	SDL_Surface *image;
 	
 };
 #endif

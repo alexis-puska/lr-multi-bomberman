@@ -284,7 +284,7 @@ void retro_reset(void){
 
 
 
-
+static struct Bomberman* bomberman;
 
 void retro_init(void){
 	
@@ -313,7 +313,7 @@ void retro_init(void){
     screen = IMG_Load( background );
     
 
-	//struct BombermanStruct* bomberman = newBomberman();
+	bomberman = newBomberman();
         
 
 	environ_cb(RETRO_ENVIRONMENT_GET_RUMBLE_INTERFACE, &rumble);
@@ -340,15 +340,7 @@ void retro_run(void){
 		}
 	}
 
-
-	fprintf(stderr, "retro_run!\n");	
-	
-	if(screen != NULL)
-	fprintf(stderr, "screen->w: %i!\n",screen->w);
-	else
-	fprintf(stderr, "screen null");
-	
-	
-	video_cb(screen->pixels, VOUT_WIDTH, VOUT_HEIGHT, 0);
+	fprintf(stderr, "retro_run!\n");		
+	video_cb(bomberman_getScreen(bomberman)->pixels, VOUT_WIDTH, VOUT_HEIGHT, 0);
 
 }
