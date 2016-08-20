@@ -27,6 +27,7 @@ endif
 OBJS += src/libretro/libretro.o
 OBJS += src/bomberman/Bomberman.o
 OBJS += src/bomberman/MyWrapper.o
+OBJS += src/bomberman/Grid.o
 
 
 CFLAGS += -DHAVE_LIBRETRO

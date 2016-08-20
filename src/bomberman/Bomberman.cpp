@@ -1,5 +1,6 @@
 #include "Bomberman.h"
 
+
 Bomberman::Bomberman()
 {
 	/*init a new buffer like SDL mecanisme, 2 surface for rendering, 
@@ -24,7 +25,12 @@ Bomberman::Bomberman()
     
     image1 = SDL_CreateRGBSurface(0, 1920, 1080, 32, rmask, gmask, bmask, amask);
     SDL_FillRect(image1, NULL, SDL_MapRGB(image1->format, 0, 204, 255));
+    
     currentImage = 0;
+    
+    //generation d'une grille de 35 sur 21 case
+    grid.setSize(35,21);
+    copySurfaceToBackRenderer(grid.getGrid(), 15, 72);
 }
 
 Bomberman::~Bomberman()
@@ -50,5 +56,16 @@ void Bomberman::swapBuffer(){
 }
 
 void Bomberman::copySurfaceToBackRenderer(SDL_Surface * toCopy){
+    fprintf(stderr, "copy grid!\n");
     SDL_BlitSurface(toCopy,NULL,(currentImage == 0 ? image1 : image0) ,NULL);
+}
+
+void Bomberman::copySurfaceToBackRenderer(SDL_Surface * toCopy, int x, int y){
+    fprintf(stderr, "copy grid!\n");
+    SDL_Rect dstrect;
+    dstrect.x = x;
+    dstrect.y = y;
+    dstrect.w = toCopy->w;
+    dstrect.h = toCopy->h;
+    SDL_BlitSurface(toCopy,NULL,(currentImage == 0 ? image1 : image0), &dstrect);
 }

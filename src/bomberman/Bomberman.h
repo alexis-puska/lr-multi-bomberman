@@ -1,8 +1,9 @@
 #include <SDL2/SDL.h>
 #include <SDL2_image/SDL_image.h>
-#include "../include/libretro_common.h"
+
 
 #include <stdio.h>
+#include "Grid.h"
 
 
 
@@ -16,10 +17,12 @@ public:
     ~Bomberman();
     SDL_Surface * getScreen();	
     void swapBuffer();
-	void copySurfaceToBackRenderer(SDL_Surface * toCopy);
+	void copySurfaceToBackRenderer(SDL_Surface * toCopy, int x, int y);
+    void copySurfaceToBackRenderer(SDL_Surface * toCopy);
 private:
 	SDL_Surface *image0;
 	SDL_Surface *image1;
     int currentImage;
+    Grid grid;
 };
 #endif
