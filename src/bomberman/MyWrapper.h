@@ -14,7 +14,7 @@ typedef struct Bomberman Bomberman;
 Bomberman* newBomberman();
 
 SDL_Surface * bomberman_getScreen(Bomberman* v);
-
+void bomberman_swapBuffer(Bomberman* v);
 void deleteBomberman(Bomberman* v);
 
 #ifdef __cplusplus

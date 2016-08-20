@@ -26,8 +26,7 @@ static retro_input_state_t input_state_cb;
 static struct retro_rumble_interface rumble;
 static bool support_no_game = true;
 
-static SDL_Surface *screen;
-static void *audio_out_buf;
+static struct Bomberman* bomberman;
 
 static const unsigned short retro_psx_map[] = {
 	[RETRO_DEVICE_ID_JOYPAD_B]	= 1 << DKEY_CROSS,
@@ -276,46 +275,15 @@ size_t retro_get_memory_size(unsigned id){
 }
 
 void retro_reset(void){
+	bomberman_swapBuffer(bomberman);
 }
 
 
 
 
 
-
-
-static struct Bomberman* bomberman;
-
 void retro_init(void){
-	
-	Uint32 rmask, gmask, bmask, amask;
-
-/* SDL interprets each pixel as a 32-bit number, so our masks must depend
-   on the endianness (byte order) of the machine */
-#if SDL_BYTEORDER == SDL_BIG_ENDIAN
-    rmask = 0xff000000;
-    gmask = 0x00ff0000;
-    bmask = 0x0000ff00;
-    amask = 0x000000ff;
-#else
-    rmask = 0x000000ff;
-    gmask = 0x0000ff00;
-    bmask = 0x00ff0000;
-    amask = 0xff000000;
-#endif
-
-	//image = SDL_CreateRGBSurface(0, 1920, 1080, 32, rmask, gmask, bmask, amask);
-	
-	//SDL_FillRect(image, NULL, SDL_MapRGB(image->format, 255, 255, 255));
-	
-	
-	fprintf(stderr, "before call C++!\n");
-    screen = IMG_Load( background );
-    
-
 	bomberman = newBomberman();
-        
-
 	environ_cb(RETRO_ENVIRONMENT_GET_RUMBLE_INTERFACE, &rumble);
 	unsigned level = 6;
 	environ_cb(RETRO_ENVIRONMENT_SET_PERFORMANCE_LEVEL, &level);
@@ -323,7 +291,8 @@ void retro_init(void){
 	fprintf(stderr, "Loaded game!\n");
 }
 
-void retro_deinit(void){	
+void retro_deinit(void){
+	deleteBomberman(bomberman);
 }
 
 void retro_run(void){
@@ -342,5 +311,4 @@ void retro_run(void){
 
 	fprintf(stderr, "retro_run!\n");		
 	video_cb(bomberman_getScreen(bomberman)->pixels, VOUT_WIDTH, VOUT_HEIGHT, 0);
-
 }

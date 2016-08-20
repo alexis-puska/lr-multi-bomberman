@@ -15,8 +15,11 @@ public:
 	Bomberman();
     ~Bomberman();
     SDL_Surface * getScreen();	
+    void swapBuffer();
+	void copySurfaceToBackRenderer(SDL_Surface * toCopy);
 private:
-	SDL_Surface *image;
-	
+	SDL_Surface *image0;
+	SDL_Surface *image1;
+    int currentImage;
 };
 #endif
