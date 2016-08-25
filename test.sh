@@ -1,0 +1,1 @@
+/Applications/RetroArch.app/Contents/MacOS/RetroArch -L /Applications/RetroArch.app/Contents/Resources/cores/lr_multi_bomberman_libretro.dylib

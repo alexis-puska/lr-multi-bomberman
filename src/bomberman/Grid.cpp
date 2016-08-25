@@ -3,46 +3,27 @@
 #include <stdlib.h>
 #include <time.h>
 
-void Grid::init(){
-    Uint32 rmask, gmask, bmask, amask;
-#if SDL_BYTEORDER == SDL_BIG_ENDIAN
-    rmask = 0xff000000;
-    gmask = 0x00ff0000;
-    bmask = 0x0000ff00;
-    amask = 0x000000ff;
-#else
-    rmask = 0x000000ff;
-    gmask = 0x0000ff00;
-    bmask = 0x00ff0000;
-    amask = 0xff000000;
-#endif
-    ground = IMG_Load( world1_ground );
-    wall = IMG_Load( world1_wall );
-    brick = IMG_Load( world1_brick );
-    theGrid = SDL_CreateRGBSurface(0, 1890, 1008, 32, rmask, gmask, bmask, amask);
-    SDL_FillRect(theGrid, NULL, SDL_MapRGB(theGrid->format, 0, 204, 255));
-}
-
-
 Grid::Grid(){
     init();
 }
 
+
 Grid::Grid(int x, int y, int levelIndex)
 {
-    init();
-    srand (time(NULL));
     sizeX = x;
     sizeY = y;
     lvl = levelIndex;
     tab = new int[sizeX * sizeY];
+    init();
     generateGrid();
 }
+
 
 Grid::~Grid()
 {
 	free(theGrid);
 }
+
 
 SDL_Surface * Grid::getGrid(){
     generateGrid();
@@ -50,15 +31,79 @@ SDL_Surface * Grid::getGrid(){
 }
 
 
-void Grid::setSize(int x, int y){
+void Grid::configure(int x, int y, int levelNumber){
     sizeX = x;
     sizeY = y;
+    lvl = levelNumber;
     tab = new int[sizeX * sizeY];
+    init();
     generateGrid();
 }
 
 
+void Grid::init(){
+    //declarativ color mask, used for create a RGB surface
+    Uint32 rmask, gmask, bmask, amask;
+    amask = 0xff000000;
+    rmask = 0x00ff0000;
+    gmask = 0x0000ff00;
+    bmask = 0x000000ff;
+    
+    //buffer for loading textures
+    SDL_Surface *textureBuffer = IMG_Load(levelSprite);
+    
+    //initialise the surface Tab
+    textures = new SDL_Surface*[40];
+    skys = new SDL_Surface*[2];
+    
+    //rectangle for cropped the texture
+    SDL_Rect textureRect;
+    SDL_Rect skyRect;
+    SDL_Rect destTextureRect;
+    
+    int offset = lvl * 384;
+    
+    //CROPPING textures level
+    destTextureRect.x = 0;
+    destTextureRect.y = 0;
+    destTextureRect.w = 54;
+    destTextureRect.h = 48;
+    for(int i = 0; i < 5; i++){
+        for(int j = 0; j < 8 ; j++){
+            textureRect.x = i * 54;
+            textureRect.y = offset + (j * 48);
+            textureRect.w = 54;
+            textureRect.h = 48;
+            textures[i+(j*5)] =  SDL_CreateRGBSurface(0, 54, 48, 32, rmask, gmask, bmask, amask);
+            SDL_BlitSurface(textureBuffer, &textureRect, textures[i+(j*5)], &destTextureRect);
+        }
+    }
+    
+    destTextureRect.x = 0;
+    destTextureRect.y = 0;
+    destTextureRect.w = 162;
+    destTextureRect.h = 144;
+    for(int k = 0; k < 2 ; k++){
+        skyRect.x = 270;
+        skyRect.y = offset + (k * 144);
+        skyRect.w = 162;
+        skyRect.h = 144;
+        skys[k] =  SDL_CreateRGBSurface(0, 162, 144, 32, rmask, gmask, bmask, amask);
+        SDL_BlitSurface(textureBuffer, &skyRect, skys[k], &destTextureRect);
+    }
+    
+    theGrid = SDL_CreateRGBSurface(0, 1890, 1008, 32, rmask, gmask, bmask, amask);
+    ground = SDL_CreateRGBSurface(0, 1890, 1008, 32, rmask, gmask, bmask, amask);
+    brickShadow = SDL_CreateRGBSurface(0, 1890, 1008, 32, rmask, gmask, bmask, amask);
+    playersBombes = SDL_CreateRGBSurface(0, 1890, 1008, 32, rmask, gmask, bmask, amask);
+    skyFixe = SDL_CreateRGBSurface(0, 1890, 1008, 32, rmask, gmask, bmask, amask);
+    skyMove = SDL_CreateRGBSurface(0, 1890, 1008, 32, rmask, gmask, bmask, amask);
+    SDL_FillRect(theGrid, NULL, SDL_MapRGB(theGrid->format, 255, 204, 0));
+}
+
+
 void Grid::generateGrid(){
+    srand (time(NULL));
     
     for(int i=0;i<sizeX;i++){
         for(int j=0;j<sizeY;j++){
@@ -74,36 +119,69 @@ void Grid::generateGrid(){
             }
         }
     }
-
-    
     SDL_Rect dstrect;
     SDL_Rect srcrect;
+    SDL_Rect skyRect;
     srcrect.x = 0;
     srcrect.y = 0;
     srcrect.w = 54;
     srcrect.h = 48;
+    
+    
+    skyRect.x = 0;
+    skyRect.y = 0;
+    skyRect.w = 162;
+    skyRect.h = 144;
+    
     for(int i = 0; i < sizeX; i++){
         for(int j = 0; j < sizeY ; j++){
             dstrect.x = i * 54;
             dstrect.y = j * 48;
             dstrect.w = 54;
             dstrect.h = 48;
-            SDL_BlitSurface(ground, &srcrect, theGrid, &dstrect);
-            switch(tab[i+(j*sizeX)]){
-                case 0:
-                    SDL_BlitSurface(ground, &srcrect, theGrid, &dstrect);
-                    break;
-                case 1:
-                    SDL_BlitSurface(wall, &srcrect, theGrid, &dstrect);
-                    break;
-                case 2:
-                    SDL_BlitSurface(brick, &srcrect, theGrid, &dstrect);
-                    break;
-                default:
-                    
-                    break;
-            }
+            SDL_BlitSurface(textures[18], &srcrect, theGrid, &dstrect);
+//            switch(tab[i+(j*sizeX)]){
+//                case 0:
+//                    SDL_BlitSurface(textures[18], &srcrect, theGrid, &dstrect);
+//                    break;
+//                case 1:
+//                    SDL_BlitSurface(textures[16], &srcrect, theGrid, &dstrect);
+//                    break;
+//                case 2:
+//                    SDL_BlitSurface(textures[21], &srcrect, theGrid, &dstrect);
+//                    break;
+//                default:
+//                    
+//                    break;
+//            }
    
+            int textureIndex = level[lvl][j][i];
+            
+            if(textureIndex < 40){
+                SDL_BlitSurface(textures[textureIndex], &srcrect, ground, &dstrect);
+            }else{
+                dstrect.x = (i-1) * 54;
+                dstrect.y = (j-1) * 48;
+                dstrect.w = 162;
+                dstrect.h = 144;
+                SDL_BlitSurface(skys[textureIndex % 40], &skyRect, skyFixe, &dstrect);
+            }
+            
+            
         }
     }
+    
+    
+    
+    SDL_Rect mergeRect;
+    mergeRect.x = 0;
+    mergeRect.y = 0;
+    mergeRect.w = 1890;
+    mergeRect.h = 1008;
+    SDL_BlitSurface(ground          , &mergeRect, theGrid, &mergeRect);
+    SDL_BlitSurface(brickShadow     , &mergeRect, theGrid, &mergeRect);
+    SDL_BlitSurface(playersBombes   , &mergeRect, theGrid, &mergeRect);
+    SDL_BlitSurface(skyFixe         , &mergeRect, theGrid, &mergeRect);
+    SDL_BlitSurface(skyMove         , &mergeRect, theGrid, &mergeRect);
+    
 }
