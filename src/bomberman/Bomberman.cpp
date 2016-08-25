@@ -22,7 +22,7 @@ Bomberman::Bomberman()
     currentImage = 0;
     
     //generation d'une grille de 35 sur 21 case
-    grid.configure(35,21,8);
+    grid.configure(35,21,6);
     copySurfaceToBackRenderer(grid.getGrid(), 15, 72);
 }
 
