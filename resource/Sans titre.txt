@@ -1,0 +1,455 @@
+bombe posée -> 18 frames
+
+explosion 5 5 5 5 5 5 5
+brick feu 10 5 5 5 5 5 5
+Déplacement case en case 18 frames
+changement de pied 7 frames
+
+saut sur louis moitié de case 60 frames
+7 frames 9 px haut, pos assis 5 frames apparition
+saut reste des frames
+
+
+
+
+SUPER BOMBERMAN 3
+ITEM FAQ v1
+
+Written by Bryan Brooks, (Bryan008 on Gamefaqs).
+Based on the UK (PAL) version of the SNES game Super Bomberman 3.
+
+
+Contents
+1. Introduction
+2. Version History
+3. Item Descriptions
+4. Louie Types
+5. Item Locations (Single Player)
+6. Item Locations (Battle Mode)
+7. General Tips
+8. Passwords
+9. FAQ
+10. Contact Information
+11. Credits
+
+
+--------------------------------------------------------------------------------
+1. INTRODUCTION
+--------------------------------------------------------------------------------
+
+This is an FAQ that focuses on items in Super Bomberman 3. It details the
+location of the items in the normal game and the items that are available in 
+battle mode as well as descriptions of the various items in the game.
+
+I have no idea why I have written this guide. I guess it's because I didn't see
+any guide for Super Bomberman 3 like it. I hope it's of some use to you.
+
+
+--------------------------------------------------------------------------------
+2. Version History
+--------------------------------------------------------------------------------
+v0.1: - Started on 10 September 2004.
+v1: - First draft completed 13 September 2004.
+
+--------------------------------------------------------------------------------
+3. Item Descriptions
+--------------------------------------------------------------------------------
+
+These are my thoughts of the items in the game. 
+(N): - Available in normal game.
+(B): - Available in battle mode.
+(X): - You lose these items when you're killed.
+
+Flame (N), (B): Adds extra range to your bombs blast. Each one will increase 
+the range of your bombs blast by an extra ground square. The more you have 
+the more effective your bombs will be. You can have a maximum of 6 Flames. 
+That'll give you a blast range of 8 squares.
+
+Bomb (N), (B): Allows you to plant an extra bomb. It'll make you capable of 
+setting off chain reactions that can easily take out opponents and enemies. 
+The more you have the more effective the Brown Louie will be. The maximum 
+number of bombs you can have is 8. That gives you 9 bombs.
+
+Skate (N), (B): Increases the speed of Bomberman. More speed makes it 
+easier to get yourself out of danger and allows you to quickly nip in and trap 
+opponents and enemies when they're vulnerable. A word of warning, the faster 
+you get the more sensitive the controller is to your movements. This can lead 
+to you being so fast that you get into trouble. Just be sure you can handle 
+more speed before you collect the skate. You can have a maximum of 9 skates 
+each one making you faster. 
+
+Clog (N): It'll decrease your speed by a level. It's the opposite of a Skate. 
+DO NOT PICK UP. Make sure you blow these up, as you don't want to 
+be slower. They are pretty rare though.
+
+Egg (N), (B): Stepping over these gives you a Louie (See Section 4. Louie 
+Types). If you have one Louie then stepping on an egg will have no effect.
+
+P-Bomb (N), (B), (X): This will give your first bomb maximum blast range of 8
+ground squares. Quite useful in the Battle mode.
+
+Remote Bomb (N), (X): Allows you to detonate your bombs by pressing B. 
+This is the best item in the game. You must get this item to survive in the 
+normal game. Pity that it's not in the battle mode but I guess it would make 
+it a bit unfair. It lets you easily eliminate the enemies. Just make sure 
+you're not in the way of the bomb blast when you detonate it. If you pick up 
+another bomb like the slime, spike or P-bomb then you'll lose your remote 
+bombs so be careful. It'll also make bosses much easier to defeat.
+
+Slime Bomb (N), (B), (X): If you throw these bombs they'll bounce all over the 
+place. If you kick then they'll bounce back and forth till the blow up. These 
+bombs are very unpredictable and not suited to the normal game but in battle 
+they can be effective and a lot of fun. You can easily kill yourself with these
+bombs.
+
+Spike Bomb (N), (X): When these bombs detonate the blast will pass though all 
+soft blocks. It makes it very effective at killing enemies and taking out all 
+the blocks quickly. Unfortunately they are first available in the same level as
+the remote bombs so you may never really get a chance to use them despite 
+their usefulness.
+
+Kick (N), (B), (X): If you press yourself against a bomb with the kick the bomb
+will slide until it hits an obstacle or you press the X button. It can be 
+useful for trapping enemies and opponents if used effectively.
+
+Glove (N), (B), (X): When you lay a bomb you can press A to pick it up and 
+by releasing A you will throw the bomb over blocks. When used correctly you 
+can take out opponents in battle mode with ease. It's useful in the normal game
+too. It an opponent throws a bomb at you and hits you with it you will be 
+stunned but if you were holing a bomb at the same time then the bomb will 
+bounce off you. Offence and defence in one item. The blue Louie has an ability 
+much like this.
+
+Heart (N), (X): Allows you to take an extra hit from an enemy/blast. You can 
+only have one of these and getting more has no effect. I hoped that you could 
+collect 9 of these and have 9 extra hits but no luck. You can get one in battle
+mode if you win soccer bomber mini game. 
+
+1-up (N): Adds an extra life to you. You can have a maximum of 9 lives in the 
+game.
+
+Bombpass (N), (X): It allows you to pass though your own bombs. Very useful
+and it stops you from stupidly trapping yourself. If you have a kick then this
+will override it and you'll not be abler to kick bombs and vice-versa with the
+kick overriding the Bombpass. IMO Bombpass is more useful than the kick for 
+the normal game.
+
+Blockpass (N), (X): A must have item that allows you to pass through soft 
+blocks. It allows you to take out enemies that can't get to you and it'll help
+you out of a tricky situation. IMO it's necessary for the final stage.
+
+Ice Cream (N): Adds 1000 points to your score.
+
+Apple (N): Adds 200 points to your score.
+
+Clock (N):  It stops the time and enemies for 16 seconds. It's extremely rare 
+but very useful. You can kill a few enemies with ease.
+
+Bombvest (N): Makes you invincible for 16 seconds. Make good use of those 
+16 seconds. Quite a rare item.
+
+Gold Flame (B): Gives you maximum rage instantly. A handy item only available
+in battle mode.
+
+Skull (B): This is a special battle item that has various effects. It can 
+produce some funny effects if you're playing a multiplayer game with some 
+friends. Some of the effects are actually quite useful where as others are 
+bad for you. 
+You can get rid of the skull by collecting an item or by passing it onto 
+another opponent by touching them. The skull can't be destroyed; instead it'll
+bounce to another square when hit by a bomb blast. There are 8 different 
+effects:
+
+Speed Boost: Gives you maximum speed, the equivalent of 9 Skates. A useful 
+effect. 
+
+Speed Down: Gives you the equivalent of the clogs. It makes you super slow 
+and easy pickings for opponents. Get rid of it quick or your dead. Passing it 
+onto an opponent can be hilarious. 
+
+Cant Stop: Bomberman slides till he hits an obstacle when he's moved. Not as 
+bad as it sounds if you know how to control it. 
+Then again it's not exactly desirable. 
+
+Quick Detonation: Your bombs will take less time to detonate. This can 
+Actually be a good thing if you're fast enough. It can make opponents run in 
+fear of your bombs.
+
+Slow Detonation: Your bombs will take longer to detonate. This is a bad effect.
+You'll be waiting ages to blow something or someone up. Still if you trap an 
+opponent then there's an agonising wait for them to die and that can be fun. 
+
+Sets Bombs Uncontrollably: Where you walk bombs will follow you. If you've 
+only got a few bombs then it's not too bad but if you've got 6 bombs then 
+you've a challenge not to kill yourself. Your opponents will run the hell away
+from you when you've got this. Pass it on to one of then for some laughs.
+
+Minimum Range Bombs: Gives your bombs the range of one of the squares. 
+Really bad!!! Lose this item quickly or you'll be laughed at for ages.
+
+Can't Plant Bomb: Your unable to plant any bombs with this effect. A horrible 
+effect that means you have to run for your life. A nice one to give to a 
+friend though.
+
+Reverse Control: This effect reverses your control of Bomberman. It's a 
+nightmare to control when you have to push left to go right. 
+
+Teleport: It switches you and an opponent about. It can be good or bad 
+depending on the circumstances. A very unpredictable effect.
+
+
+--------------------------------------------------------------------------------
+4. Louie Types
+--------------------------------------------------------------------------------
+
+When you step over an egg you get a little creature that kinda resembles a 
+Kangaroo. The animal will be with you till you take a hit from a bomb or an 
+enemy. Note that you lose the ability to use your glove when on a Louie. Each 
+colour of the Louie has a different ability that can use used by pressing the 
+Y button on the control pad.
+
+Yellow Louie: - He can kick the soft blocks in a straight line. He's excellent 
+for battle mode as you can easily trap your opponents but in the normal game 
+he is useless. Only good for taking a hit.
+
+Green Louie: - He has a super speed burst ability. It sounds good but it's not.
+He'll run in a straight-line only stopping when he hits an object. If you've 
+got the Blockpass item he'll only stop when he hits the border of the area. 
+This often means that you run into an enemy. Not a very good Louie to have 
+but he can take a hit for you so he's not completely useless and I suppose he 
+may save you on the odd occasion if used well.
+
+Blue Louie: - He can kick bombs over the blocks. Essentially he's the Louie 
+equivalent of a Glove. Very useful if you don't have a Glove but not too 
+great if you have one. He's decent to get in an early level before the 
+Glove is available.
+
+Brown Louie: - He will lay a line of bombs equivalent of the number of bombs 
+you currently have. If you have 9 bombs this guy will rule. As long as you know
+how to use him and don't stupidly blow yourself up this guy will be your best 
+asset against the bosses. I highly recommend getting this Louie. 
+
+Pink Louie: - He can jump over one block. This guy is useful and can easily 
+get you out of a tight situation especially on the ice levels. If you have the 
+Blockpass item his value is limited but he is one of the better Louie's.
+ 
+
+--------------------------------------------------------------------------------
+5. Item Locations (Single Player)
+--------------------------------------------------------------------------------
+
+The items on a level are pre-determined and here is a list of the items on 
+each level screen by screen.
+
+1.1 - Flame x2, Egg x2, Bomb x2, Skate.
+1.2 - Ice Cream, Kick, Flame, Bomb.
+1.3 - Bomb, Skate, Egg, Flame.
+        Clock, Bomb, Flame.
+1.4 - Bomb x2, Bombpass, Heart, Flame, 
+        Bomb, Bombvest, 1up, Egg, Flame.
+
+1.5 - Boss: If the foxes leaves hit your bombs then they change into the item 
+Apple. These are worth 200 points.
+
+2.1 - Bomb x2, Ice Cream, Egg, Flame.
+2.2 - Flame, Skate, Bomb
+        Egg, Flame, Bomb.
+2.3*- Ice Cream, Kick, Bomb.
+        Spike Bomb, Flame, Bomb.
+        Remote Bomb, Flame, Bomb x2, Bombvest.
+2.4* - Flame, P-Bomb, Bomb, Egg.
+         Bomb, Skate, Flame.
+
+* Note: On stages 2.3 and 2.4 there's a train. If you run over any soft blocks
+When on the train then you will lose any items that may be hidden inside them. 
+
+3.1 - Bomb x2, Flame, Kick.
+        Bomb, Bombpass, Flame, Egg.
+3.2 - Flame, Ice Cream, Slime Bomb.
+        Glove, 1-up, Bomb.
+3.3 - Egg, Flame, Bomb, Remote Bomb.
+        Flame, Bomb, 1-up.
+        Blockpass, Flame, Skate.
+3.4 - Bomb, Flame, Egg.
+        Bomb, Flame, Clog (Watch Out).
+
+4.1 - Kick, Skate, Bomb, Flame.
+        Bombvest, Egg, Bomb.
+4.2 - Bomb, Flame, 1-up.
+        Spike Bomb, Bomb, Ice Cream.
+        Bomb, P-Bomb, Flame.
+4.3 - Slime Bomb, Flame, Bombpass.
+        Glove, Bomb.
+        Flame, Bomb x2, Egg.
+4.4 - Bomb, Heart.
+        Flame, 1-up, Egg.
+        Skate, Flame, Bomb.
+
+5.1 - Egg, Bomb, Flame.
+        Flame, Bombpass, Bomb.
+        Ice Cream, Bomb, Flame, Kick.
+5.2 - Bomb x2, Flame, Clog (Watch Out).
+        Bomb, Flame.
+        Flame, Bomb, Egg.
+5.3 - Spike Bomb, Bomb x2, Skate.
+        Flame, Bomb, Ice Cream.
+        Bomb, Flame, Egg.
+5.4 - Heart, Flame, Bomb.
+        Bombvest, Bomb, P-Bomb, Flame.
+        Skate, Egg, Bomb x2.
+        Bomb, 1-up, Flame.
+
+6* - Flame, Skate, Egg.
+        Flame, Bomb, Remote Bomb.
+        Kick, Bomb.
+        Flame, Skate, Bomb, 1-up.
+        Flame, Slime Bomb.
+        Egg, Bomb x2, Flame, Glove.
+        Bomb, Flame.
+
+* Note: There may be items missing from this list. The enemy helicopters can 
+shoot missiles that destroy the soft blocks and much like the train in 2.3  
+and 2.4, the items will be lost.
+
+
+--------------------------------------------------------------------------------
+6. Item Locations (Battle Mode)
+--------------------------------------------------------------------------------
+
+This is a list of the items available in the 10 stages in the battle mode 
+section of the game. I do not have the exact number of items but I do have the 
+types of items available in each stage.
+
+1 - Block Buster: Kick, Skate, Flame, Bomb, Egg, Skull.
+
+2 - Merry Go Round: Kick, Egg, Skull, Bomb, Flame, Gold Flame, Glove, 
+P-Bomb, Skate, Slime Bomb.
+
+3 - Splish Splash: Egg, Bomb, Flame, Skate, Kick, Skull.
+
+4- Peekabo: Flame, Bomb, Egg, Skate, Kick, Slime Bomb, Skull.
+
+5 - Slip N' Slide: Bomb, Flame, Kick, Egg, Glove, Skull.
+
+6 - Move N' Grove: Flame, Bomb, Egg, Kick, Kick, Skate, Skull.
+
+7 - Sandman: Flame, Bomb, Slime bomb, Kick, Skate, Egg, Skull.
+
+8 - Spitfire: Bomb, Flame, Kick, Glove, Skate, Egg, Skull.
+
+9 - Seesaw: Flame, Bomb, Kick, Skate, P-Bomb, Slime, Bomb, Skull.
+
+10 - Swamp Boogie: Flame, Bomb, Egg, Kick, Slime Bomb, Skull.
+
+If you enable the Soccer Bomber option then the winner of the game can gain 
+one of the following items: Bomb, Skate, Glove, Heart, Kick, Clog.
+Getting the heart is the preferable option. 
+
+If you can, follow the item you want with your eyes. It's not too hard to do.
+
+
+--------------------------------------------------------------------------------
+7. General Tips
+--------------------------------------------------------------------------------
+
+Remember that you can revisit any level if you didn't get any items you need. 
+
+Once you have killed the boss on stage 5 you cannot return to any previous 
+level and you go straight to stage 6. Make sure you have the items you need. 
+
+The chances of living in stage 6 with your starting gear are slim. Therefore I 
+recommend not using the password 6363. Instead use 2301. You can collect 
+any items you need and then you can defeat the stage 5 boss and enter stage 6 
+fully equipped.
+
+I recommend visiting 1.1, 1.4, 3.3, 3.2, 1.1, 1.1, 1.1, 1.1, then the stage 5 
+boss. With this you will have the best items for your survival. 
+I recommend visiting 1.1 often just for extra Skates. 
+You'll need to be fast in stage 6. 
+
+I recommend the following items for stage 6: - Bomb x8, Flame x6, Skate x6 
+(You can have more in necessary), Brown Louie, Remote Bomb, Glove, 
+Bombpass, Blockpass, Heart. Remote bombs and Blockpass are essential. 
+You'll need to be very skilled to survive without those two items. With the 
+items mentioned above you should be able to win the game as long as you don't 
+die and lose your Remote Bombs and Blockpass.
+
+
+--------------------------------------------------------------------------------
+8. Passwords
+--------------------------------------------------------------------------------
+
+1.1: 5358
+1.2: 9486
+1.3: 4332
+1.4: 3306
+Boss: 2280
+
+2.1: 6408
+2.2: 5862
+2.3: 4836
+2.4: 7938
+Boss: 6912
+
+3.1: 9438
+3.2: 8412
+3.3: 7386
+3.4: 5880
+Boss: 4854
+
+4.1: 8916
+4.2: 7890
+4.3: 5360
+4.4: 3309
+Boss: 6411
+
+5.1: 5865
+5.2: 8967
+5.3: 2787
+5.4: 9473
+Boss: 2301
+
+6: 6363
+
+Battle mode: 4622
+
+
+--------------------------------------------------------------------------------
+9. FAQ
+--------------------------------------------------------------------------------
+Coming Soon
+
+
+--------------------------------------------------------------------------------
+10. Contact Information
+--------------------------------------------------------------------------------
+
+My E-mail address is brb82@lycos.co.uk
+
+Got any suggestions, comments, or criticisms on this guide? 
+If you have any information, (relating to this guide), that you think I am 
+missing then send it to me and I will add you to the list of credits.
+
+
+--------------------------------------------------------------------------------
+11. Credits
+--------------------------------------------------------------------------------
+
+Written by Bryan Brooks in a notepad document.
+
+This FAQ is intended for personal use only. 
+
+If you wish to post this FAQ up on your site ask me first. 
+
+This FAQ is Copyright 2004 Bryan Brooks. All Rights Reserved. 
+
+The following sites have my permission to post this FAQ:
+www.gamefaqs.com 
+
+--------------------------------------------------------------------------------
+--------------------------------------------------------------------------------
+
+
+
+
+

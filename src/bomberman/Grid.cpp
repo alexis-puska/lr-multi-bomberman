@@ -21,7 +21,22 @@ Grid::Grid(int x, int y, int levelIndex)
 
 Grid::~Grid()
 {
-	free(theGrid);
+    free(theGrid);
+    int i;
+    for(i = 0; i < 40; i++){
+        free(textures[i]);
+    }
+    for(i = 0; i < 2; i++){
+        free(skys[i]);
+    }
+    
+    
+    
+    free(ground);
+    free(brickShadow);
+    free(playersBombes);
+    free(skyFixe);
+    free(skyMove);
 }
 
 
@@ -140,23 +155,7 @@ void Grid::generateGrid(){
             dstrect.w = 54;
             dstrect.h = 48;
             SDL_BlitSurface(textures[18], &srcrect, theGrid, &dstrect);
-//            switch(tab[i+(j*sizeX)]){
-//                case 0:
-//                    SDL_BlitSurface(textures[18], &srcrect, theGrid, &dstrect);
-//                    break;
-//                case 1:
-//                    SDL_BlitSurface(textures[16], &srcrect, theGrid, &dstrect);
-//                    break;
-//                case 2:
-//                    SDL_BlitSurface(textures[21], &srcrect, theGrid, &dstrect);
-//                    break;
-//                default:
-//                    
-//                    break;
-//            }
-   
             int textureIndex = level[lvl][j][i];
-            
             if(textureIndex < 40){
                 SDL_BlitSurface(textures[textureIndex], &srcrect, ground, &dstrect);
             }else{

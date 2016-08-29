@@ -1,7 +1,6 @@
 #include <SDL2/SDL.h>
 #include <SDL2_image/SDL_image.h>
 
-
 #include <stdio.h>
 #include "Grid.h"
 
@@ -16,6 +15,7 @@ public:
 	Bomberman();
     ~Bomberman();
     SDL_Surface * getScreen();	
+    void tick(unsigned short *in_keystate, SDL_Surface * vout_buf);
     void swapBuffer();
 	void copySurfaceToBackRenderer(SDL_Surface * toCopy, int x, int y);
     void copySurfaceToBackRenderer(SDL_Surface * toCopy);

@@ -15,7 +15,33 @@
 
 #include "libretro.h"
 #include "../bomberman/MyWrapper.h"
-#include "../include/libretro_common.h"
+#include <SDL2/SDL.h>
+#include <SDL2_image/SDL_image.h>
+
+
+#define VOUT_MAX_WIDTH 1920
+#define VOUT_MAX_HEIGHT 1080
+#define VOUT_WIDTH 1920
+#define VOUT_HEIGHT 1080
+
+enum {
+    DKEY_SELECT = 0,
+    DKEY_L3,
+    DKEY_R3,
+    DKEY_START,
+    DKEY_UP,
+    DKEY_RIGHT,
+    DKEY_DOWN,
+    DKEY_LEFT,
+    DKEY_L2,
+    DKEY_R2,
+    DKEY_L1,
+    DKEY_R1,
+    DKEY_TRIANGLE,
+    DKEY_CIRCLE,
+    DKEY_CROSS,
+    DKEY_SQUARE,
+};
 
 static retro_video_refresh_t video_cb;
 static retro_audio_sample_t audio_cb;
@@ -27,6 +53,9 @@ static struct retro_rumble_interface rumble;
 static bool support_no_game = true;
 
 static struct Bomberman* bomberman;
+static unsigned short in_keystate[16];
+static SDL_Surface * vout_buf;
+
 
 static const unsigned short retro_psx_map[] = {
 	[RETRO_DEVICE_ID_JOYPAD_B]	= 1 << DKEY_CROSS,
@@ -45,6 +74,7 @@ static const unsigned short retro_psx_map[] = {
 	[RETRO_DEVICE_ID_JOYPAD_R2]	= 1 << DKEY_R2,
 };
 #define RETRO_PSX_MAP_LEN (sizeof(retro_psx_map) / sizeof(retro_psx_map[0]))
+
 
 
 
@@ -278,11 +308,16 @@ void retro_reset(void){
 	bomberman_swapBuffer(bomberman);
 }
 
-
-
-
-
 void retro_init(void){
+    
+    Uint32 rmask, gmask, bmask, amask;
+    rmask = 0x00ff0000;
+    gmask = 0x0000ff00;
+    bmask = 0x000000ff;
+    amask = 0xff000000;
+    vout_buf = SDL_CreateRGBSurface(0, 1920, 1080, 32, rmask, gmask, bmask, amask);
+    SDL_FillRect(vout_buf, NULL, SDL_MapRGB(vout_buf->format, 255, 204, 0));
+    
 	bomberman = newBomberman();
 	environ_cb(RETRO_ENVIRONMENT_GET_RUMBLE_INTERFACE, &rumble);
 	unsigned level = 6;
@@ -296,6 +331,7 @@ void retro_deinit(void){
 }
 
 void retro_run(void){
+    bomberman_tick(bomberman, in_keystate, vout_buf);
 	// reset all keystate, query libretro for keystate
 	int i;
 	int j;
@@ -310,5 +346,6 @@ void retro_run(void){
 	}
 
 	fprintf(stderr, "retro_run!\n");		
-	video_cb(bomberman_getScreen(bomberman)->pixels, VOUT_WIDTH, VOUT_HEIGHT, 0);
+	//video_cb(bomberman_getScreen(bomberman)->pixels, VOUT_WIDTH, VOUT_HEIGHT, 0);
+    video_cb(vout_buf->pixels, VOUT_WIDTH, VOUT_HEIGHT, 0);
 }

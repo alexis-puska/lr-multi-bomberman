@@ -22,7 +22,7 @@ Bomberman::Bomberman()
     currentImage = 0;
     
     //generation d'une grille de 35 sur 21 case
-    grid.configure(35,21,6);
+    grid.configure(35,21,8);
     copySurfaceToBackRenderer(grid.getGrid(), 15, 72);
 }
 
@@ -30,6 +30,21 @@ Bomberman::~Bomberman()
 {
 	free(image0);
 	free(image1);
+}
+
+void Bomberman::tick(unsigned short * in_keystate, SDL_Surface * vout_buf){
+    fprintf(stderr, "tick! ");
+    for(int i = 0; i < 16; i++){
+        fprintf(stderr, "%u, ", in_keystate[i]);
+    }
+    fprintf(stderr, "\n vout_buf : %i ", vout_buf->w);
+    
+    if(currentImage == 1){
+        SDL_BlitSurface(image1,NULL,vout_buf ,NULL);
+    }else{
+        SDL_BlitSurface(image0,NULL,vout_buf ,NULL);
+    }
+	
 }
 
 SDL_Surface * Bomberman::getScreen(){
