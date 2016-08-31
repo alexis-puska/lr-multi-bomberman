@@ -225,7 +225,11 @@ void Bomberman::tick(unsigned short * in_keystate, SDL_Surface * vout_buf){
 			drawLevelSelectionMenu(in_keystate, vout_buf);
 			break; 
 		case game:
-			grid.configure(35,21,levelIndex);
+			if(refreshBuffer || keychange[0]){
+				fprintf(stderr, "Generate Grid\n");
+				grid.configure(35,21,levelIndex);
+				refreshBuffer = false;
+			}
 			SDL_BlitSurface(grid.getGrid(),NULL,vout_buf ,NULL);
 			break;
     }

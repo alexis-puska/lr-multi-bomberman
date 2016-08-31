@@ -55,5 +55,6 @@ private:
     
     void init();
     void generateGrid();
+    void mergeGrid();
 	
 };

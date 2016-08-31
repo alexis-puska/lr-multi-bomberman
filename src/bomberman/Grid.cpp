@@ -39,7 +39,7 @@ Grid::~Grid()
 
 
 SDL_Surface * Grid::getGrid(){
-    generateGrid();
+    mergeGrid();
 	return theGrid;
 }
 
@@ -168,9 +168,10 @@ void Grid::generateGrid(){
             
         }
     }
-    
-    
-    
+    mergeGrid();
+}
+
+void Grid::mergeGrid(){
     SDL_Rect mergeRect;
     mergeRect.x = 0;
     mergeRect.y = 0;
@@ -181,5 +182,4 @@ void Grid::generateGrid(){
     SDL_BlitSurface(playersBombes   , &mergeRect, theGrid, &mergeRect);
     SDL_BlitSurface(skyFixe         , &mergeRect, theGrid, &mergeRect);
     SDL_BlitSurface(skyMove         , &mergeRect, theGrid, &mergeRect);
-    
 }
