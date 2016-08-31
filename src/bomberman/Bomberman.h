@@ -42,6 +42,12 @@ enum playerTypeEnum{
 	OFF		= 2	
 };
 
+enum gameOptionEnum{
+	suddenDeathOption		= 0,
+	badBomberOption			= 1,
+	cpuLevelOption			= 2
+};
+
 
 #ifndef __MYCLASS_H
 #define __MYCLASS_H
@@ -63,20 +69,36 @@ private:
 	void drawPlayerSpriteMenu(unsigned short * in_keystate, SDL_Surface * vout_buf);
 	void drawGameOptionMenu(unsigned short * in_keystate, SDL_Surface * vout_buf);;
 	void drawLevelSelectionMenu(unsigned short * in_keystate, SDL_Surface * vout_buf);
+    //function to evoid key repetition
+    void keyPressed(unsigned short * in_keystate);
 
-
+    //position index for the cursor
 	int cursorPosition;
+    //the bomb cursor
 	Cursor cursor;
 	
+    //refreshbuffer, for menu, if need to be full redraw
 	bool refreshBuffer;
 	
-
 	//table for memorise player type
-
+    //index 0 : 0 Human, 1 CPU, 2 OFF
+    //index 1 : sprite used for player
 	int playerType[16][2];
-
+	/*
+	* 0 : SuddenDeath	0 off, 1 on
+	* 1 : Bad Bomber	0 off, 1 on
+	* 2 : CPU Level		[0-3]
+	*/
+	int gameOption[3];
+    
 	//buffer for draw
 	SDL_Surface *screenBuffer;
+    
+    //image of differente sprite of player
+    SDL_Surface **menuPlayerSprite;
+    
+    //image of the different level available
+    SDL_Surface **menuLevelSprite;
     
     //SplashScreen
     SDL_Surface *splashScreenSurface;
@@ -87,14 +109,18 @@ private:
     //Font for menu and Game
     TTF_Font* fragileBombersFont;
     
-    //Game Grid
-    Grid grid;
-        
+    //currentStep index to know wich menu is display
     bombermanStepEnum currentStep;
     
-	void keyPressed(unsigned short * in_keystate);
-    
+    //boolean set to true when a keystate change
 	bool keychange[16];
     unsigned short previousPlayerKeystate[16];
+    
+    
+    //Game Grid
+    Grid grid;
+    
+    int levelIndex;
+    
 };
 #endif
