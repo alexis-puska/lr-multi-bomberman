@@ -21,22 +21,20 @@ Grid::Grid(int x, int y, int levelIndex)
 
 Grid::~Grid()
 {
-    free(theGrid);
+    
     int i;
     for(i = 0; i < 40; i++){
-        free(textures[i]);
+        SDL_FreeSurface(textures[i]);
     }
     for(i = 0; i < 2; i++){
-        free(skys[i]);
+        SDL_FreeSurface(skys[i]);
     }
-    
-    
-    
-    free(ground);
-    free(brickShadow);
-    free(playersBombes);
-    free(skyFixe);
-    free(skyMove);
+    SDL_FreeSurface(ground);
+    SDL_FreeSurface(brickShadow);
+    SDL_FreeSurface(playersBombes);
+    SDL_FreeSurface(skyFixe);
+    SDL_FreeSurface(skyMove);
+    SDL_FreeSurface(theGrid);
 }
 
 
@@ -114,6 +112,7 @@ void Grid::init(){
     skyFixe = SDL_CreateRGBSurface(0, 1890, 1008, 32, rmask, gmask, bmask, amask);
     skyMove = SDL_CreateRGBSurface(0, 1890, 1008, 32, rmask, gmask, bmask, amask);
     SDL_FillRect(theGrid, NULL, SDL_MapRGB(theGrid->format, 255, 204, 0));
+    SDL_FreeSurface(textureBuffer);
 }
 
 

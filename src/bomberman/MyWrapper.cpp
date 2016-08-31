@@ -6,12 +6,12 @@ extern "C" {
 		return new Bomberman();
 	}
 	
-	SDL_Surface * bomberman_getScreen(Bomberman* v) {
-		return v->getScreen();
-	}
+//	SDL_Surface * bomberman_getScreen(Bomberman* v) {
+//		return v->getScreen();
+//	}
 	
 	void bomberman_swapBuffer(Bomberman* v) {
-		return v->swapBuffer();
+//		return v->swapBuffer();
 	}
 	
 	void deleteBomberman(Bomberman* v) {

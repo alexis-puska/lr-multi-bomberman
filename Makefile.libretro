@@ -58,9 +58,9 @@ else ifeq ($(platform), linux-portable)
 else ifeq ($(platform), osx)
 	TARGET := $(TARGET_NAME)_libretro.dylib
 	fpic := -fPIC
-	CFLAGS += -I/Library/Frameworks/SDL2.framework/Headers/ -I/Library/Frameworks/SDL2_image.framework/Headers/ -F/Library/Frameworks/
+	CFLAGS += -I/Library/Frameworks/SDL2.framework/Headers/ -I/Library/Frameworks/SDL2_image.framework/Headers/ -I/Library/Frameworks/SDL2_ttf.framework/Headers/ -F/Library/Frameworks/
 	SHARED := -dynamiclib
-	GL_LIB := -framework OpenGL -framework GLUT -F/Library/Frameworks -framework SDL2 -framework SDL2_image
+	GL_LIB := -framework OpenGL -framework GLUT -F/Library/Frameworks -framework SDL2 -framework SDL2_image -framework SDL2_ttf
 	OSXVER = `sw_vers -productVersion | cut -d. -f 2`
 	OSX_LT_MAVERICKS = `(( $(OSXVER) <= 9)) && echo "YES"`
 	fpic += -mmacosx-version-min=10.5

@@ -14,7 +14,7 @@ typedef struct Bomberman Bomberman;
 Bomberman* newBomberman();
 void bomberman_tick(Bomberman *v, unsigned short *in_keystate, SDL_Surface * vout_buf);
 
-SDL_Surface * bomberman_getScreen(Bomberman* v);
+//SDL_Surface * bomberman_getScreen(Bomberman* v);
 void bomberman_swapBuffer(Bomberman* v);
 void deleteBomberman(Bomberman* v);
 
