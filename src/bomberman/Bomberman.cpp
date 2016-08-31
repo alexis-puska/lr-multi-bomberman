@@ -225,7 +225,7 @@ void Bomberman::tick(unsigned short * in_keystate, SDL_Surface * vout_buf){
 			drawLevelSelectionMenu(in_keystate, vout_buf);
 			break; 
 		case game:
-			if(refreshBuffer || keychange[0]){
+			if(refreshBuffer && previousPlayerKeystate[0] & keyPadStart && keychange[0]){
 				fprintf(stderr, "Generate Grid\n");
 				grid.configure(35,21,levelIndex);
 				refreshBuffer = false;
@@ -248,8 +248,6 @@ void Bomberman::copySurfaceToBackRenderer(SDL_Surface * src, SDL_Surface * dest,
     srcRect.h = src->h;
     SDL_BlitSurface(src, &srcRect, dest, &dstRect);
 }
-
-
 
 
 /*
