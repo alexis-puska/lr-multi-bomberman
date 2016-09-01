@@ -14,12 +14,12 @@ ifeq ($(platform),)
 endif
 
 
-
 CC ?= gcc
 CXX ?= g++
 AS ?= as
 CC_AS ?= $(CC)
 CFLAGS ?=
+
 
 TARGET_NAME := lr_multi_bomberman
 LIBM := -lm
@@ -29,6 +29,8 @@ LIBDL := -ldl
 MMAP_WIN32=0
 EXTRA_LDFLAGS =
 
+
+
 ifeq ($(GLES), 1)
    CXXFLAGS += -DGLES
    LIBS += -lGLESv2
@@ -37,13 +39,17 @@ else
 endif
 
 
+
+
 # Unix
 ifeq ($(platform), unix)
 	TARGET := $(TARGET_NAME)_libretro.so
 	fpic := -fPIC
-	LDFLAGS = -lSDL $(sdl-config --static-libs) -lm
+	LIBS = -lSDL2_image -lSDL2_ttf -g `sdl2-config --static-libs` 
+	CFLAGS += `sdl2-config --cflags`
 	SHARED := -shared -Wl,--version-script=libretro/link.T
-
+	
+	
 else ifeq ($(platform), linux-portable)
 	TARGET := $(TARGET_NAME)_libretro.so
 	fpic := -fPIC -nostdlib
@@ -53,6 +59,8 @@ else ifeq ($(platform), linux-portable)
 	LIBPTHREAD :=
 	LIBDL :=
 	SHARED := -shared -Wl,--version-script=libretro/link.T
+
+
 # OS X
 else ifeq ($(platform), osx)
 	TARGET := $(TARGET_NAME)_libretro.dylib
@@ -60,10 +68,11 @@ else ifeq ($(platform), osx)
 	CFLAGS += -I/Library/Frameworks/SDL2.framework/Headers/ -I/Library/Frameworks/SDL2_image.framework/Headers/ -I/Library/Frameworks/SDL2_ttf.framework/Headers/ -F/Library/Frameworks/
 	CFLAGS += -DIS_OSX
 	SHARED := -dynamiclib
-	GL_LIB := -F/Library/Frameworks -framework SDL2 -framework SDL2_image -framework SDL2_ttf
+	LIBS := -F/Library/Frameworks -framework SDL2 -framework SDL2_image -framework SDL2_ttf
 	OSXVER = `sw_vers -productVersion | cut -d. -f 2`
 	OSX_LT_MAVERICKS = `(( $(OSXVER) <= 9)) && echo "YES"`
 	fpic += -mmacosx-version-min=10.5
+
 
 #Raspberry Pi 2
 else ifeq ($(platform), rpi2)
@@ -72,10 +81,14 @@ else ifeq ($(platform), rpi2)
 	SHARED := -shared -Wl,--no-undefined
 	CFLAGS += -marm -mcpu=cortex-a7 -mfpu=neon-vfpv4 -mfloat-abi=hard
 	ASFLAGS += -mcpu=cortex-a7 -mfpu=neon-vfpv4 -mfloat-abi=hard
+	LDFLAGS = -I/usr/include/SDL2  -lm
+	LIBS = -lSDL2_image -lSDL2_ttf -g `sdl2-config --static-libs` 
+	CFLAGS += `sdl2-config --cflags`
 	HAVE_NEON = 1
 	ARCH = arm
 	BUILTIN_GPU = neon
 	USE_DYNAREC = 1
+	
 	
 #Raspberry Pi 3
 else ifeq ($(platform), rpi3)
@@ -84,10 +97,14 @@ else ifeq ($(platform), rpi3)
 	SHARED := -shared -Wl,--no-undefined
 	CFLAGS += -marm -mcpu=cortex-a53 -mfpu=neon-fp-armv8 -mfloat-abi=hard
 	ASFLAGS += -mcpu=cortex-a53 -mfpu=neon-fp-armv8 -mfloat-abi=hard
+	LDFLAGS = -I/usr/include/SDL2  -lm
+	LIBS = -lSDL2_image -lSDL2_ttf -g `sdl2-config --static-libs` 
+	CFLAGS += `sdl2-config --cflags`
 	HAVE_NEON = 1
 	ARCH = arm
 	BUILTIN_GPU = neon
 	USE_DYNAREC = 1
+
 
 # Windows
 else
@@ -100,23 +117,16 @@ else
 	MMAP_WIN32=1
 endif
 
+
 CFLAGS += $(fpic)
 ifeq ($(platform),win)
 	MAIN_LDLIBS += -lws2_32
-else ifneq ($(platform),qnx)
-	LDLIBS += $(LIBPHTREAD)
-	MAIN_LDLIBS += $(LIBDL)
 endif
+
+
 MAIN_LDFLAGS += -shared
 MAIN_LDLIBS += $(LIBM) $(LIBZ)
 
-TARGET ?= libretro.so
-PLATFORM = libretro
-BUILTIN_GPU ?= peops
-SOUND_DRIVERS = libretro
-PLUGINS =
-NO_CONFIG_MAK = yes
 
 libretro_all: all
-
 include Makefile
