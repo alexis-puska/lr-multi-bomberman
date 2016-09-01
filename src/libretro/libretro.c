@@ -16,8 +16,11 @@
 #include "libretro.h"
 #include "../bomberman/MyWrapper.h"
 #include <SDL2/SDL.h>
-#include <SDL2_image/SDL_image.h>
-
+#ifndef IS_OSX
+    #include <SDL2/SDL_image.h>
+#else
+    #include <SDL2_image/SDL_image.h>
+#endif
 
 #define VOUT_MAX_WIDTH 1920
 #define VOUT_MAX_HEIGHT 1080

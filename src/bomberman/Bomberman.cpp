@@ -1,8 +1,5 @@
 #include "Bomberman.h"
 
-#include "SDL_thread.h"
-#include "SDL_timer.h"
-
 #include <time.h>
 
 
@@ -589,7 +586,7 @@ void Bomberman::drawLevelSelectionMenu(unsigned short * in_keystate, SDL_Surface
 		SDL_FillRect(menu, NULL, SDL_MapRGBA(menu->format, 0, 0, 0, 120));
 		copySurfaceToBackRenderer(menu, screenBuffer, 100, 550);
 		
-		SDL_Color red = {255, 0, 0};
+		//SDL_Color red = {255, 0, 0};
 		SDL_Color green = {0, 255, 0};
 		//SDL_Color blue = {0, 140, 255};
 		

@@ -30,9 +30,7 @@ OBJS += src/bomberman/MyWrapper.o
 OBJS += src/bomberman/Grid.o
 OBJS += src/bomberman/Cursor.o
 
-
 CFLAGS += -DHAVE_LIBRETRO
-
 
 %.o: %.S
 	$(CC_AS) $(CFLAGS) -c $^ -o $@
@@ -41,8 +39,6 @@ CFLAGS += -DHAVE_LIBRETRO
 
 %.o: %.cpp
 	$(CXX) $(CXXFLAGS) $(CFLAGS) -c -o $@ $<
-
-
 
 target_: $(TARGET)
 
@@ -63,7 +59,7 @@ clean: $(PLAT_CLEAN)
 VER ?= $(shell git describe HEAD)
 
 ifeq "$(PLATFORM)" "generic"
-OUT = pcsx_rearmed_$(VER)
+OUT = lr-multi-bomberman_$(VER)
 
 rel: pcsx $(PLUGINS) \
 		frontend/pandora/skin readme.txt COPYING

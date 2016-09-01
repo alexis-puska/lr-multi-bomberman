@@ -1,7 +1,11 @@
 #ifndef __MYWRAPPER_H
 #define __MYWRAPPER_H
 #include <SDL2/SDL.h>
+#ifndef IS_OSX
+#include <SDL2/SDL_image.h>
+#else
 #include <SDL2_image/SDL_image.h>
+#endif
 
 
 
