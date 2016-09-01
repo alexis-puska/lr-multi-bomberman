@@ -125,7 +125,7 @@ void Grid::generateGrid(){
                 tab[i+(j*sizeX)] = 1;
             } else {
                 /* generate secret number between 1 and 3: */
-                if((rand() % 3 + 1)>=2){
+                if((rand() % 7 + 1)>=2){
                     tab[i+(j*sizeX)] = 2;
                 } else {
                     tab[i+(j*sizeX)] = 0;
@@ -140,7 +140,6 @@ void Grid::generateGrid(){
     srcrect.y = 0;
     srcrect.w = 54;
     srcrect.h = 48;
-    
     
     skyRect.x = 0;
     skyRect.y = 0;
@@ -164,8 +163,14 @@ void Grid::generateGrid(){
                 dstrect.h = 144;
                 SDL_BlitSurface(skys[textureIndex % 40], &skyRect, skyFixe, &dstrect);
             }
-            
-            
+            if(tab[i+(j*sizeX)] == 2){
+                if(reservedSpot[j][i] == 0){
+                    SDL_BlitSurface(textures[21], &srcrect, brickShadow, &dstrect);
+                }else{
+                    //reservedSpot !
+                    tab[i+(j*sizeX)] = 0;
+                }
+            }
         }
     }
     mergeGrid();

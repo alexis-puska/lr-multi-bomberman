@@ -33,6 +33,11 @@ private:
     //Final image to renderer
     SDL_Surface *theGrid;
     
+    
+    
+    
+    
+    
     //Layers to draw the game
     SDL_Surface *ground;
     SDL_Surface *brickShadow;
