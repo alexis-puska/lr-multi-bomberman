@@ -263,7 +263,7 @@ void Bomberman::drawPlayerTypeMenu(unsigned short * in_keystate, SDL_Surface * v
 	
 	//fprintf(stderr, "%d %d\n", refreshBuffer , keychange[0]);
 	if(refreshBuffer || keychange[0]){
-		SDL_BlitSurface(menuBackgroundSurface,NULL,screenBuffer  ,NULL);
+		SDL_BlitSurface(menuBackgroundSurface, NULL,screenBuffer  ,NULL);
 		SDL_Surface* menu;
 		menu =  SDL_CreateRGBSurface(0, 1720, 80, 32, rmask, gmask, bmask, amask);
 		SDL_FillRect(menu, NULL, SDL_MapRGBA(menu->format, 0, 0, 0, 120));
@@ -319,7 +319,7 @@ void Bomberman::drawPlayerTypeMenu(unsigned short * in_keystate, SDL_Surface * v
 
 		for(int j=0 ; j<4 ; j++){
 			for(int i=0 ; i<4 ; i++){
-				char playerName[12] = "Joueur ";
+				char playerName[15] = "Joueur ";
 				char playerTypeName[6];
 				sprintf(playerName, "Joueur %2i : ", (j*4+i)+1);
 				
@@ -415,7 +415,7 @@ void Bomberman::drawPlayerSpriteMenu(unsigned short * in_keystate, SDL_Surface *
 		for(int i=0 ; i<16 ; i++){
 			if(playerType[i][0] != OFF){
 				int index = playerType[i][1];
-				char playerName[2];
+				char playerName[10];
 				SDL_Color playerColor = blue;
 				switch(playerType[i][0]){
 					case HUMAN : 
