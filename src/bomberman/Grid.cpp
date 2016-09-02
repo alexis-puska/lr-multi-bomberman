@@ -97,7 +97,7 @@ void Grid::init(){
     destTextureRect.w = 54;
     destTextureRect.h = 48;
     for(int k = 0; k < 2 ; k++){
-        skyRect.x = 270;
+        skyRect.x = 90;
         skyRect.y = offset + (k * 48);
         skyRect.w = 54;
         skyRect.h = 48;
@@ -165,6 +165,12 @@ void Grid::generateGrid(){
             }
             if(tab[i+(j*sizeX)] == 2){
                 if(reservedSpot[j][i] == 0){
+                    if(textureIndex == 40){
+                        dstrect.x = i * 18;
+                        dstrect.y = j * 16;
+                        dstrect.w = 18;
+                        dstrect.h = 16;
+                    }
                     SDL_BlitSurface(textures[21], &srcrect, brickShadow, &dstrect);
                 }else{
                     //reservedSpot !
