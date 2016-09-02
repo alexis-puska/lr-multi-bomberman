@@ -123,7 +123,7 @@ void retro_get_system_info(struct retro_system_info *info){
 
 void retro_get_system_av_info(struct retro_system_av_info *info){
 	memset(info, 0, sizeof(*info));
-	info->timing.fps            = 1000000;
+	info->timing.fps            = 60;
 	info->timing.sample_rate    = 44100;
 	info->geometry.base_width   = VOUT_WIDTH;
 	info->geometry.base_height  = VOUT_HEIGHT;
@@ -442,7 +442,7 @@ void retro_init(void){
     SDL_FillRect(vout_buf, NULL, SDL_MapRGB(vout_buf->format, 255, 204, 0));
 	bomberman = newBomberman(vout_buf);
 	environ_cb(RETRO_ENVIRONMENT_GET_RUMBLE_INTERFACE, &rumble);
-	unsigned level = 6;
+    unsigned level = 0;
 	environ_cb(RETRO_ENVIRONMENT_SET_PERFORMANCE_LEVEL, &level);
 	environ_cb(RETRO_ENVIRONMENT_SET_SUPPORT_NO_GAME, &support_no_game);
 	fprintf(stderr, "Loaded game!\n");
@@ -466,6 +466,6 @@ void retro_run(void){
 		}
 	}
 	bomberman_tick(bomberman, in_keystate, vout_buf);
-    video_cb(vout_buf->pixels, VOUT_WIDTH, VOUT_HEIGHT, 0);
+    video_cb(vout_buf->pixels, VOUT_WIDTH, VOUT_HEIGHT, VOUT_WIDTH*4);
     
 }

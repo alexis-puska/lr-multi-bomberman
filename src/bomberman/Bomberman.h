@@ -120,6 +120,7 @@ private:
     
     //boolean set to true when a keystate change
 	bool keychange[16];
+    bool anyPlayerkeychange;
     unsigned short previousPlayerKeystate[16];
     
     
