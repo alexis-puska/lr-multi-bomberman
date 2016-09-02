@@ -19,10 +19,10 @@ Bomberman::Bomberman()
     refreshBuffer = true;
     
     //Load Font
-    fragileBombersFont = TTF_OpenFont( "./resources/font/fragile_bombers.ttf", 48); //this opens a font style and sets a size
+    fragileBombersFont = TTF_OpenFont( "./resources/font/fragile_bombers.ttf", 16); //this opens a font style and sets a size
     
     //init all surface
-    screenBuffer = SDL_CreateRGBSurface(0, 1920, 1080, 32, rmask, gmask, bmask, amask);
+    screenBuffer = SDL_CreateRGBSurface(0, 640, 360, 32, rmask, gmask, bmask, amask);
     splashScreenSurface = IMG_Load(splashScreen);
     menuBackgroundSurface = IMG_Load(menuBackground);
     
@@ -46,14 +46,14 @@ Bomberman::Bomberman()
     //init Sprite for menu
     menuPlayerSprite = new SDL_Surface*[8];
     for(int i=0;i<8;i++){
-        menuPlayerSprite[i] =  SDL_CreateRGBSurface(0, 90, 126, 32, rmask, gmask, bmask, amask);
+        menuPlayerSprite[i] =  SDL_CreateRGBSurface(0, 30, 42, 32, rmask, gmask, bmask, amask);
     }
     
     SDL_Rect dstRect;
     dstRect.x = 0;
     dstRect.y = 0;
-    dstRect.w = 90;
-    dstRect.h = 126;
+    dstRect.w = 30;
+    dstRect.h = 42;
     
     
     SDL_Surface *textureBuffer = IMG_Load(BombermanSprite);
@@ -87,17 +87,17 @@ Bomberman::Bomberman()
     SDL_Rect srcRect;
     dstRect.x = 0;
     dstRect.y = 0;
-    dstRect.w = 384;
-    dstRect.h = 330;
+    dstRect.w = 128;
+    dstRect.h = 110;
     
     menuLevelSprite = new SDL_Surface*[9];
     for(int j=0;j<3;j++){
         for(int i=0;i<3;i++){
-            srcRect.x = i*384;
-            srcRect.y = j*330;
-            srcRect.w = 384;
-            srcRect.h = 330;
-            menuLevelSprite[j*3+i] =  SDL_CreateRGBSurface(0, 384, 330, 32, rmask, gmask, bmask, amask);
+            srcRect.x = i*128;
+            srcRect.y = j*110;
+            srcRect.w = 128;
+            srcRect.h = 110;
+            menuLevelSprite[j*3+i] =  SDL_CreateRGBSurface(0, 128, 110, 32, rmask, gmask, bmask, amask);
             SDL_BlitSurface(textureBuffer, &srcRect, menuLevelSprite[j*3+i], &dstRect);
         }
     }
@@ -265,20 +265,20 @@ void Bomberman::drawPlayerTypeMenu(unsigned short * in_keystate, SDL_Surface * v
     if(refreshBuffer || keychange[0]){
         SDL_BlitSurface(menuBackgroundSurface, NULL,screenBuffer  ,NULL);
         SDL_Surface* menu;
-        menu =  SDL_CreateRGBSurface(0, 1720, 80, 32, rmask, gmask, bmask, amask);
+        menu =  SDL_CreateRGBSurface(0, 574, 27, 32, rmask, gmask, bmask, amask);
         SDL_FillRect(menu, NULL, SDL_MapRGBA(menu->format, 0, 0, 0, 120));
-        copySurfaceToBackRenderer(menu, screenBuffer , 100, 450);
+        copySurfaceToBackRenderer(menu, screenBuffer , 33, 150);
         
-        menu =  SDL_CreateRGBSurface(0, 1720, 300, 32, rmask, gmask, bmask, amask);
+        menu =  SDL_CreateRGBSurface(0, 574, 100, 32, rmask, gmask, bmask, amask);
         SDL_FillRect(menu, NULL, SDL_MapRGBA(menu->format, 0, 0, 0, 120));
-        copySurfaceToBackRenderer(menu, screenBuffer , 100, 550);
+        copySurfaceToBackRenderer(menu, screenBuffer , 33, 183);
         
         SDL_Color red = {255, 0, 0};
         SDL_Color green = {0, 255, 0};
         SDL_Color blue = {0, 140, 255};
         
         SDL_Surface* surfaceMessage = TTF_RenderText_Solid(fragileBombersFont, "Configuration joueur", green);
-        copySurfaceToBackRenderer(surfaceMessage, screenBuffer , ((1920/2)-(surfaceMessage->w/2)), 462);
+        copySurfaceToBackRenderer(surfaceMessage, screenBuffer , ((640/2)-(surfaceMessage->w/2)), 154);
         
         if(previousPlayerKeystate[0] & keyPadRight && keychange[0]){
             cursorPosition += 4;
@@ -340,15 +340,15 @@ void Bomberman::drawPlayerTypeMenu(unsigned short * in_keystate, SDL_Surface * v
                 }
                 SDL_Surface* surfaceMessage1 = TTF_RenderText_Solid(fragileBombersFont, playerTypeName, playerColor);
                 SDL_Surface* surfaceMessage2 = TTF_RenderText_Solid(fragileBombersFont, playerName, green);
-                copySurfaceToBackRenderer(surfaceMessage1, screenBuffer, 370+(j*400), 562+(i*60));
-                copySurfaceToBackRenderer(surfaceMessage2, screenBuffer, 170+(j*400), 562+(i*60));
+                copySurfaceToBackRenderer(surfaceMessage1, screenBuffer, 123+(j*133), 187+(i*20));
+                copySurfaceToBackRenderer(surfaceMessage2, screenBuffer, 56+(j*133), 187+(i*20));
             }
         }
         refreshBuffer = false;
         
     }
-    int cursorPosX = 110 + (((cursorPosition - (cursorPosition % 4))/4)*400);
-    int cursorposY = 562 + ((cursorPosition % 4)*60);
+    int cursorPosX = 36 + (((cursorPosition - (cursorPosition % 4))/4)*133);
+    int cursorposY = 187 + ((cursorPosition % 4)*20);
     copySurfaceToBackRenderer(screenBuffer, vout_buf, 0, 0);
     copySurfaceToBackRenderer(cursor.getCurrentFrame(), vout_buf, cursorPosX, cursorposY);
 }
@@ -377,23 +377,23 @@ void Bomberman::drawPlayerSpriteMenu(unsigned short * in_keystate, SDL_Surface *
         
         SDL_BlitSurface(menuBackgroundSurface,NULL,screenBuffer ,NULL);
         SDL_Surface* menu;
-        menu =  SDL_CreateRGBSurface(0, 1720, 80, 32, rmask, gmask, bmask, amask);
+        menu =  SDL_CreateRGBSurface(0, 574, 27, 32, rmask, gmask, bmask, amask);
         SDL_FillRect(menu, NULL, SDL_MapRGBA(menu->format, 0, 0, 0, 120));
-        copySurfaceToBackRenderer(menu, screenBuffer, 100, 450);
+        copySurfaceToBackRenderer(menu, screenBuffer, 33, 150);
         
-        menu =  SDL_CreateRGBSurface(0, 1720, 450, 32, rmask, gmask, bmask, amask);
+        menu =  SDL_CreateRGBSurface(0, 574, 150, 32, rmask, gmask, bmask, amask);
         SDL_FillRect(menu, NULL, SDL_MapRGBA(menu->format, 0, 0, 0, 120));
-        copySurfaceToBackRenderer(menu, screenBuffer, 100, 550);
+        copySurfaceToBackRenderer(menu, screenBuffer, 33, 183);
         
         SDL_Color green = {0, 255, 0};
         SDL_Color blue = {0, 140, 255};
         
         SDL_Surface* surfaceMessage = TTF_RenderText_Solid(fragileBombersFont, "SELECT COSTUME", green);
-        copySurfaceToBackRenderer(surfaceMessage, screenBuffer, ((1920/2)-(surfaceMessage->w/2)), 462);
+        copySurfaceToBackRenderer(surfaceMessage, screenBuffer, ((640/2)-(surfaceMessage->w/2)), 154);
         
         //add player sprite
         for(int i=0 ; i<8 ; i++){
-            copySurfaceToBackRenderer(menuPlayerSprite[i], screenBuffer, 162+(i*215), 520);
+            copySurfaceToBackRenderer(menuPlayerSprite[i], screenBuffer, 54+(i*72), 174);
         }
         
         for(int i=0;i<16;i++){
@@ -430,7 +430,7 @@ void Bomberman::drawPlayerSpriteMenu(unsigned short * in_keystate, SDL_Surface *
                         break;
                 }
                 SDL_Surface* surfaceMessage = TTF_RenderText_Solid(fragileBombersFont, playerName, playerColor);
-                copySurfaceToBackRenderer(surfaceMessage, screenBuffer, 200+(playerType[i][1]*216) -(surfaceMessage->w/2), 650+(45*list[index]));
+                copySurfaceToBackRenderer(surfaceMessage, screenBuffer, 70+(playerType[i][1]*72) -(surfaceMessage->w/2), 216+(15*list[index]));
                 list[index] = list[index] + 1;
             }
         }
@@ -515,41 +515,41 @@ void Bomberman::drawGameOptionMenu(unsigned short * in_keystate, SDL_Surface * v
         
         SDL_BlitSurface(menuBackgroundSurface,NULL,screenBuffer ,NULL);
         SDL_Surface* menu;
-        menu =  SDL_CreateRGBSurface(0, 1720, 80, 32, rmask, gmask, bmask, amask);
+        menu =  SDL_CreateRGBSurface(0, 574, 27, 32, rmask, gmask, bmask, amask);
         SDL_FillRect(menu, NULL, SDL_MapRGBA(menu->format, 0, 0, 0, 120));
-        copySurfaceToBackRenderer(menu, screenBuffer, 100, 450);
+        copySurfaceToBackRenderer(menu, screenBuffer, 33, 150);
         
-        menu =  SDL_CreateRGBSurface(0, 1720, 300, 32, rmask, gmask, bmask, amask);
+        menu =  SDL_CreateRGBSurface(0, 574, 100, 32, rmask, gmask, bmask, amask);
         SDL_FillRect(menu, NULL, SDL_MapRGBA(menu->format, 0, 0, 0, 120));
-        copySurfaceToBackRenderer(menu, screenBuffer, 100, 550);
+        copySurfaceToBackRenderer(menu, screenBuffer, 33, 183);
         
         SDL_Color red = {255, 0, 0};
         SDL_Color green = {0, 255, 0};
         SDL_Color blue = {0, 140, 255};
         
         SDL_Surface* surfaceMessage = TTF_RenderText_Solid(fragileBombersFont, "GAME OPTION", green);
-        copySurfaceToBackRenderer(surfaceMessage, screenBuffer, ((1920/2)-(surfaceMessage->w/2)), 462);
+        copySurfaceToBackRenderer(surfaceMessage, screenBuffer, ((640/2)-(surfaceMessage->w/2)), 154);
         
         surfaceMessage = TTF_RenderText_Solid(fragileBombersFont, "Sudden Death", green);
-        copySurfaceToBackRenderer(surfaceMessage, screenBuffer, 600, 562);
+        copySurfaceToBackRenderer(surfaceMessage, screenBuffer, 200, 187);
         surfaceMessage = TTF_RenderText_Solid(fragileBombersFont, "Bad Bomber", green);
-        copySurfaceToBackRenderer(surfaceMessage, screenBuffer, 600, 622);
+        copySurfaceToBackRenderer(surfaceMessage, screenBuffer, 200, 207);
         surfaceMessage = TTF_RenderText_Solid(fragileBombersFont, "CPU Level", green);
-        copySurfaceToBackRenderer(surfaceMessage, screenBuffer, 600, 682);
+        copySurfaceToBackRenderer(surfaceMessage, screenBuffer, 200, 227);
         
         surfaceMessage = TTF_RenderText_Solid(fragileBombersFont, gameOption[0] == 1 ? "ON" : "OFF", gameOption[0] == 1 ? green : red);
-        copySurfaceToBackRenderer(surfaceMessage, screenBuffer, 1200, 562);
+        copySurfaceToBackRenderer(surfaceMessage, screenBuffer, 400, 187);
         surfaceMessage = TTF_RenderText_Solid(fragileBombersFont, gameOption[1] == 1 ? "ON" : "OFF", gameOption[1] == 1 ? green : red);
-        copySurfaceToBackRenderer(surfaceMessage, screenBuffer, 1200, 622);
+        copySurfaceToBackRenderer(surfaceMessage, screenBuffer, 400, 207);
         
         char CPULevel[2];
         sprintf(CPULevel, "%i", gameOption[2]);
         surfaceMessage = TTF_RenderText_Solid(fragileBombersFont, CPULevel, blue);
-        copySurfaceToBackRenderer(surfaceMessage, screenBuffer, 1200, 682);
+        copySurfaceToBackRenderer(surfaceMessage, screenBuffer, 400, 227);
         refreshBuffer = false;
     }
-    int cursorPosX = 550;
-    int cursorposY = 562 + ( cursorPosition * 60 );	
+    int cursorPosX = 183;
+    int cursorposY = 187 + ( cursorPosition * 20 );	
     copySurfaceToBackRenderer(screenBuffer, vout_buf, 0, 0);
     copySurfaceToBackRenderer(cursor.getCurrentFrame(), vout_buf, cursorPosX, cursorposY);	
 }
@@ -578,13 +578,13 @@ void Bomberman::drawLevelSelectionMenu(unsigned short * in_keystate, SDL_Surface
         amask = 0xff000000;
         SDL_BlitSurface(menuBackgroundSurface,NULL,screenBuffer ,NULL);
         SDL_Surface* menu;
-        menu =  SDL_CreateRGBSurface(0, 1720, 80, 32, rmask, gmask, bmask, amask);
+        menu =  SDL_CreateRGBSurface(0, 574, 27, 32, rmask, gmask, bmask, amask);
         SDL_FillRect(menu, NULL, SDL_MapRGBA(menu->format, 0, 0, 0, 120));
-        copySurfaceToBackRenderer(menu, screenBuffer, 100, 450);
+        copySurfaceToBackRenderer(menu, screenBuffer, 33, 150);
         
-        menu =  SDL_CreateRGBSurface(0, 1720, 450, 32, rmask, gmask, bmask, amask);
+        menu =  SDL_CreateRGBSurface(0, 574, 150, 32, rmask, gmask, bmask, amask);
         SDL_FillRect(menu, NULL, SDL_MapRGBA(menu->format, 0, 0, 0, 120));
-        copySurfaceToBackRenderer(menu, screenBuffer, 100, 550);
+        copySurfaceToBackRenderer(menu, screenBuffer, 33, 183);
         
         //SDL_Color red = {255, 0, 0};
         SDL_Color green = {0, 255, 0};
@@ -593,7 +593,7 @@ void Bomberman::drawLevelSelectionMenu(unsigned short * in_keystate, SDL_Surface
         //menuLevelSprite
         
         SDL_Surface* surfaceMessage = TTF_RenderText_Solid(fragileBombersFont, "SELECT THE LEVEL", green);
-        copySurfaceToBackRenderer(surfaceMessage, screenBuffer, ((1920/2)-(surfaceMessage->w/2)), 462);
+        copySurfaceToBackRenderer(surfaceMessage, screenBuffer, ((640/2)-(surfaceMessage->w/2)), 154);
         
         
         
@@ -612,7 +612,7 @@ void Bomberman::drawLevelSelectionMenu(unsigned short * in_keystate, SDL_Surface
             }
         }
         
-        copySurfaceToBackRenderer(menuLevelSprite[cursorPosition], screenBuffer, ((1920/2)-(menuLevelSprite[cursorPosition]->w/2)), 600);
+        copySurfaceToBackRenderer(menuLevelSprite[cursorPosition], screenBuffer, ((640/2)-(menuLevelSprite[cursorPosition]->w/2)), 200);
         
         refreshBuffer = false;
         levelIndex = cursorPosition;

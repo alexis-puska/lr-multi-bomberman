@@ -17,14 +17,14 @@ Cursor::Cursor(){
 	
 	dst.x = 0;
 	dst.y = 0;
-	dst.w = 48;
-	dst.h = 48;
+	dst.w = 16;
+	dst.h = 16;
     for(int i = 0; i < 4; i++){
-    	src.x = i * 48;
+    	src.x = i * 16;
 	    src.y = 0;
-	    src.w = 48;
-	   	src.h = 48;
-	    cursor[i] =  SDL_CreateRGBSurface(0, 48, 48, 32, rmask, gmask, bmask, amask);
+	    src.w = 16;
+	   	src.h = 16;
+	    cursor[i] =  SDL_CreateRGBSurface(0, 16, 16, 32, rmask, gmask, bmask, amask);
 	    SDL_BlitSurface(cursorBuffer, &src, cursor[i], &dst);
     }
 	SDL_FreeSurface(cursorBuffer);

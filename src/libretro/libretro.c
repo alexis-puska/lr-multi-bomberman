@@ -22,10 +22,10 @@
     #include <SDL2_image/SDL_image.h>
 #endif
 
-#define VOUT_MAX_WIDTH 1920
-#define VOUT_MAX_HEIGHT 1080
-#define VOUT_WIDTH 1920
-#define VOUT_HEIGHT 1080
+#define VOUT_MAX_WIDTH 640
+#define VOUT_MAX_HEIGHT 360
+#define VOUT_WIDTH 640
+#define VOUT_HEIGHT 360
 
 enum {
     DKEY_SELECT = 0,
@@ -438,7 +438,7 @@ void retro_init(void){
     gmask = 0x0000ff00;
     bmask = 0x000000ff;
     amask = 0xff000000;
-    vout_buf = SDL_CreateRGBSurface(0, 1920, 1080, 32, rmask, gmask, bmask, amask);
+    vout_buf = SDL_CreateRGBSurface(0, 640, 360, 32, rmask, gmask, bmask, amask);
     SDL_FillRect(vout_buf, NULL, SDL_MapRGB(vout_buf->format, 255, 204, 0));
 	bomberman = newBomberman(vout_buf);
 	environ_cb(RETRO_ENVIRONMENT_GET_RUMBLE_INTERFACE, &rumble);
