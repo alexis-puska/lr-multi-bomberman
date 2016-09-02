@@ -13,6 +13,7 @@ ifeq ($(platform),)
 	endif
 endif
 
+#platform = rpi3
 
 CC ?= gcc
 CXX ?= g++
@@ -97,13 +98,13 @@ else ifeq ($(platform), rpi3)
 	SHARED := -shared -Wl,--no-undefined
 	CFLAGS += -marm -mcpu=cortex-a53 -mfpu=neon-fp-armv8 -mfloat-abi=hard
 	ASFLAGS += -mcpu=cortex-a53 -mfpu=neon-fp-armv8 -mfloat-abi=hard
-	LDFLAGS = -I/usr/include/SDL2  -lm
+	LDFLAGS = -lm
 	LIBS = -lSDL2_image -lSDL2_ttf -g `sdl2-config --static-libs` 
 	CFLAGS += `sdl2-config --cflags`
-	HAVE_NEON = 1
-	ARCH = arm
-	BUILTIN_GPU = neon
-	USE_DYNAREC = 1
+	#HAVE_NEON = 1
+	#ARCH = arm
+	#BUILTIN_GPU = neon
+	#USE_DYNAREC = 1
 
 
 # Windows
