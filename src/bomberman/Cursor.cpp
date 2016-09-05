@@ -1,7 +1,28 @@
 #include "Cursor.h"
 
+#define frameFrequence 100
+#define spriteSize 16
+#define nbFrame 4
+
+
+
+static int animateCursor(void* data)
+{
+	Cursor *cursor = ((Cursor *)data);
+	while(cursor->isAlive()){
+	    SDL_Delay(frameFrequence);
+	    cursor->setPosition(cursor->getPosition() + 1);
+	    if(cursor->getPosition() > 3){
+			cursor->setPosition(0);	
+		}
+	}
+	return 0;
+}
+
 
 Cursor::Cursor(){
+	//Initialise all image of the cursor
+	
 	//declarativ color mask, used for create a RGB surface
     Uint32 rmask, gmask, bmask, amask;
     amask = 0xff000000;
@@ -17,35 +38,55 @@ Cursor::Cursor(){
 	
 	dst.x = 0;
 	dst.y = 0;
-	dst.w = 16;
-	dst.h = 16;
-    for(int i = 0; i < 4; i++){
-    	src.x = i * 16;
+	dst.w = spriteSize;
+	dst.h = spriteSize;
+    for(int i = 0; i < nbFrame; i++){
+    	src.x = i * spriteSize;
 	    src.y = 0;
-	    src.w = 16;
-	   	src.h = 16;
-	    cursor[i] =  SDL_CreateRGBSurface(0, 16, 16, 32, rmask, gmask, bmask, amask);
+	    src.w = spriteSize;
+	   	src.h = spriteSize;
+	    cursor[i] =  SDL_CreateRGBSurface(0, spriteSize, spriteSize, 32, rmask, gmask, bmask, amask);
 	    SDL_BlitSurface(cursorBuffer, &src, cursor[i], &dst);
     }
 	SDL_FreeSurface(cursorBuffer);
 }
 
 Cursor::~Cursor(){
-	for(int i = 0; i < 4; i++){
+	stopAnimation();
+	for(int i = 0; i < nbFrame; i++){
         SDL_FreeSurface(cursor[i]);
     }
 }
 
 SDL_Surface * Cursor::getCurrentFrame(){
-	if(frame % 15 == 0){
-		position++;
-	}
-	if(frame == 61){
-		frame = 1;
-	}
-	frame++;
-	if(position > 3){
-		position = 0;	
-	}
 	return cursor[position];
+}
+
+
+bool Cursor::isAlive(){
+	return isThreadAlive;
+}
+
+int  Cursor::getPosition(){
+	return position;
+}
+void Cursor::setPosition(int newPosition){
+	position = newPosition;
+}
+
+void Cursor::startAnimation(){
+	//start the thread for animate the cursor
+	if(!isThreadAlive){
+		isThreadAlive = true;
+		cursorThread = SDL_CreateThread(animateCursor, "cursorThread", this);
+	}
+}
+
+void Cursor::stopAnimation(){
+	//stop the thread for animate the cursor
+	if(isThreadAlive){
+		isThreadAlive = false;
+		int treadResult;
+		SDL_WaitThread(cursorThread, &treadResult);
+	}
 }

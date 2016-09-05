@@ -2,10 +2,9 @@
 
 #include <time.h>
 
-
 Bomberman::Bomberman()
 {
-    //Init TTF feature
+	//Init TTF feature
     TTF_Init();
     
     srand (time(NULL));
@@ -17,6 +16,8 @@ Bomberman::Bomberman()
     bmask = 0x000000ff;
     amask = 0xff000000;
     refreshBuffer = true;
+    
+    
     
     //Load Font
     fragileBombersFont = TTF_OpenFont( "./resources/font/fragile_bombers.ttf", 16); //this opens a font style and sets a size
@@ -138,7 +139,6 @@ void Bomberman::tick(unsigned short * in_keystate, SDL_Surface * vout_buf){
     
     keyPressed(in_keystate);
     
-    
     //spash screen and start pressed !
     if(previousPlayerKeystate[0] & keyPadStart && keychange[0]){
         refreshBuffer = true;
@@ -204,30 +204,36 @@ void Bomberman::tick(unsigned short * in_keystate, SDL_Surface * vout_buf){
     switch(currentStep){
         case home:
             if(refreshBuffer){
-                
+		        cursor.stopAnimation();
                 SDL_BlitSurface(splashScreenSurface,NULL,vout_buf ,NULL);
                 refreshBuffer = false;
             }
             break;
         case PlayerTypeMenu:
+			cursor.startAnimation();
             drawPlayerTypeMenu(in_keystate, vout_buf);
             break;
         case PlayerSpriteMenu:
+	        cursor.stopAnimation();
             drawPlayerSpriteMenu(in_keystate, vout_buf);
             break;
         case gameOptionMenu:
+			cursor.startAnimation();
             drawGameOptionMenu(in_keystate, vout_buf);
             break;
         case levelSelectionMenu:
+        	cursor.stopAnimation();
             drawLevelSelectionMenu(in_keystate, vout_buf);
             break;
         case game:
+        	cursor.stopAnimation();
+       		SDL_FillRect(vout_buf, NULL, SDL_MapRGB(vout_buf->format, 152, 152, 152));
             if(refreshBuffer && previousPlayerKeystate[0] & keyPadStart && keychange[0]){
                 fprintf(stderr, "Generate Grid\n");
                 grid.configure(35,21,levelIndex);
                 refreshBuffer = false;
             }
-            SDL_BlitSurface(grid.getGrid(),NULL,vout_buf ,NULL);
+            copySurfaceToBackRenderer(grid.getGrid(),vout_buf, 5, 24);
             break;
     }
 }
