@@ -433,21 +433,7 @@ void retro_reset(void){
 }
 
 void retro_init(void){
-	
-	int i = 3;
-	int *p;
-	p = &i;
-	
-	i=4;
-	
-	int *q = p;
-	
-	fprintf(stderr, "Loaded game! %i %i %i\n", i, *p, *q);
-	
-	
-	
-	
-    Uint32 rmask, gmask, bmask, amask;
+	Uint32 rmask, gmask, bmask, amask;
     rmask = 0x00ff0000;
     gmask = 0x0000ff00;
     bmask = 0x000000ff;

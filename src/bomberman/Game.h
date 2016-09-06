@@ -9,24 +9,68 @@
 #include <time.h>
 #include <sys/time.h>
 
+#include "Grid.h"
+#include "Player.h"
+#include "Bombe.h"
+
 #ifndef __MYCLASS_GAME
 #define __MYCLASS_GAME
+
+enum keyPad{
+	keyPadSelect	= 1,
+	keyPadL3		= 2,
+	keyPadR3		= 4,
+	keyPadStart		= 8,
+	keyPadUp		= 16,
+	keyPadRight		= 32,
+	keyPadDown		= 64,
+	keyPadLeft		= 128,
+	keyPadL2		= 256,
+	keyPadR2		= 512,
+	keyPadL1		= 1024,
+	keyPadR1		= 2048,
+	keyPadX			= 4096,
+	keyPadA			= 8192,
+	keyPadB			= 16384,
+	keyPadY			= 32768	
+	};
+
+
+
 class Game
 {
 
 public:
 	Game();
+	Game(int levelIndexInformation, int playerInformation[16][2], int gameOption[4], SDL_Surface * vout_bufLibretro, unsigned short * in_keystateLibretro);
     ~Game();
 	bool isAlive();
+	bool isConfigured();
+	bool isRequestStopGame();
 	void tick();
-	void configure();
 	void startGame();
+	void stopGame();
 	void exitGame();
 private:
 	//variable
 	SDL_Thread *mainThread;
 	bool isThreadAlive;
+	bool requestStopGame;
+	bool configured;
+	//the grid
+	Grid *grid;
 	//function
+	int levelIndex;
+	bool suddenDeath;
+	bool badBomber;
+	int cpuLevel;
+	int time;
+	
+	
+	unsigned short * in_keystate;
+	SDL_Surface * vout_buf;
+	
+	void copySurfaceToBackRenderer(SDL_Surface * src, SDL_Surface * dest, int x, int y);
 	
 };
 #endif

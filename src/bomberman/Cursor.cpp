@@ -21,6 +21,7 @@ static int animateCursor(void* data)
 
 
 Cursor::Cursor(){
+    position = 0;
     
     isThreadAlive = false;
 	//Initialise all image of the cursor

@@ -3,9 +3,13 @@
 #define nbFrame 8
 
 
-Player::Player()
+Player::Player(bool isACpuPlayer, int indexSprite, float startPositionX, float startPositionY)
 {
-	    playerSprite = new SDL_Surface*[nbFrame];
+	posX = startPositionX;
+	posY = startPositionY;
+	cpu = isACpuPlayer;
+	
+	playerSprite = new SDL_Surface*[nbFrame];
 	
 	
 }

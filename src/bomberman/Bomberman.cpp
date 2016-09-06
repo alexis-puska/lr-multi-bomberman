@@ -105,38 +105,31 @@ Bomberman::Bomberman(unsigned short *in_keystateLibretro, SDL_Surface * vout_buf
             SDL_BlitSurface(textureBuffer, &srcRect, menuLevelSprite[j*3+i], &dstRect);
         }
     }
-    
-    
-    //SDL_FillRect(image1, NULL, SDL_MapRGB(image1->format, 255, 204, 0));
-    
-    //generation d'une grille de 35 sur 21 case
-    //grid.configure(35,21,8);
-    
-    SDL_FreeSurface(textureBuffer);
     game = new Game();
-    grid = new Grid();
-    game->startGame();
+    SDL_FreeSurface(textureBuffer);
 }
 
 
 
 
 Bomberman::~Bomberman()
-{
-    game->exitGame();
-    
+{   
+	
     SDL_FreeSurface(screenBuffer);
     SDL_FreeSurface(splashScreenSurface);
     SDL_FreeSurface(menuBackgroundSurface);
-    
-    
-    free(grid);
-    free(game);
     for(int i = 0; i < 8; i++){
         SDL_FreeSurface(menuPlayerSprite[i]);
     }
     TTF_CloseFont(fragileBombersFont);
     TTF_Quit();
+
+	if(game->isConfigured()){
+		if(game->isAlive()){
+			game->exitGame();
+		}	
+	}
+	free(game);
 }
 
 
@@ -150,106 +143,113 @@ void Bomberman::tick(){
     gmask = 0x0000ff00;
     bmask = 0x000000ff;
     amask = 0xff000000;
-    
-    keyPressed();
-    
-    //spash screen and start pressed !
-    if(previousPlayerKeystate[0] & keyPadStart && keychange[0]){
-        refreshBuffer = true;
-        switch(currentStep){
-            case home:
-                cursorPosition = 0;
-                currentStep = PlayerTypeMenu;
-                break;
-            case PlayerTypeMenu:
-                for(int i=0; i<16; i++){
-                    if(playerType[i][0] == 1){
-                        playerType[i][1]= (rand() % 7);
-                    }
-                }
-                cursorPosition = 0;
-                currentStep = PlayerSpriteMenu;
-                break;
-            case PlayerSpriteMenu:
-                cursorPosition = 0;
-                currentStep = gameOptionMenu;
-                break;
-            case gameOptionMenu:
-                cursorPosition = 0;
-                currentStep = levelSelectionMenu;
-                break;
-            case levelSelectionMenu:
-                cursorPosition = 0;
-                currentStep = gameStep;
-                break;
-            case gameStep:
-                break;
-        }
-    }else if(previousPlayerKeystate[0] & keyPadSelect && keychange[0]){
-        refreshBuffer = true;
-        switch(currentStep){
-            case home:
-                cursorPosition = 0;
-                break;
-            case PlayerTypeMenu:
-                cursorPosition = 0;
-                currentStep = home;
-                break;
-            case PlayerSpriteMenu:
-                cursorPosition = 0;
-                currentStep = PlayerTypeMenu;
-                break;
-            case gameOptionMenu:
-                cursorPosition = 0;
-                currentStep = PlayerSpriteMenu;
-                break;
-            case levelSelectionMenu:
-                cursorPosition = 0;
-                currentStep = gameOptionMenu;
-                break;
-            case gameStep :
-                cursorPosition = levelIndex;
-                currentStep = levelSelectionMenu;
-                break;
-        }
-    }
-    
-    
-    switch(currentStep){
-        case home:
-            if(refreshBuffer){
+    if(currentStep != gameStep){
+	    keyPressed();
+	    
+	    //spash screen and start pressed !
+	    if(previousPlayerKeystate[0] & keyPadStart && keychange[0]){
+	        refreshBuffer = true;
+	        switch(currentStep){
+	            case home:
+	                cursorPosition = 0;
+	                currentStep = PlayerTypeMenu;
+	                break;
+	            case PlayerTypeMenu:
+	                for(int i=0; i<16; i++){
+	                    if(playerType[i][0] == 1){
+	                        playerType[i][1]= (rand() % 7);
+	                    }
+	                }
+	                cursorPosition = 0;
+	                currentStep = PlayerSpriteMenu;
+	                break;
+	            case PlayerSpriteMenu:
+	                cursorPosition = 0;
+	                currentStep = gameOptionMenu;
+	                break;
+	            case gameOptionMenu:
+	                cursorPosition = 0;
+	                currentStep = levelSelectionMenu;
+	                break;
+	            case levelSelectionMenu:
+	                cursorPosition = 0;
+	                game = new Game(levelIndex, playerType,gameOption, vout_buf, in_keystate);
+	                SDL_FillRect(vout_buf, NULL, SDL_MapRGB(vout_buf->format, 152, 152, 152));
+	                currentStep = gameStep;
+	                break;
+	            case gameStep:
+	                break;
+	        }
+	    }else if(previousPlayerKeystate[0] & keyPadSelect && keychange[0]){
+	        refreshBuffer = true;
+	        switch(currentStep){
+	            case home:
+	                cursorPosition = 0;
+	                break;
+	            case PlayerTypeMenu:
+	                cursorPosition = 0;
+	                currentStep = home;
+	                break;
+	            case PlayerSpriteMenu:
+	                cursorPosition = 0;
+	                currentStep = PlayerTypeMenu;
+	                break;
+	            case gameOptionMenu:
+	                cursorPosition = 0;
+	                currentStep = PlayerSpriteMenu;
+	                break;
+	            case levelSelectionMenu:
+	                cursorPosition = 0;
+	                currentStep = gameOptionMenu;
+	                break;
+	            case gameStep :         
+	                cursorPosition = levelIndex;
+	                currentStep = levelSelectionMenu;
+	                break;
+	        }
+	    }
+	    
+	    
+	    switch(currentStep){
+	        case home:
+	            if(refreshBuffer){
+			        cursor.stopAnimation();
+	                SDL_BlitSurface(splashScreenSurface,NULL,vout_buf ,NULL);
+	                refreshBuffer = false;
+	            }
+	            break;
+	        case PlayerTypeMenu:
+				cursor.startAnimation();
+	            drawPlayerTypeMenu();
+	            break;
+	        case PlayerSpriteMenu:
 		        cursor.stopAnimation();
-                SDL_BlitSurface(splashScreenSurface,NULL,vout_buf ,NULL);
-                refreshBuffer = false;
-            }
-            break;
-        case PlayerTypeMenu:
-			cursor.startAnimation();
-            drawPlayerTypeMenu();
-            break;
-        case PlayerSpriteMenu:
-	        cursor.stopAnimation();
-            drawPlayerSpriteMenu();
-            break;
-        case gameOptionMenu:
-			cursor.startAnimation();
-            drawGameOptionMenu();
-            break;
-        case levelSelectionMenu:
-        	cursor.stopAnimation();
-            drawLevelSelectionMenu();
-            break;
-        case gameStep:
-        	cursor.stopAnimation();
-       		SDL_FillRect(vout_buf, NULL, SDL_MapRGB(vout_buf->format, 152, 152, 152));
-            if(refreshBuffer && previousPlayerKeystate[0] & keyPadStart && keychange[0]){
-                fprintf(stderr, "Generate Grid\n");
-                
-                grid->configure(levelIndex);
-                refreshBuffer = false;
-            }
-            copySurfaceToBackRenderer(grid->getGrid(),vout_buf, 5, 24);
-            break;
+	            drawPlayerSpriteMenu();
+	            break;
+	        case gameOptionMenu:
+				cursor.startAnimation();
+	            drawGameOptionMenu();
+	            break;
+	        case levelSelectionMenu:
+	        	cursor.stopAnimation();
+	            drawLevelSelectionMenu();
+	            break;
+	        case gameStep:
+	        	cursor.stopAnimation();
+	       		
+	            if(refreshBuffer && previousPlayerKeystate[0] & keyPadStart && keychange[0]){
+	                refreshBuffer = false;
+	            }
+	            break;
+	    }
+    }else{
+    	if(game->isRequestStopGame()){
+       		game->exitGame();
+       		free(game);
+       		cursorPosition = levelIndex;
+			currentStep = levelSelectionMenu;
+       	}   
+    	
     }
 }
 

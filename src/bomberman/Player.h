@@ -18,15 +18,17 @@
 class Player
 {
 public:
-	Player();
+	Player(bool isACpuPlayer, int indexSprite, float startPositionX, float startPositionY);
     ~Player();
     void doSomething();
 private:
 	/*
 	* VAR
 	*/
-//	bool cpu;
-//	int characterSpriteIndex;
+	bool cpu;
+	int characterSpriteIndex;
+	int posX;
+	int posY;
 	//image of differente sprite of player
     SDL_Surface **playerSprite;
     
