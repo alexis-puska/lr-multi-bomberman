@@ -12,6 +12,7 @@
 
 #include <stdio.h>
 #include "Grid.h"
+#include "Game.h"
 #include "Cursor.h"
 
 
@@ -21,7 +22,7 @@ enum bombermanStepEnum{
 		PlayerSpriteMenu,
 		gameOptionMenu,			//Sudden death / Bad Bomber / CPU Level
 		levelSelectionMenu,		// Select the grid design
-		game
+		gameStep
 	};
 	
 	
@@ -128,6 +129,7 @@ private:
     
     //Game Grid
     Grid grid;
+    Game game;
     
     int levelIndex;
     

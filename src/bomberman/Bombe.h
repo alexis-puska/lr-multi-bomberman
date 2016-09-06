@@ -13,27 +13,14 @@
 
 
 
-#ifndef __MYCLASS_PLAYER
-#define __MYCLASS_PLAYER
-class Player
+#ifndef __MYCLASS_BOMBE
+#define __MYCLASS_BOMBE
+class Bombe
 {
+
 public:
-	Player();
-    ~Player();
-    void doSomething();
+	Bombe();
+    ~Bombe();
 private:
-	/*
-	* VAR
-	*/
-	bool cpu;
-	int characterSpriteIndex;
-	//image of differente sprite of player
-    SDL_Surface **playerSprite;
-    
-    
-	/*
-	* FUNCTION
-	*/
-    
 };
 #endif

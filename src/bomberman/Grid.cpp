@@ -3,15 +3,24 @@
 #include <stdlib.h>
 #include <time.h>
 
+#define sizeX 35
+#define sizeY 21
+
+#define blockSizeX 18
+#define blockSizeY 16
+
+#define largeBlockSizeX 54
+#define largeBlockSizeY 48
+
+
 Grid::Grid(){
+	lvl = 0;
     init();
 }
 
 
-Grid::Grid(int x, int y, int levelIndex)
+Grid::Grid(int levelIndex)
 {
-    sizeX = x;
-    sizeY = y;
     lvl = levelIndex;
     tab = new int[sizeX * sizeY];
     init();
@@ -44,9 +53,8 @@ SDL_Surface * Grid::getGrid(){
 }
 
 
-void Grid::configure(int x, int y, int levelNumber){
-    sizeX = x;
-    sizeY = y;
+void Grid::configure(int levelNumber){
+
     lvl = levelNumber;
     tab = new int[sizeX * sizeY];
     init();
@@ -79,15 +87,15 @@ void Grid::init(){
     //CROPPING textures level
     destTextureRect.x = 0;
     destTextureRect.y = 0;
-    destTextureRect.w = 18;
-    destTextureRect.h = 16;
+    destTextureRect.w = blockSizeX;
+    destTextureRect.h = blockSizeY;
     for(int i = 0; i < 5; i++){
         for(int j = 0; j < 8 ; j++){
-            textureRect.x = i * 18;
-            textureRect.y = offset + (j * 16);
-            textureRect.w = 18;
-            textureRect.h = 16;
-            textures[i+(j*5)] =  SDL_CreateRGBSurface(0, 18, 16, 32, rmask, gmask, bmask, amask);
+            textureRect.x = i * blockSizeX;
+            textureRect.y = offset + (j * blockSizeY);
+            textureRect.w = blockSizeX;
+            textureRect.h = blockSizeY;
+            textures[i+(j*5)] =  SDL_CreateRGBSurface(0, blockSizeX, blockSizeY, 32, rmask, gmask, bmask, amask);
             SDL_BlitSurface(textureBuffer, &textureRect, textures[i+(j*5)], &destTextureRect);
         }
     }
@@ -138,38 +146,38 @@ void Grid::generateGrid(){
     SDL_Rect skyRect;
     srcrect.x = 0;
     srcrect.y = 0;
-    srcrect.w = 18;
-    srcrect.h = 16;
+    srcrect.w = blockSizeX;
+    srcrect.h = blockSizeY;
     
     skyRect.x = 0;
     skyRect.y = 0;
-    skyRect.w = 54;
-    skyRect.h = 48;
+    skyRect.w = largeBlockSizeX;
+    skyRect.h = largeBlockSizeY;
     
     for(int i = 0; i < sizeX; i++){
         for(int j = 0; j < sizeY ; j++){
-            dstrect.x = i * 18;
-            dstrect.y = j * 16;
-            dstrect.w = 18;
-            dstrect.h = 16;
-            SDL_BlitSurface(textures[18], &srcrect, theGrid, &dstrect);
+            dstrect.x = i * blockSizeX;
+            dstrect.y = j * blockSizeY;
+            dstrect.w = blockSizeX;
+            dstrect.h = blockSizeY;
+            SDL_BlitSurface(textures[blockSizeX], &srcrect, theGrid, &dstrect);
             int textureIndex = level[lvl][j][i];
             if(textureIndex < 40){
                 SDL_BlitSurface(textures[textureIndex], &srcrect, ground, &dstrect);
             }else{
-                dstrect.x = (i-1) * 18;
-                dstrect.y = (j-1) * 16;
-                dstrect.w = 54;
-                dstrect.h = 48;
+                dstrect.x = (i-1) * blockSizeX;
+                dstrect.y = (j-1) * blockSizeY;
+                dstrect.w = largeBlockSizeX;
+                dstrect.h = largeBlockSizeY;
                 SDL_BlitSurface(skys[textureIndex % 40], &skyRect, skyFixe, &dstrect);
             }
             if(tab[i+(j*sizeX)] == 2){
                 if(reservedSpot[j][i] == 0){
                     if(textureIndex == 40){
-                        dstrect.x = i * 18;
-                        dstrect.y = j * 16;
-                        dstrect.w = 18;
-                        dstrect.h = 16;
+                        dstrect.x = i * blockSizeX;
+                        dstrect.y = j * blockSizeY;
+                        dstrect.w = blockSizeX;
+                        dstrect.h = blockSizeY;
                     }
                     SDL_BlitSurface(textures[21], &srcrect, brickShadow, &dstrect);
                 }else{

@@ -21,6 +21,8 @@ static int animateCursor(void* data)
 
 
 Cursor::Cursor(){
+    
+    isThreadAlive = false;
 	//Initialise all image of the cursor
 	
 	//declarativ color mask, used for create a RGB surface

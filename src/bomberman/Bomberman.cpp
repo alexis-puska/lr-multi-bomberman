@@ -108,6 +108,7 @@ Bomberman::Bomberman()
     
     //generation d'une grille de 35 sur 21 case
     //grid.configure(35,21,8);
+    game.startGame();
 }
 
 
@@ -166,9 +167,9 @@ void Bomberman::tick(unsigned short * in_keystate, SDL_Surface * vout_buf){
                 break;
             case levelSelectionMenu:
                 cursorPosition = 0;
-                currentStep = game;
+                currentStep = gameStep;
                 break;
-            case game:
+            case gameStep:
                 break;
         }
     }else if(previousPlayerKeystate[0] & keyPadSelect && keychange[0]){
@@ -193,7 +194,7 @@ void Bomberman::tick(unsigned short * in_keystate, SDL_Surface * vout_buf){
                 cursorPosition = 0;
                 currentStep = gameOptionMenu;
                 break;
-            case game :
+            case gameStep :
                 cursorPosition = levelIndex;
                 currentStep = levelSelectionMenu;
                 break;
@@ -225,12 +226,12 @@ void Bomberman::tick(unsigned short * in_keystate, SDL_Surface * vout_buf){
         	cursor.stopAnimation();
             drawLevelSelectionMenu(in_keystate, vout_buf);
             break;
-        case game:
+        case gameStep:
         	cursor.stopAnimation();
        		SDL_FillRect(vout_buf, NULL, SDL_MapRGB(vout_buf->format, 152, 152, 152));
             if(refreshBuffer && previousPlayerKeystate[0] & keyPadStart && keychange[0]){
                 fprintf(stderr, "Generate Grid\n");
-                grid.configure(35,21,levelIndex);
+                grid.configure(levelIndex);
                 refreshBuffer = false;
             }
             copySurfaceToBackRenderer(grid.getGrid(),vout_buf, 5, 24);
@@ -451,7 +452,7 @@ void Bomberman::drawPlayerSpriteMenu(unsigned short * in_keystate, SDL_Surface *
 
 
 /*
- * Menu for game option
+ * Menu for gameStep option
  *
  *
  *

@@ -13,11 +13,11 @@ class Grid
 
 public:
     Grid();
-	Grid(int x, int y, int levelIndex);
+	Grid(int levelIndex);
     ~Grid();
     
     //configure the grid and build it
-    void configure(int x, int y, int levelNumber);
+    void configure(int levelNumber);
     
     //get Image to render in retroarch
     SDL_Surface * getGrid();
@@ -38,10 +38,6 @@ private:
     SDL_Surface *theGrid;
     
     
-    
-    
-    
-    
     //Layers to draw the game
     SDL_Surface *ground;
     SDL_Surface *brickShadow;
@@ -51,19 +47,11 @@ private:
     
     //table of free/occuped part of the grid
     int * tab;
-    
-    //size of the grid
-    int sizeX;
-    int sizeY;
-    
+        
     //level index to load the texture and level template
     int lvl;
     
-    
-    
-    
     void init();
     void generateGrid();
-    void mergeGrid();
-	
+    void mergeGrid();	
 };
