@@ -2,8 +2,8 @@
 #include "MyWrapper.h"
 
 extern "C" {
-	Bomberman* newBomberman() {
-		return new Bomberman();
+	Bomberman* newBomberman(unsigned short *in_keystate, SDL_Surface * vout_buf) {
+		return new Bomberman(in_keystate, vout_buf);
 	}
 	
 //	SDL_Surface * bomberman_getScreen(Bomberman* v) {
@@ -18,7 +18,7 @@ extern "C" {
 		delete v;
 	}
 	
-	void bomberman_tick(Bomberman *v, unsigned short *in_keystate, SDL_Surface * vout_buf){
-		v->tick(in_keystate, vout_buf);
+	void bomberman_tick(Bomberman *v){
+		v->tick();
 	}
 }

@@ -54,7 +54,8 @@ enum playerTypeEnum{
 enum gameOptionEnum{
 	suddenDeathOption		= 0,
 	badBomberOption			= 1,
-	cpuLevelOption			= 2
+	cpuLevelOption			= 2,
+	timeLevelOption			= 3
 };
 
 
@@ -64,22 +65,27 @@ class Bomberman
 {
 
 public:
-	Bomberman();
+	Bomberman(unsigned short *in_keystateLibretro, SDL_Surface * vout_bufLibretro);
     ~Bomberman();
     
     //function call for every frame
-    void tick(unsigned short *in_keystate, SDL_Surface * vout_buf);
+    void tick();
     
     //function to copy some surface into an other
     void copySurfaceToBackRenderer(SDL_Surface * src, SDL_Surface * dest, int x, int y);
 private:
 
-	void drawPlayerTypeMenu(unsigned short * in_keystate, SDL_Surface * vout_buf);
-	void drawPlayerSpriteMenu(unsigned short * in_keystate, SDL_Surface * vout_buf);
-	void drawGameOptionMenu(unsigned short * in_keystate, SDL_Surface * vout_buf);;
-	void drawLevelSelectionMenu(unsigned short * in_keystate, SDL_Surface * vout_buf);
+	void drawPlayerTypeMenu();
+	void drawPlayerSpriteMenu();
+	void drawGameOptionMenu();
+	void drawLevelSelectionMenu();
     //function to evoid key repetition
-    void keyPressed(unsigned short * in_keystate);
+    void keyPressed();
+
+
+	unsigned short * in_keystate;
+	SDL_Surface * vout_buf;
+
 
     //position index for the cursor
 	int cursorPosition;
@@ -94,11 +100,12 @@ private:
     //index 1 : sprite used for player
 	int playerType[16][2];
 	/*
-	* 0 : SuddenDeath	0 off, 1 on
-	* 1 : Bad Bomber	0 off, 1 on
-	* 2 : CPU Level		[0-3]
+	* 0 : SuddenDeath		0 off, 1 on
+	* 1 : Bad Bomber		0 off, 1 on
+	* 2 : CPU Level			[0-3]
+	* 3 : Time of a party	[-1: infiny  3-6]
 	*/
-	int gameOption[3];
+	int gameOption[4];
     
 	//buffer for draw
 	SDL_Surface *screenBuffer;
@@ -128,8 +135,8 @@ private:
     
     
     //Game Grid
-    Grid grid;
-    Game game;
+    Grid *grid;
+    Game *game;
     
     int levelIndex;
     

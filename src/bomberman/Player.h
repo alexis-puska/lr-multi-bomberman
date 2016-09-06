@@ -25,8 +25,8 @@ private:
 	/*
 	* VAR
 	*/
-	bool cpu;
-	int characterSpriteIndex;
+//	bool cpu;
+//	int characterSpriteIndex;
 	//image of differente sprite of player
     SDL_Surface **playerSprite;
     

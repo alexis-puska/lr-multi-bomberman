@@ -26,7 +26,7 @@ static int metronome(void* data)
 		delay = gameTick - milliseconds;
 
 		if(delay > 0){
-            fprintf(stderr, "game tick pause : %03ul \n", delay);
+            fprintf(stderr, "game tick pause : %i \n", (int)delay);
 			SDL_Delay(delay);
 		}else{
 			fprintf(stderr, "game tick time tooooo long !!!!\n");
@@ -50,7 +50,7 @@ void Game::configure(){
 
 void Game::tick(){
 	
-    SDL_Delay(15);
+    //SDL_Delay(15);
     
 }
 

@@ -2,7 +2,7 @@
 
 #include <time.h>
 
-Bomberman::Bomberman()
+Bomberman::Bomberman(unsigned short *in_keystateLibretro, SDL_Surface * vout_bufLibretro)
 {
 	//Init TTF feature
     TTF_Init();
@@ -17,6 +17,8 @@ Bomberman::Bomberman()
     amask = 0xff000000;
     refreshBuffer = true;
     
+    in_keystate = in_keystateLibretro;
+    vout_buf = vout_bufLibretro;
     
     
     //Load Font
@@ -43,6 +45,7 @@ Bomberman::Bomberman()
     gameOption[0] = 0;
     gameOption[1] = 0;
     gameOption[2] = 1;
+    gameOption[3] = 3;
     
     //init Sprite for menu
     menuPlayerSprite = new SDL_Surface*[8];
@@ -108,7 +111,11 @@ Bomberman::Bomberman()
     
     //generation d'une grille de 35 sur 21 case
     //grid.configure(35,21,8);
-    game.startGame();
+    
+    SDL_FreeSurface(textureBuffer);
+    game = new Game();
+    grid = new Grid();
+    game->startGame();
 }
 
 
@@ -116,9 +123,15 @@ Bomberman::Bomberman()
 
 Bomberman::~Bomberman()
 {
+    game->exitGame();
+    
     SDL_FreeSurface(screenBuffer);
     SDL_FreeSurface(splashScreenSurface);
     SDL_FreeSurface(menuBackgroundSurface);
+    
+    
+    free(grid);
+    free(game);
     for(int i = 0; i < 8; i++){
         SDL_FreeSurface(menuPlayerSprite[i]);
     }
@@ -129,7 +142,7 @@ Bomberman::~Bomberman()
 
 
 
-void Bomberman::tick(unsigned short * in_keystate, SDL_Surface * vout_buf){
+void Bomberman::tick(){
     //fprintf(stderr, "%u\n", in_keystate[0]);
     //color mask
     Uint32 rmask, gmask, bmask, amask;
@@ -138,7 +151,7 @@ void Bomberman::tick(unsigned short * in_keystate, SDL_Surface * vout_buf){
     bmask = 0x000000ff;
     amask = 0xff000000;
     
-    keyPressed(in_keystate);
+    keyPressed();
     
     //spash screen and start pressed !
     if(previousPlayerKeystate[0] & keyPadStart && keychange[0]){
@@ -212,29 +225,30 @@ void Bomberman::tick(unsigned short * in_keystate, SDL_Surface * vout_buf){
             break;
         case PlayerTypeMenu:
 			cursor.startAnimation();
-            drawPlayerTypeMenu(in_keystate, vout_buf);
+            drawPlayerTypeMenu();
             break;
         case PlayerSpriteMenu:
 	        cursor.stopAnimation();
-            drawPlayerSpriteMenu(in_keystate, vout_buf);
+            drawPlayerSpriteMenu();
             break;
         case gameOptionMenu:
 			cursor.startAnimation();
-            drawGameOptionMenu(in_keystate, vout_buf);
+            drawGameOptionMenu();
             break;
         case levelSelectionMenu:
         	cursor.stopAnimation();
-            drawLevelSelectionMenu(in_keystate, vout_buf);
+            drawLevelSelectionMenu();
             break;
         case gameStep:
         	cursor.stopAnimation();
        		SDL_FillRect(vout_buf, NULL, SDL_MapRGB(vout_buf->format, 152, 152, 152));
             if(refreshBuffer && previousPlayerKeystate[0] & keyPadStart && keychange[0]){
                 fprintf(stderr, "Generate Grid\n");
-                grid.configure(levelIndex);
+                
+                grid->configure(levelIndex);
                 refreshBuffer = false;
             }
-            copySurfaceToBackRenderer(grid.getGrid(),vout_buf, 5, 24);
+            copySurfaceToBackRenderer(grid->getGrid(),vout_buf, 5, 24);
             break;
     }
 }
@@ -261,17 +275,20 @@ void Bomberman::copySurfaceToBackRenderer(SDL_Surface * src, SDL_Surface * dest,
  *
  *
  */
-void Bomberman::drawPlayerTypeMenu(unsigned short * in_keystate, SDL_Surface * vout_buf){
+void Bomberman::drawPlayerTypeMenu(){
     Uint32 rmask, gmask, bmask, amask;
     rmask = 0x00ff0000;
     gmask = 0x0000ff00;
     bmask = 0x000000ff;
     amask = 0xff000000;
+
+    
     
     //fprintf(stderr, "%d %d\n", refreshBuffer , keychange[0]);
     if(refreshBuffer || keychange[0]){
-        SDL_BlitSurface(menuBackgroundSurface, NULL,screenBuffer  ,NULL);
-        SDL_Surface* menu;
+        SDL_BlitSurface(menuBackgroundSurface, NULL,screenBuffer ,NULL);
+	    SDL_Surface* menu;        
+        
         menu =  SDL_CreateRGBSurface(0, 574, 27, 32, rmask, gmask, bmask, amask);
         SDL_FillRect(menu, NULL, SDL_MapRGBA(menu->format, 0, 0, 0, 120));
         copySurfaceToBackRenderer(menu, screenBuffer , 33, 150);
@@ -322,8 +339,9 @@ void Bomberman::drawPlayerTypeMenu(unsigned short * in_keystate, SDL_Surface * v
             if(playerType[cursorPosition][0]<0){
                 playerType[cursorPosition][0] = 2;
             }
-        }
-        
+        } 
+        SDL_Surface* surfaceMessage1;
+        SDL_Surface* surfaceMessage2;
         for(int j=0 ; j<4 ; j++){
             for(int i=0 ; i<4 ; i++){
                 char playerName[15] = "Joueur ";
@@ -345,13 +363,17 @@ void Bomberman::drawPlayerTypeMenu(unsigned short * in_keystate, SDL_Surface * v
                         playerColor = red;
                         break;
                 }
-                SDL_Surface* surfaceMessage1 = TTF_RenderText_Solid(fragileBombersFont, playerTypeName, playerColor);
-                SDL_Surface* surfaceMessage2 = TTF_RenderText_Solid(fragileBombersFont, playerName, green);
+                surfaceMessage1 = TTF_RenderText_Solid(fragileBombersFont, playerTypeName, playerColor);
+                surfaceMessage2 = TTF_RenderText_Solid(fragileBombersFont, playerName, green);
                 copySurfaceToBackRenderer(surfaceMessage1, screenBuffer, 123+(j*133), 187+(i*20));
                 copySurfaceToBackRenderer(surfaceMessage2, screenBuffer, 56+(j*133), 187+(i*20));
             }
         }
         refreshBuffer = false;
+        SDL_FreeSurface(menu);
+	    SDL_FreeSurface(surfaceMessage);
+    	SDL_FreeSurface(surfaceMessage1);
+	    SDL_FreeSurface(surfaceMessage2);
         
     }
     int cursorPosX = 36 + (((cursorPosition - (cursorPosition % 4))/4)*133);
@@ -373,7 +395,7 @@ void Bomberman::drawPlayerTypeMenu(unsigned short * in_keystate, SDL_Surface * v
  *
  *
  */
-void Bomberman::drawPlayerSpriteMenu(unsigned short * in_keystate, SDL_Surface * vout_buf){
+void Bomberman::drawPlayerSpriteMenu(){
     
     if(refreshBuffer || anyPlayerkeychange){
         Uint32 rmask, gmask, bmask, amask;
@@ -442,6 +464,8 @@ void Bomberman::drawPlayerSpriteMenu(unsigned short * in_keystate, SDL_Surface *
             }
         }
         refreshBuffer = false;
+        SDL_FreeSurface(menu);
+	    SDL_FreeSurface(surfaceMessage);
         copySurfaceToBackRenderer(screenBuffer, vout_buf, 0, 0);
     }
 }
@@ -458,7 +482,7 @@ void Bomberman::drawPlayerSpriteMenu(unsigned short * in_keystate, SDL_Surface *
  *
  *
  */
-void Bomberman::drawGameOptionMenu(unsigned short * in_keystate, SDL_Surface * vout_buf){
+void Bomberman::drawGameOptionMenu(){
     if(refreshBuffer || keychange[0]){
         Uint32 rmask, gmask, bmask, amask;
         rmask = 0x00ff0000;
@@ -467,7 +491,6 @@ void Bomberman::drawGameOptionMenu(unsigned short * in_keystate, SDL_Surface * v
         amask = 0xff000000;
         
         if(previousPlayerKeystate[0] & keyPadRight && keychange[0]){
-            
             switch(cursorPosition){
                 case suddenDeathOption:
                 case badBomberOption:
@@ -483,6 +506,14 @@ void Bomberman::drawGameOptionMenu(unsigned short * in_keystate, SDL_Surface * v
                         gameOption[cursorPosition] = 3;
                     }else if(gameOption[cursorPosition] >3){
                         gameOption[cursorPosition] = 1;
+                    }
+                    break;
+                case timeLevelOption:
+                    gameOption[cursorPosition] = gameOption[cursorPosition] +1;
+                    if(gameOption[cursorPosition] >6){
+                        gameOption[cursorPosition] = -1;
+                    }else if(gameOption[cursorPosition] == 0){
+                        gameOption[cursorPosition] = 3;
                     }
                     break;
             }
@@ -505,18 +536,27 @@ void Bomberman::drawGameOptionMenu(unsigned short * in_keystate, SDL_Surface * v
                         gameOption[cursorPosition] = 1;
                     }
                     break;
+                 case timeLevelOption:
+                    gameOption[cursorPosition] = gameOption[cursorPosition] -1;
+                    if(gameOption[cursorPosition] == 2){
+                        gameOption[cursorPosition] = -1;
+                    }else if(gameOption[cursorPosition] == -2){
+                        gameOption[cursorPosition] = 6;
+                    }
+                    break;
+
             }
         }
         if(previousPlayerKeystate[0] & keyPadDown && keychange[0]){
             cursorPosition++;
-            if(cursorPosition > 2){
+            if(cursorPosition > 3){
                 cursorPosition = 0;
             }
         }
         if(previousPlayerKeystate[0] & keyPadUp && keychange[0]){
             cursorPosition--;
             if(cursorPosition < 0){
-                cursorPosition = 2;
+                cursorPosition = 3;
             }
         }
         
@@ -543,6 +583,8 @@ void Bomberman::drawGameOptionMenu(unsigned short * in_keystate, SDL_Surface * v
         copySurfaceToBackRenderer(surfaceMessage, screenBuffer, 200, 207);
         surfaceMessage = TTF_RenderText_Solid(fragileBombersFont, "CPU Level", green);
         copySurfaceToBackRenderer(surfaceMessage, screenBuffer, 200, 227);
+        surfaceMessage = TTF_RenderText_Solid(fragileBombersFont, "Time", green);
+        copySurfaceToBackRenderer(surfaceMessage, screenBuffer, 200, 247);
         
         surfaceMessage = TTF_RenderText_Solid(fragileBombersFont, gameOption[0] == 1 ? "ON" : "OFF", gameOption[0] == 1 ? green : red);
         copySurfaceToBackRenderer(surfaceMessage, screenBuffer, 400, 187);
@@ -553,7 +595,18 @@ void Bomberman::drawGameOptionMenu(unsigned short * in_keystate, SDL_Surface * v
         sprintf(CPULevel, "%i", gameOption[2]);
         surfaceMessage = TTF_RenderText_Solid(fragileBombersFont, CPULevel, blue);
         copySurfaceToBackRenderer(surfaceMessage, screenBuffer, 400, 227);
+        
+        char timeOfLevel[7];
+        if(gameOption[3] != -1){
+        	sprintf(timeOfLevel, "%i", gameOption[3]);
+        }else{
+        	sprintf(timeOfLevel, "infini");
+        }
+        surfaceMessage = TTF_RenderText_Solid(fragileBombersFont, timeOfLevel, blue);
+        copySurfaceToBackRenderer(surfaceMessage, screenBuffer, 400, 247);
         refreshBuffer = false;
+        SDL_FreeSurface(menu);
+	    SDL_FreeSurface(surfaceMessage);
     }
     int cursorPosX = 183;
     int cursorposY = 187 + ( cursorPosition * 20 );	
@@ -576,7 +629,7 @@ void Bomberman::drawGameOptionMenu(unsigned short * in_keystate, SDL_Surface * v
  * 
  * 
  */
-void Bomberman::drawLevelSelectionMenu(unsigned short * in_keystate, SDL_Surface * vout_buf){
+void Bomberman::drawLevelSelectionMenu(){
     if(refreshBuffer || keychange[0]){
         Uint32 rmask, gmask, bmask, amask;
         rmask = 0x00ff0000;
@@ -622,13 +675,15 @@ void Bomberman::drawLevelSelectionMenu(unsigned short * in_keystate, SDL_Surface
         copySurfaceToBackRenderer(menuLevelSprite[cursorPosition], screenBuffer, ((640/2)-(menuLevelSprite[cursorPosition]->w/2)), 200);
         
         refreshBuffer = false;
+        SDL_FreeSurface(menu);
+	    SDL_FreeSurface(surfaceMessage);
         levelIndex = cursorPosition;
     }
     copySurfaceToBackRenderer(screenBuffer, vout_buf, 0, 0);
 }
 
 
-void Bomberman::keyPressed(unsigned short * in_keystate){
+void Bomberman::keyPressed(){
     anyPlayerkeychange = false;
     for(int i = 0; i < 16 ; i++){
         if(previousPlayerKeystate[i] != in_keystate[i]){
