@@ -30,6 +30,9 @@ OBJS += src/libretro/libretro.o
 OBJS += src/bomberman/Bomberman.o
 OBJS += src/bomberman/MyWrapper.o
 OBJS += src/bomberman/Grid.o
+OBJS += src/bomberman/Game.o
+OBJS += src/bomberman/Player.o
+OBJS += src/bomberman/Bombe.o
 OBJS += src/bomberman/Cursor.o
 
 
