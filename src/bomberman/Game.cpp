@@ -46,21 +46,21 @@ Game::Game(int levelIndexInformation, int playerInformation[16][2], int gameOpti
 	configured = true;
 	requestStopGame = false;
 	
-	int levelIndex = levelIndexInformation;
+	levelIndex = levelIndexInformation;
 	if(gameOption[0] == 1){
-		bool suddenDeath = true;
+		suddenDeath = true;
 	}else{
-		bool suddenDeath = false;
+		suddenDeath = false;
 	}
 	
 	if(gameOption[1] == 1){
-		bool badBomber = true;
+		badBomber = true;
 	}else{
-		bool badBomber = false;
+		badBomber = false;
 	}
 		
-	int cpuLevel = gameOption[2];
-	int time = gameOption[3];
+	cpuLevel = gameOption[2];
+	time = gameOption[3];
 	
 	
 	in_keystate = in_keystateLibretro;

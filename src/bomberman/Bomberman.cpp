@@ -2,6 +2,22 @@
 
 #include <time.h>
 
+const static char *levelView = "./resources/sprite/level/LevelView.png";
+const static char *splashScreen = "./resources/image/SplashScreen.png";
+const static char *menuBackground = "./resources/image/MenuBackground.png";
+
+
+const static char *BombermanSpriteCossak = "./resources/sprite/characters/AllBombermanCossak.png";
+const static char *BombermanSprite = "./resources/sprite/characters/AllBomberman.png";
+const static char *BombermanSpriteBarbar = "./resources/sprite/characters/AllBombermanBarbar.png";
+const static char *BombermanSpriteChan = "./resources/sprite/characters/AllBombermanChan.png";
+const static char *BombermanSpriteKid = "./resources/sprite/characters/AllBombermanKid.png";
+const static char *BombermanSpritePretty = "./resources/sprite/characters/AllBombermanPretty.png";
+const static char *BombermanSpritePunk = "./resources/sprite/characters/AllBombermanPunk.png";
+const static char *BombermanSpriteMexican = "./resources/sprite/characters/AllBombermanMexican.png";
+
+
+
 Bomberman::Bomberman(unsigned short *in_keystateLibretro, SDL_Surface * vout_bufLibretro)
 {
 	//Init TTF feature
@@ -138,11 +154,6 @@ Bomberman::~Bomberman()
 void Bomberman::tick(){
     //fprintf(stderr, "%u\n", in_keystate[0]);
     //color mask
-    Uint32 rmask, gmask, bmask, amask;
-    rmask = 0x00ff0000;
-    gmask = 0x0000ff00;
-    bmask = 0x000000ff;
-    amask = 0xff000000;
     if(currentStep != gameStep){
 	    keyPressed();
 	    

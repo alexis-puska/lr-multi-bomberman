@@ -4,8 +4,9 @@
 #else
 #include <SDL2_image/SDL_image.h>
 #endif
-#include "../include/image_ressource.h"
 #include "../include/level.h"
+
+
 
 
 class Grid

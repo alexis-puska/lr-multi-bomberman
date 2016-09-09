@@ -9,7 +9,7 @@
 #endif
 #include <stdio.h>
 
-const static char *cursorSprite = "./resources/sprite/other/Cursor.png";
+
 
 #ifndef __MYCLASS_J
 #define __MYCLASS_J

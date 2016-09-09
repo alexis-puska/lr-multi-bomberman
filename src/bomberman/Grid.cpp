@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
+#include <vector>
 
 #define sizeX 35
 #define sizeY 21
@@ -13,6 +14,8 @@
 #define largeBlockSizeY 48
 
 
+const static char *levelSprite = "./resources/sprite/level/AllLevel.png";
+
 Grid::Grid(){
 	lvl = 0;
     init();
@@ -21,6 +24,26 @@ Grid::Grid(){
 
 Grid::Grid(int levelIndex)
 {
+	
+//	 std::vector<int> myvector;
+//
+//	  // set some values (from 1 to 10)
+//	  for (int i=0; i<=9; i++) myvector.push_back(i);
+//	
+//	
+//	
+//	for(int i=0;i<myvector.size();i++){
+//		
+//		if(myvector[i] == 6 || myvector[i] == 2 || myvector[i] == 8){
+//			  myvector.erase (myvector.begin()+i);			
+//		}
+//	}
+//	for (unsigned i=0; i<myvector.size(); ++i)
+//		fprintf(stderr,"%i", myvector[i]);
+//		fprintf(stderr,"\n\n");
+//	
+//
+	
     lvl = levelIndex;
     tab = new int[sizeX * sizeY];
     init();
@@ -49,7 +72,7 @@ Grid::~Grid()
 
 SDL_Surface * Grid::getGrid(){
     mergeGrid();
-	return theGrid;
+    return theGrid;
 }
 
 
@@ -191,7 +214,7 @@ void Grid::generateGrid(){
 }
 
 void Grid::mergeGrid(){
-    SDL_Rect mergeRect;
+	SDL_Rect mergeRect;
     mergeRect.x = 0;
     mergeRect.y = 0;
     mergeRect.w = 630;

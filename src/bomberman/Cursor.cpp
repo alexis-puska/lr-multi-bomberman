@@ -4,7 +4,7 @@
 #define spriteSize 16
 #define nbFrame 4
 
-
+const static char *cursorSprite = "./resources/sprite/other/Cursor.png";
 
 static int animateCursor(void* data)
 {
