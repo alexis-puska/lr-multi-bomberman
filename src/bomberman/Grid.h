@@ -21,7 +21,9 @@ public:
     void configure(int levelNumber);
     
     //get Image to render in retroarch
-    SDL_Surface * getGrid();
+	SDL_Surface * getGroundLayer();
+	SDL_Surface * getSkyLayer();
+	SDL_Surface * getBricksLayer();
     
 private:
     
@@ -35,16 +37,10 @@ private:
     SDL_Surface **textures;
 	SDL_Surface **skys;
     
-    //Final image to renderer
-    SDL_Surface *theGrid;
-    
-    
     //Layers to draw the game
     SDL_Surface *ground;
     SDL_Surface *brickShadow;
-    SDL_Surface *playersBombes;
     SDL_Surface *skyFixe;
-    SDL_Surface *skyMove;
     
     //table of free/occuped part of the grid
     int * tab;
@@ -54,5 +50,4 @@ private:
     
     void init();
     void generateGrid();
-    void mergeGrid();	
 };

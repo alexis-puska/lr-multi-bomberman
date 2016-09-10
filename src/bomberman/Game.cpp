@@ -36,12 +36,26 @@ static int metronome(void* data)
 }
 
 Game::Game(){
+	//declarativ color mask, used for create a RGB surface
+    Uint32 rmask, gmask, bmask, amask;
+    amask = 0xff000000;
+    rmask = 0x00ff0000;
+    gmask = 0x0000ff00;
+    bmask = 0x000000ff;
+	screenBuffer = SDL_CreateRGBSurface(0, 630, 336, 32, rmask, gmask, bmask, amask);
 	isThreadAlive = false;
 	configured = false;
 	requestStopGame = false;
 }
 
 Game::Game(int levelIndexInformation, int playerInformation[16][2], int gameOption[4], SDL_Surface *  vout_bufLibretro, unsigned short * in_keystateLibretro){
+	//declarativ color mask, used for create a RGB surface
+    Uint32 rmask, gmask, bmask, amask;
+    amask = 0xff000000;
+    rmask = 0x00ff0000;
+    gmask = 0x0000ff00;
+    bmask = 0x000000ff;
+	screenBuffer = SDL_CreateRGBSurface(0, 630, 336, 32, rmask, gmask, bmask, amask);
 	isThreadAlive = false;
 	configured = true;
 	requestStopGame = false;
@@ -69,12 +83,13 @@ Game::Game(int levelIndexInformation, int playerInformation[16][2], int gameOpti
 	fprintf(stderr, "generate one grid\n");
 	grid = new Grid(levelIndexInformation);
 	
-	copySurfaceToBackRenderer(grid->getGrid(),vout_buf, 5, 24);
+	mergeScreen();
 	startGame();
 }
 
 Game::~Game(){
-	exitGame();	
+	exitGame();
+	SDL_FreeSurface(screenBuffer);
 }
 
 void Game::startGame(){
@@ -92,7 +107,7 @@ void Game::exitGame(){
 void Game::stopGame(){
 	if(isThreadAlive){
 		isThreadAlive = false;
-		int treadResult;
+		int treadResult = 0;
 		SDL_WaitThread(mainThread, &treadResult);
 		fprintf(stderr, "result stop thread %i\n", treadResult);
 	}
@@ -128,6 +143,19 @@ void Game::tick(){
 	if(in_keystate[0] & keyPadB && !requestStopGame){
 		requestStopGame = true;		
 	}
+	mergeScreen();
+}
 
-	copySurfaceToBackRenderer(grid->getGrid(),vout_buf, 5, 24);
+
+    
+void Game::mergeScreen(){
+	SDL_Rect mergeRect;
+    mergeRect.x = 0;
+    mergeRect.y = 0;
+    mergeRect.w = 630;
+    mergeRect.h = 336;
+    SDL_BlitSurface(grid->getGroundLayer()	, &mergeRect, screenBuffer, &mergeRect);
+    SDL_BlitSurface(grid->getSkyLayer()		, &mergeRect, screenBuffer, &mergeRect);
+    SDL_BlitSurface(grid->getBricksLayer()	, &mergeRect, screenBuffer, &mergeRect);
+    copySurfaceToBackRenderer(screenBuffer, vout_buf, 5, 24);
 }

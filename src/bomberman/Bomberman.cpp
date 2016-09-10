@@ -139,13 +139,14 @@ Bomberman::~Bomberman()
     }
     TTF_CloseFont(fragileBombersFont);
     TTF_Quit();
-
-	if(game->isConfigured()){
-		if(game->isAlive()){
-			game->exitGame();
-		}	
+	if(game != NULL){
+		if(game->isConfigured()){
+			if(game->isAlive()){
+				game->exitGame();
+				free(game);
+			}	
+		}
 	}
-	free(game);
 }
 
 

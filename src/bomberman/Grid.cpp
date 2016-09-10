@@ -63,17 +63,23 @@ Grid::~Grid()
     }
     SDL_FreeSurface(ground);
     SDL_FreeSurface(brickShadow);
-    SDL_FreeSurface(playersBombes);
     SDL_FreeSurface(skyFixe);
-    SDL_FreeSurface(skyMove);
-    SDL_FreeSurface(theGrid);
 }
 
 
-SDL_Surface * Grid::getGrid(){
-    mergeGrid();
-    return theGrid;
+
+SDL_Surface * Grid::getGroundLayer(){
+    return ground;
 }
+
+SDL_Surface * Grid::getSkyLayer(){
+    return brickShadow;
+}
+
+SDL_Surface * Grid::getBricksLayer(){
+    return skyFixe;
+}
+
 
 
 void Grid::configure(int levelNumber){
@@ -136,13 +142,9 @@ void Grid::init(){
         SDL_BlitSurface(textureBuffer, &skyRect, skys[k], &destTextureRect);
     }
     
-    theGrid = SDL_CreateRGBSurface(0, 630, 336, 32, rmask, gmask, bmask, amask);
     ground = SDL_CreateRGBSurface(0, 630, 336, 32, rmask, gmask, bmask, amask);
     brickShadow = SDL_CreateRGBSurface(0, 630, 336, 32, rmask, gmask, bmask, amask);
-    playersBombes = SDL_CreateRGBSurface(0, 630, 336, 32, rmask, gmask, bmask, amask);
     skyFixe = SDL_CreateRGBSurface(0, 630, 336, 32, rmask, gmask, bmask, amask);
-    skyMove = SDL_CreateRGBSurface(0, 630, 336, 32, rmask, gmask, bmask, amask);
-    SDL_FillRect(theGrid, NULL, SDL_MapRGB(theGrid->format, 255, 204, 0));
     SDL_FreeSurface(textureBuffer);
 }
 
@@ -183,8 +185,8 @@ void Grid::generateGrid(){
             dstrect.y = j * blockSizeY;
             dstrect.w = blockSizeX;
             dstrect.h = blockSizeY;
-            SDL_BlitSurface(textures[blockSizeX], &srcrect, theGrid, &dstrect);
             int textureIndex = level[lvl][j][i];
+            SDL_BlitSurface(textures[18], &srcrect, ground, &dstrect);
             if(textureIndex < 40){
                 SDL_BlitSurface(textures[textureIndex], &srcrect, ground, &dstrect);
             }else{
@@ -210,18 +212,6 @@ void Grid::generateGrid(){
             }
         }
     }
-    mergeGrid();
 }
 
-void Grid::mergeGrid(){
-	SDL_Rect mergeRect;
-    mergeRect.x = 0;
-    mergeRect.y = 0;
-    mergeRect.w = 630;
-    mergeRect.h = 336;
-    SDL_BlitSurface(ground          , &mergeRect, theGrid, &mergeRect);
-    SDL_BlitSurface(brickShadow     , &mergeRect, theGrid, &mergeRect);
-    SDL_BlitSurface(playersBombes   , &mergeRect, theGrid, &mergeRect);
-    SDL_BlitSurface(skyFixe         , &mergeRect, theGrid, &mergeRect);
-    SDL_BlitSurface(skyMove         , &mergeRect, theGrid, &mergeRect);
-}
+

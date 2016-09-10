@@ -54,6 +54,7 @@ public:
 private:
 	//variable
 	SDL_Thread *mainThread;
+	SDL_Surface * screenBuffer;
 	bool isThreadAlive;
 	bool requestStopGame;
 	bool configured;
@@ -71,6 +72,7 @@ private:
 	SDL_Surface * vout_buf;
 	
 	void copySurfaceToBackRenderer(SDL_Surface * src, SDL_Surface * dest, int x, int y);
+	void mergeScreen();
 	
 };
 #endif
