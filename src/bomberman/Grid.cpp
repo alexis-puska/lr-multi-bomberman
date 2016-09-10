@@ -73,11 +73,11 @@ SDL_Surface * Grid::getGroundLayer(){
 }
 
 SDL_Surface * Grid::getSkyLayer(){
-    return brickShadow;
+	return skyFixe;
 }
 
 SDL_Surface * Grid::getBricksLayer(){
-    return skyFixe;
+	return brickShadow;
 }
 
 

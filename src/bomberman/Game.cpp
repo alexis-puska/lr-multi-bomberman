@@ -155,7 +155,8 @@ void Game::mergeScreen(){
     mergeRect.w = 630;
     mergeRect.h = 336;
     SDL_BlitSurface(grid->getGroundLayer()	, &mergeRect, screenBuffer, &mergeRect);
-    SDL_BlitSurface(grid->getSkyLayer()		, &mergeRect, screenBuffer, &mergeRect);
     SDL_BlitSurface(grid->getBricksLayer()	, &mergeRect, screenBuffer, &mergeRect);
+    SDL_BlitSurface(grid->getSkyLayer()		, &mergeRect, screenBuffer, &mergeRect);
+    
     copySurfaceToBackRenderer(screenBuffer, vout_buf, 5, 24);
 }
