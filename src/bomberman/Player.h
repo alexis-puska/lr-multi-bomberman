@@ -20,7 +20,7 @@ class Player
 public:
 	Player(unsigned short * in_keystateLibretro, bool isACpuPlayer, int indexSprite, float startPositionX, float startPositionY, int playerNumberLibretro);
     ~Player();
-    void doSomething();
+    void doSomething(SDL_Surface * surfaceToDraw);
 private:
 	/*
 	* VAR
@@ -28,19 +28,15 @@ private:
 	bool cpu;
 	int playerNumber;
 	int characterSpriteIndex;
-	int posX;
-	int posY;
+	float posX;
+	float posY;
 	//image of differente sprite of player
     SDL_Surface **playerSprite;
     unsigned short * in_keystate;
-    
-    
-    
-    
-    
-	/*
+	int previousDirection;
+    /*
 	* FUNCTION
 	*/
-    
+
 };
 #endif

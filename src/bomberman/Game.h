@@ -8,6 +8,8 @@
 #include <stdio.h>
 #include <time.h>
 #include <sys/time.h>
+#include <vector>
+#include <algorithm>
 
 #include "Grid.h"
 #include "Player.h"
@@ -35,8 +37,6 @@ enum keyPad{
 	keyPadY			= 32768	
 	};
 
-
-
 class Game
 {
 
@@ -55,6 +55,7 @@ private:
 	//variable
 	SDL_Thread *mainThread;
 	SDL_Surface * screenBuffer;
+	SDL_Surface * playerBombeExplode;
 	bool isThreadAlive;
 	bool requestStopGame;
 	bool configured;
@@ -70,6 +71,7 @@ private:
 	
 	unsigned short * in_keystate;
 	SDL_Surface * vout_buf;
+	std::vector<Player *>players;
 	
 	void copySurfaceToBackRenderer(SDL_Surface * src, SDL_Surface * dest, int x, int y);
 	void mergeScreen();
