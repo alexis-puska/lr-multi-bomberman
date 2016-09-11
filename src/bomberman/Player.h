@@ -11,6 +11,8 @@
 
 #include <stdio.h>
 
+#define sizeX 35
+#define sizeY 21
 
 
 #ifndef __MYCLASS_PLAYER
@@ -18,7 +20,7 @@
 class Player
 {
 public:
-	Player(unsigned short * in_keystateLibretro, bool isACpuPlayer, int indexSprite, float startPositionX, float startPositionY, int playerNumberLibretro);
+	Player(unsigned short * in_keystateLibretro, bool isACpuPlayer, int indexSprite, float startPositionX, float startPositionY, int playerNumberLibretro, int tab[sizeX * sizeY]);
     ~Player();
     void doSomething(SDL_Surface * surfaceToDraw);
 private:
@@ -30,6 +32,9 @@ private:
 	int characterSpriteIndex;
 	float posX;
 	float posY;
+	
+	//pointer to the grid element;
+	int * tab;
 	//image of differente sprite of player
     SDL_Surface **playerSprite;
     unsigned short * in_keystate;

@@ -450,6 +450,7 @@ void retro_init(void){
 
 void retro_deinit(void){
 	deleteBomberman(bomberman);
+	SDL_FreeSurface(vout_buf);
 }
 
 void retro_run(void){

@@ -4,8 +4,7 @@
 #include <time.h>
 #include <vector>
 
-#define sizeX 35
-#define sizeY 21
+
 
 #define blockSizeX 18
 #define blockSizeY 16
@@ -22,7 +21,7 @@ Grid::Grid(){
 }
 
 
-Grid::Grid(int levelIndex)
+Grid::Grid(int levelIndex, int table[sizeX * sizeY])
 {
 	
 //	 std::vector<int> myvector;
@@ -45,7 +44,7 @@ Grid::Grid(int levelIndex)
 //
 	
     lvl = levelIndex;
-    tab = new int[sizeX * sizeY];
+    tab = table;
     init();
     generateGrid();
 }
@@ -61,9 +60,13 @@ Grid::~Grid()
     for(i = 0; i < 2; i++){
         SDL_FreeSurface(skys[i]);
     }
+    free(textures);
+    free(skys);
+    
     SDL_FreeSurface(ground);
     SDL_FreeSurface(brickShadow);
     SDL_FreeSurface(skyFixe);
+    free(tab);
 }
 
 

@@ -5,6 +5,12 @@
 #define nb_imageY 7
 #define sprite_sizeW 30 
 #define sprite_sizeH 42
+#define blockSizeX 18
+#define blockSizeY 16
+
+#define stepOfPlayerY 0.08
+#define stepOfPlayerX 0.08
+#define nbFrameIncAnimation 5
 
 const static char *BombermanSprite = "./resources/sprite/characters/AllBomberman.png";
 const static char *BombermanSpriteCossak = "./resources/sprite/characters/AllBombermanCossak.png";
@@ -53,11 +59,8 @@ enum playerSprite{
 	mexican		= 7	
 };
 
-#define stepOfPlayer 1.2
-#define nbFrameIncAnimation 5
 
-
-Player::Player(unsigned short * in_keystateLibretro, bool isACpuPlayer, int indexSprite, float startPositionX, float startPositionY, int playerNumberLibretro)
+Player::Player(unsigned short * in_keystateLibretro, bool isACpuPlayer, int indexSprite, float startPositionX, float startPositionY, int playerNumberLibretro, int table[sizeX * sizeY])
 {
 	previousDirection = down;
 	Uint32 rmask, gmask, bmask, amask;
@@ -115,9 +118,10 @@ Player::Player(unsigned short * in_keystateLibretro, bool isACpuPlayer, int inde
 		}
 	}
 	
-	posX = startPositionX*18;
-	posY = startPositionY*16;
+	posX = startPositionX;
+	posY = startPositionY;
 	cpu = isACpuPlayer;
+	tab = table;
 	playerNumber = playerNumberLibretro;
 	characterSpriteIndex = indexSprite;
 	in_keystate = in_keystateLibretro;
@@ -129,6 +133,9 @@ Player::~Player()
 	for(int i = 0; i < nbFrame; i++){
 		SDL_FreeSurface(playerSprite[i]);
 	}
+	free(in_keystate);
+	free(tab);
+	free(playerSprite);
 }
 
 void Player::doSomething(SDL_Surface * surfaceToDraw){
@@ -137,29 +144,56 @@ void Player::doSomething(SDL_Surface * surfaceToDraw){
 		
 	}else{
 		unsigned short keystate = *in_keystate;
+		
+		int roundX = 0;
+		int roundY = 0;
+		if((posX - floor(posX)) <= 0.5){
+			roundX = floor(posX);
+		}else{
+			roundX = ceil(posX);
+		}
+		if((posY - floor(posY)) <= 0.5){
+			roundY = floor(posY);
+		}else{
+			roundY = ceil(posY);
+		}
+		
+		
 		if(keystate & keyPadLeft){
-			posX = posX - stepOfPlayer;
+				posX = ( posX - stepOfPlayerX );
+
 			previousDirection = left;
 		}
 		if(keystate & keyPadRight){
-			posX = posX + stepOfPlayer;
+				posX = ( posX + stepOfPlayerX );
 			previousDirection = right;
 		}
+		
+		
 		if(keystate & keyPadDown){
-			posY = posY + stepOfPlayer;
+				posY = ( posY + stepOfPlayerY );
 			previousDirection = down;
 		}
 		if(keystate & keyPadUp){
-			posY = posY - stepOfPlayer;
+				posY = ( posY - stepOfPlayerY );
 			previousDirection = up;
 		}
 		
+				
+		
+		
+		if(playerNumber == 0)
+		fprintf(stderr, "%i %f %i %f",roundX, posX,roundY, posY);
 	}
+	
+	
+	
+	
 	
 	SDL_Rect srcTextureRect;
 	SDL_Rect destTextureRect;
-	destTextureRect.x = posX-6;
-    destTextureRect.y = posY-26;
+	destTextureRect.x = (posX * blockSizeX) - 6;
+    destTextureRect.y = (posY * blockSizeY) - 32;
     destTextureRect.w = sprite_sizeW;
     destTextureRect.h = sprite_sizeH;
 	srcTextureRect.x = 0;

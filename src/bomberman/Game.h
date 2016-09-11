@@ -61,6 +61,8 @@ private:
 	bool configured;
 	//the grid
 	Grid *grid;
+	//table of free/occuped part of the grid
+    int * tab;
 	//function
 	int levelIndex;
 	bool suddenDeath;

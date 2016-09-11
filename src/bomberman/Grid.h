@@ -7,6 +7,9 @@
 #include "../include/level.h"
 
 
+#define sizeX 35
+#define sizeY 21
+
 
 
 class Grid
@@ -14,7 +17,7 @@ class Grid
 
 public:
     Grid();
-	Grid(int levelIndex);
+	Grid(int levelIndex, int table[sizeX * sizeY]);
     ~Grid();
     
     //configure the grid and build it

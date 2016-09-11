@@ -2,6 +2,8 @@
 
 
 #define gameTick 20
+#define sizeX 35
+#define sizeY 21
 
 Uint32 rmask, gmask, bmask, amask;
 
@@ -47,6 +49,7 @@ Game::Game(){
 	isThreadAlive = false;
 	configured = false;
 	requestStopGame = false;
+	tab = new int[sizeX * sizeY];
 }
 
 Game::Game(int levelIndexInformation, int playerInformation[16][2], int gameOption[4], SDL_Surface *  vout_bufLibretro, unsigned short * in_keystateLibretro){
@@ -57,6 +60,7 @@ Game::Game(int levelIndexInformation, int playerInformation[16][2], int gameOpti
 	isThreadAlive = false;
 	configured = true;
 	requestStopGame = false;
+	tab = new int[sizeX * sizeY];
 	
 	levelIndex = levelIndexInformation;
 	if(gameOption[0] == 1){
@@ -79,14 +83,14 @@ Game::Game(int levelIndexInformation, int playerInformation[16][2], int gameOpti
 	vout_buf = vout_bufLibretro;
 	
 	fprintf(stderr, "generate one grid\n");
-	grid = new Grid(levelIndexInformation);
+	grid = new Grid(levelIndexInformation, tab);
 	
 	for(int i = 0; i < 16; i++){
 		
 		int indexTexture = playerInformation[i][1];
 		int startX = startPlayer[i][0];
 		int startY = startPlayer[i][1];
-		Player * player = new Player(&in_keystate[i], false , indexTexture , startX, startY, i);
+		Player * player = new Player(&in_keystate[i], false , indexTexture , startX, startY, i, tab);
 		players.push_back(player);
 	}
 	
@@ -108,6 +112,10 @@ Game::Game(int levelIndexInformation, int playerInformation[16][2], int gameOpti
 
 Game::~Game(){
 	exitGame();
+	free(grid);
+	free(tab);
+	free(in_keystate);
+	SDL_FreeSurface(vout_buf);
 	SDL_FreeSurface(screenBuffer);
 	SDL_FreeSurface(playerBombeExplode);
 }
@@ -121,7 +129,6 @@ void Game::startGame(){
 
 void Game::exitGame(){
 	stopGame();
-	free(grid);
 }
 
 void Game::stopGame(){
@@ -169,7 +176,6 @@ void Game::tick(){
 		requestStopGame = true;		
 	}
 	
-	//playerBombeExplode = SDL_CreateRGBSurface(0, 630, 336, 32, rmask, gmask, bmask, amask);
 	SDL_FillRect(playerBombeExplode, NULL, SDL_MapRGBA(playerBombeExplode->format, 0, 0, 0, 0));
 	
 	for(int i=0;i<players.size();i++){
