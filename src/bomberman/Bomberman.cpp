@@ -256,7 +256,6 @@ void Bomberman::tick(){
 	    }
     }else{
     	if(game->isRequestStopGame()){
-    		fprintf(stderr, "free game");
        		game->exitGame();
        		free(game);
        		game = NULL;

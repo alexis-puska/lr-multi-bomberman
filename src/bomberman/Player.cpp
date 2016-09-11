@@ -105,7 +105,7 @@ Player::Player(unsigned short * in_keystateLibretro, bool isACpuPlayer, int inde
     destTextureRect.y = 0;
     destTextureRect.w = sprite_sizeW;
     destTextureRect.h = sprite_sizeH;
-    playerSprite = new SDL_Surface*[nb_imageX * nb_imageY];
+    playerSprite = new SDL_Surface * [nb_imageX * nb_imageY];
 	
 	for(int i = 0 ; i < nb_imageX; i++){
 		for(int j = 0; j < nb_imageY; j++){
@@ -130,7 +130,7 @@ Player::Player(unsigned short * in_keystateLibretro, bool isACpuPlayer, int inde
 
 Player::~Player()
 {
-	for(int i = 0; i < nbFrame; i++){
+	for(int i = 0; i < nb_imageX * nb_imageY; i++){
 		SDL_FreeSurface(playerSprite[i]);
 	}
 	free(in_keystate);

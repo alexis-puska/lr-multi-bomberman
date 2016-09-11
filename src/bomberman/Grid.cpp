@@ -67,6 +67,7 @@ Grid::~Grid()
     SDL_FreeSurface(brickShadow);
     SDL_FreeSurface(skyFixe);
     free(tab);
+    fprintf(stderr, "destroy grid");
 }
 
 
