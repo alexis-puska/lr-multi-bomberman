@@ -122,7 +122,6 @@ Bomberman::Bomberman(unsigned short *in_keystateLibretro, SDL_Surface * vout_buf
             SDL_BlitSurface(textureBuffer, &srcRect, menuLevelSprite[j*3+i], &dstRect);
         }
     }
-    game = new Game();
     SDL_FreeSurface(textureBuffer);
 }
 
@@ -186,8 +185,8 @@ void Bomberman::tick(){
 	                break;
 	            case levelSelectionMenu:
 	                cursorPosition = 0;
-	                game = new Game(levelIndex, playerType,gameOption, vout_buf, in_keystate);
 	                SDL_FillRect(vout_buf, NULL, SDL_MapRGB(vout_buf->format, 152, 152, 152));
+	                game = new Game(levelIndex, playerType,gameOption, vout_buf, in_keystate);
 	                currentStep = gameStep;
 	                break;
 	            case gameStep:

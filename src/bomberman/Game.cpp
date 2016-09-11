@@ -54,7 +54,10 @@ Game::Game(){
 
 Game::Game(int levelIndexInformation, int playerInformation[16][2], int gameOption[4], SDL_Surface *  vout_bufLibretro, unsigned short * in_keystateLibretro){
 	//declarativ color mask, used for create a RGB surface
-    
+    amask = 0xff000000;
+    rmask = 0x00ff0000;
+    gmask = 0x0000ff00;
+    bmask = 0x000000ff;
 	screenBuffer = SDL_CreateRGBSurface(0, 630, 336, 32, rmask, gmask, bmask, amask);
 	playerBombeExplode = SDL_CreateRGBSurface(0, 630, 336, 32, rmask, gmask, bmask, amask);
 	isThreadAlive = false;
