@@ -118,6 +118,7 @@ Game::~Game(){
 	free(grid);
 	free(tab);
 	free(in_keystate);
+	players.clear();
 	SDL_FreeSurface(vout_buf);
 	SDL_FreeSurface(screenBuffer);
 	SDL_FreeSurface(playerBombeExplode);
@@ -137,6 +138,8 @@ void Game::exitGame(){
 void Game::stopGame(){
 	if(isThreadAlive){
 		isThreadAlive = false;
+		configured = false;
+		requestStopGame = false;
 		int treadResult = 0;
 		SDL_WaitThread(mainThread, &treadResult);
 		fprintf(stderr, "result stop thread %i\n", treadResult);

@@ -122,6 +122,7 @@ Bomberman::Bomberman(unsigned short *in_keystateLibretro, SDL_Surface * vout_buf
             SDL_BlitSurface(textureBuffer, &srcRect, menuLevelSprite[j*3+i], &dstRect);
         }
     }
+    game = NULL;
     SDL_FreeSurface(textureBuffer);
 }
 
@@ -130,7 +131,6 @@ Bomberman::Bomberman(unsigned short *in_keystateLibretro, SDL_Surface * vout_buf
 
 Bomberman::~Bomberman()
 {   
-	
     SDL_FreeSurface(screenBuffer);
     SDL_FreeSurface(splashScreenSurface);
     SDL_FreeSurface(menuBackgroundSurface);
@@ -139,13 +139,13 @@ Bomberman::~Bomberman()
     }
     TTF_CloseFont(fragileBombersFont);
     TTF_Quit();
-	if(game != NULL){
+	if (game){
 		if(game->isConfigured()){
 			if(game->isAlive()){
 				game->exitGame();
-				free(game);
 			}	
 		}
+		free(game);
 	}
 }
 
@@ -256,8 +256,10 @@ void Bomberman::tick(){
 	    }
     }else{
     	if(game->isRequestStopGame()){
+    		fprintf(stderr, "free game");
        		game->exitGame();
        		free(game);
+       		game = NULL;
        		cursorPosition = levelIndex;
 			currentStep = levelSelectionMenu;
        	}   

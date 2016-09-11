@@ -53,7 +53,7 @@ public:
 	void exitGame();
 private:
 	//variable
-	SDL_Thread *mainThread;
+	SDL_Thread * mainThread;
 	SDL_Surface * screenBuffer;
 	SDL_Surface * playerBombeExplode;
 	bool isThreadAlive;
