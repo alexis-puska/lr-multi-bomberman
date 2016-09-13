@@ -47,11 +47,11 @@ class Bomberman
 {
 
 public:
-	Bomberman(unsigned short *in_keystateLibretro, SDL_Surface * vout_bufLibretro);
+	Bomberman(SDL_Surface * vout_bufLibretro);
     ~Bomberman();
     
     //function call for every frame
-    void tick();
+    void tick(unsigned short in_keystateLibretro[16]);
     
     //function to copy some surface into an other
     void copySurfaceToBackRenderer(SDL_Surface * src, SDL_Surface * dest, int x, int y);
@@ -65,7 +65,7 @@ private:
     void keyPressed();
 
 
-	unsigned short * in_keystate;
+	unsigned short in_keystate[16];
 	SDL_Surface * vout_buf;
 
 

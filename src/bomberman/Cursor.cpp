@@ -59,6 +59,7 @@ Cursor::~Cursor(){
 	for(int i = 0; i < nbFrame; i++){
         SDL_FreeSurface(cursor[i]);
     }
+    free(cursor);
 }
 
 SDL_Surface * Cursor::getCurrentFrame(){

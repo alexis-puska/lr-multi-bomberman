@@ -429,7 +429,7 @@ size_t retro_get_memory_size(unsigned id){
 
 void retro_reset(void){
 	deleteBomberman(bomberman);
-	bomberman = newBomberman(in_keystate, vout_buf);
+	bomberman = newBomberman(vout_buf);
 }
 
 void retro_init(void){
@@ -440,7 +440,7 @@ void retro_init(void){
     amask = 0xff000000;
     vout_buf = SDL_CreateRGBSurface(0, 640, 360, 32, rmask, gmask, bmask, amask);
     SDL_FillRect(vout_buf, NULL, SDL_MapRGB(vout_buf->format, 255, 204, 0));
-	bomberman = newBomberman(in_keystate, vout_buf);
+	bomberman = newBomberman(vout_buf);
 	environ_cb(RETRO_ENVIRONMENT_GET_RUMBLE_INTERFACE, &rumble);
     unsigned level = 0;
 	environ_cb(RETRO_ENVIRONMENT_SET_PERFORMANCE_LEVEL, &level);
@@ -466,7 +466,7 @@ void retro_run(void){
 			}
 		}
 	}
-	bomberman_tick(bomberman);
+	bomberman_tick(bomberman, in_keystate);
     video_cb(vout_buf->pixels, VOUT_WIDTH, VOUT_HEIGHT, VOUT_WIDTH*4);
     
 }

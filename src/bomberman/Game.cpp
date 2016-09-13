@@ -29,10 +29,10 @@ static int metronome(void* data)
 		delay = gameTick - milliseconds;
 
 		if(delay > 0){
-            fprintf(stderr, "game tick pause : %i \n", (int)delay);
+//            fprintf(stderr, "game tick pause : %i \n", (int)delay);
 			SDL_Delay(delay);
-		}else{
-			fprintf(stderr, "game tick time tooooo long !!!!\n");
+//		}else{
+//			fprintf(stderr, "game tick time tooooo long !!!!\n");
 		}
 	}
 	return 0;
@@ -91,8 +91,8 @@ Game::Game(int levelIndexInformation, int playerInformation[16][2], int gameOpti
 	for(int i = 0; i < 16; i++){
 		
 		int indexTexture = playerInformation[i][1];
-		int startX = startPlayer[i][0];
-		int startY = startPlayer[i][1];
+		float startX = startPlayer[i][0];
+		float startY = startPlayer[i][1];
 		Player * player = new Player(&in_keystate[i], false , indexTexture , startX, startY, i, tab);
 		players.push_back(player);
 	}

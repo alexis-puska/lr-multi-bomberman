@@ -19,7 +19,7 @@ const static char *BombermanSpriteMexican = "./resources/sprite/characters/AllBo
 
 
 
-Bomberman::Bomberman(unsigned short *in_keystateLibretro, SDL_Surface * vout_bufLibretro)
+Bomberman::Bomberman(SDL_Surface * vout_bufLibretro)
 {
 	//Init TTF feature
     TTF_Init();
@@ -34,7 +34,6 @@ Bomberman::Bomberman(unsigned short *in_keystateLibretro, SDL_Surface * vout_buf
     amask = 0xff000000;
     refreshBuffer = true;
     
-    in_keystate = in_keystateLibretro;
     vout_buf = vout_bufLibretro;
     
     
@@ -152,9 +151,12 @@ Bomberman::~Bomberman()
 
 
 
-void Bomberman::tick(){
+void Bomberman::tick(unsigned short in_keystateLibretro[16]){
     //fprintf(stderr, "%u\n", in_keystate[0]);
     //color mask
+	for(int i=0;i<16;i++)
+		in_keystate[i] = in_keystateLibretro[i];
+    
     if(currentStep != gameStep){
 	    keyPressed();
 	    

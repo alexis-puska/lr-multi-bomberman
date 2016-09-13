@@ -28,15 +28,29 @@ private:
 	* VAR
 	*/
 	bool cpu;
+//	bool dead;
+//	bool burn;
+//	bool onLouis;
 	int playerNumber;
 	int characterSpriteIndex;
 	float posX;
 	float posY;
 	
+	int frameCounter;
+	int offsetSprite;
+	
 	//pointer to the grid element;
 	int * tab;
 	//image of differente sprite of player
-    SDL_Surface **playerSprite;
+    SDL_Surface **playerSpriteWalk;
+	SDL_Surface **playerSpriteWalkBomb;
+	SDL_Surface **playerSpriteThrowBomb;
+	SDL_Surface **playerSpriteOnLouis;
+	SDL_Surface **playerSpriteVictory;
+	SDL_Surface **playerSpriteAngry;
+	SDL_Surface **playerSpriteBurn;
+    
+    
     unsigned short * in_keystate;
 	int previousDirection;
     /*
