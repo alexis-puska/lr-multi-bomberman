@@ -28,16 +28,18 @@ private:
 	* VAR
 	*/
 	bool cpu;
-//	bool dead;
-//	bool burn;
-//	bool onLouis;
 	int playerNumber;
 	int characterSpriteIndex;
 	float posX;
 	float posY;
+	int playerState;
 	
+	//animation part
 	int frameCounter;
 	int offsetSprite;
+	int nbFrameForAnimation;
+
+	int louisType;
 	
 	//pointer to the grid element;
 	int * tab;
@@ -49,7 +51,9 @@ private:
 	SDL_Surface **playerSpriteVictory;
 	SDL_Surface **playerSpriteAngry;
 	SDL_Surface **playerSpriteBurn;
-    
+	SDL_Surface **louisSprite;
+	SDL_Surface **louisSpriteBurn;
+	SDL_Surface *louisMergebuffer;
     
     unsigned short * in_keystate;
 	int previousDirection;
@@ -57,5 +61,13 @@ private:
 	* FUNCTION
 	*/
 
+	void drawNormal(SDL_Surface * surfaceToDraw);
+	void drawOnLouis(SDL_Surface * surfaceToDraw);	
+	void drawWithBombe(SDL_Surface * surfaceToDraw);
+	void drawThrowBombe(SDL_Surface * surfaceToDraw);
+	void drawBurning(SDL_Surface * surfaceToDraw);
+	void drawLouisBurning(SDL_Surface * surfaceToDraw);
+	void drawVictory(SDL_Surface * surfaceToDraw);
+	void drawCrying(SDL_Surface * surfaceToDraw);
 };
 #endif

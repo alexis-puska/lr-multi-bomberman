@@ -19,6 +19,7 @@ const static char *BombermanSpriteKid = "./resources/sprite/characters/AllBomber
 const static char *BombermanSpritePretty = "./resources/sprite/characters/AllBombermanPretty.png";
 const static char *BombermanSpritePunk = "./resources/sprite/characters/AllBombermanPunk.png";
 const static char *BombermanSpriteMexican = "./resources/sprite/characters/AllBombermanMexican.png";
+const static char *BombermanSpriteLouis = "./resources/sprite/characters/AllLouis.png";
 
 enum playerKey{
 	keyPadSelect	= 1,
@@ -48,7 +49,7 @@ enum playerMove{
 };
 	
 enum playerSprite{
-	bomberman	= 0,	
+	bomberman	= 0,	 
 	cossak		= 1,
 	barbar		= 2,
 	chan		= 3,
@@ -58,9 +59,42 @@ enum playerSprite{
 	mexican		= 7	
 };
 
+enum playerStateEnum{
+	normal			= 0,
+	onLouis			= 1,
+	carryBombe		= 2,
+	throwBombe		= 3,
+	burning			= 4,
+	louisBurning	= 5,
+	victory			= 6,
+	crying			= 7,
+	dead			= 8
+};
+
+enum nbFrameAnimationEnum{
+	animationNormal			= 4,
+	animationOnLouis		= 4,
+	animationCarryBombe		= 4,
+	animationThrowBombe		= 2,
+	animationBurning		= 7,
+	animationLouisBurning	= 7,
+	animationVictory		= 4,
+	animationCrying			= 4
+};
+
+enum louisTypeEnum{
+	blueLouis		= 0,
+	yellowLouis		= 1,
+	pinkLouis		= 2,
+	greenLouis		= 3,
+	brownLouis		= 4
+};
+
+
 
 Player::Player(unsigned short * in_keystateLibretro, bool isACpuPlayer, int indexSprite, float startPositionX, float startPositionY, int playerNumberLibretro, int table[sizeX * sizeY])
 {
+	playerState = onLouis;
 	frameCounter = 0;
 	offsetSprite = 0;
 	previousDirection = down;
@@ -116,6 +150,10 @@ Player::Player(unsigned short * in_keystateLibretro, bool isACpuPlayer, int inde
 	playerSpriteVictory= new SDL_Surface * [4];
 	playerSpriteAngry= new SDL_Surface * [4];
 	playerSpriteBurn= new SDL_Surface * [7];
+	louisMergebuffer = new SDL_Surface;
+	
+	louisSprite = new SDL_Surface * [12];
+	louisSpriteBurn = new SDL_Surface * [4];
 	
 	
 	//playerSpriteWalk
@@ -156,7 +194,7 @@ Player::Player(unsigned short * in_keystateLibretro, bool isACpuPlayer, int inde
 	
 	//playerSpriteOnLouis
 	for(j = 0 ; j < 4; j++){
-		srcTextureRect.x = 7 * sprite_sizeW;
+		srcTextureRect.x = 8 * sprite_sizeW;
 	    srcTextureRect.y = j * sprite_sizeH;
 	    srcTextureRect.w = sprite_sizeW;
 	    srcTextureRect.h = sprite_sizeH;
@@ -193,6 +231,31 @@ Player::Player(unsigned short * in_keystateLibretro, bool isACpuPlayer, int inde
 		playerSpriteBurn[i] =  SDL_CreateRGBSurface(0, sprite_sizeW, sprite_sizeH, 32, rmask, gmask, bmask, amask);
        	SDL_BlitSurface(tempSurface, &srcTextureRect, playerSpriteBurn[i], &destTextureRect);
 	}
+	SDL_FreeSurface(tempSurface);
+	
+	
+	//LOUIS PART
+	tempSurface = IMG_Load(BombermanSpriteLouis);
+	
+	for(i = 0 ; i < 3; i++){
+		for(j = 0; j < 4; j++){
+			srcTextureRect.x = i * sprite_sizeW;
+		    srcTextureRect.y = j * sprite_sizeH;
+		    srcTextureRect.w = sprite_sizeW;
+		    srcTextureRect.h = sprite_sizeH;
+			louisSprite[i + (j * 3)] =  SDL_CreateRGBSurface(0, sprite_sizeW, sprite_sizeH, 32, rmask, gmask, bmask, amask);
+        	SDL_BlitSurface(tempSurface, &srcTextureRect, louisSprite[i + (j * 3)], &destTextureRect);
+		}
+	}
+	
+	for(i = 0 ; i < 4; i++){
+		srcTextureRect.x = i * sprite_sizeW;
+	    srcTextureRect.y = 4 * sprite_sizeH;
+	    srcTextureRect.w = sprite_sizeW;
+	    srcTextureRect.h = sprite_sizeH;
+		louisSpriteBurn[i] =  SDL_CreateRGBSurface(0, sprite_sizeW, sprite_sizeH, 32, rmask, gmask, bmask, amask);
+       	SDL_BlitSurface(tempSurface, &srcTextureRect, louisSpriteBurn[i], &destTextureRect);
+	}
 	
 	posX = startPositionX;
 	posY = startPositionY;
@@ -227,6 +290,12 @@ Player::~Player()
 	for(int i = 0; i < 7; i++){
 		SDL_FreeSurface(playerSpriteBurn[i]);
 	}
+	for(int i = 0; i < 12; i++){
+		SDL_FreeSurface(louisSprite[i]);
+	}
+	for(int i = 0; i < 4; i++){
+		SDL_FreeSurface(louisSpriteBurn[i]);
+	}
 	
 	free(playerSpriteWalk);
 	free(playerSpriteWalkBomb);
@@ -235,60 +304,24 @@ Player::~Player()
 	free(playerSpriteVictory);
 	free(playerSpriteAngry);
 	free(playerSpriteBurn);
+	free(louisSprite);
+	free(louisSpriteBurn);
 	
 	free(in_keystate);
 	free(tab);
 }
 
-void Player::doSomething(SDL_Surface * surfaceToDraw){
-	int indexToDraw = previousDirection * 3;
-	
-	unsigned short keystate = *in_keystate;
-	
-	if(cpu){
-		
-	}else{
-		int roundX = 0;
-		int roundY = 0;
-		if((posX - floor(posX)) <= 0.5){
-			roundX = floor(posX);
-		}else{
-			roundX = ceil(posX);
-		}
-		if((posY - floor(posY)) <= 0.5){
-			roundY = floor(posY);
-		}else{
-			roundY = ceil(posY);
-		}
-		
-		
-		if(keystate & keyPadLeft){
-			posX = ( posX - stepOfPlayerX );
-			previousDirection = left;
-		}
-		
-		if(keystate & keyPadRight){
-			posX = ( posX + stepOfPlayerX );
-			previousDirection = right;
-		}
-		
-		
-		if(keystate & keyPadDown){
-			posY = ( posY + stepOfPlayerY );
-			previousDirection = down;
-		}
-		
-		if(keystate & keyPadUp){
-			posY = ( posY - stepOfPlayerY );
-			previousDirection = up;
-		}
 
-//		if(playerNumber == 0)
-//		fprintf(stderr, "%i %f %i %f",roundX, posX,roundY, posY);
-	}
-	
-	
-	
+
+
+
+
+/*
+* DRAWING PART
+*/
+void Player::drawNormal(SDL_Surface * surfaceToDraw){
+	unsigned short keystate = *in_keystate;
+	nbFrameForAnimation = animationNormal;
 	SDL_Rect srcTextureRect;
 	SDL_Rect destTextureRect;
 	destTextureRect.x = (posX * blockSizeX) - (sprite_sizeW / 2);
@@ -303,18 +336,14 @@ void Player::doSomething(SDL_Surface * surfaceToDraw){
 		if(frameCounter > nbFrame){
 			frameCounter = 0;
 			offsetSprite++;	
-			if(offsetSprite >=4){
+			if(offsetSprite >=nbFrameForAnimation){
 				offsetSprite = 0;
 			}
 		}
 		frameCounter++;
 	}else{
 		offsetSprite = 0;
-	}
-	if(playerNumber == 0){
-		fprintf(stderr, "%u %i\n",keystate, offsetSprite);
-	}
-	
+	}	
 	int offsetSpriteAnimation = 0;
 	switch (offsetSprite){
 		case 0:
@@ -330,10 +359,424 @@ void Player::doSomething(SDL_Surface * surfaceToDraw){
 			offsetSpriteAnimation = 2;
 			break;		
 	}
-
-	SDL_BlitSurface(playerSpriteWalk[indexToDraw + offsetSpriteAnimation], &srcTextureRect, surfaceToDraw, &destTextureRect);
+	SDL_BlitSurface(playerSpriteWalk[(previousDirection * 3) + offsetSpriteAnimation], &srcTextureRect, surfaceToDraw, &destTextureRect);
 }
 
 
 
+void Player::drawOnLouis(SDL_Surface * surfaceToDraw){
+	Uint32 rmask, gmask, bmask, amask;
+    amask = 0xff000000;
+    rmask = 0x00ff0000;
+    gmask = 0x0000ff00;
+    bmask = 0x000000ff;
+	unsigned short keystate = *in_keystate;
+	nbFrameForAnimation = animationOnLouis;
+	SDL_Rect srcTextureRect;
+	SDL_Rect destTextureRect;
+	destTextureRect.x = (posX * blockSizeX) - (sprite_sizeW / 2);
+    destTextureRect.y = (posY * blockSizeY) - (sprite_sizeH - 7);
+    destTextureRect.w = sprite_sizeW;
+    destTextureRect.h = sprite_sizeH;
+	srcTextureRect.x = 0;
+	srcTextureRect.y = 0;
+	srcTextureRect.w = sprite_sizeW;
+	srcTextureRect.h = sprite_sizeH;
+	if(keystate != 0){	
+		if(frameCounter > nbFrame){
+			frameCounter = 0;
+			offsetSprite++;	
+			if(offsetSprite >=nbFrameForAnimation){
+				offsetSprite = 0;
+			}
+		}
+		frameCounter++;
+	}else{
+		offsetSprite = 0;
+	}	
+	int offsetSpriteAnimation = 0;
+	switch (offsetSprite){
+		case 0:
+			offsetSpriteAnimation = 1;
+			break;	
+		case 1:
+			offsetSpriteAnimation = 0;
+			break;
+		case 2:
+			offsetSpriteAnimation = 1;
+			break;
+		case 3:
+			offsetSpriteAnimation = 2;
+			break;		
+	}
+	louisMergebuffer = SDL_CreateRGBSurface(0, sprite_sizeW, sprite_sizeH, 32, rmask, gmask, bmask, amask);
+	if(previousDirection == down){
+		SDL_BlitSurface(playerSpriteOnLouis[previousDirection], &srcTextureRect, louisMergebuffer, &srcTextureRect);
+		SDL_BlitSurface(louisSprite[(previousDirection * 3) + offsetSpriteAnimation], &srcTextureRect, louisMergebuffer, &srcTextureRect);
+		SDL_BlitSurface(louisMergebuffer, &srcTextureRect, surfaceToDraw, &destTextureRect);
+	}else{
+		SDL_BlitSurface(louisSprite[(previousDirection * 3) + offsetSpriteAnimation], &srcTextureRect, louisMergebuffer, &srcTextureRect);
+		SDL_BlitSurface(playerSpriteOnLouis[previousDirection], &srcTextureRect, louisMergebuffer, &srcTextureRect);
+		SDL_BlitSurface(louisMergebuffer, &srcTextureRect, surfaceToDraw, &destTextureRect);
+	}
+	SDL_FreeSurface(louisMergebuffer);
+}
+
+
+
+void Player::drawWithBombe(SDL_Surface * surfaceToDraw){
+	unsigned short keystate = *in_keystate;
+	nbFrameForAnimation = animationCarryBombe;
+	SDL_Rect srcTextureRect;
+	SDL_Rect destTextureRect;
+	destTextureRect.x = (posX * blockSizeX) - (sprite_sizeW / 2);
+    destTextureRect.y = (posY * blockSizeY) - (sprite_sizeH - 7);
+    destTextureRect.w = sprite_sizeW;
+    destTextureRect.h = sprite_sizeH;
+	srcTextureRect.x = 0;
+	srcTextureRect.y = 0;
+	srcTextureRect.w = sprite_sizeW;
+	srcTextureRect.h = sprite_sizeH;
+	if(keystate != 0){	
+		if(frameCounter > nbFrame){
+			frameCounter = 0;
+			offsetSprite++;	
+			if(offsetSprite >=nbFrameForAnimation){
+				offsetSprite = 0;
+			}
+		}
+		frameCounter++;
+	}else{
+		offsetSprite = 0;
+	}	
+	int offsetSpriteAnimation = 0;
+	switch (offsetSprite){
+		case 0:
+			offsetSpriteAnimation = 0;
+			break;	
+		case 1:
+			offsetSpriteAnimation = 1;
+			break;
+		case 2:
+			offsetSpriteAnimation = 0;
+			break;
+		case 3:
+			offsetSpriteAnimation = 2;
+			break;		
+	}
+	SDL_BlitSurface(playerSpriteWalkBomb[(previousDirection * 3) + offsetSpriteAnimation], &srcTextureRect, surfaceToDraw, &destTextureRect);
+}
+
+
+
+void Player::drawThrowBombe(SDL_Surface * surfaceToDraw){
+	unsigned short keystate = *in_keystate;
+	nbFrameForAnimation = animationThrowBombe;
+	SDL_Rect srcTextureRect;
+	SDL_Rect destTextureRect;
+	destTextureRect.x = (posX * blockSizeX) - (sprite_sizeW / 2);
+    destTextureRect.y = (posY * blockSizeY) - (sprite_sizeH - 7);
+    destTextureRect.w = sprite_sizeW;
+    destTextureRect.h = sprite_sizeH;
+	srcTextureRect.x = 0;
+	srcTextureRect.y = 0;
+	srcTextureRect.w = sprite_sizeW;
+	srcTextureRect.h = sprite_sizeH;
+	if(keystate != 0){	
+		if(frameCounter > nbFrame){
+			frameCounter = 0;
+			offsetSprite++;	
+			if(offsetSprite >=nbFrameForAnimation){
+				offsetSprite = 0;
+			}
+		}
+		frameCounter++;
+	}else{
+		offsetSprite = 0;
+	}
+	SDL_BlitSurface(playerSpriteThrowBomb[(previousDirection * 2) + offsetSprite], &srcTextureRect, surfaceToDraw, &destTextureRect);
+}
+
+
+
+void Player::drawBurning(SDL_Surface * surfaceToDraw){
+	unsigned short keystate = *in_keystate;
+	nbFrameForAnimation = animationBurning;
+	SDL_Rect srcTextureRect;
+	SDL_Rect destTextureRect;
+	destTextureRect.x = (posX * blockSizeX) - (sprite_sizeW / 2);
+    destTextureRect.y = (posY * blockSizeY) - (sprite_sizeH - 7);
+    destTextureRect.w = sprite_sizeW;
+    destTextureRect.h = sprite_sizeH;
+	srcTextureRect.x = 0;
+	srcTextureRect.y = 0;
+	srcTextureRect.w = sprite_sizeW;
+	srcTextureRect.h = sprite_sizeH;
+	if(keystate != 0){	
+		if(frameCounter > nbFrame){
+			frameCounter = 0;
+			offsetSprite++;	
+			if(offsetSprite >=nbFrameForAnimation){
+				offsetSprite = 0;
+			}
+		}
+		frameCounter++;
+	}else{
+		offsetSprite = 0;
+	}	
+	SDL_BlitSurface(playerSpriteBurn[offsetSprite], &srcTextureRect, surfaceToDraw, &destTextureRect);
+}
+
+
+
+void Player::drawLouisBurning(SDL_Surface * surfaceToDraw){
+	unsigned short keystate = *in_keystate;
+	nbFrameForAnimation = animationLouisBurning;
+	SDL_Rect srcTextureRect;
+	SDL_Rect destTextureRect;
+	destTextureRect.x = (posX * blockSizeX) - (sprite_sizeW / 2);
+    destTextureRect.y = (posY * blockSizeY) - (sprite_sizeH - 7);
+    destTextureRect.w = sprite_sizeW;
+    destTextureRect.h = sprite_sizeH;
+	srcTextureRect.x = 0;
+	srcTextureRect.y = 0;
+	srcTextureRect.w = sprite_sizeW;
+	srcTextureRect.h = sprite_sizeH;
+	if(keystate != 0){	
+		if(frameCounter > nbFrame){
+			frameCounter = 0;
+			offsetSprite++;	
+			if(offsetSprite >=nbFrameForAnimation){
+				offsetSprite = 0;
+			}
+		}
+		frameCounter++;
+	}else{
+		offsetSprite = 0;
+	}
+	SDL_BlitSurface(playerSpriteBurn[offsetSprite], &srcTextureRect, surfaceToDraw, &destTextureRect);
+}
+
+
+
+void Player::drawVictory(SDL_Surface * surfaceToDraw){
+	unsigned short keystate = *in_keystate;
+	nbFrameForAnimation = animationVictory;
+	SDL_Rect srcTextureRect;
+	SDL_Rect destTextureRect;
+	destTextureRect.x = (posX * blockSizeX) - (sprite_sizeW / 2);
+    destTextureRect.y = (posY * blockSizeY) - (sprite_sizeH - 7);
+    destTextureRect.w = sprite_sizeW;
+    destTextureRect.h = sprite_sizeH;
+	srcTextureRect.x = 0;
+	srcTextureRect.y = 0;
+	srcTextureRect.w = sprite_sizeW;
+	srcTextureRect.h = sprite_sizeH;
+	if(keystate != 0){	
+		if(frameCounter > nbFrame){
+			frameCounter = 0;
+			offsetSprite++;	
+			if(offsetSprite >=nbFrameForAnimation){
+				offsetSprite = 0;
+			}
+		}
+		frameCounter++;
+	}else{
+		offsetSprite = 0;
+	}	
+	int offsetSpriteAnimation = 0;
+	switch (offsetSprite){
+		case 0:
+			offsetSpriteAnimation = 1;
+			break;	
+		case 1:
+			offsetSpriteAnimation = 0;
+			break;
+		case 2:
+			offsetSpriteAnimation = 1;
+			break;
+		case 3:
+			offsetSpriteAnimation = 2;
+			break;		
+	}
+	SDL_BlitSurface(playerSpriteVictory[offsetSpriteAnimation], &srcTextureRect, surfaceToDraw, &destTextureRect);
+}
+
+
+
+void Player::drawCrying(SDL_Surface * surfaceToDraw){
+	unsigned short keystate = *in_keystate;
+	nbFrameForAnimation = animationCrying;
+	SDL_Rect srcTextureRect;
+	SDL_Rect destTextureRect;
+	destTextureRect.x = (posX * blockSizeX) - (sprite_sizeW / 2);
+    destTextureRect.y = (posY * blockSizeY) - (sprite_sizeH - 7);
+    destTextureRect.w = sprite_sizeW;
+    destTextureRect.h = sprite_sizeH;
+	srcTextureRect.x = 0;
+	srcTextureRect.y = 0;
+	srcTextureRect.w = sprite_sizeW;
+	srcTextureRect.h = sprite_sizeH;
+
+	if(keystate != 0){	
+		if(frameCounter > nbFrame){
+			frameCounter = 0;
+			offsetSprite++;	
+			if(offsetSprite >=nbFrameForAnimation){
+				offsetSprite = 0;
+			}
+		}
+		frameCounter++;
+	}else{
+		offsetSprite = 0;
+	}	
+	int offsetSpriteAnimation = 0;
+	switch (offsetSprite){
+		case 0:
+			offsetSpriteAnimation = 1;
+			break;	
+		case 1:
+			offsetSpriteAnimation = 0;
+			break;
+		case 2:
+			offsetSpriteAnimation = 1;
+			break;
+		case 3:
+			offsetSpriteAnimation = 2;
+			break;		
+	}
+	SDL_BlitSurface(playerSpriteAngry[offsetSpriteAnimation], &srcTextureRect, surfaceToDraw, &destTextureRect);
+}
+
+
+
+
+
+
+
+void Player::doSomething(SDL_Surface * surfaceToDraw){
+	unsigned short keystate = *in_keystate;
+	
+	if(cpu){
+		
+	} else {
+		int roundX = floor(posX);
+		int roundY = floor(posY);
+		
+		float margeInf = 0.5 - (stepOfPlayerY/2);
+		float margeSup = 0.5 + (stepOfPlayerY/2);
+		
+		float posInsideCaseX = posX - (float)floor(posX);
+		if(posX-(float)roundX >= margeInf && posX-(float)roundX <= margeSup){
+			posX = (float)floor(posX)+0.5;
+		}
+		
+		float posInsideCaseY = posY - (float)floor(posY);
+		if(posY-(float)roundY >= margeInf && posY-(float)roundY <= margeSup){
+			posY = (float)floor(posY) + 0.5;
+		}
+		
+		if(playerNumber==0){
+		fprintf(stderr, "%f %f \n", posX, posY);	
+		}
+		
+		
+		
+		if(keystate & keyPadLeft){
+			if(posX - roundX == 0.5){
+				if(!(tab[(roundX - 1) + (roundY * sizeX)] !=0)){		
+					posX = ( posX - stepOfPlayerX );
+				}
+			}else{
+				if(posY - roundY > 0.5){
+					posY = ( posY - stepOfPlayerY );
+				}else if(posY - roundY < 0.5){
+					posY = ( posY + stepOfPlayerY );
+				}else{
+					posX = ( posX - stepOfPlayerX );
+				}
+			}
+			previousDirection = left;
+		}
+		
+		if(keystate & keyPadRight){
+			if(posX - roundX == 0.5){
+				if(!(tab[(roundX + 1) + (roundY * sizeX)] !=0)){
+					posX = ( posX + stepOfPlayerX );
+				}
+			}else{
+				if(posY - roundY > 0.5){
+					posY = ( posY - stepOfPlayerY );
+				}else if(posY - roundY < 0.5){
+					posY = ( posY + stepOfPlayerY );
+				}else{
+					posX = ( posX + stepOfPlayerX );	
+				}
+			}
+			previousDirection = right;
+		}
+		
+		if(keystate & keyPadDown){
+			
+			if(posY - roundY == 0.5){
+				if(!(tab[roundX + ((roundY + 1 ) * sizeX)] !=0)){
+					posY = ( posY + stepOfPlayerY );
+				}
+			}else{
+				if(posX - roundX > 0.5){
+					posX = ( posX - stepOfPlayerX );
+				}else if(posX - roundX < 0.5){
+					posX = ( posX + stepOfPlayerX );
+				}else{
+					posY = ( posY + stepOfPlayerY );
+				}
+			}
+		previousDirection = down;
+		}
+		
+		if(keystate & keyPadUp){
+			if(posY - roundY == 0.5){
+				if(!(tab[roundX + ((roundY - 1 ) * sizeX)] !=0)){
+					posY = ( posY - stepOfPlayerY );
+				}
+			}else{
+				if(posX - roundX > 0.5){
+					posX = ( posX - stepOfPlayerX );
+				}else if(posX - roundX < 0.5){
+					posX = ( posX + stepOfPlayerX );
+				}else{
+					posY = ( posY - stepOfPlayerY );
+				}
+			}
+		previousDirection = up;
+		}
+	}
+	
+	switch(playerState){
+		case normal:
+			drawNormal(surfaceToDraw);
+			break;
+		case onLouis:
+			drawOnLouis(surfaceToDraw);
+			break;
+		case carryBombe:
+			drawWithBombe(surfaceToDraw);
+			break;
+		case throwBombe:
+			drawThrowBombe(surfaceToDraw);
+			break;
+		case burning:
+			drawBurning(surfaceToDraw);
+			break;
+		case louisBurning:
+			drawLouisBurning(surfaceToDraw);
+			break;
+		case victory:
+			drawVictory(surfaceToDraw);
+			break;
+		case crying:
+			drawCrying(surfaceToDraw);
+			break;
+	}
+}
 
