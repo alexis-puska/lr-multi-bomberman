@@ -30,22 +30,30 @@ class Bombe
 {
 
 public:
-	Bombe(int Strenght, int posX, int posY, int type, int numPlayerSetTheBombe, int nbTickBeforeExplostion, SDL_Surface ** miscSheet);
+	Bombe(int Strenght, int posXX, int posYY, int type, int numPlayerSetTheBombe, int nbTickBeforeExplostion, SDL_Surface ** miscSheet);
     ~Bombe();
     bool isExplode();
     void explode();
     int getStrenght();
+    int getPlayer();
     bool isPowerBombe();
     void pushBomb(int direction);
-	void tick();
-
+	void tick(SDL_Surface * surfaceToDraw);
 
 private:
+	SDL_Surface ** animation;
+
 	int nbTickExplode;
-	bool hasExplode;
-	float posX;
-	float posY;
-	int roundX;
-	int roundY;
+	int posX;
+	int posY;
+	int strenght;
+	int player;
+	int bombeType;
+
+	//for animation	
+	int frameCounter;
+	int offsetSprite;
+	int nbFrameForAnimation;
+	
 };
 #endif

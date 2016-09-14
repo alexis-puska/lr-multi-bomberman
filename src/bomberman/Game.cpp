@@ -50,11 +50,6 @@ Game::Game(){
     playerBombeExplode = SDL_CreateRGBSurface(0, 630, 336, 32, rmask, gmask, bmask, amask);
 	screenBuffer = SDL_CreateRGBSurface(0, 630, 336, 32, rmask, gmask, bmask, amask);
 	overlay = SDL_CreateRGBSurface(0, 630, 336, 32, rmask, gmask, bmask, amask);
-	
-	SDL_Surface ** explosionSprite;
-	SDL_Surface ** bombeSprite;
-	SDL_Surface ** bonusSprite;
-	SDL_Surface ** eggsSprite;
 	isThreadAlive = false;
 	configured = false;
 	requestStopGame = false;
@@ -83,9 +78,6 @@ Game::Game(int levelIndexInformation, int playerInformation[16][2], int gameOpti
     surfaceMessage = TTF_RenderText_Solid(fragileBombersFont, "Press Select for exit pause", green);
     copySurfaceToBackRenderer(surfaceMessage, overlay , ((640/2)-(surfaceMessage->w/2)), 194);
     SDL_FreeSurface(surfaceMessage);
-    
-    
-    
     
     gamePause = false;
 	screenBuffer = SDL_CreateRGBSurface(0, 630, 336, 32, rmask, gmask, bmask, amask);
@@ -365,6 +357,16 @@ void Game::tick(){
 			//for each bonus
 			//	check position joueur pour récupérer le bonus
 			//Ajout bonus aléatoire
+		
+			
+			for(unsigned int i=0;i<bombes.size();i++){
+				bombes[i] -> tick(playerBombeExplode);
+				if(bombes[i]->isExplode()){
+					players[bombes[i]->getPlayer()]->ABombeExplode();
+					bombes.erase(bombes.begin()+i);
+				}
+			}
+		
 		
 			for(unsigned int i=0;i<players.size();i++){
 				players[i] -> doSomething(playerBombeExplode);

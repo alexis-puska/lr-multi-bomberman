@@ -99,14 +99,14 @@ private:
     /*
 	* FUNCTION For draw player
 	*/
-	void drawNormal(SDL_Surface * surfaceToDraw);
-	void drawOnLouis(SDL_Surface * surfaceToDraw);	
-	void drawWithBombe(SDL_Surface * surfaceToDraw);
-	void drawThrowBombe(SDL_Surface * surfaceToDraw);
-	void drawBurning(SDL_Surface * surfaceToDraw);
-	void drawLouisBurning(SDL_Surface * surfaceToDraw);
-	void drawVictory(SDL_Surface * surfaceToDraw);
-	void drawCrying(SDL_Surface * surfaceToDraw);
+	void drawNormal(SDL_Surface * surfaceToDraw, bool animate);
+	void drawOnLouis(SDL_Surface * surfaceToDraw, bool animate);	
+	void drawWithBombe(SDL_Surface * surfaceToDraw, bool animate);
+	void drawThrowBombe(SDL_Surface * surfaceToDraw, bool animate);
+	void drawBurning(SDL_Surface * surfaceToDraw, bool animate);
+	void drawLouisBurning(SDL_Surface * surfaceToDraw, bool animate);
+	void drawVictory(SDL_Surface * surfaceToDraw, bool animate);
+	void drawCrying(SDL_Surface * surfaceToDraw, bool animate);
 	
 	
 	

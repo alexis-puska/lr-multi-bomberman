@@ -332,8 +332,7 @@ Player::~Player()
 /*
 * DRAWING PART
 */
-void Player::drawNormal(SDL_Surface * surfaceToDraw){
-	unsigned short keystate = *in_keystate;
+void Player::drawNormal(SDL_Surface * surfaceToDraw, bool animate){
 	nbFrameForAnimation = animationNormal;
 	SDL_Rect srcTextureRect;
 	SDL_Rect destTextureRect;
@@ -345,7 +344,7 @@ void Player::drawNormal(SDL_Surface * surfaceToDraw){
 	srcTextureRect.y = 0;
 	srcTextureRect.w = sprite_sizeW;
 	srcTextureRect.h = sprite_sizeH;
-	if(keystate != 0){	
+	if(animate){	
 		if(frameCounter > nbFrame){
 			frameCounter = 0;
 			offsetSprite++;	
@@ -377,13 +376,12 @@ void Player::drawNormal(SDL_Surface * surfaceToDraw){
 
 
 
-void Player::drawOnLouis(SDL_Surface * surfaceToDraw){
+void Player::drawOnLouis(SDL_Surface * surfaceToDraw, bool animate){
 	Uint32 rmask, gmask, bmask, amask;
     amask = 0xff000000;
     rmask = 0x00ff0000;
     gmask = 0x0000ff00;
     bmask = 0x000000ff;
-	unsigned short keystate = *in_keystate;
 	nbFrameForAnimation = animationOnLouis;
 	SDL_Rect srcTextureRect;
 	SDL_Rect destTextureRect;
@@ -395,7 +393,7 @@ void Player::drawOnLouis(SDL_Surface * surfaceToDraw){
 	srcTextureRect.y = 0;
 	srcTextureRect.w = sprite_sizeW;
 	srcTextureRect.h = sprite_sizeH;
-	if(keystate != 0){	
+	if(animate){	
 		if(frameCounter > nbFrame){
 			frameCounter = 0;
 			offsetSprite++;	
@@ -437,8 +435,7 @@ void Player::drawOnLouis(SDL_Surface * surfaceToDraw){
 
 
 
-void Player::drawWithBombe(SDL_Surface * surfaceToDraw){
-	unsigned short keystate = *in_keystate;
+void Player::drawWithBombe(SDL_Surface * surfaceToDraw, bool animate){
 	nbFrameForAnimation = animationCarryBombe;
 	SDL_Rect srcTextureRect;
 	SDL_Rect destTextureRect;
@@ -450,7 +447,7 @@ void Player::drawWithBombe(SDL_Surface * surfaceToDraw){
 	srcTextureRect.y = 0;
 	srcTextureRect.w = sprite_sizeW;
 	srcTextureRect.h = sprite_sizeH;
-	if(keystate != 0){	
+	if(animate){	
 		if(frameCounter > nbFrame){
 			frameCounter = 0;
 			offsetSprite++;	
@@ -482,8 +479,7 @@ void Player::drawWithBombe(SDL_Surface * surfaceToDraw){
 
 
 
-void Player::drawThrowBombe(SDL_Surface * surfaceToDraw){
-	unsigned short keystate = *in_keystate;
+void Player::drawThrowBombe(SDL_Surface * surfaceToDraw, bool animate){
 	nbFrameForAnimation = animationThrowBombe;
 	SDL_Rect srcTextureRect;
 	SDL_Rect destTextureRect;
@@ -495,7 +491,7 @@ void Player::drawThrowBombe(SDL_Surface * surfaceToDraw){
 	srcTextureRect.y = 0;
 	srcTextureRect.w = sprite_sizeW;
 	srcTextureRect.h = sprite_sizeH;
-	if(keystate != 0){	
+	if(animate){	
 		if(frameCounter > nbFrame){
 			frameCounter = 0;
 			offsetSprite++;	
@@ -512,8 +508,7 @@ void Player::drawThrowBombe(SDL_Surface * surfaceToDraw){
 
 
 
-void Player::drawBurning(SDL_Surface * surfaceToDraw){
-	unsigned short keystate = *in_keystate;
+void Player::drawBurning(SDL_Surface * surfaceToDraw, bool animate){
 	nbFrameForAnimation = animationBurning;
 	SDL_Rect srcTextureRect;
 	SDL_Rect destTextureRect;
@@ -525,7 +520,7 @@ void Player::drawBurning(SDL_Surface * surfaceToDraw){
 	srcTextureRect.y = 0;
 	srcTextureRect.w = sprite_sizeW;
 	srcTextureRect.h = sprite_sizeH;
-	if(keystate != 0){	
+	if(animate){	
 		if(frameCounter > nbFrame){
 			frameCounter = 0;
 			offsetSprite++;	
@@ -542,8 +537,7 @@ void Player::drawBurning(SDL_Surface * surfaceToDraw){
 
 
 
-void Player::drawLouisBurning(SDL_Surface * surfaceToDraw){
-	unsigned short keystate = *in_keystate;
+void Player::drawLouisBurning(SDL_Surface * surfaceToDraw, bool animate){
 	nbFrameForAnimation = animationLouisBurning;
 	SDL_Rect srcTextureRect;
 	SDL_Rect destTextureRect;
@@ -555,7 +549,7 @@ void Player::drawLouisBurning(SDL_Surface * surfaceToDraw){
 	srcTextureRect.y = 0;
 	srcTextureRect.w = sprite_sizeW;
 	srcTextureRect.h = sprite_sizeH;
-	if(keystate != 0){	
+	if(animate){	
 		if(frameCounter > nbFrame){
 			frameCounter = 0;
 			offsetSprite++;	
@@ -572,8 +566,7 @@ void Player::drawLouisBurning(SDL_Surface * surfaceToDraw){
 
 
 
-void Player::drawVictory(SDL_Surface * surfaceToDraw){
-	unsigned short keystate = *in_keystate;
+void Player::drawVictory(SDL_Surface * surfaceToDraw, bool animate){
 	nbFrameForAnimation = animationVictory;
 	SDL_Rect srcTextureRect;
 	SDL_Rect destTextureRect;
@@ -585,7 +578,7 @@ void Player::drawVictory(SDL_Surface * surfaceToDraw){
 	srcTextureRect.y = 0;
 	srcTextureRect.w = sprite_sizeW;
 	srcTextureRect.h = sprite_sizeH;
-	if(keystate != 0){	
+	if(animate){	
 		if(frameCounter > nbFrame){
 			frameCounter = 0;
 			offsetSprite++;	
@@ -617,8 +610,7 @@ void Player::drawVictory(SDL_Surface * surfaceToDraw){
 
 
 
-void Player::drawCrying(SDL_Surface * surfaceToDraw){
-	unsigned short keystate = *in_keystate;
+void Player::drawCrying(SDL_Surface * surfaceToDraw, bool animate){
 	nbFrameForAnimation = animationCrying;
 	SDL_Rect srcTextureRect;
 	SDL_Rect destTextureRect;
@@ -631,7 +623,7 @@ void Player::drawCrying(SDL_Surface * surfaceToDraw){
 	srcTextureRect.w = sprite_sizeW;
 	srcTextureRect.h = sprite_sizeH;
 
-	if(keystate != 0){	
+	if(animate){	
 		if(frameCounter > nbFrame){
 			frameCounter = 0;
 			offsetSprite++;	
@@ -669,6 +661,7 @@ void Player::drawCrying(SDL_Surface * surfaceToDraw){
 
 void Player::doSomething(SDL_Surface * surfaceToDraw){
 	unsigned short keystate = *in_keystate;
+	bool animate = false;
 	
 	if(cpu){
 		
@@ -706,6 +699,7 @@ void Player::doSomething(SDL_Surface * surfaceToDraw){
 				}
 			}
 			previousDirection = left;
+			animate = true;
 		}
 		
 		if(keystate & keyPadRight){
@@ -723,6 +717,7 @@ void Player::doSomething(SDL_Surface * surfaceToDraw){
 				}
 			}
 			previousDirection = right;
+			animate = true;
 		}
 		
 		if(keystate & keyPadDown){
@@ -740,7 +735,8 @@ void Player::doSomething(SDL_Surface * surfaceToDraw){
 					posY = ( posY + playerSpeed );
 				}
 			}
-		previousDirection = down;
+			previousDirection = down;
+			animate = true;
 		}
 		
 		if(keystate & keyPadUp){
@@ -757,7 +753,8 @@ void Player::doSomething(SDL_Surface * surfaceToDraw){
 					posY = ( posY - playerSpeed );
 				}
 			}
-		previousDirection = up;
+			previousDirection = up;
+			animate = true;
 		}
 		
 		/*
@@ -783,36 +780,35 @@ void Player::doSomething(SDL_Surface * surfaceToDraw){
 	
 	switch(playerState){
 		case normal:
-			drawNormal(surfaceToDraw);
+			drawNormal(surfaceToDraw, animate);
 			break;
 		case onLouis:
-			drawOnLouis(surfaceToDraw);
+			drawOnLouis(surfaceToDraw, animate);
 			break;
 		case carryBombe:
-			drawWithBombe(surfaceToDraw);
+			drawWithBombe(surfaceToDraw, animate);
 			break;
 		case throwBombe:
-			drawThrowBombe(surfaceToDraw);
+			drawThrowBombe(surfaceToDraw, animate);
 			break;
 		case burning:
-			drawBurning(surfaceToDraw);
+			drawBurning(surfaceToDraw, animate);
 			break;
 		case louisBurning:
-			drawLouisBurning(surfaceToDraw);
+			drawLouisBurning(surfaceToDraw, animate);
 			break;
 		case victory:
-			drawVictory(surfaceToDraw);
+			drawVictory(surfaceToDraw, animate);
 			break;
 		case crying:
-			drawCrying(surfaceToDraw);
+			drawCrying(surfaceToDraw, animate);
 			break;
 	}
 }
 
 Bombe * Player::addBombe(){
-	
 	int type = normalBombeType;
-	int time = 200;
+	int time = 100;
 	int strenght = flameStrengh;
 	
 	if(bubbleBombePower){
@@ -826,11 +822,16 @@ Bombe * Player::addBombe(){
 		strenght = 30;
 		type = powerBombeType;
 	}
-	return new Bombe(flameStrengh, floor(posX), floor(posY), type, playerNumber, time, bombeSprite);	
+	return new Bombe(flameStrengh, (int)floor(posX), (int)floor(posY), type, playerNumber, time, bombeSprite);
 }
 
 bool Player::wantPutBombe(){
-	return putABombe;
+	if(NBBombeRemaining>0)
+		return putABombe;
+	else{
+		putABombe = false;
+		return false;
+	}
 }
 
 void Player::ABombeExplode(){
