@@ -1,8 +1,10 @@
 #include <SDL2/SDL.h>
 #ifndef IS_OSX
-#include <SDL2/SDL_image.h>
+	#include <SDL2/SDL_image.h>
+	#include <SDL2/SDL_ttf.h>
 #else
-#include <SDL2_image/SDL_image.h>
+	#include <SDL2_image/SDL_image.h>
+    #include <SDL2_ttf/SDL_ttf.h>
 #endif
 
 #include <stdio.h>
@@ -13,7 +15,6 @@
 
 #include "Grid.h"
 #include "Player.h"
-#include "Bombe.h"
 
 #ifndef __MYCLASS_GAME
 #define __MYCLASS_GAME
@@ -52,10 +53,20 @@ public:
 	void stopGame();
 	void exitGame();
 private:
+	//Font for menu and Game
+    TTF_Font* fragileBombersFont;
 	//variable
 	SDL_Thread * mainThread;
 	SDL_Surface * screenBuffer;
 	SDL_Surface * playerBombeExplode;
+	SDL_Surface * overlay;
+	
+	SDL_Surface ** explosionSprite;
+	SDL_Surface ** bombeSprite;
+	SDL_Surface ** bonusSprite;
+	SDL_Surface ** eggsSprite;
+	
+	
 	bool isThreadAlive;
 	bool requestStopGame;
 	bool configured;
@@ -69,11 +80,14 @@ private:
 	bool badBomber;
 	int cpuLevel;
 	int time;
+	bool gamePause;
+	bool gameStart;
 	
 	
 	unsigned short * in_keystate;
 	SDL_Surface * vout_buf;
 	std::vector<Player *>players;
+	std::vector<Bombe *>bombes;
 	
 	void copySurfaceToBackRenderer(SDL_Surface * src, SDL_Surface * dest, int x, int y);
 	void mergeScreen();

@@ -7,8 +7,6 @@
 #define blockSizeX 18
 #define blockSizeY 16
 
-#define stepOfPlayerY 0.1
-#define stepOfPlayerX 0.1
 #define nbFrameIncAnimation 5
 
 const static char *BombermanSprite = "./resources/sprite/characters/AllBomberman.png";
@@ -92,9 +90,21 @@ enum louisTypeEnum{
 
 
 
-Player::Player(unsigned short * in_keystateLibretro, bool isACpuPlayer, int indexSprite, float startPositionX, float startPositionY, int playerNumberLibretro, int table[sizeX * sizeY])
+Player::Player(unsigned short * in_keystateLibretro, bool isACpuPlayer, int indexSprite, float startPositionX, float startPositionY, int playerNumberLibretro, int table[sizeX * sizeY], SDL_Surface ** bombeSpriteGame)
 {
 	playerState = onLouis;
+	NbBombeMax = 1;
+	NBBombeRemaining = 1;
+	bubbleBombePower = false;
+	haveGlovePower = false;
+	ghostModePower = false;
+	powerBombePower = false;
+	radioBombePower = false;
+	putABombe = false;
+	flameStrengh = 2;
+	playerSpeed = 0.1;
+	
+	
 	frameCounter = 0;
 	offsetSprite = 0;
 	previousDirection = down;
@@ -264,6 +274,7 @@ Player::Player(unsigned short * in_keystateLibretro, bool isACpuPlayer, int inde
 	playerNumber = playerNumberLibretro;
 	characterSpriteIndex = indexSprite;
 	in_keystate = in_keystateLibretro;
+	bombeSprite = bombeSpriteGame;
 	SDL_FreeSurface(tempSurface);
 }
 
@@ -306,6 +317,8 @@ Player::~Player()
 	free(playerSpriteBurn);
 	free(louisSprite);
 	free(louisSpriteBurn);
+	
+	free(bombeSprite);
 	
 	free(in_keystate);
 	free(tab);
@@ -660,40 +673,36 @@ void Player::doSomething(SDL_Surface * surfaceToDraw){
 	if(cpu){
 		
 	} else {
+
+		/*
+		* Direction of a player
+		*/
 		int roundX = floor(posX);
 		int roundY = floor(posY);
 		
-		float margeInf = 0.5 - (stepOfPlayerY/2);
-		float margeSup = 0.5 + (stepOfPlayerY/2);
+		float margeInf = 0.5 - (playerSpeed/2);
+		float margeSup = 0.5 + (playerSpeed/2);
 		
-		float posInsideCaseX = posX - (float)floor(posX);
 		if(posX-(float)roundX >= margeInf && posX-(float)roundX <= margeSup){
 			posX = (float)floor(posX)+0.5;
 		}
 		
-		float posInsideCaseY = posY - (float)floor(posY);
 		if(posY-(float)roundY >= margeInf && posY-(float)roundY <= margeSup){
 			posY = (float)floor(posY) + 0.5;
 		}
 		
-		if(playerNumber==0){
-		fprintf(stderr, "%f %f \n", posX, posY);	
-		}
-		
-		
-		
 		if(keystate & keyPadLeft){
 			if(posX - roundX == 0.5){
 				if(!(tab[(roundX - 1) + (roundY * sizeX)] !=0)){		
-					posX = ( posX - stepOfPlayerX );
+					posX = ( posX - playerSpeed );
 				}
 			}else{
 				if(posY - roundY > 0.5){
-					posY = ( posY - stepOfPlayerY );
+					posY = ( posY - playerSpeed );
 				}else if(posY - roundY < 0.5){
-					posY = ( posY + stepOfPlayerY );
+					posY = ( posY + playerSpeed );
 				}else{
-					posX = ( posX - stepOfPlayerX );
+					posX = ( posX - playerSpeed );
 				}
 			}
 			previousDirection = left;
@@ -702,15 +711,15 @@ void Player::doSomething(SDL_Surface * surfaceToDraw){
 		if(keystate & keyPadRight){
 			if(posX - roundX == 0.5){
 				if(!(tab[(roundX + 1) + (roundY * sizeX)] !=0)){
-					posX = ( posX + stepOfPlayerX );
+					posX = ( posX + playerSpeed );
 				}
 			}else{
 				if(posY - roundY > 0.5){
-					posY = ( posY - stepOfPlayerY );
+					posY = ( posY - playerSpeed );
 				}else if(posY - roundY < 0.5){
-					posY = ( posY + stepOfPlayerY );
+					posY = ( posY + playerSpeed );
 				}else{
-					posX = ( posX + stepOfPlayerX );	
+					posX = ( posX + playerSpeed );	
 				}
 			}
 			previousDirection = right;
@@ -720,15 +729,15 @@ void Player::doSomething(SDL_Surface * surfaceToDraw){
 			
 			if(posY - roundY == 0.5){
 				if(!(tab[roundX + ((roundY + 1 ) * sizeX)] !=0)){
-					posY = ( posY + stepOfPlayerY );
+					posY = ( posY + playerSpeed );
 				}
 			}else{
 				if(posX - roundX > 0.5){
-					posX = ( posX - stepOfPlayerX );
+					posX = ( posX - playerSpeed );
 				}else if(posX - roundX < 0.5){
-					posX = ( posX + stepOfPlayerX );
+					posX = ( posX + playerSpeed );
 				}else{
-					posY = ( posY + stepOfPlayerY );
+					posY = ( posY + playerSpeed );
 				}
 			}
 		previousDirection = down;
@@ -737,18 +746,38 @@ void Player::doSomething(SDL_Surface * surfaceToDraw){
 		if(keystate & keyPadUp){
 			if(posY - roundY == 0.5){
 				if(!(tab[roundX + ((roundY - 1 ) * sizeX)] !=0)){
-					posY = ( posY - stepOfPlayerY );
+					posY = ( posY - playerSpeed );
 				}
 			}else{
 				if(posX - roundX > 0.5){
-					posX = ( posX - stepOfPlayerX );
+					posX = ( posX - playerSpeed );
 				}else if(posX - roundX < 0.5){
-					posX = ( posX + stepOfPlayerX );
+					posX = ( posX + playerSpeed );
 				}else{
-					posY = ( posY - stepOfPlayerY );
+					posY = ( posY - playerSpeed );
 				}
 			}
 		previousDirection = up;
+		}
+		
+		/*
+		* ACTION OF A PLAYER
+		*/
+		
+		if(keystate & keyPadStart){
+			//display menu	
+		}
+		if(keystate & keyPadA){
+			putABombe = true;	
+		}
+		if(keystate & keyPadB){
+			//display menu	
+		}
+		if(keystate & keyPadX){
+			//display menu	
+		}
+		if(keystate & keyPadY){
+			//display menu	
 		}
 	}
 	
@@ -778,5 +807,79 @@ void Player::doSomething(SDL_Surface * surfaceToDraw){
 			drawCrying(surfaceToDraw);
 			break;
 	}
+}
+
+Bombe * Player::addBombe(){
+	
+	int type = normalBombeType;
+	int time = 200;
+	int strenght = flameStrengh;
+	
+	if(bubbleBombePower){
+		type = bubbleBombeType;
+	}
+	if(radioBombePower){
+		type = radioBombeType;
+		time = -1;
+	}
+	if(powerBombePower){
+		strenght = 30;
+		type = powerBombeType;
+	}
+	return new Bombe(flameStrengh, floor(posX), floor(posY), type, playerNumber, time, bombeSprite);	
+}
+
+bool Player::wantPutBombe(){
+	return putABombe;
+}
+
+void Player::ABombeExplode(){
+	NBBombeRemaining++;
+}
+
+void Player::ABombeIsSet(){
+	fprintf(stderr, "bombe posee, %i %i", NBBombeRemaining, NbBombeMax);
+	NBBombeRemaining--;
+	putABombe = false;
+}
+
+void Player::takeAnEgg(){
+	playerState = onLouis;
+}
+
+void Player::takeGlove(){
+	haveGlovePower = true;
+}
+
+void Player::ghostMode(){
+	ghostModePower = true;
+}
+
+void Player::flameUp(){
+	flameStrengh++;
+}
+
+void Player::speedUp(){
+	playerSpeed = playerSpeed + 0.02;
+}
+
+void Player::speedDown(){
+	playerSpeed = playerSpeed - 0.02;
+}
+
+void Player::powerBombe(){
+	powerBombePower = true;
+}
+
+void Player::radioBombe(){
+	radioBombePower = true;
+}
+
+void Player::bubleBombe(){
+	bubbleBombePower = true;
+}
+
+void Player::bombeNbUp(){
+	NbBombeMax++;
 }
 
