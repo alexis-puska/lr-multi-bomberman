@@ -47,8 +47,10 @@ Raspberry pi 2/3:
 - 2 for the raspberry pi 2
 - 3 for the raspberry pi 3
 
-```
-Launch :
-	/PathToRetroarch/retroarch -L lr_multi_bomberman_libretro.so
 
+
+===============================
+Launch :
+```
+	/PathToRetroarch/retroarch -L lr_multi_bomberman_libretro.so
 ```
