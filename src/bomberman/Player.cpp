@@ -527,6 +527,7 @@ void Player::drawBurning(SDL_Surface * surfaceToDraw, bool animate){
 			if(offsetSprite >=nbFrameForAnimation){
 				offsetSprite = 0;
 				playerState = dead;
+				return;
 			}
 		}
 		frameCounter++;
