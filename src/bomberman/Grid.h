@@ -23,6 +23,9 @@ public:
     //configure the grid and build it
     void configure(int levelNumber);
     
+    
+    void burnAWall(int posX, int posY);
+    
     //get Image to render in retroarch
 	SDL_Surface * getGroundLayer();
 	SDL_Surface * getSkyLayer();

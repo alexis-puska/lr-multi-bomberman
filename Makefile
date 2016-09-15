@@ -33,6 +33,8 @@ OBJS += src/bomberman/Grid.o
 OBJS += src/bomberman/Game.o
 OBJS += src/bomberman/Player.o
 OBJS += src/bomberman/Bombe.o
+OBJS += src/bomberman/Explosion.o
+OBJS += src/bomberman/BurnWall.o
 OBJS += src/bomberman/Cursor.o
 
 

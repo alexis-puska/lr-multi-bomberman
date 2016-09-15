@@ -74,7 +74,7 @@ enum nbFrameAnimationEnum{
 	animationOnLouis		= 4,
 	animationCarryBombe		= 4,
 	animationThrowBombe		= 2,
-	animationBurning		= 7,
+	animationBurning		= 6,
 	animationLouisBurning	= 7,
 	animationVictory		= 4,
 	animationCrying			= 4
@@ -92,9 +92,9 @@ enum louisTypeEnum{
 
 Player::Player(unsigned short * in_keystateLibretro, bool isACpuPlayer, int indexSprite, float startPositionX, float startPositionY, int playerNumberLibretro, int table[sizeX * sizeY], SDL_Surface ** bombeSpriteGame)
 {
-	playerState = onLouis;
-	NbBombeMax = 1;
-	NBBombeRemaining = 1;
+	playerState = normal;
+	NbBombeMax = 2;
+	NBBombeRemaining = 2;
 	bubbleBombePower = false;
 	haveGlovePower = false;
 	ghostModePower = false;
@@ -526,6 +526,7 @@ void Player::drawBurning(SDL_Surface * surfaceToDraw, bool animate){
 			offsetSprite++;	
 			if(offsetSprite >=nbFrameForAnimation){
 				offsetSprite = 0;
+				playerState = dead;
 			}
 		}
 		frameCounter++;
@@ -662,119 +663,152 @@ void Player::drawCrying(SDL_Surface * surfaceToDraw, bool animate){
 void Player::doSomething(SDL_Surface * surfaceToDraw){
 	unsigned short keystate = *in_keystate;
 	bool animate = false;
-	
-	if(cpu){
-		
-	} else {
-
-		/*
-		* Direction of a player
-		*/
-		int roundX = floor(posX);
-		int roundY = floor(posY);
-		
-		float margeInf = 0.5 - (playerSpeed/2);
-		float margeSup = 0.5 + (playerSpeed/2);
-		
-		if(posX-(float)roundX >= margeInf && posX-(float)roundX <= margeSup){
-			posX = (float)floor(posX)+0.5;
-		}
-		
-		if(posY-(float)roundY >= margeInf && posY-(float)roundY <= margeSup){
-			posY = (float)floor(posY) + 0.5;
-		}
-		
-		if(keystate & keyPadLeft){
-			if(posX - roundX == 0.5){
-				if(!(tab[(roundX - 1) + (roundY * sizeX)] !=0)){		
-					posX = ( posX - playerSpeed );
-				}
-			}else{
-				if(posY - roundY > 0.5){
-					posY = ( posY - playerSpeed );
-				}else if(posY - roundY < 0.5){
-					posY = ( posY + playerSpeed );
-				}else{
-					posX = ( posX - playerSpeed );
-				}
-			}
-			previousDirection = left;
-			animate = true;
-		}
-		
-		if(keystate & keyPadRight){
-			if(posX - roundX == 0.5){
-				if(!(tab[(roundX + 1) + (roundY * sizeX)] !=0)){
-					posX = ( posX + playerSpeed );
-				}
-			}else{
-				if(posY - roundY > 0.5){
-					posY = ( posY - playerSpeed );
-				}else if(posY - roundY < 0.5){
-					posY = ( posY + playerSpeed );
-				}else{
-					posX = ( posX + playerSpeed );	
-				}
-			}
-			previousDirection = right;
-			animate = true;
-		}
-		
-		if(keystate & keyPadDown){
+	if(playerState != dead){
+		if(cpu){
 			
-			if(posY - roundY == 0.5){
-				if(!(tab[roundX + ((roundY + 1 ) * sizeX)] !=0)){
-					posY = ( posY + playerSpeed );
+		} else {
+			if(playerState != burning){
+				/*
+				* Direction of a player
+				*/
+				int roundX = floor(posX);
+				int roundY = floor(posY);
+				
+				if(tab[roundX + roundY * sizeX] == 1){
+					playerState = burning;
+					animate = true;
 				}
-			}else{
-				if(posX - roundX > 0.5){
-					posX = ( posX - playerSpeed );
-				}else if(posX - roundX < 0.5){
-					posX = ( posX + playerSpeed );
-				}else{
-					posY = ( posY + playerSpeed );
+						
+				if(roundY > sizeY){
+					posY = 0.0;
+					roundY = 0;
 				}
+				
+				if(roundY < 0){
+					posY = sizeY + 0.9;
+					roundY = sizeY;
+				}
+		
+				float margeInf = 0.5 - (playerSpeed/2);
+				float margeSup = 0.5 + (playerSpeed/2);
+				
+				if(posX-(float)roundX >= margeInf && posX-(float)roundX <= margeSup){
+					posX = (float)floor(posX)+0.5;
+				}
+				
+				if(posY-(float)roundY >= margeInf && posY-(float)roundY <= margeSup){
+					posY = (float)floor(posY) + 0.5;
+				}
+				
+				if(keystate & keyPadLeft){
+					if(posX - roundX == 0.5){
+						if(!(tab[(roundX - 1) + (roundY * sizeX)] > 1)){		
+							posX = ( posX - playerSpeed );
+						}
+					}else{
+						if(posY - roundY > 0.5){
+							posY = ( posY - playerSpeed );
+						}else if(posY - roundY < 0.5){
+							posY = ( posY + playerSpeed );
+						}else{
+							posX = ( posX - playerSpeed );
+						}
+					}
+					previousDirection = left;
+					animate = true;
+				}
+				
+				if(keystate & keyPadRight){
+					if(posX - roundX == 0.5){
+						if(!(tab[(roundX + 1) + (roundY * sizeX)] > 1)){
+							posX = ( posX + playerSpeed );
+						}
+					}else{
+						if(posY - roundY > 0.5){
+							posY = ( posY - playerSpeed );
+						}else if(posY - roundY < 0.5){
+							posY = ( posY + playerSpeed );
+						}else{
+							posX = ( posX + playerSpeed );	
+						}
+					}
+					previousDirection = right;
+					animate = true;
+				}
+				
+				
+				
+				
+				if(keystate & keyPadDown){
+					
+					if(posY - roundY == 0.5){
+						if((roundY+1) > sizeY){
+							if(!(tab[roundX + ((sizeY+1) * sizeX)] > 1)){
+								posY = ( posY + playerSpeed );
+							}
+						}else{
+							if(!(tab[roundX + ((roundY + 1 ) * sizeX)] > 1)){
+								posY = ( posY + playerSpeed );
+							}
+						}
+					}else{
+						if(posX - roundX > 0.5){
+							posX = ( posX - playerSpeed );
+						}else if(posX - roundX < 0.5){
+							posX = ( posX + playerSpeed );
+						}else{
+							posY = ( posY + playerSpeed );
+						}
+					}
+					previousDirection = down;
+					animate = true;
+				}
+				
+				if(keystate & keyPadUp){
+					if(posY - roundY == 0.5){
+						if((roundY-1) < 0){
+							if(!(tab[roundX + ((sizeY-1) * sizeX)] > 1)){
+								posY = ( posY - playerSpeed );
+							}
+						}else{
+							if(!(tab[roundX + ((roundY - 1 ) * sizeX)] > 1)){
+								posY = ( posY - playerSpeed );
+							}
+						}
+					}else{
+						if(posX - roundX > 0.5){
+							posX = ( posX - playerSpeed );
+						}else if(posX - roundX < 0.5){
+							posX = ( posX + playerSpeed );
+						}else{
+							posY = ( posY - playerSpeed );
+						}
+					}
+					previousDirection = up;
+					animate = true;
+				}
+				
+				
+				/*
+				* ACTION OF A PLAYER
+				*/
+				
+				if(keystate & keyPadStart){
+					//display menu	
+				}
+				if(keystate & keyPadA){
+					putABombe = true;	
+				}
+				if(keystate & keyPadB){
+					//display menu	
+				}
+				if(keystate & keyPadX){
+					//display menu	
+				}
+				if(keystate & keyPadY){
+					//display menu	
+				}	
 			}
-			previousDirection = down;
-			animate = true;
-		}
-		
-		if(keystate & keyPadUp){
-			if(posY - roundY == 0.5){
-				if(!(tab[roundX + ((roundY - 1 ) * sizeX)] !=0)){
-					posY = ( posY - playerSpeed );
-				}
-			}else{
-				if(posX - roundX > 0.5){
-					posX = ( posX - playerSpeed );
-				}else if(posX - roundX < 0.5){
-					posX = ( posX + playerSpeed );
-				}else{
-					posY = ( posY - playerSpeed );
-				}
-			}
-			previousDirection = up;
-			animate = true;
-		}
-		
-		/*
-		* ACTION OF A PLAYER
-		*/
-		
-		if(keystate & keyPadStart){
-			//display menu	
-		}
-		if(keystate & keyPadA){
-			putABombe = true;	
-		}
-		if(keystate & keyPadB){
-			//display menu	
-		}
-		if(keystate & keyPadX){
-			//display menu	
-		}
-		if(keystate & keyPadY){
-			//display menu	
 		}
 	}
 	
@@ -792,7 +826,7 @@ void Player::doSomething(SDL_Surface * surfaceToDraw){
 			drawThrowBombe(surfaceToDraw, animate);
 			break;
 		case burning:
-			drawBurning(surfaceToDraw, animate);
+			drawBurning(surfaceToDraw, true);
 			break;
 		case louisBurning:
 			drawLouisBurning(surfaceToDraw, animate);
@@ -808,7 +842,7 @@ void Player::doSomething(SDL_Surface * surfaceToDraw){
 
 Bombe * Player::addBombe(){
 	int type = normalBombeType;
-	int time = 100;
+	int time = 100	;
 	int strenght = flameStrengh;
 	
 	if(bubbleBombePower){
@@ -822,13 +856,14 @@ Bombe * Player::addBombe(){
 		strenght = 30;
 		type = powerBombeType;
 	}
-	return new Bombe(flameStrengh, (int)floor(posX), (int)floor(posY), type, playerNumber, time, bombeSprite);
+	tab[(int)floor(posX) + ((int)floor(posY)*sizeX)] = 3;
+	return new Bombe(flameStrengh, (int)floor(posX), (int)floor(posY), type, playerNumber, time, bombeSprite, tab);
 }
 
 bool Player::wantPutBombe(){
-	if(NBBombeRemaining>0)
+	if(NBBombeRemaining>0 && tab[(int)floor(posX) + ((int)floor(posY)*sizeX)] != 3){
 		return putABombe;
-	else{
+	}else{
 		putABombe = false;
 		return false;
 	}
@@ -839,7 +874,6 @@ void Player::ABombeExplode(){
 }
 
 void Player::ABombeIsSet(){
-	fprintf(stderr, "bombe posee, %i %i", NBBombeRemaining, NbBombeMax);
 	NBBombeRemaining--;
 	putABombe = false;
 }

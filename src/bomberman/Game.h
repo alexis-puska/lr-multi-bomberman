@@ -15,6 +15,7 @@
 
 #include "Grid.h"
 #include "Player.h"
+#include "BurnWall.h"
 
 #ifndef __MYCLASS_GAME
 #define __MYCLASS_GAME
@@ -65,6 +66,7 @@ private:
 	SDL_Surface ** bombeSprite;
 	SDL_Surface ** bonusSprite;
 	SDL_Surface ** eggsSprite;
+	SDL_Surface ** burnWallSprite;
 	
 	
 	bool isThreadAlive;
@@ -88,6 +90,8 @@ private:
 	SDL_Surface * vout_buf;
 	std::vector<Player *>players;
 	std::vector<Bombe *>bombes;
+	std::vector<Explosion *> explosions;
+	std::vector<BurnWall *> burnWalls;
 	
 	void copySurfaceToBackRenderer(SDL_Surface * src, SDL_Surface * dest, int x, int y);
 	void mergeScreen();

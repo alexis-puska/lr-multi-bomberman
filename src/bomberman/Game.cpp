@@ -2,12 +2,12 @@
 
 
 #define gameTick 20
-#define sizeX 35
-#define sizeY 21
+
 
 Uint32 rmask, gmask, bmask, amask;
 const static char *misc = "./resources/sprite/other/Misc.png";
-
+const static char *fireSprite = "./resources/sprite/other/Fire.png";
+const static char *levelSprite = "./resources/sprite/level/AllLevel.png";
 
 static int metronome(void* data)
 {
@@ -29,10 +29,10 @@ static int metronome(void* data)
 		delay = gameTick - milliseconds;
 
 		if(delay > 0){
-            fprintf(stderr, "game tick pause : %i \n", (int)delay);
+            fprintf(stderr, "%i\n", (int)delay);
 			SDL_Delay(delay);
 		}else{
-			fprintf(stderr, "game tick time tooooo long !!!!\n");
+			fprintf(stderr, "warning!!!\n");
 		}
 	}
 	return 0;
@@ -119,8 +119,9 @@ Game::Game(int levelIndexInformation, int playerInformation[16][2], int gameOpti
 	bombeSprite = new SDL_Surface * [12];
 	bonusSprite = new SDL_Surface * [12];
 	eggsSprite = new SDL_Surface * [2];
+	burnWallSprite = new SDL_Surface * [6];
 	
-	SDL_Surface * tempSurface = IMG_Load(misc);
+	SDL_Surface * tempSurface = IMG_Load(fireSprite);
 	SDL_Rect srcTextureRect;
 	SDL_Rect destTextureRect;
 	destTextureRect.x = 0;
@@ -133,19 +134,22 @@ Game::Game(int levelIndexInformation, int playerInformation[16][2], int gameOpti
 	// explosionSprite
 	for(i = 0 ; i < 4; i++){
 		for(j = 0; j < 9; j++){
-			srcTextureRect.x = i * 16;
+			srcTextureRect.x = i * 18;
 		    srcTextureRect.y = j * 16;
-		    srcTextureRect.w = 16;
+		    srcTextureRect.w = 18;
 		    srcTextureRect.h = 16;
-			explosionSprite[i + (j * 4)] =  SDL_CreateRGBSurface(0, 16, 16, 32, rmask, gmask, bmask, amask);
+			explosionSprite[i + (j * 4)] =  SDL_CreateRGBSurface(0, 18, 16, 32, rmask, gmask, bmask, amask);
         	SDL_BlitSurface(tempSurface, &srcTextureRect, explosionSprite[i + (j * 4)], &destTextureRect);
 		}
 	}
 	
+	SDL_FreeSurface(tempSurface);
+	tempSurface = IMG_Load(misc);
+	
 	// bonusSprite
 	for(i = 0 ; i < 2; i++){
 		for(j = 0; j < 6; j++){
-			srcTextureRect.x = (i + 4) * 16;
+			srcTextureRect.x = i * 16;
 		    srcTextureRect.y = j * 16;
 		    srcTextureRect.w = 16;
 		    srcTextureRect.h = 16;
@@ -157,7 +161,7 @@ Game::Game(int levelIndexInformation, int playerInformation[16][2], int gameOpti
 	// bombeSprite
 	for(i = 0 ; i < 3; i++){
 		for(j = 0; j < 4; j++){
-			srcTextureRect.x = (i+6) * 16;
+			srcTextureRect.x = (i+2) * 16;
 		    srcTextureRect.y = j * 16;
 		    srcTextureRect.w = 16;
 		    srcTextureRect.h = 16;
@@ -168,15 +172,38 @@ Game::Game(int levelIndexInformation, int playerInformation[16][2], int gameOpti
 	
 	// eggsSprite
 	for(i = 0 ; i < 2; i++){
-		srcTextureRect.x = (i+4) * 16;
+		srcTextureRect.x = i * 16;
 	    srcTextureRect.y = 4 * 16;
 	    srcTextureRect.w = 16;
 	    srcTextureRect.h = 16;
 		eggsSprite[i] =  SDL_CreateRGBSurface(0, 16, 16, 32, rmask, gmask, bmask, amask);
        	SDL_BlitSurface(tempSurface, &srcTextureRect, eggsSprite[i], &destTextureRect);
 	}
-
 	SDL_FreeSurface(tempSurface);
+	
+	
+	// Load Surface for burn wall animation
+	// levelIndexInformation
+	tempSurface = IMG_Load(levelSprite);
+	
+	for(i = 0 ; i < 3; i++){
+		srcTextureRect.x = (i + 2) *18;
+	    srcTextureRect.y = (levelIndexInformation * 128) + (4 * 16);
+	    srcTextureRect.w = 18;
+	    srcTextureRect.h = 16;
+		burnWallSprite[i] =  SDL_CreateRGBSurface(0, 18, 16, 32, rmask, gmask, bmask, amask);
+       	SDL_BlitSurface(tempSurface, &srcTextureRect, burnWallSprite[i], &destTextureRect);
+	}
+	for(i = 0 ; i < 3; i++){
+		srcTextureRect.x = i *18;
+	    srcTextureRect.y = (levelIndexInformation * 128) + (5 * 16);
+	    srcTextureRect.w = 18;
+	    srcTextureRect.h = 16;
+		burnWallSprite[i+3] =  SDL_CreateRGBSurface(0, 18, 16, 32, rmask, gmask, bmask, amask);
+       	SDL_BlitSurface(tempSurface, &srcTextureRect, burnWallSprite[i+3], &destTextureRect);
+	}
+	SDL_FreeSurface(tempSurface);
+	
 	
 	
 	/*
@@ -215,6 +242,8 @@ Game::~Game(){
 	free(tab);
 	free(in_keystate);
 	players.clear();
+	bombes.clear();
+	explosions.clear();
 	SDL_FreeSurface(vout_buf);
 	SDL_FreeSurface(overlay);
 	SDL_FreeSurface(screenBuffer);
@@ -232,11 +261,15 @@ Game::~Game(){
 	for(int i = 0; i < 2; i++){
 		SDL_FreeSurface(eggsSprite[i]);
 	}
+	for(int i = 0; i < 6; i++){
+		SDL_FreeSurface(burnWallSprite[i]);
+	}
+	
 	free(explosionSprite);
 	free(bombeSprite);
 	free(bonusSprite);
 	free(eggsSprite);
-	
+	free(burnWallSprite);
 	TTF_CloseFont(fragileBombersFont);
     TTF_Quit();
 }
@@ -363,11 +396,195 @@ void Game::tick(){
 				bombes[i] -> tick(playerBombeExplode);
 				if(bombes[i]->isExplode()){
 					players[bombes[i]->getPlayer()]->ABombeExplode();
+					
+					/* 
+					* generate explosion
+					*/
+					
+					int strenght = bombes[i]->getStrenght();
+					int posXBombe = bombes[i]->getPosX();
+					int posYBombe = bombes[i]->getPosY();
+					
+					
+					/*
+					*DIRECTION
+					*/
+
+					bool exitLoop = false;
+					int ind = 0;
+					
+					//CENTER
+					explosions.push_back(new Explosion(posXBombe, posYBombe, 0, explosionSprite, tab));
+					
+					//UP
+					for(int j = 1; j < strenght + 1; j++){
+						if(exitLoop == true){
+							break;	
+						}
+						
+						switch(tab[posXBombe + (posYBombe-j) * sizeX]){
+							case 0 :
+							case 1 :
+								if(j == strenght){
+									ind = 1;
+								}else{
+									ind = 2;
+								}
+								explosions.push_back(new Explosion(posXBombe, posYBombe - j, ind, explosionSprite, tab));
+								break;
+							case 2 :
+								burnWalls.push_back(new BurnWall(posXBombe, posYBombe - j, ind, burnWallSprite, tab));
+								grid->burnAWall(posXBombe, posYBombe - j);
+								exitLoop = true;
+								break;
+							case 3 : 
+								for(unsigned int k=0;k<bombes.size();k++){
+									if(bombes[k] -> getCase() == posXBombe + (posYBombe - j) * sizeX){
+										bombes[k]->explode();
+										exitLoop = true;
+										break;
+									}
+								}
+								break;
+							case 4 :
+								exitLoop = true;
+								break;
+						}
+					}
+					
+					
+					//Right
+					exitLoop = false;
+					for(int j = 1; j < strenght + 1; j++){
+						if(exitLoop == true){
+							break;	
+						}
+						
+						switch(tab[ (posXBombe + j ) + posYBombe * sizeX]){
+							case 0 :
+							case 1 :
+								if(j == strenght){
+									ind = 7;
+								}else{
+									ind = 8;
+								}
+								explosions.push_back(new Explosion((posXBombe + j ),posYBombe, ind, explosionSprite, tab));
+								break;
+							case 2 :
+								burnWalls.push_back(new BurnWall((posXBombe + j ), posYBombe, ind, burnWallSprite, tab));
+								grid->burnAWall((posXBombe + j ), posYBombe);
+								exitLoop = true;
+								break;
+							case 3 : 
+								for(unsigned int k=0;k<bombes.size();k++){
+									if(bombes[k] -> getCase() == (posXBombe + j ) + posYBombe * sizeX){
+										bombes[k]->explode();
+										exitLoop = true;
+										break;
+									}
+								}
+								break;
+							case 4 :
+								exitLoop = true;
+								break;	
+						}
+					}
+					
+					
+					//DOWN
+					exitLoop = false;
+					for(int j = 1; j < strenght + 1; j++){
+						if(exitLoop == true){
+							break;	
+						}
+						
+						switch(tab[posXBombe + (posYBombe + j) * sizeX]){
+							case 0 :
+							case 1 :
+								if(j == strenght){
+									ind = 5;
+								}else{
+									ind = 6;
+								}
+								explosions.push_back(new Explosion(posXBombe, posYBombe + j, ind, explosionSprite, tab));
+								break;
+							case 2 :
+								burnWalls.push_back(new BurnWall(posXBombe, posYBombe + j, ind, burnWallSprite, tab));
+								grid->burnAWall(posXBombe, posYBombe + j);
+								exitLoop = true;
+								break;
+							case 3 : 
+								for(unsigned int k=0;k<bombes.size();k++){
+									if(bombes[k] -> getCase() == posXBombe + (posYBombe + j) * sizeX){
+										bombes[k]->explode();
+										exitLoop = true;
+										break;
+									}
+								}
+								break;
+							case 4 :
+								exitLoop = true;
+								break;
+						}
+					}
+					
+					//LEFT
+					exitLoop = false;
+					for(int j = 1; j < strenght + 1; j++){
+						if(exitLoop == true){
+							break;	
+						}
+						
+						switch(tab[ (posXBombe - j ) + posYBombe * sizeX]){
+							case 0 :
+							case 1 :
+								if(j == strenght){
+									ind = 3;
+								}else{
+									ind = 4;
+								}
+								explosions.push_back(new Explosion((posXBombe - j ),posYBombe, ind, explosionSprite, tab));
+								break;
+							case 2 :
+								burnWalls.push_back(new BurnWall((posXBombe - j ), posYBombe, ind, burnWallSprite, tab));
+								grid->burnAWall((posXBombe - j ), posYBombe);
+								exitLoop = true;
+								break;
+							case 3 : 
+								for(unsigned int k=0;k<bombes.size();k++){
+									if(bombes[k] -> getCase() == (posXBombe - j ) + posYBombe * sizeX){
+										bombes[k]->explode();
+										exitLoop = true;
+										break;
+									}
+								}
+								break;
+							case 4 :
+								exitLoop = true;
+								break;	
+						}
+					}
+
+
+
 					bombes.erase(bombes.begin()+i);
 				}
 			}
-		
-		
+			
+			for(unsigned int i=0 ; i< explosions.size() ; i++){
+				explosions[i] -> tick(playerBombeExplode);
+				if(explosions[i]->canBeDelete()){
+					explosions.erase(explosions.begin()+i);
+				}
+			}
+			
+			for(unsigned int i=0 ; i< burnWalls.size() ; i++){
+				burnWalls[i] -> tick(playerBombeExplode);
+				if(burnWalls[i]->canBeDelete()){
+					burnWalls.erase(burnWalls.begin()+i);
+				}
+			}
+			
 			for(unsigned int i=0;i<players.size();i++){
 				players[i] -> doSomething(playerBombeExplode);
 				if(players[i] -> wantPutBombe()){

@@ -3,9 +3,9 @@
 #define nbFrame 6
 
 
-Bombe::Bombe(int Strenght, int posXX, int posYY, int type, int numPlayerSetTheBombe, int nbTickBeforeExplostion, SDL_Surface ** miscSheet){
+Bombe::Bombe(int Strenght, int posXX, int posYY, int type, int numPlayerSetTheBombe, int nbTickBeforeExplostion, SDL_Surface ** miscSheet, int table[sizeX * sizeY]){
 
-	
+	tab = table;
 	frameCounter = 0;
 	offsetSprite = 0;
 	nbFrameForAnimation = 4;
@@ -22,12 +22,13 @@ Bombe::Bombe(int Strenght, int posXX, int posYY, int type, int numPlayerSetTheBo
 
 Bombe::~Bombe(){
 	animation = NULL;
+	tab = NULL;
 }
 
 bool Bombe::isExplode(){
-	
+
 	if(nbTickExplode <=0){
-		fprintf(stderr,"BOOM");
+		tab[posX + posY * sizeX ] = 0;
 		return true;
 	}else{
 		return false;
@@ -35,11 +36,24 @@ bool Bombe::isExplode(){
 }
 
 void Bombe::explode(){
+	tab[posX + posY * sizeX ] = 0;
 	nbTickExplode = 0;
 }
 
 int Bombe::getStrenght(){
 	return strenght;
+}
+
+int Bombe::getPosX(){
+	return posX;
+}
+
+int Bombe::getPosY(){
+	return posY;
+}
+
+int Bombe::getCase(){
+	return posX + posY * sizeX;	
 }
 
 int Bombe::getPlayer(){

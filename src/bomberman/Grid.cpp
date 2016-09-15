@@ -159,7 +159,11 @@ void Grid::generateGrid(){
     for(int i=0;i<sizeX;i++){
         for(int j=0;j<sizeY;j++){
             if( j == 0 || j == (sizeY-1) || i == 0 || i == (sizeX-1)|| (j%2 == 0 && i%2 == 0)){
-                tab[i+(j*sizeX)] = 1;
+            	//murs
+                tab[i+(j*sizeX)] = 4;
+                if(level[lvl][j][i] == 18  ||  level[lvl][j][i] == 19  ||  level[lvl][j][i] == 20){
+            		tab[i+(j*sizeX)] = 0;	
+            	}
             } else {
                 /* generate secret number between 1 and 3: */
                 if((rand() % 7 + 1)>=2){
@@ -216,6 +220,19 @@ void Grid::generateGrid(){
             }
         }
     }
+}
+
+
+void Grid::burnAWall(int posX, int posY){
+	if(tab[posX + posY * sizeX] == 2){
+		tab[posX + posY * sizeX] = 0;
+		SDL_Rect rect;
+	    rect.x = posX * blockSizeX;
+	    rect.y = posY * blockSizeY;
+	    rect.w = blockSizeX;
+	    rect.h = blockSizeY;
+		SDL_FillRect(brickShadow, &rect, 0x000000);
+	}
 }
 
 
