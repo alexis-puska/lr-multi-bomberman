@@ -10,7 +10,7 @@
 
 
 #include <stdio.h>
-#include "bombe.h"
+#include "Bombe.h"
 
 #define sizeX 35
 #define sizeY 21
