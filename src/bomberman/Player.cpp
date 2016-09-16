@@ -664,7 +664,7 @@ void Player::drawCrying(SDL_Surface * surfaceToDraw, bool animate){
 void Player::doSomething(SDL_Surface * surfaceToDraw){
 	unsigned short keystate = *in_keystate;
 	bool animate = false;
-	if(playerState != dead || playerState != victory){
+	if(playerState != dead || playerState == victory){
 		if(cpu){
 			
 		} else {
