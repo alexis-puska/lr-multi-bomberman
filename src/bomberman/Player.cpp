@@ -664,7 +664,7 @@ void Player::drawCrying(SDL_Surface * surfaceToDraw, bool animate){
 void Player::doSomething(SDL_Surface * surfaceToDraw){
 	unsigned short keystate = *in_keystate;
 	bool animate = false;
-	if(playerState != dead){
+	if(playerState != dead || playerState != victory){
 		if(cpu){
 			
 		} else {
@@ -833,7 +833,7 @@ void Player::doSomething(SDL_Surface * surfaceToDraw){
 			drawLouisBurning(surfaceToDraw, animate);
 			break;
 		case victory:
-			drawVictory(surfaceToDraw, animate);
+			drawVictory(surfaceToDraw, true);
 			break;
 		case crying:
 			drawCrying(surfaceToDraw, animate);
@@ -924,4 +924,8 @@ bool Player::isAlive(){
 		return false;
 	}
 	return true;
+}
+
+void Player::winTheGame(){
+	playerState = victory;	
 }

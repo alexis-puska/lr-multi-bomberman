@@ -30,7 +30,10 @@ public:
 	*/
 	Bombe * addBombe();
 	bool wantPutBombe();
+	//check for the end of game
 	bool isAlive();
+	void winTheGame();
+	
 	void ABombeExplode();
 	void ABombeIsSet();
 	void takeAnEgg();

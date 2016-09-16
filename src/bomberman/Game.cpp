@@ -617,6 +617,7 @@ void Game::tick(){
 				for(unsigned int i=0;i<players.size();i++){
 	    			if(players[i]->isAlive()){
 	    				playerScore[i]++;
+	    				players[i]->winTheGame();
 	    			}	
 	    		}
 				gameState = gameEnd;
@@ -857,7 +858,14 @@ void Game::tick(){
 				gameState = gameWait;
 			}
 		break;
-    	case gameEnd:    	
+    	case gameEnd:
+    	
+    		SDL_FillRect(playerBombeExplode, NULL, SDL_MapRGBA(playerBombeExplode->format, 0, 0, 0, 0));
+    		for(unsigned int i=0;i<players.size();i++){
+				players[i] -> doSomething(playerBombeExplode);
+    		}
+    		mergeScreen();
+    	
     		//restart game
     		if(in_keystate[0] & keyPadStart){
 				gameState = gameWait;
