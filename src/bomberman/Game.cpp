@@ -8,6 +8,23 @@ Uint32 rmask, gmask, bmask, amask;
 const static char *misc = "./resources/sprite/other/Misc.png";
 const static char *fireSprite = "./resources/sprite/other/Fire.png";
 const static char *levelSprite = "./resources/sprite/level/AllLevel.png";
+const static char *background = "./resources/image/EmptyBackground.png";
+
+
+const static char *BombermanSprite = "./resources/sprite/characters/AllBomberman.png";
+const static char *BombermanSpriteCossak = "./resources/sprite/characters/AllBombermanCossak.png";
+const static char *BombermanSpriteBarbar = "./resources/sprite/characters/AllBombermanBarbar.png";
+const static char *BombermanSpriteChan = "./resources/sprite/characters/AllBombermanChan.png";
+const static char *BombermanSpriteKid = "./resources/sprite/characters/AllBombermanKid.png";
+const static char *BombermanSpritePretty = "./resources/sprite/characters/AllBombermanPretty.png";
+const static char *BombermanSpritePunk = "./resources/sprite/characters/AllBombermanPunk.png";
+const static char *BombermanSpriteMexican = "./resources/sprite/characters/AllBombermanMexican.png";
+
+/*
+* 
+* TICK generator
+* 
+*/
 
 static int metronome(void* data)
 {
@@ -38,10 +55,14 @@ static int metronome(void* data)
 	return 0;
 }
 
+/*
+* 
+* Default constructor
+* 
+*/
+
 Game::Game(){
 	gameStart = false;
-	//Load Font
-    fragileBombersFont = TTF_OpenFont( "./resources/font/fragile_bombers.ttf", 36); //this opens a font style and sets a size
 	//declarativ color mask, used for create a RGB surface
     amask = 0xff000000;
     rmask = 0x00ff0000;
@@ -54,12 +75,20 @@ Game::Game(){
 	configured = false;
 	requestStopGame = false;
 	tab = new int[sizeX * sizeY];
+	tabBonus = new int[sizeX * sizeY];
 }
 
+/*
+* 
+* constructor
+* 
+*/
 Game::Game(int levelIndexInformation, int playerInformation[16][2], int gameOption[4], SDL_Surface *  vout_bufLibretro, unsigned short * in_keystateLibretro){
 	gameStart = false;
+	
 	//Load Font
     fragileBombersFont = TTF_OpenFont( "./resources/font/fragile_bombers.ttf", 36); //this opens a font style and sets a size
+	
 	//declarativ color mask, used for create a RGB surface
     amask = 0xff000000;
     rmask = 0x00ff0000;
@@ -78,7 +107,9 @@ Game::Game(int levelIndexInformation, int playerInformation[16][2], int gameOpti
     surfaceMessage = TTF_RenderText_Solid(fragileBombersFont, "Press Select for exit pause", green);
     copySurfaceToBackRenderer(surfaceMessage, overlay , ((640/2)-(surfaceMessage->w/2)), 194);
     SDL_FreeSurface(surfaceMessage);
+    TTF_CloseFont(fragileBombersFont);
     
+    //init variable or surface
     gamePause = false;
 	screenBuffer = SDL_CreateRGBSurface(0, 630, 336, 32, rmask, gmask, bmask, amask);
 	playerBombeExplode = SDL_CreateRGBSurface(0, 630, 336, 32, rmask, gmask, bmask, amask);
@@ -86,6 +117,7 @@ Game::Game(int levelIndexInformation, int playerInformation[16][2], int gameOpti
 	configured = true;
 	requestStopGame = false;
 	tab = new int[sizeX * sizeY];
+	tabBonus = new int[sizeX * sizeY];
 	
 	levelIndex = levelIndexInformation;
 	if(gameOption[0] == 1){
@@ -101,8 +133,11 @@ Game::Game(int levelIndexInformation, int playerInformation[16][2], int gameOpti
 	}
 		
 	cpuLevel = gameOption[2];
-	time = gameOption[3];
-	
+	if(gameOption[3] != -1){
+		nbTickForGame = gameOption[3] * 50 * 60;
+	}else{
+		nbTickForGame = gameOption[3];
+	}
 	
 	in_keystate = in_keystateLibretro;
 	vout_buf = vout_bufLibretro;
@@ -120,6 +155,7 @@ Game::Game(int levelIndexInformation, int playerInformation[16][2], int gameOpti
 	bonusSprite = new SDL_Surface * [12];
 	eggsSprite = new SDL_Surface * [2];
 	burnWallSprite = new SDL_Surface * [6];
+	headerPlayerSprite = new SDL_Surface * [16];
 	
 	SDL_Surface * tempSurface = IMG_Load(fireSprite);
 	SDL_Rect srcTextureRect;
@@ -204,42 +240,97 @@ Game::Game(int levelIndexInformation, int playerInformation[16][2], int gameOpti
 	}
 	SDL_FreeSurface(tempSurface);
 	
+	/*
+	* PLAYER INFORMATION
 	
+	
+	
+	LOAD MINIATURE FOR HEADER SCORE
+	*/
+	
+	
+	SDL_Surface *textureBuffer;
+	SDL_Rect srcRect;
+    srcRect.x = 90;
+    srcRect.y = 210;
+    srcRect.w = 20;
+    srcRect.h = 20;
+    SDL_Rect dstRect;
+    dstRect.x = 0;
+    dstRect.y = 0;
+    dstRect.w = 20;
+    dstRect.h = 20;
+    
+	for(int i = 0; i < 16; i++){
+	    switch(playerInformation[i][1]){
+	    	case 0:
+		    	 textureBuffer= IMG_Load(BombermanSprite);
+		    	 break;
+			case 1:
+		    	 textureBuffer= IMG_Load(BombermanSpriteCossak);
+		    	 break;
+			case 2:
+		    	 textureBuffer= IMG_Load(BombermanSpriteBarbar);
+		    	 break;
+			case 3:
+		    	 textureBuffer= IMG_Load(BombermanSpriteChan);
+		    	 break;
+			case 4:
+		    	 textureBuffer= IMG_Load(BombermanSpriteKid);
+		    	 break;
+			case 5:
+		    	 textureBuffer= IMG_Load(BombermanSpritePretty);
+		    	 break;
+			case 6:
+		    	 textureBuffer= IMG_Load(BombermanSpritePunk);
+		    	 break;
+			case 7:
+		    	 textureBuffer= IMG_Load(BombermanSpriteMexican);
+		    	 break;
+		    default:
+		    	textureBuffer= IMG_Load(BombermanSprite);
+	    }
+    
+    	headerPlayerSprite[i] =  SDL_CreateRGBSurface(0, 18, 16, 32, rmask, gmask, bmask, amask);
+	    SDL_BlitSurface(textureBuffer, &srcRect, headerPlayerSprite[i], &dstRect);
+	   	SDL_FreeSurface(textureBuffer); 
+	}
 	
 	/*
 	*	LOAD PLAYER ON GRID
 	*/
+
 	for(int i = 0; i < 16; i++){
 		int indexTexture = playerInformation[i][1];
 		float startX = startPlayer[i][0];
 		float startY = startPlayer[i][1];
+		
 		Player * player = new Player(&in_keystate[i], false , indexTexture , startX, startY, i, tab, bombeSprite);
 		players.push_back(player);
 		player = NULL;
 	}
-	
-	
-//		for(int i=0;i<myvector.size();i++){
-//			if(myvector[i] == 6 || myvector[i] == 2 || myvector[i] == 8){
-//				  myvector.erase (myvector.begin()+i);			
-//			}
-//		}
-//		for (unsigned i=0; i<myvector.size(); ++i)
-//			fprintf(stderr,"%i", myvector[i]);
-//			fprintf(stderr,"\n\n");
-//		}
-	
-	
-	
-	
+
+    
+    //load for time display and generate header
+    fragileBombersFont = TTF_OpenFont( "./resources/font/fragile_bombers.ttf", 16); //this opens a font style and sets a size
+
+	generateHeader();
+	updateTimeDisplay();
 	mergeScreen();
 	startGame();
 }
+
+/*
+* 
+* Destructor
+* 
+*/
 
 Game::~Game(){
 	exitGame();
 	free(grid);
 	free(tab);
+	free(tabBonus);
 	free(in_keystate);
 	players.clear();
 	bombes.clear();
@@ -264,16 +355,25 @@ Game::~Game(){
 	for(int i = 0; i < 6; i++){
 		SDL_FreeSurface(burnWallSprite[i]);
 	}
+	for(int i = 0; i < 16; i++){
+		SDL_FreeSurface(headerPlayerSprite[i]);
+	}
 	
 	free(explosionSprite);
 	free(bombeSprite);
 	free(bonusSprite);
 	free(eggsSprite);
 	free(burnWallSprite);
-	TTF_CloseFont(fragileBombersFont);
+	free(headerPlayerSprite);
+    TTF_CloseFont(fragileBombersFont);
     TTF_Quit();
 }
 
+/*
+* 
+* function that initialise totaly a game
+* 
+*/
 void Game::startGame(){
 	if(!isThreadAlive){
 		isThreadAlive = true;
@@ -285,6 +385,11 @@ void Game::exitGame(){
 	stopGame();
 }
 
+/*
+* 
+* function that kill a Game and the Tick thread
+* 
+*/
 void Game::stopGame(){
 	if(isThreadAlive){
 		isThreadAlive = false;
@@ -296,6 +401,11 @@ void Game::stopGame(){
 	}
 }
 
+/*
+* 
+* function to copy a furgare inside an other.
+* 
+*/
 void Game::copySurfaceToBackRenderer(SDL_Surface * src, SDL_Surface * dest, int x, int y){
     SDL_Rect dstRect;
     dstRect.x = x;
@@ -310,6 +420,11 @@ void Game::copySurfaceToBackRenderer(SDL_Surface * src, SDL_Surface * dest, int 
     SDL_BlitSurface(src, &srcRect, dest, &dstRect);
 }
 
+/*
+* 
+* function return some information to Bomberman class, for navigation with the previous menu
+* 
+*/
 bool Game::isConfigured(){
 	return configured;
 }
@@ -321,7 +436,12 @@ bool Game::isAlive(){
 bool Game::isRequestStopGame(){
 	return requestStopGame;
 }
-    
+
+/*
+* 
+* merge the different layers to generate the game frame
+* 
+*/
 void Game::mergeScreen(){
 	SDL_Rect mergeRect;
     mergeRect.x = 0;
@@ -335,7 +455,129 @@ void Game::mergeScreen(){
     copySurfaceToBackRenderer(screenBuffer, vout_buf, 5, 24);
 }
 
+/**
+	GENERATE HEADER Player Score
+*/
+void Game::generateHeader(){
+	//reset the background
+	SDL_Surface * textureBuffer = IMG_Load(background);
+	copySurfaceToBackRenderer(textureBuffer, vout_buf, 0, 0);
+	SDL_FreeSurface(textureBuffer);
+	
+	Uint32 rmask, gmask, bmask, amask;
+    rmask = 0x00ff0000;
+    gmask = 0x0000ff00;
+    bmask = 0x000000ff;
+    amask = 0xff000000;
+
+	SDL_Surface* surfaceMessage;
+	SDL_Color green = {0, 255, 0};
+	SDL_Color red = {255, 0, 0};
+
+    SDL_Surface* menu;
+	menu =  SDL_CreateRGBSurface(0, 32, 20, 32, rmask, gmask, bmask, amask);
+    SDL_FillRect(menu, NULL, SDL_MapRGBA(menu->format, 0, 0, 0, 120));
+	
+	for(int i = 0; i < 8; i++){
+		//shadow rect
+		SDL_Rect rect;
+	    rect.x = i * 36 + 2;
+	    rect.y = 2;
+	    rect.w = 32;
+	    rect.h = 20;
+		SDL_BlitSurface(menu , NULL, vout_buf, &rect);
+		
+		//copy mini head player
+		rect.x = i * 36 + 4;
+	    rect.y = 4;
+	    rect.w = 20;
+	    rect.h = 20;
+		SDL_BlitSurface(headerPlayerSprite[i], NULL, vout_buf, &rect);
+		
+		//wrote number of victory
+		SDL_Surface* surfaceMessage = TTF_RenderText_Solid(fragileBombersFont, "0", red);
+    	copySurfaceToBackRenderer(surfaceMessage, vout_buf , i * 36 + 26 , 2);
+	    SDL_FreeSurface(surfaceMessage);
+		
+	}
+	
+	for(int i = 0; i < 8; i++){
+		SDL_Rect rect;
+	    rect.x = i * 36 + 354;
+	    rect.y = 2;
+	    rect.w = 32;
+	    rect.h = 20;
+		SDL_BlitSurface(menu , NULL, vout_buf, &rect);
+		
+		//copy mini head player
+		rect.x = i * 36 + 356;
+	    rect.y = 4;
+	    rect.w = 20;
+	    rect.h = 20;
+		SDL_BlitSurface(headerPlayerSprite[i], NULL, vout_buf, &rect);
+		
+		//wrote number of victory
+		SDL_Surface* surfaceMessage = TTF_RenderText_Solid(fragileBombersFont, "0", red);
+    	copySurfaceToBackRenderer(surfaceMessage, vout_buf , i * 36 + 378 , 2);
+	    SDL_FreeSurface(surfaceMessage);
+
+		
+	}
+	
+	SDL_FreeSurface(menu);
+}
+
+/**
+* Update the remaining time of a game
+* erase a part of the vout_buffer and write remaining time
+*/
+void Game::updateTimeDisplay(){
+	SDL_Rect rect;
+    rect.x = 290;
+    rect.y = 2;
+    rect.w = 60;
+    rect.h = 20;
+    SDL_FillRect(vout_buf, &rect, 0x000000);
+    
+    char time[6];
+    sprintf(time, "%i", nbTickForGame / 50);
+    
+    SDL_Color green = {0, 255, 0};
+    SDL_Surface* surfaceMessage = TTF_RenderText_Solid(fragileBombersFont, time, green);
+	copySurfaceToBackRenderer(surfaceMessage, vout_buf , ((640/2)-(surfaceMessage->w/2)), 2);
+
+    SDL_FreeSurface(surfaceMessage);
+}
+
+
+
+/*
+* 
+* Tick : MAIN function of the game, every 20 ms this function is call
+* 
+* if the game is in pause mode
+* 		display the pause message
+* else
+* 		Check the bombe
+*			theck if the bombe remain time is up -> explode
+*				generate the explosion
+*				generate a wall burn 
+*				explode the near bombe
+*		Check the explosion
+*			if an explosion animation is done -> remove
+*		Check the wall burn
+* 			if an burning wall animation is done -> remove
+*		Check the player 
+*			animate player
+* 			check if the player request to put a bombe
+*/
 void Game::tick(){
+    
+    if(nbTickForGame % 50 == 0){
+        updateTimeDisplay();
+    }
+    nbTickForGame--;
+    
 	if(!gameStart){
 		if(in_keystate[0] == 0){
 			gameStart = true;
@@ -373,24 +615,7 @@ void Game::tick(){
 			
 			
 			SDL_FillRect(playerBombeExplode, NULL, SDL_MapRGBA(playerBombeExplode->format, 0, 0, 0, 0));
-			//	Bombe
-			//	decompte explosion
-			//	si explostion
-			//		notification grille suppresion bombe
-			//			si bonus à la coordonnée, ajout du sprite pour le bonus
-			//explosion
-			//	animation
-			//		fin d'animation
-			//
-			//joueur
-			//	doSomething
-			//		check si dans explosion
-			//	check pose bombe
-			//		ajout nouvelle bombe
-			//for each bonus
-			//	check position joueur pour récupérer le bonus
-			//Ajout bonus aléatoire
-		
+					
 			
 			for(unsigned int i=0;i<bombes.size();i++){
 				bombes[i] -> tick(playerBombeExplode);

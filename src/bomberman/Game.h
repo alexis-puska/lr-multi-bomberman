@@ -54,47 +54,66 @@ public:
 	void stopGame();
 	void exitGame();
 private:
-	//Font for menu and Game
+	//Font for Header and time remaining and pause message
     TTF_Font* fragileBombersFont;
+    
 	//variable
 	SDL_Thread * mainThread;
 	SDL_Surface * screenBuffer;
 	SDL_Surface * playerBombeExplode;
 	SDL_Surface * overlay;
 	
+	//spite for animation
 	SDL_Surface ** explosionSprite;
 	SDL_Surface ** bombeSprite;
 	SDL_Surface ** bonusSprite;
 	SDL_Surface ** eggsSprite;
 	SDL_Surface ** burnWallSprite;
+	//sprite for header
+	SDL_Surface ** headerPlayerSprite;
 	
 	
+	
+	//pointer in the libretro buffer
+	SDL_Surface * vout_buf;
+	
+	//Game option variable
+	int levelIndex;
+	int cpuLevel;
+	int nbTickForGame;
+	bool suddenDeath;
+	bool badBomber;
+	//functional variable
+	bool gamePause;
+	bool gameStart;
 	bool isThreadAlive;
 	bool requestStopGame;
 	bool configured;
-	//the grid
-	Grid *grid;
-	//table of free/occuped part of the grid
-    int * tab;
-	//function
-	int levelIndex;
-	bool suddenDeath;
-	bool badBomber;
-	int cpuLevel;
-	int time;
-	bool gamePause;
-	bool gameStart;
 	
-	
+
+	//keystate of player
 	unsigned short * in_keystate;
-	SDL_Surface * vout_buf;
+	
+	//containers of object that can be put in the grid
 	std::vector<Player *>players;
 	std::vector<Bombe *>bombes;
 	std::vector<Explosion *> explosions;
 	std::vector<BurnWall *> burnWalls;
 	
+	/*
+	*	GRID PART
+	*/
+	//the grid generator
+	Grid *grid;
+	//table of free/occuped part of the grid
+    int * tab;
+    int * tabBonus;
+    
+	//function
 	void copySurfaceToBackRenderer(SDL_Surface * src, SDL_Surface * dest, int x, int y);
 	void mergeScreen();
+	void generateHeader();
+	void updateTimeDisplay();
 	
 };
 #endif

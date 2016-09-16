@@ -225,7 +225,6 @@ void Grid::generateGrid(){
 
 void Grid::burnAWall(int posX, int posY){
 	if(tab[posX + posY * sizeX] == 2){
-		tab[posX + posY * sizeX] = 0;
 		SDL_Rect rect;
 	    rect.x = posX * blockSizeX;
 	    rect.y = posY * blockSizeY;

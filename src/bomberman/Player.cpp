@@ -690,8 +690,8 @@ void Player::doSomething(SDL_Surface * surfaceToDraw){
 					roundY = sizeY;
 				}
 		
-				float margeInf = 0.5 - (playerSpeed/2);
-				float margeSup = 0.5 + (playerSpeed/2);
+				float margeInf = 0.51 - (playerSpeed/2);
+				float margeSup = 0.49 + (playerSpeed/2);
 				
 				if(posX-(float)roundX >= margeInf && posX-(float)roundX <= margeSup){
 					posX = (float)floor(posX)+0.5;

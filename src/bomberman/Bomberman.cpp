@@ -78,31 +78,37 @@ Bomberman::Bomberman(SDL_Surface * vout_bufLibretro)
     
     SDL_Surface *textureBuffer = IMG_Load(BombermanSprite);
     SDL_BlitSurface(textureBuffer, &dstRect, menuPlayerSprite[0], &dstRect);
+    SDL_FreeSurface(textureBuffer);
     
     textureBuffer = IMG_Load(BombermanSpriteCossak);
     SDL_BlitSurface(textureBuffer, &dstRect, menuPlayerSprite[1], &dstRect);
+    SDL_FreeSurface(textureBuffer);
     
     textureBuffer = IMG_Load(BombermanSpriteBarbar);
     SDL_BlitSurface(textureBuffer, &dstRect, menuPlayerSprite[2], &dstRect);
+    SDL_FreeSurface(textureBuffer);
     
     textureBuffer = IMG_Load(BombermanSpriteChan);
     SDL_BlitSurface(textureBuffer, &dstRect, menuPlayerSprite[3], &dstRect);
+    SDL_FreeSurface(textureBuffer);
     
     textureBuffer = IMG_Load(BombermanSpriteKid);
     SDL_BlitSurface(textureBuffer, &dstRect, menuPlayerSprite[4], &dstRect);
+    SDL_FreeSurface(textureBuffer);
     
     textureBuffer = IMG_Load(BombermanSpritePretty);
     SDL_BlitSurface(textureBuffer, &dstRect, menuPlayerSprite[5], &dstRect);
+    SDL_FreeSurface(textureBuffer);
     
     textureBuffer = IMG_Load(BombermanSpritePunk);
     SDL_BlitSurface(textureBuffer, &dstRect, menuPlayerSprite[6], &dstRect);
+    SDL_FreeSurface(textureBuffer);
     
     textureBuffer = IMG_Load(BombermanSpriteMexican);
     SDL_BlitSurface(textureBuffer, &dstRect, menuPlayerSprite[7], &dstRect);
-    
+    SDL_FreeSurface(textureBuffer);
     
     //init Level sprite for menu
-    
     textureBuffer = IMG_Load(levelView);
     SDL_Rect srcRect;
     dstRect.x = 0;
@@ -154,8 +160,9 @@ Bomberman::~Bomberman()
 void Bomberman::tick(unsigned short in_keystateLibretro[16]){
     //fprintf(stderr, "%u\n", in_keystate[0]);
     //color mask
-	for(int i=0;i<16;i++)
+	for(int i=0;i<16;i++){
 		in_keystate[i] = in_keystateLibretro[i];
+	}
     
     if(currentStep != gameStep){
 	    keyPressed();
@@ -187,7 +194,6 @@ void Bomberman::tick(unsigned short in_keystateLibretro[16]){
 	                break;
 	            case levelSelectionMenu:
 	                cursorPosition = 0;
-	                SDL_FillRect(vout_buf, NULL, SDL_MapRGB(vout_buf->format, 152, 152, 152));
 	                game = new Game(levelIndex, playerType,gameOption, vout_buf, in_keystate);
 	                currentStep = gameStep;
 	                break;

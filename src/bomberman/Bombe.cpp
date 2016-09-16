@@ -79,7 +79,6 @@ void Bombe::tick(SDL_Surface * surfaceToDraw){
 	dstRect.w = 16;
 	dstRect.h = 16;
 	
-	
 	if(frameCounter > nbFrame){
 		frameCounter = 0;
 		offsetSprite++;	
