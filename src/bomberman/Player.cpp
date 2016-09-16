@@ -919,3 +919,9 @@ void Player::bombeNbUp(){
 	NbBombeMax++;
 }
 
+bool Player::isAlive(){
+	if(playerState == dead || playerState == burning){
+		return false;
+	}
+	return true;
+}

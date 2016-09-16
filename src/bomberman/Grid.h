@@ -22,7 +22,8 @@ public:
     
     //configure the grid and build it
     void configure(int levelNumber);
-    
+    void generateGrid();
+    void resetSurface();    
     
     void burnAWall(int posX, int posY);
     
@@ -55,5 +56,5 @@ private:
     int lvl;
     
     void init();
-    void generateGrid();
+    
 };

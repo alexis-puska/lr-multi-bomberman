@@ -23,26 +23,6 @@ Grid::Grid(){
 
 Grid::Grid(int levelIndex, int table[sizeX * sizeY])
 {
-	
-//	 std::vector<int> myvector;
-//
-//	  // set some values (from 1 to 10)
-//	  for (int i=0; i<=9; i++) myvector.push_back(i);
-//	
-//	
-//	
-//	for(int i=0;i<myvector.size();i++){
-//		
-//		if(myvector[i] == 6 || myvector[i] == 2 || myvector[i] == 8){
-//			  myvector.erase (myvector.begin()+i);			
-//		}
-//	}
-//	for (unsigned i=0; i<myvector.size(); ++i)
-//		fprintf(stderr,"%i", myvector[i]);
-//		fprintf(stderr,"\n\n");
-//	
-//
-	
     lvl = levelIndex;
     tab = table;
     init();
@@ -50,9 +30,7 @@ Grid::Grid(int levelIndex, int table[sizeX * sizeY])
 }
 
 
-Grid::~Grid()
-{
-    
+Grid::~Grid(){
     int i;
     for(i = 0; i < 40; i++){
         SDL_FreeSurface(textures[i]);
@@ -66,8 +44,7 @@ Grid::~Grid()
     SDL_FreeSurface(ground);
     SDL_FreeSurface(brickShadow);
     SDL_FreeSurface(skyFixe);
-    free(tab);
-    fprintf(stderr, "destroy grid");
+	tab = NULL;
 }
 
 
@@ -145,13 +122,25 @@ void Grid::init(){
         skys[k] =  SDL_CreateRGBSurface(0, 54, 48, 32, rmask, gmask, bmask, amask);
         SDL_BlitSurface(textureBuffer, &skyRect, skys[k], &destTextureRect);
     }
-    
     ground = SDL_CreateRGBSurface(0, 630, 336, 32, rmask, gmask, bmask, amask);
     brickShadow = SDL_CreateRGBSurface(0, 630, 336, 32, rmask, gmask, bmask, amask);
     skyFixe = SDL_CreateRGBSurface(0, 630, 336, 32, rmask, gmask, bmask, amask);
     SDL_FreeSurface(textureBuffer);
 }
 
+void Grid::resetSurface(){
+	Uint32 rmask, gmask, bmask, amask;
+    amask = 0xff000000;
+    rmask = 0x00ff0000;
+    gmask = 0x0000ff00;
+    bmask = 0x000000ff;
+	SDL_FreeSurface(ground);
+	SDL_FreeSurface(brickShadow);
+	SDL_FreeSurface(skyFixe);
+	ground = SDL_CreateRGBSurface(0, 630, 336, 32, rmask, gmask, bmask, amask);
+    brickShadow = SDL_CreateRGBSurface(0, 630, 336, 32, rmask, gmask, bmask, amask);
+    skyFixe = SDL_CreateRGBSurface(0, 630, 336, 32, rmask, gmask, bmask, amask);	
+}
 
 void Grid::generateGrid(){
     srand (time(NULL));
@@ -221,6 +210,7 @@ void Grid::generateGrid(){
         }
     }
 }
+
 
 
 void Grid::burnAWall(int posX, int posY){

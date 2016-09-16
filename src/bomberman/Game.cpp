@@ -46,10 +46,10 @@ static int metronome(void* data)
 		delay = gameTick - milliseconds;
 
 		if(delay > 0){
-            fprintf(stderr, "%i\n", (int)delay);
+//            fprintf(stderr, "%i\n", (int)delay);
 			SDL_Delay(delay);
 		}else{
-			fprintf(stderr, "warning!!!\n");
+			fprintf(stderr, "warning\n");
 		}
 	}
 	return 0;
@@ -62,7 +62,7 @@ static int metronome(void* data)
 */
 
 Game::Game(){
-	gameStart = false;
+	gameState = gameWait;
 	//declarativ color mask, used for create a RGB surface
     amask = 0xff000000;
     rmask = 0x00ff0000;
@@ -83,18 +83,18 @@ Game::Game(){
 * constructor
 * 
 */
-Game::Game(int levelIndexInformation, int playerInformation[16][2], int gameOption[4], SDL_Surface *  vout_bufLibretro, unsigned short * in_keystateLibretro){
-	gameStart = false;
+Game::Game(int levelIndexInformation, int playerInformationParam[16][2], int gameOption[4], SDL_Surface *  vout_bufLibretro, unsigned short * in_keystateLibretro){
+	gameState = gameWait;
 	
-	//Load Font
+	// Load Font
     fragileBombersFont = TTF_OpenFont( "./resources/font/fragile_bombers.ttf", 36); //this opens a font style and sets a size
 	
-	//declarativ color mask, used for create a RGB surface
+	// declarativ color mask, used for create a RGB surface
     amask = 0xff000000;
     rmask = 0x00ff0000;
     gmask = 0x0000ff00;
     bmask = 0x000000ff;
-    //create overlay for pause / exit game
+    // create overlay for pause / exit game
     overlay = SDL_CreateRGBSurface(0, 630, 336, 32, rmask, gmask, bmask, amask);
     SDL_FillRect(overlay, NULL, SDL_MapRGBA(overlay->format, 0, 0, 0, 120));
 	SDL_Color green = {0, 255, 0};
@@ -109,8 +109,7 @@ Game::Game(int levelIndexInformation, int playerInformation[16][2], int gameOpti
     SDL_FreeSurface(surfaceMessage);
     TTF_CloseFont(fragileBombersFont);
     
-    //init variable or surface
-    gamePause = false;
+    // init variable or surface
 	screenBuffer = SDL_CreateRGBSurface(0, 630, 336, 32, rmask, gmask, bmask, amask);
 	playerBombeExplode = SDL_CreateRGBSurface(0, 630, 336, 32, rmask, gmask, bmask, amask);
 	isThreadAlive = false;
@@ -135,8 +134,10 @@ Game::Game(int levelIndexInformation, int playerInformation[16][2], int gameOpti
 	cpuLevel = gameOption[2];
 	if(gameOption[3] != -1){
 		nbTickForGame = gameOption[3] * 50 * 60;
+		nbTickForGameParam = nbTickForGame;
 	}else{
 		nbTickForGame = gameOption[3];
+		nbTickForGameParam = nbTickForGame;
 	}
 	
 	in_keystate = in_keystateLibretro;
@@ -262,7 +263,7 @@ Game::Game(int levelIndexInformation, int playerInformation[16][2], int gameOpti
     dstRect.h = 20;
     
 	for(int i = 0; i < 16; i++){
-	    switch(playerInformation[i][1]){
+	    switch(playerInformationParam[i][1]){
 	    	case 0:
 		    	 textureBuffer= IMG_Load(BombermanSprite);
 		    	 break;
@@ -301,9 +302,13 @@ Game::Game(int levelIndexInformation, int playerInformation[16][2], int gameOpti
 	*/
 
 	for(int i = 0; i < 16; i++){
-		int indexTexture = playerInformation[i][1];
+		int indexTexture = playerInformationParam[i][1];
 		float startX = startPlayer[i][0];
 		float startY = startPlayer[i][1];
+		
+		playerType[i] = playerInformationParam[i][0];
+		playerIndexTexture[i] = playerInformationParam[i][1];
+		playerScore[i] = 0;
 		
 		Player * player = new Player(&in_keystate[i], false , indexTexture , startX, startY, i, tab, bombeSprite);
 		players.push_back(player);
@@ -328,14 +333,19 @@ Game::Game(int levelIndexInformation, int playerInformation[16][2], int gameOpti
 
 Game::~Game(){
 	exitGame();
-	free(grid);
-	free(tab);
-	free(tabBonus);
-	free(in_keystate);
 	players.clear();
 	bombes.clear();
 	explosions.clear();
-	SDL_FreeSurface(vout_buf);
+	burnWalls.clear();
+	
+	
+	
+	free(grid);
+	free(tab);
+	free(tabBonus);
+	in_keystate = NULL;
+
+	vout_buf = NULL;
 	SDL_FreeSurface(overlay);
 	SDL_FreeSurface(screenBuffer);
 	SDL_FreeSurface(playerBombeExplode);
@@ -365,6 +375,7 @@ Game::~Game(){
 	free(eggsSprite);
 	free(burnWallSprite);
 	free(headerPlayerSprite);
+	
     TTF_CloseFont(fragileBombersFont);
     TTF_Quit();
 }
@@ -495,8 +506,10 @@ void Game::generateHeader(){
 		SDL_BlitSurface(headerPlayerSprite[i], NULL, vout_buf, &rect);
 		
 		//wrote number of victory
-		SDL_Surface* surfaceMessage = TTF_RenderText_Solid(fragileBombersFont, "0", red);
-    	copySurfaceToBackRenderer(surfaceMessage, vout_buf , i * 36 + 26 , 2);
+		char score[3];
+    	sprintf(score, "%i", playerScore[i]);
+		SDL_Surface* surfaceMessage = TTF_RenderText_Solid(fragileBombersFont, score, red);
+    	copySurfaceToBackRenderer(surfaceMessage, vout_buf , i * 36 + 22 , 2);
 	    SDL_FreeSurface(surfaceMessage);
 		
 	}
@@ -514,11 +527,15 @@ void Game::generateHeader(){
 	    rect.y = 4;
 	    rect.w = 20;
 	    rect.h = 20;
-		SDL_BlitSurface(headerPlayerSprite[i], NULL, vout_buf, &rect);
+		SDL_BlitSurface(headerPlayerSprite[i + 8], NULL, vout_buf, &rect);
+		
+		
 		
 		//wrote number of victory
-		SDL_Surface* surfaceMessage = TTF_RenderText_Solid(fragileBombersFont, "0", red);
-    	copySurfaceToBackRenderer(surfaceMessage, vout_buf , i * 36 + 378 , 2);
+		char score[3];
+    	sprintf(score, "%i", playerScore[i+8]);
+		SDL_Surface* surfaceMessage = TTF_RenderText_Solid(fragileBombersFont, score, red);
+    	copySurfaceToBackRenderer(surfaceMessage, vout_buf , i * 36 + 374 , 2);
 	    SDL_FreeSurface(surfaceMessage);
 
 		
@@ -539,8 +556,12 @@ void Game::updateTimeDisplay(){
     rect.h = 20;
     SDL_FillRect(vout_buf, &rect, 0x000000);
     
-    char time[6];
-    sprintf(time, "%i", nbTickForGame / 50);
+    char time[7];
+    if(nbTickForGameParam != -1){
+    	sprintf(time, "%i", nbTickForGame / 50);
+    }else{
+    	sprintf(time, "INFINI", nbTickForGame / 50);
+    }
     
     SDL_Color green = {0, 255, 0};
     SDL_Surface* surfaceMessage = TTF_RenderText_Solid(fragileBombersFont, time, green);
@@ -573,46 +594,41 @@ void Game::updateTimeDisplay(){
 */
 void Game::tick(){
     
-    if(nbTickForGame % 50 == 0){
-        updateTimeDisplay();
-    }
-    nbTickForGame--;
     
-	if(!gameStart){
-		if(in_keystate[0] == 0){
-			gameStart = true;
-		}
-	}else if(gameStart){
-		if(gamePause){
-			SDL_Rect mergeRect;
-		    mergeRect.x = 0;
-		    mergeRect.y = 0;
-		    mergeRect.w = 630;
-		    mergeRect.h = 336;
-		    SDL_BlitSurface(grid->getGroundLayer()	, &mergeRect, screenBuffer, &mergeRect);
-		    SDL_BlitSurface(grid->getBricksLayer()	, &mergeRect, screenBuffer, &mergeRect);
-		    SDL_BlitSurface(playerBombeExplode		, &mergeRect, screenBuffer, &mergeRect);
-		    SDL_BlitSurface(grid->getSkyLayer()		, &mergeRect, screenBuffer, &mergeRect);
-			SDL_BlitSurface(overlay					, &mergeRect, screenBuffer, &mergeRect);
-	    	copySurfaceToBackRenderer(screenBuffer, vout_buf, 5, 24);
-			if(in_keystate[0] & keyPadSelect && !requestStopGame){
-				gamePause = false;
-				gameStart = false;
+    
+    switch(gameState){
+    
+		case gameWait:
+			if(in_keystate[0] == 0){
+				gameState = gameStart;
 			}
-			if(in_keystate[0] & keyPadB && !requestStopGame){
-				requestStopGame = true;
-				gamePause = false;
-			}
-		}else{
+			break;
+		case gameStart:
 			amask = 0xff000000;
 		    rmask = 0x00ff0000;
 		    gmask = 0x0000ff00;
 		    bmask = 0x000000ff;
 			if(in_keystate[0] & keyPadStart && !requestStopGame){
-				gamePause = true;		
+				gameState = gamePause;
+				break;
 			}
 			
+			if(nbTickForGame == 0){
+				for(unsigned int i=0;i<players.size();i++){
+	    			if(players[i]->isAlive()){
+	    				playerScore[i]++;
+	    			}	
+	    		}
+				gameState = gameEnd;
+				break;
+			}
 			
+			if(nbTickForGameParam != -1){
+				nbTickForGame--;
+			    if(nbTickForGame % 50 == 0){
+			        updateTimeDisplay();
+			    }	
+			}
 			
 			SDL_FillRect(playerBombeExplode, NULL, SDL_MapRGBA(playerBombeExplode->format, 0, 0, 0, 0));
 					
@@ -818,6 +834,51 @@ void Game::tick(){
 				}
 			}
 			mergeScreen();
-		}
+			break;
+			
+			
+		case gamePause:
+			SDL_Rect mergeRect;
+		    mergeRect.x = 0;
+		    mergeRect.y = 0;
+		    mergeRect.w = 630;
+		    mergeRect.h = 336;
+		    SDL_BlitSurface(grid->getGroundLayer()	, &mergeRect, screenBuffer, &mergeRect);
+		    SDL_BlitSurface(grid->getBricksLayer()	, &mergeRect, screenBuffer, &mergeRect);
+		    SDL_BlitSurface(playerBombeExplode		, &mergeRect, screenBuffer, &mergeRect);
+		    SDL_BlitSurface(grid->getSkyLayer()		, &mergeRect, screenBuffer, &mergeRect);
+			SDL_BlitSurface(overlay					, &mergeRect, screenBuffer, &mergeRect);
+	    	copySurfaceToBackRenderer(screenBuffer, vout_buf, 5, 24);
+			if(in_keystate[0] & keyPadSelect && !requestStopGame){
+				gameState = gameStart;
+			}
+			if(in_keystate[0] & keyPadB && !requestStopGame){
+				requestStopGame = true;
+				gameState = gameWait;
+			}
+		break;
+    	case gameEnd:    	
+    		//restart game
+    		if(in_keystate[0] & keyPadStart){
+				gameState = gameWait;
+				generateHeader();
+				nbTickForGame = nbTickForGameParam;
+			
+    			players.clear();
+    			bombes.clear();
+				explosions.clear();
+				burnWalls.clear();
+				grid -> resetSurface();
+				grid -> generateGrid();
+				
+	    		for(int i = 0; i < 16; i++){
+					float startX = startPlayer[i][0];
+					float startY = startPlayer[i][1];
+					Player * player = new Player(&in_keystate[i], false , playerIndexTexture[i] , startX, startY, i, tab, bombeSprite);
+					players.push_back(player);
+					player = NULL;
+				}
+			}
+    		break;
 	}
 }

@@ -30,6 +30,7 @@ public:
 	*/
 	Bombe * addBombe();
 	bool wantPutBombe();
+	bool isAlive();
 	void ABombeExplode();
 	void ABombeIsSet();
 	void takeAnEgg();

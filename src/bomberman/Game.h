@@ -39,6 +39,14 @@ enum keyPad{
 	keyPadY			= 32768	
 	};
 
+enum gameStateEnum{
+	gameStart	= 0,
+	gamePause	= 1, 
+	gameWait	= 2,	
+	gameEnd		= 3,
+};
+
+
 class Game
 {
 
@@ -81,11 +89,14 @@ private:
 	int levelIndex;
 	int cpuLevel;
 	int nbTickForGame;
+	int nbTickForGameParam;
 	bool suddenDeath;
 	bool badBomber;
+	int playerType[16];
+	int playerIndexTexture[16];
+	int playerScore[16];
 	//functional variable
-	bool gamePause;
-	bool gameStart;
+	int gameState;
 	bool isThreadAlive;
 	bool requestStopGame;
 	bool configured;
