@@ -855,7 +855,7 @@ Bombe * Player::addBombe(){
 		type = powerBombeType;
 	}
 	tab[(int)floor(posX) + ((int)floor(posY)*sizeX)] = 3;
-	return new Bombe(flameStrengh, (int)floor(posX), (int)floor(posY), type, playerNumber, time, bombeSprite, tab);
+	return new Bombe(strenght, (int)floor(posX), (int)floor(posY), type, playerNumber, time, bombeSprite, tab);
 }
 
 bool Player::wantPutBombe(){

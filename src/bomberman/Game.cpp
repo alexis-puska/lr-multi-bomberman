@@ -520,7 +520,6 @@ void Game::generateHeader(){
     amask = 0xff000000;
 
 	SDL_Surface* surfaceMessage;
-	SDL_Color green = {0, 255, 0};
 	SDL_Color red = {255, 0, 0};
 
     SDL_Surface* menu;
@@ -546,7 +545,7 @@ void Game::generateHeader(){
 		//wrote number of victory
 		char score[3];
     	sprintf(score, "%i", playerScore[i]);
-		SDL_Surface* surfaceMessage = TTF_RenderText_Solid(fragileBombersFont, score, red);
+		surfaceMessage = TTF_RenderText_Solid(fragileBombersFont, score, red);
     	copySurfaceToBackRenderer(surfaceMessage, vout_buf , i * 36 + 22 , 2);
 	    SDL_FreeSurface(surfaceMessage);
 		
@@ -598,7 +597,7 @@ void Game::updateTimeDisplay(){
     if(nbTickForGameParam != -1){
     	sprintf(time, "%i", nbTickForGame / 50);
     }else{
-    	sprintf(time, "INFINI", nbTickForGame / 50);
+    	sprintf(time, "INFINI");
     }
     
     SDL_Color green = {0, 255, 0};
