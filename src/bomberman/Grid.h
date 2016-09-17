@@ -17,7 +17,7 @@ class Grid
 
 public:
     Grid();
-	Grid(int levelIndex, int table[sizeX * sizeY], int tableBonus[sizeX * sizeY]);
+	Grid(int levelIndex, int table[sizeX * sizeY], int tableBonus[sizeX * sizeY], SDL_Surface ** bonusSpriteGame);
     ~Grid();
     
     //configure the grid and build it
@@ -26,6 +26,7 @@ public:
     void resetSurface();    
     
     void burnAWall(int posX, int posY);
+    void burnBonus(int posX, int posY);
     
     //get Image to render in retroarch
 	SDL_Surface * getGroundLayer();
@@ -43,6 +44,7 @@ private:
      */
     SDL_Surface **textures;
 	SDL_Surface **skys;
+	SDL_Surface **bonusSprite;
     
     //Layers to draw the game
     SDL_Surface *ground;

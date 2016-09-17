@@ -13,7 +13,7 @@
 #include <vector>
 #include <algorithm>
 
-#include "Grid.h"
+
 #include "Player.h"
 #include "BurnWall.h"
 

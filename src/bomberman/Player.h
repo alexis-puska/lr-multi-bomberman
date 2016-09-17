@@ -11,6 +11,7 @@
 
 #include <stdio.h>
 #include "Bombe.h"
+#include "Grid.h"
 
 #define sizeX 35
 #define sizeY 21
@@ -21,7 +22,7 @@
 class Player
 {
 public:
-	Player(unsigned short * in_keystateLibretro, bool isACpuPlayer, int indexSprite, float startPositionX, float startPositionY, int playerNumberLibretro, int tab[sizeX * sizeY], int tableBonus[sizeX * sizeY], SDL_Surface ** bombeSpriteGame);
+	Player(unsigned short * in_keystateLibretro, bool isACpuPlayer, int indexSprite, float startPositionX, float startPositionY, int playerNumberLibretro, int tab[sizeX * sizeY], int tableBonus[sizeX * sizeY], SDL_Surface ** bombeSpriteGame, Grid * gridParam);
     ~Player();
     void doSomething(SDL_Surface * surfaceToDraw);
 
@@ -36,16 +37,17 @@ public:
 	
 	void ABombeExplode();
 	void ABombeIsSet();
-	void takeAnEgg();
-	void takeGlove();
-	void ghostMode();
-	void flameUp();
-	void speedUp();
-	void speedDown();
-	void powerBombe();
-	void bubleBombe();
-	void radioBombe();
-	void bombeNbUp();
+	void foundABonus(int bonusIndex);
+//	void takeAnEgg();
+//	void takeGlove();
+//	void ghostMode();
+//	void flameUp();
+//	void speedUp();
+//	void speedDown();
+//	void powerBombe();
+//	void bubleBombe();
+//	void radioBombe();
+//	void bombeNbUp();
     
     
 private:
@@ -88,6 +90,7 @@ private:
 	int * tab;
 	int * tabBonus;
 	SDL_Surface ** bombeSprite;
+	Grid * grid;
 	
 	//image of differente sprite of player
     SDL_Surface **playerSpriteWalk;

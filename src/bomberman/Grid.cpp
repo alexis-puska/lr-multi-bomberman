@@ -21,8 +21,9 @@ Grid::Grid(){
 }
 
 
-Grid::Grid(int levelIndex, int table[sizeX * sizeY], int tableBonus[sizeX * sizeY])
+Grid::Grid(int levelIndex, int table[sizeX * sizeY], int tableBonus[sizeX * sizeY], SDL_Surface ** bonusSpriteGame)
 {
+	bonusSprite = bonusSpriteGame;
     lvl = levelIndex;
     tab = table;
     tabBonus = tableBonus;
@@ -47,6 +48,7 @@ Grid::~Grid(){
     SDL_FreeSurface(skyFixe);
 	tab = NULL;
 	tabBonus = NULL;
+	bonusSprite = NULL;
 }
 
 
@@ -212,9 +214,8 @@ void Grid::generateGrid(){
             }
         }
     }
+    tabBonus[3+(2*sizeX)] = 3;
 }
-
-
 
 void Grid::burnAWall(int posX, int posY){
 	if(tab[posX + posY * sizeX] == 2){
@@ -224,6 +225,29 @@ void Grid::burnAWall(int posX, int posY){
 	    rect.w = blockSizeX;
 	    rect.h = blockSizeY;
 		SDL_FillRect(brickShadow, &rect, 0x000000);
+	}
+	
+	if(tabBonus[posX + posY * sizeX] !=0){
+		fprintf(stderr,"revele bonus\n");
+		SDL_Rect dstrect;
+		dstrect.x = posX * blockSizeX +1;
+		dstrect.y = posY * blockSizeY;
+		dstrect.w = 16;
+		dstrect.h = 16;
+		SDL_BlitSurface(bonusSprite[tabBonus[posX + posY * sizeX]], NULL, brickShadow, &dstrect);
+	}
+}
+
+void Grid::burnBonus(int posX, int posY){
+	fprintf(stderr,"burnbonus\n");
+	if(tabBonus[posX + posY * sizeX] !=0){
+		SDL_Rect rect;
+	    rect.x = posX * blockSizeX;
+	    rect.y = posY * blockSizeY;
+	    rect.w = blockSizeX;
+	    rect.h = blockSizeY;
+		SDL_FillRect(brickShadow, &rect, 0x000000);
+		tabBonus[posX + posY * sizeX] = 0;
 	}
 }
 

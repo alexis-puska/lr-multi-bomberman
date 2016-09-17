@@ -155,7 +155,7 @@ Game::Game(int levelIndexInformation, int playerInformationParam[16][2], int gam
 	vout_buf = vout_bufLibretro;
 	
 	fprintf(stderr, "generate one grid\n");
-	grid = new Grid(levelIndexInformation, tab, tabBonus);
+	
 	
 	
 	/*
@@ -205,6 +205,8 @@ Game::Game(int levelIndexInformation, int playerInformationParam[16][2], int gam
         	SDL_BlitSurface(tempSurface, &srcTextureRect, bonusSprite[i + (j * 2)], &destTextureRect);
 		}
 	}
+	
+	grid = new Grid(levelIndexInformation, tab, tabBonus, bonusSprite);
 	
 	// bombeSprite
 	for(i = 0 ; i < 3; i++){
@@ -335,14 +337,14 @@ Game::Game(int levelIndexInformation, int playerInformationParam[16][2], int gam
 		switch(playerType[i]){
 			case HUMAN:
 				// if a human link the next keystate of libretro, else link a empty value
-				player = new Player(&in_keystate[indexLibretro], false , indexTexture , startX, startY, i, tab, tabBonus, bombeSprite);
+				player = new Player(&in_keystate[indexLibretro], false , indexTexture , startX, startY, i, tab, tabBonus, bombeSprite, grid);
 				players.push_back(player);
 				player = NULL;
 				indexLibretro++;
 				nbPlayerAlive++;
 				break;
 			case CPU:
-				player = new Player(&in_keystate_cpu[index], true , indexTexture , startX, startY, i, tab, tabBonus, bombeSprite);
+				player = new Player(&in_keystate_cpu[index], true , indexTexture , startX, startY, i, tab, tabBonus, bombeSprite, grid);
 				players.push_back(player);
 				player = NULL;
 				in_keystate[index] = 0;
@@ -738,10 +740,14 @@ void Game::tick(){
 					*/
 
 					bool exitLoop = false;
+					bool aWallHasBurn = false;
 					int ind = 0;
 					
 					//CENTER
 					explosions.push_back(new Explosion(posXBombe, posYBombe, 0, explosionSprite, tab, tabBonus));
+					if(tabBonus[posXBombe + posYBombe * sizeX] != 0){
+						grid->burnBonus(posXBombe, posYBombe);
+					}
 					
 					//UP
 					for(int j = 1; j < strenght + 1; j++){
@@ -749,6 +755,7 @@ void Game::tick(){
 							break;	
 						}
 						
+						//explostion and wall
 						switch(tab[posXBombe + (posYBombe-j) * sizeX]){
 							case 0 :
 							case 1 :
@@ -763,6 +770,7 @@ void Game::tick(){
 								burnWalls.push_back(new BurnWall(posXBombe, posYBombe - j, ind, burnWallSprite, tab, tabBonus));
 								grid->burnAWall(posXBombe, posYBombe - j);
 								exitLoop = true;
+								aWallHasBurn = true;
 								break;
 							case 3 : 
 								for(unsigned int k=0;k<bombes.size();k++){
@@ -777,11 +785,18 @@ void Game::tick(){
 								exitLoop = true;
 								break;
 						}
+						if(!aWallHasBurn){
+							// if we don't have burn a wall, we can have a bonus in the case of table. we remove it !
+							if(tabBonus[posXBombe + (posYBombe-j) * sizeX] != 0){
+								grid->burnBonus(posXBombe, posYBombe - j);
+							}
+						}
 					}
 					
 					
 					//Right
 					exitLoop = false;
+					aWallHasBurn = false;
 					for(int j = 1; j < strenght + 1; j++){
 						if(exitLoop == true){
 							break;	
@@ -801,6 +816,7 @@ void Game::tick(){
 								burnWalls.push_back(new BurnWall((posXBombe + j ), posYBombe, ind, burnWallSprite, tab, tabBonus));
 								grid->burnAWall((posXBombe + j ), posYBombe);
 								exitLoop = true;
+								aWallHasBurn = true;
 								break;
 							case 3 : 
 								for(unsigned int k=0;k<bombes.size();k++){
@@ -815,11 +831,18 @@ void Game::tick(){
 								exitLoop = true;
 								break;	
 						}
+						if(!aWallHasBurn){
+							// if we don't have burn a wall, we can have a bonus in the case of table. we remove it !
+							if(tabBonus[ (posXBombe + j ) + posYBombe * sizeX] != 0){
+								grid->burnBonus((posXBombe + j ), posYBombe);
+							}
+						}
 					}
 					
 					
 					//DOWN
 					exitLoop = false;
+					aWallHasBurn = false;
 					for(int j = 1; j < strenght + 1; j++){
 						if(exitLoop == true){
 							break;	
@@ -839,6 +862,7 @@ void Game::tick(){
 								burnWalls.push_back(new BurnWall(posXBombe, posYBombe + j, ind, burnWallSprite, tab, tabBonus));
 								grid->burnAWall(posXBombe, posYBombe + j);
 								exitLoop = true;
+								aWallHasBurn = true;
 								break;
 							case 3 : 
 								for(unsigned int k=0;k<bombes.size();k++){
@@ -853,10 +877,18 @@ void Game::tick(){
 								exitLoop = true;
 								break;
 						}
+						if(!aWallHasBurn){
+							// if we don't have burn a wall, we can have a bonus in the case of table. we remove it !
+							if(tabBonus[posXBombe + (posYBombe + j) * sizeX] != 0){
+								grid->burnBonus(posXBombe, posYBombe + j);
+							}
+						}
+						
 					}
 					
 					//LEFT
 					exitLoop = false;
+					aWallHasBurn = false;
 					for(int j = 1; j < strenght + 1; j++){
 						if(exitLoop == true){
 							break;	
@@ -882,6 +914,7 @@ void Game::tick(){
 									if(bombes[k] -> getCase() == (posXBombe - j ) + posYBombe * sizeX){
 										bombes[k]->explode();
 										exitLoop = true;
+										aWallHasBurn = true;
 										break;
 									}
 								}
@@ -889,6 +922,12 @@ void Game::tick(){
 							case 4 :
 								exitLoop = true;
 								break;	
+						}
+						if(!aWallHasBurn){
+							// if we don't have burn a wall, we can have a bonus in the case of table. we remove it !
+							if(tabBonus[ (posXBombe - j ) + posYBombe * sizeX] != 0){
+								grid->burnBonus((posXBombe - j ), posYBombe);
+							}
 						}
 					}
 
@@ -994,14 +1033,14 @@ void Game::tick(){
 					switch(playerType[i]){
 						case HUMAN:
 							// if a human link the next keystate of libretro, else link a empty value
-							player = new Player(&in_keystate[indexLibretro], false , playerIndexTexture[i] , startX, startY, i, tab, tabBonus, bombeSprite);
+							player = new Player(&in_keystate[indexLibretro], false , playerIndexTexture[i] , startX, startY, i, tab, tabBonus, bombeSprite, grid);
 							players.push_back(player);
 							player = NULL;
 							indexLibretro++;
 							nbPlayerInGame++;
 							break;
 						case CPU:
-							player = new Player(&in_keystate_cpu[index], true , playerIndexTexture[i] , startX, startY, i, tab, tabBonus, bombeSprite);
+							player = new Player(&in_keystate_cpu[index], true , playerIndexTexture[i] , startX, startY, i, tab, tabBonus, bombeSprite, grid);
 							players.push_back(player);
 							player = NULL;
 							in_keystate[index] = 0;

@@ -1,5 +1,6 @@
 #include "Player.h"
 
+
 #define nbFrame 6
 
 #define sprite_sizeW 30 
@@ -92,8 +93,9 @@ enum louisTypeEnum{
 
 
 
-Player::Player(unsigned short * in_keystateLibretro, bool isACpuPlayer, int indexSprite, float startPositionX, float startPositionY, int playerNumberLibretro, int table[sizeX * sizeY], int tableBonus[sizeX * sizeY], SDL_Surface ** bombeSpriteGame)
+Player::Player(unsigned short * in_keystateLibretro, bool isACpuPlayer, int indexSprite, float startPositionX, float startPositionY, int playerNumberLibretro, int table[sizeX * sizeY], int tableBonus[sizeX * sizeY], SDL_Surface ** bombeSpriteGame, Grid * gridParam)
 {
+	grid = gridParam;
 	playerState = normal;
 	NbBombeMax = 2;
 	NBBombeRemaining = 2;
@@ -326,6 +328,7 @@ Player::~Player()
 	free(in_keystate);
 	tab = NULL;
 	tabBonus = NULL;
+	grid = NULL;
 }
 
 
@@ -665,6 +668,9 @@ void Player::drawCrying(SDL_Surface * surfaceToDraw, bool animate){
 
 
 
+
+
+
 void Player::doSomething(SDL_Surface * surfaceToDraw){
 	unsigned short keystate = *in_keystate;
 	bool animate = false;
@@ -675,6 +681,11 @@ void Player::doSomething(SDL_Surface * surfaceToDraw){
 			*/
 			int roundX = floor(posX);
 			int roundY = floor(posY);
+			
+			if(tabBonus[roundX + roundY * sizeX] !=0){
+				foundABonus(tabBonus[roundX + roundY * sizeX]);
+			}
+			
 			
 			if(tab[roundX + roundY * sizeX] == 1){
 				playerState = burning;
@@ -881,6 +892,37 @@ void Player::ABombeIsSet(){
 	putABombe = false;
 }
 
+bool Player::isAlive(){
+	if(playerState == dead || playerState == burning){
+		return false;
+	}
+	return true;
+}
+
+void Player::winTheGame(){
+	playerState = victory;	
+}
+
+
+
+
+void Player::foundABonus(int bonusIndex){
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+}
+
+
+
+/*
+
 void Player::takeAnEgg(){
 	playerState = onLouis;
 }
@@ -921,13 +963,4 @@ void Player::bombeNbUp(){
 	NbBombeMax++;
 }
 
-bool Player::isAlive(){
-	if(playerState == dead || playerState == burning){
-		return false;
-	}
-	return true;
-}
-
-void Player::winTheGame(){
-	playerState = victory;	
-}
+*/
