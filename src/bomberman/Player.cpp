@@ -667,152 +667,149 @@ void Player::doSomething(SDL_Surface * surfaceToDraw){
 	unsigned short keystate = *in_keystate;
 	bool animate = false;
 	if(playerState != dead || playerState == victory){
-		if(cpu){
+		if(playerState != burning){
+			/*
+			* Direction of a player
+			*/
+			int roundX = floor(posX);
+			int roundY = floor(posY);
 			
-		} else {
-			if(playerState != burning){
-				/*
-				* Direction of a player
-				*/
-				int roundX = floor(posX);
-				int roundY = floor(posY);
-				
-				if(tab[roundX + roundY * sizeX] == 1){
-					playerState = burning;
-					animate = true;
-				}
-						
-				if(roundY > sizeY){
-					posY = 0.0;
-					roundY = 0;
-				}
-				
-				if(roundY < 0){
-					posY = sizeY + 0.9;
-					roundY = sizeY;
-				}
-		
-				float margeInf = 0.51 - (playerSpeed/2);
-				float margeSup = 0.49 + (playerSpeed/2);
-				
-				if(posX-(float)roundX >= margeInf && posX-(float)roundX <= margeSup){
-					posX = (float)floor(posX)+0.5;
-				}
-				
-				if(posY-(float)roundY >= margeInf && posY-(float)roundY <= margeSup){
-					posY = (float)floor(posY) + 0.5;
-				}
-				
-				if(keystate & keyPadLeft){
-					if(posX - roundX == 0.5){
-						if(!(tab[(roundX - 1) + (roundY * sizeX)] > 1)){		
-							posX = ( posX - playerSpeed );
-						}
-					}else{
-						if(posY - roundY > 0.5){
-							posY = ( posY - playerSpeed );
-						}else if(posY - roundY < 0.5){
-							posY = ( posY + playerSpeed );
-						}else{
-							posX = ( posX - playerSpeed );
-						}
-					}
-					previousDirection = left;
-					animate = true;
-				}
-				
-				if(keystate & keyPadRight){
-					if(posX - roundX == 0.5){
-						if(!(tab[(roundX + 1) + (roundY * sizeX)] > 1)){
-							posX = ( posX + playerSpeed );
-						}
-					}else{
-						if(posY - roundY > 0.5){
-							posY = ( posY - playerSpeed );
-						}else if(posY - roundY < 0.5){
-							posY = ( posY + playerSpeed );
-						}else{
-							posX = ( posX + playerSpeed );	
-						}
-					}
-					previousDirection = right;
-					animate = true;
-				}
-				
-				
-				
-				
-				if(keystate & keyPadDown){
-					
-					if(posY - roundY == 0.5){
-						if((roundY+1) > sizeY){
-							if(!(tab[roundX + ((sizeY+1) * sizeX)] > 1)){
-								posY = ( posY + playerSpeed );
-							}
-						}else{
-							if(!(tab[roundX + ((roundY + 1 ) * sizeX)] > 1)){
-								posY = ( posY + playerSpeed );
-							}
-						}
-					}else{
-						if(posX - roundX > 0.5){
-							posX = ( posX - playerSpeed );
-						}else if(posX - roundX < 0.5){
-							posX = ( posX + playerSpeed );
-						}else{
-							posY = ( posY + playerSpeed );
-						}
-					}
-					previousDirection = down;
-					animate = true;
-				}
-				
-				if(keystate & keyPadUp){
-					if(posY - roundY == 0.5){
-						if((roundY-1) < 0){
-							if(!(tab[roundX + ((sizeY-1) * sizeX)] > 1)){
-								posY = ( posY - playerSpeed );
-							}
-						}else{
-							if(!(tab[roundX + ((roundY - 1 ) * sizeX)] > 1)){
-								posY = ( posY - playerSpeed );
-							}
-						}
-					}else{
-						if(posX - roundX > 0.5){
-							posX = ( posX - playerSpeed );
-						}else if(posX - roundX < 0.5){
-							posX = ( posX + playerSpeed );
-						}else{
-							posY = ( posY - playerSpeed );
-						}
-					}
-					previousDirection = up;
-					animate = true;
-				}
-				
-				
-				/*
-				* ACTION OF A PLAYER
-				*/
-				
-				if(keystate & keyPadStart){
-					//display menu	
-				}
-				if(keystate & keyPadA){
-					putABombe = true;	
-				}
-				if(keystate & keyPadB){
-					//display menu	
-				}
-				if(keystate & keyPadX){
-					//display menu	
-				}
-				if(keystate & keyPadY){
-					//display menu	
-				}	
+			if(tab[roundX + roundY * sizeX] == 1){
+				playerState = burning;
+				animate = true;
 			}
+					
+			if(roundY > sizeY){
+				posY = 0.0;
+				roundY = 0;
+			}
+			
+			if(roundY < 0){
+				posY = sizeY + 0.9;
+				roundY = sizeY;
+			}
+	
+			float margeInf = 0.51 - (playerSpeed/2);
+			float margeSup = 0.49 + (playerSpeed/2);
+			
+			if(posX-(float)roundX >= margeInf && posX-(float)roundX <= margeSup){
+				posX = (float)floor(posX)+0.5;
+			}
+			
+			if(posY-(float)roundY >= margeInf && posY-(float)roundY <= margeSup){
+				posY = (float)floor(posY) + 0.5;
+			}
+			
+			if(keystate & keyPadLeft){
+				if(posX - roundX == 0.5){
+					if(!(tab[(roundX - 1) + (roundY * sizeX)] > 1)){		
+						posX = ( posX - playerSpeed );
+					}
+				}else{
+					if(posY - roundY > 0.5){
+						posY = ( posY - playerSpeed );
+					}else if(posY - roundY < 0.5){
+						posY = ( posY + playerSpeed );
+					}else{
+						posX = ( posX - playerSpeed );
+					}
+				}
+				previousDirection = left;
+				animate = true;
+			}
+			
+			if(keystate & keyPadRight){
+				if(posX - roundX == 0.5){
+					if(!(tab[(roundX + 1) + (roundY * sizeX)] > 1)){
+						posX = ( posX + playerSpeed );
+					}
+				}else{
+					if(posY - roundY > 0.5){
+						posY = ( posY - playerSpeed );
+					}else if(posY - roundY < 0.5){
+						posY = ( posY + playerSpeed );
+					}else{
+						posX = ( posX + playerSpeed );	
+					}
+				}
+				previousDirection = right;
+				animate = true;
+			}
+			
+			
+			
+			
+			if(keystate & keyPadDown){
+				
+				if(posY - roundY == 0.5){
+					if((roundY+1) > sizeY){
+						if(!(tab[roundX + ((sizeY+1) * sizeX)] > 1)){
+							posY = ( posY + playerSpeed );
+						}
+					}else{
+						if(!(tab[roundX + ((roundY + 1 ) * sizeX)] > 1)){
+							posY = ( posY + playerSpeed );
+						}
+					}
+				}else{
+					if(posX - roundX > 0.5){
+						posX = ( posX - playerSpeed );
+					}else if(posX - roundX < 0.5){
+						posX = ( posX + playerSpeed );
+					}else{
+						posY = ( posY + playerSpeed );
+					}
+				}
+				previousDirection = down;
+				animate = true;
+			}
+			
+			if(keystate & keyPadUp){
+				if(posY - roundY == 0.5){
+					if((roundY-1) < 0){
+						if(!(tab[roundX + ((sizeY-1) * sizeX)] > 1)){
+							posY = ( posY - playerSpeed );
+						}
+					}else{
+						if(!(tab[roundX + ((roundY - 1 ) * sizeX)] > 1)){
+							posY = ( posY - playerSpeed );
+						}
+					}
+				}else{
+					if(posX - roundX > 0.5){
+						posX = ( posX - playerSpeed );
+					}else if(posX - roundX < 0.5){
+						posX = ( posX + playerSpeed );
+					}else{
+						posY = ( posY - playerSpeed );
+					}
+				}
+				previousDirection = up;
+				animate = true;
+			}
+			
+			
+			/*
+			* ACTION OF A PLAYER
+			*/
+			
+			if(keystate & keyPadStart){
+				//display menu	
+			}
+			if(keystate & keyPadA){
+				putABombe = true;	
+			}
+			if(keystate & keyPadB){
+				//display menu	
+			}
+			if(keystate & keyPadX){
+				//display menu	
+			}
+			if(keystate & keyPadY){
+				//display menu	
+			}	
 		}
+		
 	}
 	
 	switch(playerState){
