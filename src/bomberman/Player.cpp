@@ -861,12 +861,15 @@ Bombe * Player::addBombe(){
 }
 
 bool Player::wantPutBombe(){
-	if(NBBombeRemaining>0 && tab[(int)floor(posX) + ((int)floor(posY)*sizeX)] != 3){
-		return putABombe;
-	}else{
-		putABombe = false;
-		return false;
+	if(isAlive()){
+		if(NBBombeRemaining>0 && tab[(int)floor(posX) + ((int)floor(posY)*sizeX)] != 3){
+			return putABombe;
+		}else{
+			putABombe = false;
+			return false;
+		}
 	}
+	return false;
 }
 
 void Player::ABombeExplode(){
