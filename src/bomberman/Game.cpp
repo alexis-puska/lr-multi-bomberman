@@ -116,7 +116,14 @@ Game::Game(int levelIndexInformation, int playerInformationParam[16][2], int gam
 	configured = true;
 	requestStopGame = false;
 	tab = new int[sizeX * sizeY];
+	for(int i = 0; i < sizeX * sizeY; i++){
+		tab[i] = 0;
+	}
+ 	
 	tabBonus = new int[sizeX * sizeY];
+	for(int i = 0; i < sizeX * sizeY; i++){
+		tabBonus[i] = 0;
+	}
 	
 	levelIndex = levelIndexInformation;
 	if(gameOption[0] == 1){

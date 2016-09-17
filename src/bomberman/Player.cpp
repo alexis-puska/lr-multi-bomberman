@@ -738,14 +738,17 @@ void Player::doSomething(SDL_Surface * surfaceToDraw){
 			
 			
 			
+			if(playerNumber == 0){
+				fprintf(stderr, "%i %i %f %f\n", roundX, roundY, posX, posY);
+			}
+
+			
 			
 			if(keystate & keyPadDown){
 				
 				if(posY - roundY == 0.5){
-					if((roundY+1) > sizeY){
-						if(!(tab[roundX + ((sizeY+1) * sizeX)] > 1)){
+					if(roundY >= (sizeY-1)){
 							posY = ( posY + playerSpeed );
-						}
 					}else{
 						if(!(tab[roundX + ((roundY + 1 ) * sizeX)] > 1)){
 							posY = ( posY + playerSpeed );
@@ -766,10 +769,8 @@ void Player::doSomething(SDL_Surface * surfaceToDraw){
 			
 			if(keystate & keyPadUp){
 				if(posY - roundY == 0.5){
-					if((roundY-1) < 0){
-						if(!(tab[roundX + ((sizeY-1) * sizeX)] > 1)){
+					if(roundY == 0){
 							posY = ( posY - playerSpeed );
-						}
 					}else{
 						if(!(tab[roundX + ((roundY - 1 ) * sizeX)] > 1)){
 							posY = ( posY - playerSpeed );
