@@ -907,9 +907,14 @@ void Player::winTheGame(){
 
 
 void Player::foundABonus(int bonusIndex){
-	
-	
-	
+	int roundX = floor(posX);
+	int roundY = floor(posY);
+	switch(bonusIndex){
+		case 2:
+			flameStrengh++;
+			break;
+	}
+	grid->burnBonus(roundX, roundY);
 	
 	
 	

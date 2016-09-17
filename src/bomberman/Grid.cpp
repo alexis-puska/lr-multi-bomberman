@@ -214,7 +214,8 @@ void Grid::generateGrid(){
             }
         }
     }
-    tabBonus[3+(2*sizeX)] = 3;
+    //simulate a flamme up
+    tabBonus[3+(2*sizeX)] = 2;
 }
 
 void Grid::burnAWall(int posX, int posY){
