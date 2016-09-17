@@ -738,9 +738,6 @@ void Player::doSomething(SDL_Surface * surfaceToDraw){
 			
 			
 			
-			if(playerNumber == 0){
-				fprintf(stderr, "%i %i %f %f\n", roundX, roundY, posX, posY);
-			}
 
 			
 			
