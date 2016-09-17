@@ -85,7 +85,7 @@ Game::Game(){
 */
 Game::Game(int levelIndexInformation, int playerInformationParam[16][2], int gameOption[4], SDL_Surface *  vout_bufLibretro, unsigned short * in_keystateLibretro){
 	gameState = gameWait;
-	
+	nbPlayerInGame = 0;
 	// Load Font
     fragileBombersFont = TTF_OpenFont( "./resources/font/fragile_bombers.ttf", 36); //this opens a font style and sets a size
 	
@@ -140,7 +140,7 @@ Game::Game(int levelIndexInformation, int playerInformationParam[16][2], int gam
 		nbTickForGameParam = nbTickForGame;
 	}
 	
-	in_keystate = in_keystateLibretro;
+	
 	vout_buf = vout_bufLibretro;
 	
 	fprintf(stderr, "generate one grid\n");
@@ -300,8 +300,19 @@ Game::Game(int levelIndexInformation, int playerInformationParam[16][2], int gam
 	/*
 	*	LOAD PLAYER ON GRID
 	*/
+	
+	//in_keystate = in_keystateLibretro;
+	in_keystate_cpu = new unsigned short[16];
+	for(int i = 0; i < 16; i++){
+		in_keystate_cpu[i] = 0;
+	}
+	in_keystate = in_keystateLibretro;
+	int indexLibretro = 0;
+	int index = 0;
+	Player * player;
 
 	for(int i = 0; i < 16; i++){
+		
 		int indexTexture = playerInformationParam[i][1];
 		float startX = startPlayer[i][0];
 		float startY = startPlayer[i][1];
@@ -310,9 +321,28 @@ Game::Game(int levelIndexInformation, int playerInformationParam[16][2], int gam
 		playerIndexTexture[i] = playerInformationParam[i][1];
 		playerScore[i] = 0;
 		
-		Player * player = new Player(&in_keystate[i], false , indexTexture , startX, startY, i, tab, bombeSprite);
-		players.push_back(player);
-		player = NULL;
+		switch(playerType[i]){
+			case HUMAN:
+				// if a human link the next keystate of libretro, else link a empty value
+				player = new Player(&in_keystate[indexLibretro], false , indexTexture , startX, startY, i, tab, bombeSprite);
+				players.push_back(player);
+				player = NULL;
+				indexLibretro++;
+				nbPlayerAlive++;
+				break;
+			case CPU:
+				player = new Player(&in_keystate_cpu[index], true , indexTexture , startX, startY, i, tab, bombeSprite);
+				players.push_back(player);
+				player = NULL;
+				in_keystate[index] = 0;
+				index++;
+				nbPlayerAlive++;
+				break;
+			case OFF:
+				break;
+		}
+		
+		
 	}
 
     
@@ -344,6 +374,7 @@ Game::~Game(){
 	free(tab);
 	free(tabBonus);
 	in_keystate = NULL;
+	free(in_keystate_cpu);
 
 	vout_buf = NULL;
 	SDL_FreeSurface(overlay);
@@ -594,7 +625,7 @@ void Game::updateTimeDisplay(){
 */
 void Game::tick(){
     
-    
+   
     
     switch(gameState){
     
@@ -608,6 +639,7 @@ void Game::tick(){
 		    rmask = 0x00ff0000;
 		    gmask = 0x0000ff00;
 		    bmask = 0x000000ff;
+			nbPlayerAlive = 0;
 			if(in_keystate[0] & keyPadStart && !requestStopGame){
 				gameState = gamePause;
 				break;
@@ -620,7 +652,7 @@ void Game::tick(){
 	    				players[i]->winTheGame();
 	    			}	
 	    		}
-				gameState = gameEnd;
+	    		gameState = gameEnd;
 				break;
 			}
 			
@@ -829,11 +861,25 @@ void Game::tick(){
 			
 			for(unsigned int i=0;i<players.size();i++){
 				players[i] -> doSomething(playerBombeExplode);
+				if(players[i]->isAlive()){
+					nbPlayerAlive++;
+				}
 				if(players[i] -> wantPutBombe()){
 					bombes.push_back(players[i] -> addBombe());
 					players[i] -> ABombeIsSet();
 				}
 			}
+			
+			if(nbPlayerAlive <=1){
+				for(unsigned int i=0;i<players.size();i++){
+	    			if(players[i]->isAlive()){
+	    				playerScore[i]++;
+	    				players[i]->winTheGame();
+	    			}	
+	    		}
+	    		gameState = gameEnd;
+			}
+			
 			mergeScreen();
 			break;
 			
@@ -879,14 +925,42 @@ void Game::tick(){
 				grid -> resetSurface();
 				grid -> generateGrid();
 				
+				int indexLibretro = 0;
+				int index = 0;
+				nbPlayerInGame = 0;
+				
+				Player * player;
+				
+				
 	    		for(int i = 0; i < 16; i++){
 					float startX = startPlayer[i][0];
 					float startY = startPlayer[i][1];
-					Player * player = new Player(&in_keystate[i], false , playerIndexTexture[i] , startX, startY, i, tab, bombeSprite);
-					players.push_back(player);
-					player = NULL;
+					switch(playerType[i]){
+						case HUMAN:
+							// if a human link the next keystate of libretro, else link a empty value
+							player = new Player(&in_keystate[indexLibretro], false , playerIndexTexture[i] , startX, startY, i, tab, bombeSprite);
+							players.push_back(player);
+							player = NULL;
+							indexLibretro++;
+							nbPlayerInGame++;
+							break;
+						case CPU:
+							player = new Player(&in_keystate_cpu[index], true , playerIndexTexture[i] , startX, startY, i, tab, bombeSprite);
+							players.push_back(player);
+							player = NULL;
+							in_keystate[index] = 0;
+							index++;
+							nbPlayerInGame++;
+							break;
+						case OFF:
+							break;
+					}
 				}
 			}
     		break;
 	}
 }
+
+
+
+

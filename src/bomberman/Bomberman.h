@@ -24,14 +24,6 @@ enum bombermanStepEnum{
 		gameStep
 	};
 	
-	
-
-	
-enum playerTypeEnum{
-	HUMAN	= 0,
-	CPU 	= 1,
-	OFF		= 2	
-};
 
 enum gameOptionEnum{
 	suddenDeathOption		= 0,

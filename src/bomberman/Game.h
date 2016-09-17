@@ -46,6 +46,12 @@ enum gameStateEnum{
 	gameEnd		= 3,
 };
 
+enum playerTypeEnum{
+	HUMAN	= 0,
+	CPU 	= 1,
+	OFF		= 2	
+};
+
 
 class Game
 {
@@ -97,13 +103,17 @@ private:
 	int playerScore[16];
 	//functional variable
 	int gameState;
+	int nbPlayerAlive;
+	int nbPlayerInGame;
 	bool isThreadAlive;
 	bool requestStopGame;
 	bool configured;
 	
+	
 
 	//keystate of player
 	unsigned short * in_keystate;
+	unsigned short * in_keystate_cpu;
 	
 	//containers of object that can be put in the grid
 	std::vector<Player *>players;

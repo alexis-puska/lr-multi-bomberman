@@ -38,6 +38,8 @@ enum playerKey{
 	keyPadY			= 32768	
 	};
 		
+
+		
 enum playerMove{
 	none	=-1,
 	down	= 0,
