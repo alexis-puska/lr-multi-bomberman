@@ -92,7 +92,7 @@ enum louisTypeEnum{
 
 
 
-Player::Player(unsigned short * in_keystateLibretro, bool isACpuPlayer, int indexSprite, float startPositionX, float startPositionY, int playerNumberLibretro, int table[sizeX * sizeY], SDL_Surface ** bombeSpriteGame)
+Player::Player(unsigned short * in_keystateLibretro, bool isACpuPlayer, int indexSprite, float startPositionX, float startPositionY, int playerNumberLibretro, int table[sizeX * sizeY], int tableBonus[sizeX * sizeY], SDL_Surface ** bombeSpriteGame)
 {
 	playerState = normal;
 	NbBombeMax = 2;
@@ -273,6 +273,7 @@ Player::Player(unsigned short * in_keystateLibretro, bool isACpuPlayer, int inde
 	posY = startPositionY;
 	cpu = isACpuPlayer;
 	tab = table;
+	tabBonus = tableBonus;
 	playerNumber = playerNumberLibretro;
 	characterSpriteIndex = indexSprite;
 	in_keystate = in_keystateLibretro;
@@ -323,7 +324,8 @@ Player::~Player()
 	free(bombeSprite);
 	
 	free(in_keystate);
-	free(tab);
+	tab = NULL;
+	tabBonus = NULL;
 }
 
 

@@ -40,10 +40,11 @@ enum keyPad{
 	};
 
 enum gameStateEnum{
-	gameStart	= 0,
-	gamePause	= 1, 
-	gameWait	= 2,	
-	gameEnd		= 3,
+	gameStart		= 0,
+	gamePause		= 1, 
+	gameWait		= 2,	
+	gameEnd			= 3,
+	generateResult	=4,
 };
 
 enum playerTypeEnum{
@@ -76,6 +77,7 @@ private:
 	SDL_Surface * screenBuffer;
 	SDL_Surface * playerBombeExplode;
 	SDL_Surface * overlay;
+	SDL_Surface * overlayResult;
 	
 	//spite for animation
 	SDL_Surface ** explosionSprite;
@@ -132,9 +134,10 @@ private:
     
 	//function
 	void copySurfaceToBackRenderer(SDL_Surface * src, SDL_Surface * dest, int x, int y);
-	void mergeScreen();
+	void mergeScreen(bool mergeResult);
 	void generateHeader();
 	void updateTimeDisplay();
+	void drawResultOfGame();
 	
 };
 #endif

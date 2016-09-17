@@ -71,6 +71,7 @@ Game::Game(){
     playerBombeExplode = SDL_CreateRGBSurface(0, 630, 336, 32, rmask, gmask, bmask, amask);
 	screenBuffer = SDL_CreateRGBSurface(0, 630, 336, 32, rmask, gmask, bmask, amask);
 	overlay = SDL_CreateRGBSurface(0, 630, 336, 32, rmask, gmask, bmask, amask);
+	overlayResult =  SDL_CreateRGBSurface(0, 250, 200, 32, rmask, gmask, bmask, amask);
 	isThreadAlive = false;
 	configured = false;
 	requestStopGame = false;
@@ -112,10 +113,13 @@ Game::Game(int levelIndexInformation, int playerInformationParam[16][2], int gam
     // init variable or surface
 	screenBuffer = SDL_CreateRGBSurface(0, 630, 336, 32, rmask, gmask, bmask, amask);
 	playerBombeExplode = SDL_CreateRGBSurface(0, 630, 336, 32, rmask, gmask, bmask, amask);
+	overlayResult =  SDL_CreateRGBSurface(0, 250, 200, 32, rmask, gmask, bmask, amask);
+	
 	isThreadAlive = false;
 	configured = true;
 	requestStopGame = false;
 	tab = new int[sizeX * sizeY];
+	tabBonus = new int[sizeX * sizeY];
 	for(int i = 0; i < sizeX * sizeY; i++){
 		tab[i] = 0;
 	}
@@ -151,7 +155,7 @@ Game::Game(int levelIndexInformation, int playerInformationParam[16][2], int gam
 	vout_buf = vout_bufLibretro;
 	
 	fprintf(stderr, "generate one grid\n");
-	grid = new Grid(levelIndexInformation, tab);
+	grid = new Grid(levelIndexInformation, tab, tabBonus);
 	
 	
 	/*
@@ -331,14 +335,14 @@ Game::Game(int levelIndexInformation, int playerInformationParam[16][2], int gam
 		switch(playerType[i]){
 			case HUMAN:
 				// if a human link the next keystate of libretro, else link a empty value
-				player = new Player(&in_keystate[indexLibretro], false , indexTexture , startX, startY, i, tab, bombeSprite);
+				player = new Player(&in_keystate[indexLibretro], false , indexTexture , startX, startY, i, tab, tabBonus, bombeSprite);
 				players.push_back(player);
 				player = NULL;
 				indexLibretro++;
 				nbPlayerAlive++;
 				break;
 			case CPU:
-				player = new Player(&in_keystate_cpu[index], true , indexTexture , startX, startY, i, tab, bombeSprite);
+				player = new Player(&in_keystate_cpu[index], true , indexTexture , startX, startY, i, tab, tabBonus, bombeSprite);
 				players.push_back(player);
 				player = NULL;
 				in_keystate[index] = 0;
@@ -358,7 +362,7 @@ Game::Game(int levelIndexInformation, int playerInformationParam[16][2], int gam
 
 	generateHeader();
 	updateTimeDisplay();
-	mergeScreen();
+	mergeScreen(false);
 	startGame();
 }
 
@@ -385,6 +389,7 @@ Game::~Game(){
 
 	vout_buf = NULL;
 	SDL_FreeSurface(overlay);
+	SDL_FreeSurface(overlayResult);
 	SDL_FreeSurface(screenBuffer);
 	SDL_FreeSurface(playerBombeExplode);
 	
@@ -491,7 +496,7 @@ bool Game::isRequestStopGame(){
 * merge the different layers to generate the game frame
 * 
 */
-void Game::mergeScreen(){
+void Game::mergeScreen(bool mergeResult){
 	SDL_Rect mergeRect;
     mergeRect.x = 0;
     mergeRect.y = 0;
@@ -500,9 +505,51 @@ void Game::mergeScreen(){
     SDL_BlitSurface(grid->getGroundLayer()	, &mergeRect, screenBuffer, &mergeRect);
     SDL_BlitSurface(grid->getBricksLayer()	, &mergeRect, screenBuffer, &mergeRect);
     SDL_BlitSurface(playerBombeExplode		, &mergeRect, screenBuffer, &mergeRect);
-    SDL_BlitSurface(grid->getSkyLayer()		, &mergeRect, screenBuffer, &mergeRect);
+
+    if(mergeResult){
+    	mergeRect.x = (630/2) - (overlayResult->w/2);
+    	mergeRect.y = (360/2) - (overlayResult->h/2);
+    	mergeRect.w = overlayResult->w;
+    	mergeRect.h = overlayResult->h;
+   	    SDL_BlitSurface(overlayResult		, NULL, screenBuffer, &mergeRect);
+    }
     copySurfaceToBackRenderer(screenBuffer, vout_buf, 5, 24);
 }
+
+
+/**
+* 
+* DRAW RESULT TABLE OVER THE GAME
+*
+*/
+	
+void Game::drawResultOfGame(){
+	SDL_FillRect(overlayResult, NULL, SDL_MapRGBA(overlayResult->format, 0, 0, 0, 120));
+	SDL_Surface* surfaceMessage;
+	SDL_Color green = {0, 255, 0};
+	SDL_Color red = {255, 0, 0};
+	char mess[18];
+	int x = 25;
+	int y = 20;
+	for(unsigned int i=0;i<players.size();i++){
+		if(players[i]->isAlive()){
+			sprintf(mess, "Player %i : ALIVE", i+1);
+			surfaceMessage = TTF_RenderText_Solid(fragileBombersFont, mess, green);
+		}else{
+			sprintf(mess, "Player %i : DEAD", i+1);
+			surfaceMessage = TTF_RenderText_Solid(fragileBombersFont, mess, red);
+		}	
+		
+		copySurfaceToBackRenderer(surfaceMessage, overlayResult , x, y);
+		SDL_FreeSurface(surfaceMessage);
+		y = y + 20;
+		if(y > 170){
+			y = 20;
+			x = 145;	
+		}
+	}
+}
+
 
 /**
 	GENERATE HEADER Player Score
@@ -631,7 +678,10 @@ void Game::updateTimeDisplay(){
 */
 void Game::tick(){
     
-   
+   amask = 0xff000000;
+   rmask = 0x00ff0000;
+   gmask = 0x0000ff00;
+   bmask = 0x000000ff;
     
     switch(gameState){
     
@@ -641,10 +691,7 @@ void Game::tick(){
 			}
 			break;
 		case gameStart:
-			amask = 0xff000000;
-		    rmask = 0x00ff0000;
-		    gmask = 0x0000ff00;
-		    bmask = 0x000000ff;
+			
 			nbPlayerAlive = 0;
 			if(in_keystate[0] & keyPadStart && !requestStopGame){
 				gameState = gamePause;
@@ -658,7 +705,7 @@ void Game::tick(){
 	    				players[i]->winTheGame();
 	    			}	
 	    		}
-	    		gameState = gameEnd;
+	    		gameState = generateResult;
 				break;
 			}
 			
@@ -694,7 +741,7 @@ void Game::tick(){
 					int ind = 0;
 					
 					//CENTER
-					explosions.push_back(new Explosion(posXBombe, posYBombe, 0, explosionSprite, tab));
+					explosions.push_back(new Explosion(posXBombe, posYBombe, 0, explosionSprite, tab, tabBonus));
 					
 					//UP
 					for(int j = 1; j < strenght + 1; j++){
@@ -710,10 +757,10 @@ void Game::tick(){
 								}else{
 									ind = 2;
 								}
-								explosions.push_back(new Explosion(posXBombe, posYBombe - j, ind, explosionSprite, tab));
+								explosions.push_back(new Explosion(posXBombe, posYBombe - j, ind, explosionSprite, tab, tabBonus));
 								break;
 							case 2 :
-								burnWalls.push_back(new BurnWall(posXBombe, posYBombe - j, ind, burnWallSprite, tab));
+								burnWalls.push_back(new BurnWall(posXBombe, posYBombe - j, ind, burnWallSprite, tab, tabBonus));
 								grid->burnAWall(posXBombe, posYBombe - j);
 								exitLoop = true;
 								break;
@@ -748,10 +795,10 @@ void Game::tick(){
 								}else{
 									ind = 8;
 								}
-								explosions.push_back(new Explosion((posXBombe + j ),posYBombe, ind, explosionSprite, tab));
+								explosions.push_back(new Explosion((posXBombe + j ),posYBombe, ind, explosionSprite, tab, tabBonus));
 								break;
 							case 2 :
-								burnWalls.push_back(new BurnWall((posXBombe + j ), posYBombe, ind, burnWallSprite, tab));
+								burnWalls.push_back(new BurnWall((posXBombe + j ), posYBombe, ind, burnWallSprite, tab, tabBonus));
 								grid->burnAWall((posXBombe + j ), posYBombe);
 								exitLoop = true;
 								break;
@@ -786,10 +833,10 @@ void Game::tick(){
 								}else{
 									ind = 6;
 								}
-								explosions.push_back(new Explosion(posXBombe, posYBombe + j, ind, explosionSprite, tab));
+								explosions.push_back(new Explosion(posXBombe, posYBombe + j, ind, explosionSprite, tab, tabBonus));
 								break;
 							case 2 :
-								burnWalls.push_back(new BurnWall(posXBombe, posYBombe + j, ind, burnWallSprite, tab));
+								burnWalls.push_back(new BurnWall(posXBombe, posYBombe + j, ind, burnWallSprite, tab, tabBonus));
 								grid->burnAWall(posXBombe, posYBombe + j);
 								exitLoop = true;
 								break;
@@ -823,10 +870,10 @@ void Game::tick(){
 								}else{
 									ind = 4;
 								}
-								explosions.push_back(new Explosion((posXBombe - j ),posYBombe, ind, explosionSprite, tab));
+								explosions.push_back(new Explosion((posXBombe - j ),posYBombe, ind, explosionSprite, tab, tabBonus));
 								break;
 							case 2 :
-								burnWalls.push_back(new BurnWall((posXBombe - j ), posYBombe, ind, burnWallSprite, tab));
+								burnWalls.push_back(new BurnWall((posXBombe - j ), posYBombe, ind, burnWallSprite, tab, tabBonus));
 								grid->burnAWall((posXBombe - j ), posYBombe);
 								exitLoop = true;
 								break;
@@ -883,10 +930,10 @@ void Game::tick(){
 	    				players[i]->winTheGame();
 	    			}	
 	    		}
-	    		gameState = gameEnd;
+	    		gameState = generateResult;
 			}
 			
-			mergeScreen();
+			mergeScreen(false);
 			break;
 			
 			
@@ -910,13 +957,16 @@ void Game::tick(){
 				gameState = gameWait;
 			}
 		break;
+		case generateResult : 
+			drawResultOfGame();
+			gameState = gameEnd;		
     	case gameEnd:
     	
     		SDL_FillRect(playerBombeExplode, NULL, SDL_MapRGBA(playerBombeExplode->format, 0, 0, 0, 0));
     		for(unsigned int i=0;i<players.size();i++){
 				players[i] -> doSomething(playerBombeExplode);
     		}
-    		mergeScreen();
+    		mergeScreen(true);
     	
     		//restart game
     		if(in_keystate[0] & keyPadStart){
@@ -944,14 +994,14 @@ void Game::tick(){
 					switch(playerType[i]){
 						case HUMAN:
 							// if a human link the next keystate of libretro, else link a empty value
-							player = new Player(&in_keystate[indexLibretro], false , playerIndexTexture[i] , startX, startY, i, tab, bombeSprite);
+							player = new Player(&in_keystate[indexLibretro], false , playerIndexTexture[i] , startX, startY, i, tab, tabBonus, bombeSprite);
 							players.push_back(player);
 							player = NULL;
 							indexLibretro++;
 							nbPlayerInGame++;
 							break;
 						case CPU:
-							player = new Player(&in_keystate_cpu[index], true , playerIndexTexture[i] , startX, startY, i, tab, bombeSprite);
+							player = new Player(&in_keystate_cpu[index], true , playerIndexTexture[i] , startX, startY, i, tab, tabBonus, bombeSprite);
 							players.push_back(player);
 							player = NULL;
 							in_keystate[index] = 0;
@@ -966,7 +1016,6 @@ void Game::tick(){
     		break;
 	}
 }
-
 
 
 

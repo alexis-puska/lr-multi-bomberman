@@ -21,7 +21,7 @@
 class Player
 {
 public:
-	Player(unsigned short * in_keystateLibretro, bool isACpuPlayer, int indexSprite, float startPositionX, float startPositionY, int playerNumberLibretro, int tab[sizeX * sizeY], SDL_Surface ** bombeSpriteGame);
+	Player(unsigned short * in_keystateLibretro, bool isACpuPlayer, int indexSprite, float startPositionX, float startPositionY, int playerNumberLibretro, int tab[sizeX * sizeY], int tableBonus[sizeX * sizeY], SDL_Surface ** bombeSpriteGame);
     ~Player();
     void doSomething(SDL_Surface * surfaceToDraw);
 
@@ -86,6 +86,7 @@ private:
 	
 	//pointer to the grid element;
 	int * tab;
+	int * tabBonus;
 	SDL_Surface ** bombeSprite;
 	
 	//image of differente sprite of player

@@ -21,10 +21,11 @@ Grid::Grid(){
 }
 
 
-Grid::Grid(int levelIndex, int table[sizeX * sizeY])
+Grid::Grid(int levelIndex, int table[sizeX * sizeY], int tableBonus[sizeX * sizeY])
 {
     lvl = levelIndex;
     tab = table;
+    tabBonus = tableBonus;
     init();
     generateGrid();
 }
@@ -45,6 +46,7 @@ Grid::~Grid(){
     SDL_FreeSurface(brickShadow);
     SDL_FreeSurface(skyFixe);
 	tab = NULL;
+	tabBonus = NULL;
 }
 
 
@@ -67,6 +69,7 @@ void Grid::configure(int levelNumber){
 
     lvl = levelNumber;
     tab = new int[sizeX * sizeY];
+    tabBonus = new int[sizeX * sizeY];
     init();
     generateGrid();
 }

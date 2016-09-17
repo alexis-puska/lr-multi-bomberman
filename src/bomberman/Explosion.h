@@ -20,7 +20,7 @@ class Explosion
 {
 
 public:
-	Explosion(int posXX, int posYY, int index, SDL_Surface ** miscSheet, int table[sizeX * sizeY]);
+	Explosion(int posXX, int posYY, int index, SDL_Surface ** miscSheet, int table[sizeX * sizeY], int tableBonus[sizeX * sizeY]);
     ~Explosion();
     void tick(SDL_Surface * surfaceToDraw);
     bool canBeDelete();
@@ -28,6 +28,7 @@ public:
 private:
 	SDL_Surface ** animation;
 	int * tab;
+	int * tabBonus;
 	int posX;
 	int posY; 
 	int indexExplosion;

@@ -17,7 +17,7 @@ class Grid
 
 public:
     Grid();
-	Grid(int levelIndex, int table[sizeX * sizeY]);
+	Grid(int levelIndex, int table[sizeX * sizeY], int tableBonus[sizeX * sizeY]);
     ~Grid();
     
     //configure the grid and build it
@@ -51,6 +51,7 @@ private:
     
     //table of free/occuped part of the grid
     int * tab;
+    int * tabBonus;
         
     //level index to load the texture and level template
     int lvl;
