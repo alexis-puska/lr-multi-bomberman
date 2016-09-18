@@ -4,13 +4,24 @@
 #else
 #include <SDL2_image/SDL_image.h>
 #endif
-#include "../include/level.h"
+#include <vector>
 
+
+#ifndef __MYCLASS_GRID
+#define __MYCLASS_GRID
 
 #define sizeX 35
 #define sizeY 21
 
+#include "../include/level.h"
 
+enum gridElementEnum{
+	emptyElement		= 0,
+	explosionElement	= 1,
+	brickElement		= 2,
+	bombeElement		= 3,
+	wallElement			= 4,
+};
 
 class Grid
 {
@@ -51,9 +62,14 @@ private:
     SDL_Surface *brickShadow;
     SDL_Surface *skyFixe;
     
+    
+    
     //table of free/occuped part of the grid
     int * tab;
     int * tabBonus;
+    
+    std::vector<int> emptyCase;
+    std::vector<int> notEmptyCase;
         
     //level index to load the texture and level template
     int lvl;
@@ -61,3 +77,4 @@ private:
     void init();
     
 };
+#endif

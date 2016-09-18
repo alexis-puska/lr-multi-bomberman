@@ -17,6 +17,9 @@
 #define sizeY 21
 
 
+
+
+
 #ifndef __MYCLASS_PLAYER
 #define __MYCLASS_PLAYER
 class Player

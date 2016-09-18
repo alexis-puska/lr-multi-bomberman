@@ -26,8 +26,8 @@ bool BurnWall::canBeDelete(){
 	
 	if(deleteAnimation){
 		//remove grid status BurnWall
-		if(tab[posX + posY * sizeX] == 2){
-			tab[posX + posY * sizeX] = 0;	
+		if(tab[posX + posY * sizeX] == brickElement){
+			tab[posX + posY * sizeX] = emptyElement;
 		}
 	}
 	return deleteAnimation;

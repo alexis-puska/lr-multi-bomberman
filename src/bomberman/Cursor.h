@@ -11,8 +11,8 @@
 
 
 
-#ifndef __MYCLASS_J
-#define __MYCLASS_J
+#ifndef __MYCLASS_CURSOR
+#define __MYCLASS_CURSOR
 class Cursor
 {
 

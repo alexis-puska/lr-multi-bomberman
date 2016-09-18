@@ -10,6 +10,7 @@
 
 #include <stdio.h>
 #include "Explosion.h"
+#include "Grid.h"
 
 #ifndef __MYCLASS_BOMBE
 #define __MYCLASS_BOMBE
@@ -20,6 +21,7 @@ enum bombeTypeEnum{
 	powerBombeType	= 2,
 	bubbleBombeType	= 3,
 };
+
 
 #define sizeX 35
 #define sizeY 21

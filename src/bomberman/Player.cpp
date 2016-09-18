@@ -687,7 +687,7 @@ void Player::doSomething(SDL_Surface * surfaceToDraw){
 			}
 			
 			
-			if(tab[roundX + roundY * sizeX] == 1){
+			if(tab[roundX + roundY * sizeX] == explosionElement){
 				playerState = burning;
 				animate = true;
 			}
@@ -715,7 +715,7 @@ void Player::doSomething(SDL_Surface * surfaceToDraw){
 			
 			if(keystate & keyPadLeft){
 				if(posX - roundX == 0.5){
-					if(!(tab[(roundX - 1) + (roundY * sizeX)] > 1)){		
+					if(!(tab[(roundX - 1) + (roundY * sizeX)] > explosionElement)){		
 						posX = ( posX - playerSpeed );
 					}
 				}else{
@@ -733,7 +733,7 @@ void Player::doSomething(SDL_Surface * surfaceToDraw){
 			
 			if(keystate & keyPadRight){
 				if(posX - roundX == 0.5){
-					if(!(tab[(roundX + 1) + (roundY * sizeX)] > 1)){
+					if(!(tab[(roundX + 1) + (roundY * sizeX)] > explosionElement)){
 						posX = ( posX + playerSpeed );
 					}
 				}else{
@@ -760,7 +760,7 @@ void Player::doSomething(SDL_Surface * surfaceToDraw){
 					if(roundY >= (sizeY-1)){
 							posY = ( posY + playerSpeed );
 					}else{
-						if(!(tab[roundX + ((roundY + 1 ) * sizeX)] > 1)){
+						if(!(tab[roundX + ((roundY + 1 ) * sizeX)] > explosionElement)){
 							posY = ( posY + playerSpeed );
 						}
 					}
@@ -782,7 +782,7 @@ void Player::doSomething(SDL_Surface * surfaceToDraw){
 					if(roundY == 0){
 							posY = ( posY - playerSpeed );
 					}else{
-						if(!(tab[roundX + ((roundY - 1 ) * sizeX)] > 1)){
+						if(!(tab[roundX + ((roundY - 1 ) * sizeX)] > explosionElement)){
 							posY = ( posY - playerSpeed );
 						}
 					}
@@ -867,13 +867,13 @@ Bombe * Player::addBombe(){
 		strenght = 30;
 		type = powerBombeType;
 	}
-	tab[(int)floor(posX) + ((int)floor(posY)*sizeX)] = 3;
+	tab[(int)floor(posX) + ((int)floor(posY)*sizeX)] = bombeElement;
 	return new Bombe(strenght, (int)floor(posX), (int)floor(posY), type, playerNumber, time, bombeSprite, tab);
 }
 
 bool Player::wantPutBombe(){
 	if(isAlive()){
-		if(NBBombeRemaining>0 && tab[(int)floor(posX) + ((int)floor(posY)*sizeX)] != 3){
+		if(NBBombeRemaining>0 && tab[(int)floor(posX) + ((int)floor(posY)*sizeX)] != bombeElement){
 			return putABombe;
 		}else{
 			putABombe = false;
@@ -911,7 +911,9 @@ void Player::foundABonus(int bonusIndex){
 	int roundY = floor(posY);
 	switch(bonusIndex){
 		case 2:
-			flameStrengh++;
+//			playerState = onLouis;
+			NbBombeMax+=10;
+			NBBombeRemaining+=10;
 			break;
 	}
 	grid->burnBonus(roundX, roundY);

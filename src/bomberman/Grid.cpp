@@ -4,14 +4,10 @@
 #include <time.h>
 #include <vector>
 
-
-
 #define blockSizeX 18
 #define blockSizeY 16
-
 #define largeBlockSizeX 54
 #define largeBlockSizeY 48
-
 
 const static char *levelSprite = "./resources/sprite/level/AllLevel.png";
 
@@ -154,16 +150,20 @@ void Grid::generateGrid(){
         for(int j=0;j<sizeY;j++){
             if( j == 0 || j == (sizeY-1) || i == 0 || i == (sizeX-1)|| (j%2 == 0 && i%2 == 0)){
             	//murs
-                tab[i+(j*sizeX)] = 4;
+                tab[i+(j*sizeX)] = wallElement;
+                notEmptyCase.push_back(i+(j*sizeX));
                 if(level[lvl][j][i] == 18  ||  level[lvl][j][i] == 19  ||  level[lvl][j][i] == 20){
-            		tab[i+(j*sizeX)] = 0;	
+            		tab[i+(j*sizeX)] = emptyElement;
+            		emptyCase.push_back(i+(j*sizeX));	
             	}
             } else {
                 /* generate secret number between 1 and 3: */
                 if((rand() % 7 + 1)>=2){
-                    tab[i+(j*sizeX)] = 2;
+                    tab[i+(j*sizeX)] = brickElement;
+                    notEmptyCase.push_back(i+(j*sizeX));
                 } else {
-                    tab[i+(j*sizeX)] = 0;
+                    tab[i+(j*sizeX)] = emptyElement;
+                    emptyCase.push_back(i+(j*sizeX));
                 }
             }
         }
@@ -198,7 +198,7 @@ void Grid::generateGrid(){
                 dstrect.h = largeBlockSizeY;
                 SDL_BlitSurface(skys[textureIndex % 40], &skyRect, skyFixe, &dstrect);
             }
-            if(tab[i+(j*sizeX)] == 2){
+            if(tab[i+(j*sizeX)] == brickElement){
                 if(reservedSpot[j][i] == 0){
                     if(textureIndex == 40){
                         dstrect.x = i * blockSizeX;
@@ -209,7 +209,8 @@ void Grid::generateGrid(){
                     SDL_BlitSurface(textures[21], &srcrect, brickShadow, &dstrect);
                 }else{
                     //reservedSpot !
-                    tab[i+(j*sizeX)] = 0;
+                    tab[i+(j*sizeX)] = emptyElement;
+					emptyCase.push_back(i+(j*sizeX));
                 }
             }
         }
@@ -219,7 +220,7 @@ void Grid::generateGrid(){
 }
 
 void Grid::burnAWall(int posX, int posY){
-	if(tab[posX + posY * sizeX] == 2){
+	if(tab[posX + posY * sizeX] == brickElement){
 		SDL_Rect rect;
 	    rect.x = posX * blockSizeX;
 	    rect.y = posY * blockSizeY;

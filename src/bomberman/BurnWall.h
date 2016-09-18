@@ -9,6 +9,7 @@
 #endif
 
 #include <stdio.h>
+#include "Grid.h"
 
 #ifndef __MYCLASS_BURNWALL
 #define __MYCLASS_BURNWALL

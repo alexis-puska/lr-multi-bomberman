@@ -121,7 +121,7 @@ Game::Game(int levelIndexInformation, int playerInformationParam[16][2], int gam
 	tab = new int[sizeX * sizeY];
 	tabBonus = new int[sizeX * sizeY];
 	for(int i = 0; i < sizeX * sizeY; i++){
-		tab[i] = 0;
+		tab[i] = emptyElement;
 	}
  	
 	tabBonus = new int[sizeX * sizeY];
@@ -757,8 +757,8 @@ void Game::tick(){
 						
 						//explostion and wall
 						switch(tab[posXBombe + (posYBombe-j) * sizeX]){
-							case 0 :
-							case 1 :
+							case emptyElement :
+							case explosionElement :
 								if(j == strenght){
 									ind = 1;
 								}else{
@@ -766,13 +766,13 @@ void Game::tick(){
 								}
 								explosions.push_back(new Explosion(posXBombe, posYBombe - j, ind, explosionSprite, tab, tabBonus));
 								break;
-							case 2 :
+							case brickElement :
 								burnWalls.push_back(new BurnWall(posXBombe, posYBombe - j, ind, burnWallSprite, tab, tabBonus));
 								grid->burnAWall(posXBombe, posYBombe - j);
 								exitLoop = true;
 								aWallHasBurn = true;
 								break;
-							case 3 : 
+							case bombeElement : 
 								for(unsigned int k=0;k<bombes.size();k++){
 									if(bombes[k] -> getCase() == posXBombe + (posYBombe - j) * sizeX){
 										bombes[k]->explode();
@@ -781,7 +781,7 @@ void Game::tick(){
 									}
 								}
 								break;
-							case 4 :
+							case wallElement :
 								exitLoop = true;
 								break;
 						}
@@ -803,8 +803,8 @@ void Game::tick(){
 						}
 						
 						switch(tab[ (posXBombe + j ) + posYBombe * sizeX]){
-							case 0 :
-							case 1 :
+							case emptyElement :
+							case explosionElement :
 								if(j == strenght){
 									ind = 7;
 								}else{
@@ -812,13 +812,13 @@ void Game::tick(){
 								}
 								explosions.push_back(new Explosion((posXBombe + j ),posYBombe, ind, explosionSprite, tab, tabBonus));
 								break;
-							case 2 :
+							case brickElement :
 								burnWalls.push_back(new BurnWall((posXBombe + j ), posYBombe, ind, burnWallSprite, tab, tabBonus));
 								grid->burnAWall((posXBombe + j ), posYBombe);
 								exitLoop = true;
 								aWallHasBurn = true;
 								break;
-							case 3 : 
+							case bombeElement : 
 								for(unsigned int k=0;k<bombes.size();k++){
 									if(bombes[k] -> getCase() == (posXBombe + j ) + posYBombe * sizeX){
 										bombes[k]->explode();
@@ -827,7 +827,7 @@ void Game::tick(){
 									}
 								}
 								break;
-							case 4 :
+							case wallElement :
 								exitLoop = true;
 								break;	
 						}
@@ -849,8 +849,8 @@ void Game::tick(){
 						}
 						
 						switch(tab[posXBombe + (posYBombe + j) * sizeX]){
-							case 0 :
-							case 1 :
+							case emptyElement :
+							case explosionElement :
 								if(j == strenght){
 									ind = 5;
 								}else{
@@ -858,13 +858,13 @@ void Game::tick(){
 								}
 								explosions.push_back(new Explosion(posXBombe, posYBombe + j, ind, explosionSprite, tab, tabBonus));
 								break;
-							case 2 :
+							case brickElement :
 								burnWalls.push_back(new BurnWall(posXBombe, posYBombe + j, ind, burnWallSprite, tab, tabBonus));
 								grid->burnAWall(posXBombe, posYBombe + j);
 								exitLoop = true;
 								aWallHasBurn = true;
 								break;
-							case 3 : 
+							case bombeElement : 
 								for(unsigned int k=0;k<bombes.size();k++){
 									if(bombes[k] -> getCase() == posXBombe + (posYBombe + j) * sizeX){
 										bombes[k]->explode();
@@ -873,7 +873,7 @@ void Game::tick(){
 									}
 								}
 								break;
-							case 4 :
+							case wallElement :
 								exitLoop = true;
 								break;
 						}
@@ -895,8 +895,8 @@ void Game::tick(){
 						}
 						
 						switch(tab[ (posXBombe - j ) + posYBombe * sizeX]){
-							case 0 :
-							case 1 :
+							case emptyElement :
+							case explosionElement :
 								if(j == strenght){
 									ind = 3;
 								}else{
@@ -904,12 +904,12 @@ void Game::tick(){
 								}
 								explosions.push_back(new Explosion((posXBombe - j ),posYBombe, ind, explosionSprite, tab, tabBonus));
 								break;
-							case 2 :
+							case brickElement :
 								burnWalls.push_back(new BurnWall((posXBombe - j ), posYBombe, ind, burnWallSprite, tab, tabBonus));
 								grid->burnAWall((posXBombe - j ), posYBombe);
 								exitLoop = true;
 								break;
-							case 3 : 
+							case bombeElement : 
 								for(unsigned int k=0;k<bombes.size();k++){
 									if(bombes[k] -> getCase() == (posXBombe - j ) + posYBombe * sizeX){
 										bombes[k]->explode();
@@ -919,7 +919,7 @@ void Game::tick(){
 									}
 								}
 								break;
-							case 4 :
+							case wallElement :
 								exitLoop = true;
 								break;	
 						}

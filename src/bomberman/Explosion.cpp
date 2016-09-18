@@ -15,7 +15,7 @@ Explosion::Explosion(int posXX, int posYY, int index, SDL_Surface ** miscSheet, 
     nbFrameForAnimation = 7;
     deleteAnimation = false;
     //set explosion in the grid
-    tab[posX + posY * sizeX] = 1;
+    tab[posX + posY * sizeX] = explosionElement;
 }
 
 
@@ -29,7 +29,7 @@ bool Explosion::canBeDelete(){
 	
 	if(deleteAnimation){
 		//remove grid status explosion
-		tab[posX + posY * sizeX] = 0;	
+		tab[posX + posY * sizeX] = emptyElement;	
 	}
 	return deleteAnimation;
 }

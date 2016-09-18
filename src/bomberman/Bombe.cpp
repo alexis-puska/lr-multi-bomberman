@@ -28,7 +28,7 @@ Bombe::~Bombe(){
 bool Bombe::isExplode(){
 
 	if(nbTickExplode <=0){
-		tab[posX + posY * sizeX ] = 0;
+		tab[posX + posY * sizeX ] = emptyElement;
 		return true;
 	}else{
 		return false;
@@ -36,7 +36,7 @@ bool Bombe::isExplode(){
 }
 
 void Bombe::explode(){
-	tab[posX + posY * sizeX ] = 0;
+	tab[posX + posY * sizeX ] = emptyElement;
 	nbTickExplode = 0;
 }
 
