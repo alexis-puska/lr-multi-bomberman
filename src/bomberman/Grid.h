@@ -23,6 +23,33 @@ enum gridElementEnum{
 	wallElement			= 4,
 };
 
+enum bonusEnum{
+	noBonus			=-1,
+	deathBonus		= 0,
+	rollerBonus		= 1,
+	fireBonus		= 2,
+	fireMaxBonus	= 3,
+	bombeBonus		= 4,
+	radioBombeBonus	= 5,
+	kickBonus		= 6,
+	gloveBonus		= 7,
+	bubbleBonus		= 8,
+	powerBombeBonus	= 9,
+	getaBonus		= 10,
+	ghostBonus		= 11,
+	eggBonus		= 12,
+};
+
+enum malusEnum{
+	diarhee			= 0,
+	constipation	= 1,
+	speedBombe		= 2,
+	slowBombe		= 3,
+	slowDown		= 4,
+	speed			= 5,
+};
+
+
 class Grid
 {
 

@@ -126,7 +126,7 @@ Game::Game(int levelIndexInformation, int playerInformationParam[16][2], int gam
  	
 	tabBonus = new int[sizeX * sizeY];
 	for(int i = 0; i < sizeX * sizeY; i++){
-		tabBonus[i] = 0;
+		tabBonus[i] = -1;
 	}
 	
 	levelIndex = levelIndexInformation;
@@ -164,7 +164,7 @@ Game::Game(int levelIndexInformation, int playerInformationParam[16][2], int gam
 	
 	explosionSprite = new SDL_Surface * [36];
 	bombeSprite = new SDL_Surface * [12];
-	bonusSprite = new SDL_Surface * [12];
+	bonusSprite = new SDL_Surface * [14];
 	eggsSprite = new SDL_Surface * [2];
 	burnWallSprite = new SDL_Surface * [6];
 	headerPlayerSprite = new SDL_Surface * [16];
@@ -196,7 +196,7 @@ Game::Game(int levelIndexInformation, int playerInformationParam[16][2], int gam
 	
 	// bonusSprite
 	for(i = 0 ; i < 2; i++){
-		for(j = 0; j < 6; j++){
+		for(j = 0; j < 7; j++){
 			srcTextureRect.x = i * 16;
 		    srcTextureRect.y = j * 16;
 		    srcTextureRect.w = 16;
@@ -745,7 +745,8 @@ void Game::tick(){
 					
 					//CENTER
 					explosions.push_back(new Explosion(posXBombe, posYBombe, 0, explosionSprite, tab, tabBonus));
-					if(tabBonus[posXBombe + posYBombe * sizeX] != 0){
+					if(tabBonus[posXBombe + posYBombe * sizeX] != -1){
+						fprintf(stderr,"burn bonu\n");
 						grid->burnBonus(posXBombe, posYBombe);
 					}
 					
@@ -787,7 +788,8 @@ void Game::tick(){
 						}
 						if(!aWallHasBurn){
 							// if we don't have burn a wall, we can have a bonus in the case of table. we remove it !
-							if(tabBonus[posXBombe + (posYBombe-j) * sizeX] != 0){
+							if(tabBonus[posXBombe + (posYBombe-j) * sizeX] != -1){
+								fprintf(stderr,"burn bonus\n");
 								grid->burnBonus(posXBombe, posYBombe - j);
 							}
 						}
@@ -833,7 +835,8 @@ void Game::tick(){
 						}
 						if(!aWallHasBurn){
 							// if we don't have burn a wall, we can have a bonus in the case of table. we remove it !
-							if(tabBonus[ (posXBombe + j ) + posYBombe * sizeX] != 0){
+							if(tabBonus[ (posXBombe + j ) + posYBombe * sizeX] != -1){
+								fprintf(stderr,"burn bonus\n");
 								grid->burnBonus((posXBombe + j ), posYBombe);
 							}
 						}
@@ -879,7 +882,8 @@ void Game::tick(){
 						}
 						if(!aWallHasBurn){
 							// if we don't have burn a wall, we can have a bonus in the case of table. we remove it !
-							if(tabBonus[posXBombe + (posYBombe + j) * sizeX] != 0){
+							if(tabBonus[posXBombe + (posYBombe + j) * sizeX] != -1){
+								fprintf(stderr,"burn bonus\n");
 								grid->burnBonus(posXBombe, posYBombe + j);
 							}
 						}
@@ -925,7 +929,8 @@ void Game::tick(){
 						}
 						if(!aWallHasBurn){
 							// if we don't have burn a wall, we can have a bonus in the case of table. we remove it !
-							if(tabBonus[ (posXBombe - j ) + posYBombe * sizeX] != 0){
+							if(tabBonus[ (posXBombe - j ) + posYBombe * sizeX] != -1){
+								fprintf(stderr,"burn bonus\n");
 								grid->burnBonus((posXBombe - j ), posYBombe);
 							}
 						}

@@ -151,7 +151,6 @@ void Grid::generateGrid(){
             if( j == 0 || j == (sizeY-1) || i == 0 || i == (sizeX-1)|| (j%2 == 0 && i%2 == 0)){
             	//murs
                 tab[i+(j*sizeX)] = wallElement;
-                notEmptyCase.push_back(i+(j*sizeX));
                 if(level[lvl][j][i] == 18  ||  level[lvl][j][i] == 19  ||  level[lvl][j][i] == 20){
             		tab[i+(j*sizeX)] = emptyElement;
             		emptyCase.push_back(i+(j*sizeX));	
@@ -159,8 +158,10 @@ void Grid::generateGrid(){
             } else {
                 /* generate secret number between 1 and 3: */
                 if((rand() % 7 + 1)>=2){
-                    tab[i+(j*sizeX)] = brickElement;
-                    notEmptyCase.push_back(i+(j*sizeX));
+                	if(reservedSpot[j][i] == 0){
+                    	tab[i+(j*sizeX)] = brickElement;
+                    	notEmptyCase.push_back(i+(j*sizeX));
+                	}
                 } else {
                     tab[i+(j*sizeX)] = emptyElement;
                     emptyCase.push_back(i+(j*sizeX));
@@ -210,13 +211,43 @@ void Grid::generateGrid(){
                 }else{
                     //reservedSpot !
                     tab[i+(j*sizeX)] = emptyElement;
-					emptyCase.push_back(i+(j*sizeX));
                 }
             }
         }
     }
-    //simulate a flamme up
-    tabBonus[3+(2*sizeX)] = 2;
+    
+    //draw Death bonus for a level
+    for(int i = 0; i < bonusByLevel[lvl][0]; i++){
+    	int ind = emptyCase[rand() % emptyCase.size() + 1];
+    	while(reservedSpot[(int)ind / sizeX][(ind % sizeX)] != 0){
+    		ind = emptyCase[rand() % emptyCase.size() + 1];
+    	}
+    	tabBonus[ind] = deathBonus;
+    	SDL_Rect dstrect;
+		dstrect.x = ((ind % sizeX) * blockSizeX) + 1;
+		dstrect.y = floor(ind / sizeX) * blockSizeY;
+		dstrect.w = 16;
+		dstrect.h = 16;
+		SDL_BlitSurface(bonusSprite[0], NULL, brickShadow, &dstrect);
+    }
+    
+    //draw Death bonus for a level
+    for(int y = 1; y < 13; y++){
+    	for(int i = 0; i < bonusByLevel[lvl][y]; i++){
+    		int ind = notEmptyCase[rand() % notEmptyCase.size()];
+	    	while(tabBonus[ind] != noBonus){
+	    		ind = notEmptyCase[rand() % notEmptyCase.size()];
+    		}
+	    	tabBonus[ind] = y;
+	    	SDL_Rect dstrect;
+			dstrect.x = ((ind % sizeX) * blockSizeX) + 1;
+			dstrect.y = floor(ind / sizeX) * blockSizeY;
+			dstrect.w = 16;
+			dstrect.h = 16;
+			//SDL_BlitSurface(bonusSprite[y], NULL, brickShadow, &dstrect);
+	    }
+    }
+    
 }
 
 void Grid::burnAWall(int posX, int posY){
@@ -229,7 +260,7 @@ void Grid::burnAWall(int posX, int posY){
 		SDL_FillRect(brickShadow, &rect, 0x000000);
 	}
 	
-	if(tabBonus[posX + posY * sizeX] !=0){
+	if(tabBonus[posX + posY * sizeX] != noBonus){
 		fprintf(stderr,"revele bonus\n");
 		SDL_Rect dstrect;
 		dstrect.x = posX * blockSizeX +1;
@@ -241,15 +272,14 @@ void Grid::burnAWall(int posX, int posY){
 }
 
 void Grid::burnBonus(int posX, int posY){
-	fprintf(stderr,"burnbonus\n");
-	if(tabBonus[posX + posY * sizeX] !=0){
+	if(tabBonus[posX + posY * sizeX] != noBonus){
 		SDL_Rect rect;
 	    rect.x = posX * blockSizeX;
 	    rect.y = posY * blockSizeY;
 	    rect.w = blockSizeX;
 	    rect.h = blockSizeY;
 		SDL_FillRect(brickShadow, &rect, 0x000000);
-		tabBonus[posX + posY * sizeX] = 0;
+		tabBonus[posX + posY * sizeX] = noBonus;
 	}
 }
 

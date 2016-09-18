@@ -682,7 +682,7 @@ void Player::doSomething(SDL_Surface * surfaceToDraw){
 			int roundX = floor(posX);
 			int roundY = floor(posY);
 			
-			if(tabBonus[roundX + roundY * sizeX] !=0){
+			if(tabBonus[roundX + roundY * sizeX] != noBonus){
 				foundABonus(tabBonus[roundX + roundY * sizeX]);
 			}
 			
@@ -910,64 +910,42 @@ void Player::foundABonus(int bonusIndex){
 	int roundX = floor(posX);
 	int roundY = floor(posY);
 	switch(bonusIndex){
-		case 2:
-//			playerState = onLouis;
-			NbBombeMax+=10;
-			NBBombeRemaining+=10;
+		case deathBonus :
+			break;
+		case rollerBonus :
+			playerSpeed += 0.02;
+			break;
+		case fireBonus :
+			flameStrengh++;
+			break;
+		case fireMaxBonus :
+			flameStrengh += 10;
+			break;
+		case bombeBonus :
+			NbBombeMax++;
+			NBBombeRemaining++;
+			break;
+		case radioBombeBonus :
+			break;
+		case kickBonus :
+			break;
+		case gloveBonus :
+			haveGlovePower = true;
+			break;
+		case bubbleBonus :
+			break;
+		case powerBombeBonus :
+			break;
+		case getaBonus :
+			playerSpeed -= 0.02;
+			break;
+		case ghostBonus :
+			ghostModePower = true;
+			break;
+		case eggBonus :
+			playerState = onLouis;
 			break;
 	}
+	fprintf(stderr,"take bonus %i\n", bonusIndex);
 	grid->burnBonus(roundX, roundY);
-	
-	
-	
-	
-	
-	
-	
 }
-
-
-
-/*
-
-void Player::takeAnEgg(){
-	playerState = onLouis;
-}
-
-void Player::takeGlove(){
-	haveGlovePower = true;
-}
-
-void Player::ghostMode(){
-	ghostModePower = true;
-}
-
-void Player::flameUp(){
-	flameStrengh++;
-}
-
-void Player::speedUp(){
-	playerSpeed = playerSpeed + 0.02;
-}
-
-void Player::speedDown(){
-	playerSpeed = playerSpeed - 0.02;
-}
-
-void Player::powerBombe(){
-	powerBombePower = true;
-}
-
-void Player::radioBombe(){
-	radioBombePower = true;
-}
-
-void Player::bubleBombe(){
-	bubbleBombePower = true;
-}
-
-void Player::bombeNbUp(){
-	NbBombeMax++;
-}
-
-*/
