@@ -23,6 +23,13 @@ enum gridElementEnum{
 	wallElement			= 4,
 };
 
+enum bombeTypeEnum{
+	normalBombeType	= 0,
+	radioBombeType	= 1,
+	powerBombeType	= 2,
+	bubbleBombeType	= 3,
+};
+
 enum bonusEnum{
 	noBonus			=-1,
 	deathBonus		= 0,

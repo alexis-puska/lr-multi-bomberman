@@ -73,6 +73,8 @@ private:
 	bool putABombe;
 	int flameStrengh;
 	
+	int invincibleTime;
+	
 	//Object variable
 	bool cpu;
 	int playerNumber;
@@ -119,7 +121,6 @@ private:
 	void drawVictory(SDL_Surface * surfaceToDraw, bool animate);
 	void drawCrying(SDL_Surface * surfaceToDraw, bool animate);
 	
-	
-	
+	void getAMalusBonus();
 };
 #endif

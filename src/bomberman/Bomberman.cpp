@@ -364,6 +364,11 @@ void Bomberman::drawPlayerTypeMenu(){
                 playerType[cursorPosition][0] = 2;
             }
         } 
+        
+        //player 0 always Human
+        playerType[0][0] = 0;
+        
+        
         SDL_Surface* surfaceMessage1;
         SDL_Surface* surfaceMessage2;
         for(int j=0 ; j<4 ; j++){
@@ -716,14 +721,20 @@ void Bomberman::drawLevelSelectionMenu(){
 
 
 void Bomberman::keyPressed(){
+	int index = 0;
     anyPlayerkeychange = false;
     for(int i = 0; i < 16 ; i++){
-        if(previousPlayerKeystate[i] != in_keystate[i]){
-            keychange[i] = true;
-            anyPlayerkeychange = true;
-            previousPlayerKeystate[i] = in_keystate[i];
-        }else{
-            keychange[i] = false;	
-        }
+    	if(playerType[i][0]==0){
+	        if(previousPlayerKeystate[i] != in_keystate[index]){
+	            keychange[i] = true;
+	            anyPlayerkeychange = true;
+	            previousPlayerKeystate[i] = in_keystate[index];
+	        }else{
+	        	keychange[i] = false;	
+	        }
+	        index++;
+	    }else{
+		    keychange[i] = false;	
+	    }
     }
 }

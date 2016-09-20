@@ -15,12 +15,7 @@
 #ifndef __MYCLASS_BOMBE
 #define __MYCLASS_BOMBE
 
-enum bombeTypeEnum{
-	normalBombeType	= 0,
-	radioBombeType	= 1,
-	powerBombeType	= 2,
-	bubbleBombeType	= 3,
-};
+
 
 
 #define sizeX 35

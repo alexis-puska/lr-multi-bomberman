@@ -26,7 +26,6 @@ Bombe::~Bombe(){
 }
 
 bool Bombe::isExplode(){
-
 	if(nbTickExplode <=0){
 		tab[posX + posY * sizeX ] = emptyElement;
 		return true;

@@ -97,6 +97,7 @@ Player::Player(unsigned short * in_keystateLibretro, bool isACpuPlayer, int inde
 {
 	grid = gridParam;
 	playerState = normal;
+	invincibleTime = 0;
 	NbBombeMax = 2;
 	NBBombeRemaining = 2;
 	bubbleBombePower = false;
@@ -686,10 +687,18 @@ void Player::doSomething(SDL_Surface * surfaceToDraw){
 				foundABonus(tabBonus[roundX + roundY * sizeX]);
 			}
 			
-			
-			if(tab[roundX + roundY * sizeX] == explosionElement){
-				playerState = burning;
-				animate = true;
+			if(invincibleTime == 0){
+				if(tab[roundX + roundY * sizeX] == explosionElement){
+					if(playerState == onLouis){
+						invincibleTime = 50;
+						playerState = normal;
+					}else{
+						playerState = burning;
+						animate = true;
+					}
+				}
+			}else{
+				invincibleTime--;	
 			}
 					
 			if(roundY > sizeY){
@@ -911,6 +920,7 @@ void Player::foundABonus(int bonusIndex){
 	int roundY = floor(posY);
 	switch(bonusIndex){
 		case deathBonus :
+			getAMalusBonus();
 			break;
 		case rollerBonus :
 			playerSpeed += 0.02;
@@ -925,12 +935,11 @@ void Player::foundABonus(int bonusIndex){
 			NbBombeMax++;
 			NBBombeRemaining++;
 			break;
-		case radioBombeBonus :
-			break;
 		case kickBonus :
 			break;
 		case gloveBonus :
-			haveGlovePower = true;
+			break;
+		case radioBombeBonus :
 			break;
 		case bubbleBonus :
 			break;
@@ -949,3 +958,9 @@ void Player::foundABonus(int bonusIndex){
 	fprintf(stderr,"take bonus %i\n", bonusIndex);
 	grid->burnBonus(roundX, roundY);
 }
+
+void Player::getAMalusBonus(){
+	
+	
+}
+
