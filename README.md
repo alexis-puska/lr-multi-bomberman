@@ -62,7 +62,9 @@ Raspberry pi 2/3:
 - Malus (diarhee(put bombe every time), constipation(can't put a bombe), fast bombe, slow bombe, slow player, fast player)
 - Bombe type(<del>normal</del>, radio, power, rubber)
 - Power(kick, glove)
+- other level design (pirates, ring)
 - Artificial interlligence
+- Teleporter
 - Game type (badBomber, sudden death)
 - Louis burning animation
 - Audio
