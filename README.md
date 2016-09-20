@@ -34,7 +34,7 @@ unzip and install the SDL2_image.framework, SDL2_ttf.framework, SDL2.framework i
 
 
 ===============================
-**Compilation : **
+**Compilation :**
 
 Unix / mac os X : 
 ```
@@ -59,7 +59,7 @@ Raspberry pi 2/3:
 **Next step :**
 
 - Bonus (kick bombe, <del>flamme up, flamme max, bombe sup, louis, Gotta, roller</del>, block pass)
-- Malus (diarhee, constipation, fast bombe, slow bombe, 
+- Malus (diarhee(put bombe every time), constipation(can't put a bombe), fast bombe, slow bombe, slow player, fast player)
 - Bombe type(<del>normal</del>, radio, power, rubber)
 - Power(kick, glove)
 - Artificial interlligence
