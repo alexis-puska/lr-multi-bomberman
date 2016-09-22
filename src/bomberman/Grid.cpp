@@ -145,6 +145,12 @@ void Grid::resetSurface(){
 
 void Grid::generateGrid(){
     srand (time(NULL));
+
+	for(int i = 0; i < sizeX * sizeY; i++){
+		tab[i] = emptyElement;
+		tabBonus[i] = -1;
+	}
+
     
     for(int i=0;i<sizeX;i++){
         for(int j=0;j<sizeY;j++){

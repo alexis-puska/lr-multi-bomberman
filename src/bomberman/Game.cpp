@@ -122,10 +122,6 @@ Game::Game(int levelIndexInformation, int playerInformationParam[16][2], int gam
 	tabBonus = new int[sizeX * sizeY];
 	for(int i = 0; i < sizeX * sizeY; i++){
 		tab[i] = emptyElement;
-	}
- 	
-	tabBonus = new int[sizeX * sizeY];
-	for(int i = 0; i < sizeX * sizeY; i++){
 		tabBonus[i] = -1;
 	}
 	
@@ -507,7 +503,8 @@ void Game::mergeScreen(bool mergeResult){
     SDL_BlitSurface(grid->getGroundLayer()	, &mergeRect, screenBuffer, &mergeRect);
     SDL_BlitSurface(grid->getBricksLayer()	, &mergeRect, screenBuffer, &mergeRect);
     SDL_BlitSurface(playerBombeExplode		, &mergeRect, screenBuffer, &mergeRect);
-
+	SDL_BlitSurface(grid->getSkyLayer()	, &mergeRect, screenBuffer, &mergeRect);
+    
     if(mergeResult){
     	mergeRect.x = (630/2) - (overlayResult->w/2);
     	mergeRect.y = (360/2) - (overlayResult->h/2);
