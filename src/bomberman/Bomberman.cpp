@@ -666,75 +666,73 @@ void Bomberman::drawGameOptionMenu(){
  * 
  */
 void Bomberman::drawLevelSelectionMenu(){
-    if(refreshBuffer || keychange[0]){
-        Uint32 rmask, gmask, bmask, amask;
-        rmask = 0x00ff0000;
-        gmask = 0x0000ff00;
-        bmask = 0x000000ff;
-        amask = 0xff000000;
-        SDL_BlitSurface(menuBackgroundSurface,NULL,screenBuffer ,NULL);
-        SDL_Surface* menu;
-        menu =  SDL_CreateRGBSurface(0, 574, 27, 32, rmask, gmask, bmask, amask);
-        SDL_FillRect(menu, NULL, SDL_MapRGBA(menu->format, 0, 0, 0, 120));
-        copySurfaceToBackRenderer(menu, screenBuffer, 33, 150);
-        SDL_FreeSurface(menu);
-        
-        menu =  SDL_CreateRGBSurface(0, 574, 150, 32, rmask, gmask, bmask, amask);
-        SDL_FillRect(menu, NULL, SDL_MapRGBA(menu->format, 0, 0, 0, 120));
-        copySurfaceToBackRenderer(menu, screenBuffer, 33, 183);
-        
-        //SDL_Color red = {255, 0, 0};
-        SDL_Color green = {0, 255, 0};
-        //SDL_Color blue = {0, 140, 255};
-        
-        //menuLevelSprite
-        
-        SDL_Surface* surfaceMessage = TTF_RenderText_Solid(fragileBombersFont, "SELECT THE LEVEL", green);
-        copySurfaceToBackRenderer(surfaceMessage, screenBuffer, ((640/2)-(surfaceMessage->w/2)), 154);
-        
-        
-        
-        
-        if(previousPlayerKeystate[0] & keyPadRight && keychange[0]){
-            cursorPosition++;
-            if(cursorPosition>8){
-                cursorPosition = 0;	
-            }
-            
-        }
-        if(previousPlayerKeystate[0] & keyPadLeft && keychange[0]){
-            cursorPosition--;
-            if(cursorPosition<0){
-                cursorPosition = 8;	
-            }
-        }
-        
-        copySurfaceToBackRenderer(menuLevelSprite[cursorPosition], screenBuffer, ((640/2)-(menuLevelSprite[cursorPosition]->w/2)), 200);
-        
-        refreshBuffer = false;
-        SDL_FreeSurface(menu);
-	    SDL_FreeSurface(surfaceMessage);
-        levelIndex = cursorPosition;
-    }
-    copySurfaceToBackRenderer(screenBuffer, vout_buf, 0, 0);
+	if(refreshBuffer || keychange[0]){
+		Uint32 rmask, gmask, bmask, amask;
+		rmask = 0x00ff0000;
+		gmask = 0x0000ff00;
+		bmask = 0x000000ff;
+		amask = 0xff000000;
+		SDL_BlitSurface(menuBackgroundSurface,NULL,screenBuffer ,NULL);
+		SDL_Surface* menu;
+		menu =  SDL_CreateRGBSurface(0, 574, 27, 32, rmask, gmask, bmask, amask);
+		SDL_FillRect(menu, NULL, SDL_MapRGBA(menu->format, 0, 0, 0, 120));
+		copySurfaceToBackRenderer(menu, screenBuffer, 33, 150);
+		SDL_FreeSurface(menu);
+		
+		menu =  SDL_CreateRGBSurface(0, 574, 150, 32, rmask, gmask, bmask, amask);
+		SDL_FillRect(menu, NULL, SDL_MapRGBA(menu->format, 0, 0, 0, 120));
+		copySurfaceToBackRenderer(menu, screenBuffer, 33, 183);
+		
+		//SDL_Color red = {255, 0, 0};
+		SDL_Color green = {0, 255, 0};
+		//SDL_Color blue = {0, 140, 255};
+		
+		//menuLevelSprite
+		
+		SDL_Surface* surfaceMessage = TTF_RenderText_Solid(fragileBombersFont, "SELECT THE LEVEL", green);
+		copySurfaceToBackRenderer(surfaceMessage, screenBuffer, ((640/2)-(surfaceMessage->w/2)), 154);
+		
+		
+		if(previousPlayerKeystate[0] & keyPadRight && keychange[0]){
+			cursorPosition++;
+			if(cursorPosition>8){
+				cursorPosition = 0;	
+			}
+			
+		}
+		if(previousPlayerKeystate[0] & keyPadLeft && keychange[0]){
+			cursorPosition--;
+			if(cursorPosition<0){
+				cursorPosition = 8;	
+			}
+		}
+		
+		copySurfaceToBackRenderer(menuLevelSprite[cursorPosition], screenBuffer, ((640/2)-(menuLevelSprite[cursorPosition]->w/2)), 200);
+		
+		refreshBuffer = false;
+		SDL_FreeSurface(menu);
+		SDL_FreeSurface(surfaceMessage);
+		levelIndex = cursorPosition;
+	}
+	copySurfaceToBackRenderer(screenBuffer, vout_buf, 0, 0);
 }
 
 
 void Bomberman::keyPressed(){
 	int index = 0;
-    anyPlayerkeychange = false;
-    for(int i = 0; i < 16 ; i++){
-    	if(playerType[i][0]==0){
-	        if(previousPlayerKeystate[i] != in_keystate[index]){
-	            keychange[i] = true;
-	            anyPlayerkeychange = true;
-	            previousPlayerKeystate[i] = in_keystate[index];
-	        }else{
-	        	keychange[i] = false;	
-	        }
-	        index++;
-	    }else{
-		    keychange[i] = false;	
-	    }
-    }
+	anyPlayerkeychange = false;
+	for(int i = 0; i < 16 ; i++){
+		if(playerType[i][0]==0){
+			if(previousPlayerKeystate[i] != in_keystate[index]){
+				keychange[i] = true;
+				anyPlayerkeychange = true;
+				previousPlayerKeystate[i] = in_keystate[index];
+			}else{
+				keychange[i] = false;	
+			}
+			index++;
+		}else{
+			keychange[i] = false;	
+		}
+	}
 }

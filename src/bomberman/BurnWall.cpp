@@ -12,27 +12,27 @@ BurnWall::BurnWall(int posXX, int posYY, int index, SDL_Surface ** miscSheet, in
 	tabBonus = tableBonus;
 	frameCounter = 0;
 	offsetSprite = 0;
-    nbFrameForAnimation = 6;
-    deleteAnimation = false;
+	nbFrameForAnimation = 6;
+	deleteAnimation = false;
 }
-
+	
 BurnWall::~BurnWall(){
 	animation = NULL;
 	tab = NULL;
 	tabBonus = NULL;
 }
-
+	
 bool BurnWall::canBeDelete(){
 	
 	if(deleteAnimation){
-		//remove grid status BurnWall
+	//remove grid status BurnWall
 		if(tab[posX + posY * sizeX] == brickElement){
-			tab[posX + posY * sizeX] = emptyElement;
+		tab[posX + posY * sizeX] = emptyElement;
 		}
 	}
 	return deleteAnimation;
 }
-
+	
 void BurnWall::tick(SDL_Surface * surfaceToDraw){
 	SDL_Rect dstRect;
 	dstRect.x = posX * 18;
