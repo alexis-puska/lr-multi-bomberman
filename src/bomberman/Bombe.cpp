@@ -26,7 +26,7 @@ Bombe::~Bombe(){
 }
 
 bool Bombe::isExplode(){
-	if(nbTickExplode <=0){
+	if(nbTickExplode ==0){
 		tab[posX + posY * sizeX ] = emptyElement;
 		return true;
 	}else{
@@ -35,6 +35,11 @@ bool Bombe::isExplode(){
 }
 
 void Bombe::explode(){
+	tab[posX + posY * sizeX ] = emptyElement;
+	nbTickExplode = 1;
+}
+
+void Bombe::explodeNow(){
 	tab[posX + posY * sizeX ] = emptyElement;
 	nbTickExplode = 0;
 }
@@ -60,7 +65,7 @@ int Bombe::getPlayer(){
 }
 
 bool Bombe::isPowerBombe(){
-	if(bombeType == 2){
+	if(bombeType == powerBombeType){
 		return true;
 	}else{
 		return false;
@@ -101,6 +106,15 @@ void Bombe::tick(SDL_Surface * surfaceToDraw){
 			offsetSpriteAnimation = 2;
 			break;		
 	}
-	nbTickExplode--;
-	SDL_BlitSurface(animation[offsetSpriteAnimation], NULL, surfaceToDraw, &dstRect);
+	
+	switch(bombeType){
+		case normalBombeType:
+		case powerBombeType:
+		case bubbleBombeType:
+			nbTickExplode--;
+			break;
+		case radioBombeType:
+			break;	
+	}
+	SDL_BlitSurface(animation[offsetSpriteAnimation + bombeType * 3], NULL, surfaceToDraw, &dstRect);
 }

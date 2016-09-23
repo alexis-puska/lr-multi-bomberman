@@ -33,6 +33,7 @@ public:
     ~Bombe();
     bool isExplode();
     void explode();
+    void explodeNow();
     int getStrenght();
     int getPlayer();
     int getPosX();

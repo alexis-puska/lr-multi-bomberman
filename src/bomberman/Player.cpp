@@ -100,12 +100,10 @@ Player::Player(unsigned short * in_keystateLibretro, bool isACpuPlayer, int inde
 	invincibleTime = 0;
 	NbBombeMax = 2;
 	NBBombeRemaining = 2;
-	bubbleBombePower = false;
-	haveGlovePower = false;
-	ghostModePower = false;
-	powerBombePower = false;
-	radioBombePower = false;
+	bombeType = normalBombeType;
 	putABombe = false;
+	ghostModePower = false;
+	triggerBombe = false;
 	flameStrengh = 2;
 	playerSpeed = 0.1;
 	
@@ -667,11 +665,6 @@ void Player::drawCrying(SDL_Surface * surfaceToDraw, bool animate){
 
 
 
-
-
-
-
-
 void Player::doSomething(SDL_Surface * surfaceToDraw){
 	unsigned short keystate = *in_keystate;
 	bool animate = false;
@@ -683,7 +676,7 @@ void Player::doSomething(SDL_Surface * surfaceToDraw){
 			int roundX = floor(posX);
 			int roundY = floor(posY);
 			
-			if(tabBonus[roundX + roundY * sizeX] != noBonus){
+			if(tabBonus[roundX + roundY * sizeX] != noBonus && tab[roundX + roundY * sizeX] < brickElement){
 				foundABonus(tabBonus[roundX + roundY * sizeX]);
 			}
 			
@@ -711,8 +704,18 @@ void Player::doSomething(SDL_Surface * surfaceToDraw){
 				roundY = sizeY;
 			}
 	
-			float margeInf = 0.51 - (playerSpeed/2);
-			float margeSup = 0.49 + (playerSpeed/2);
+			float margeInf;
+			float margeSup;
+			
+			if(playerSpeed > 0.1){
+				margeInf = 0.51 - (playerSpeed/2);
+			 	margeSup = 0.49 + (playerSpeed/2);
+			}else{
+				margeInf = 0.49 - (playerSpeed/2);
+				margeSup = 0.51 + (playerSpeed/2);
+			}
+			
+			
 			
 			if(posX-(float)roundX >= margeInf && posX-(float)roundX <= margeSup){
 				posX = (float)floor(posX)+0.5;
@@ -722,9 +725,16 @@ void Player::doSomething(SDL_Surface * surfaceToDraw){
 				posY = (float)floor(posY) + 0.5;
 			}
 			
+			int canPassBlock = 0;
+			if(ghostModePower == true){
+				canPassBlock = brickElement;
+			}else{
+				canPassBlock = explosionElement;
+			}
+			
 			if(keystate & keyPadLeft){
 				if(posX - roundX == 0.5){
-					if(!(tab[(roundX - 1) + (roundY * sizeX)] > explosionElement)){		
+					if(!(tab[(roundX - 1) + (roundY * sizeX)] > canPassBlock)){		
 						posX = ( posX - playerSpeed );
 					}
 				}else{
@@ -742,7 +752,7 @@ void Player::doSomething(SDL_Surface * surfaceToDraw){
 			
 			if(keystate & keyPadRight){
 				if(posX - roundX == 0.5){
-					if(!(tab[(roundX + 1) + (roundY * sizeX)] > explosionElement)){
+					if(!(tab[(roundX + 1) + (roundY * sizeX)] > canPassBlock)){
 						posX = ( posX + playerSpeed );
 					}
 				}else{
@@ -758,18 +768,13 @@ void Player::doSomething(SDL_Surface * surfaceToDraw){
 				animate = true;
 			}
 			
-			
-			
-
-			
-			
 			if(keystate & keyPadDown){
 				
 				if(posY - roundY == 0.5){
 					if(roundY >= (sizeY-1)){
 							posY = ( posY + playerSpeed );
 					}else{
-						if(!(tab[roundX + ((roundY + 1 ) * sizeX)] > explosionElement)){
+						if(!(tab[roundX + ((roundY + 1 ) * sizeX)] > canPassBlock)){
 							posY = ( posY + playerSpeed );
 						}
 					}
@@ -791,7 +796,7 @@ void Player::doSomething(SDL_Surface * surfaceToDraw){
 					if(roundY == 0){
 							posY = ( posY - playerSpeed );
 					}else{
-						if(!(tab[roundX + ((roundY - 1 ) * sizeX)] > explosionElement)){
+						if(!(tab[roundX + ((roundY - 1 ) * sizeX)] > canPassBlock)){
 							posY = ( posY - playerSpeed );
 						}
 					}
@@ -820,7 +825,9 @@ void Player::doSomething(SDL_Surface * surfaceToDraw){
 				putABombe = true;	
 			}
 			if(keystate & keyPadB){
-				//display menu	
+				if(bombeType == radioBombeType){
+					triggerBombe = true;	
+				}
 			}
 			if(keystate & keyPadX){
 				//display menu	
@@ -861,23 +868,33 @@ void Player::doSomething(SDL_Surface * surfaceToDraw){
 }
 
 Bombe * Player::addBombe(){
-	int type = normalBombeType;
-	int time = 100	;
+	int time = 100;
 	int strenght = flameStrengh;
-	
-	if(bubbleBombePower){
-		type = bubbleBombeType;
-	}
-	if(radioBombePower){
-		type = radioBombeType;
-		time = -1;
-	}
-	if(powerBombePower){
-		strenght = 30;
-		type = powerBombeType;
+	switch(bombeType){
+		case radioBombeType:
+			time = -1;
+			break;
+		case powerBombeType:
+		case normalBombeType:
+		case bubbleBombeType:
+			break;		
 	}
 	tab[(int)floor(posX) + ((int)floor(posY)*sizeX)] = bombeElement;
-	return new Bombe(strenght, (int)floor(posX), (int)floor(posY), type, playerNumber, time, bombeSprite, tab);
+	return new Bombe(strenght, (int)floor(posX), (int)floor(posY), bombeType, playerNumber, time, bombeSprite, tab);
+	
+}
+
+int Player::getPlayerNumber(){
+	return playerNumber;	
+}
+
+bool Player::triggerPowerBombe(){
+	return triggerBombe;	
+}
+
+void Player::releaseTrigger(){
+	fprintf(stderr,"release");
+	triggerBombe = false;
 }
 
 bool Player::wantPutBombe(){
@@ -892,7 +909,17 @@ bool Player::wantPutBombe(){
 	return false;
 }
 
+bool Player::walkOnWall(){
+	if(tab[(int)floor(posX) + (int)floor(posY) * sizeX] < brickElement){
+		return false;
+	}else{
+		putABombe = false;
+		return true;	
+	}
+}
+
 void Player::ABombeExplode(){
+	triggerBombe = false;
 	NBBombeRemaining++;
 }
 
@@ -940,13 +967,18 @@ void Player::foundABonus(int bonusIndex){
 		case gloveBonus :
 			break;
 		case radioBombeBonus :
+			bombeType = radioBombeType;
 			break;
 		case bubbleBonus :
+			bombeType = bubbleBombeType;
 			break;
 		case powerBombeBonus :
+			bombeType = powerBombeType;
 			break;
 		case getaBonus :
-			playerSpeed -= 0.02;
+			if(playerSpeed > 0.05){
+				playerSpeed -= 0.02;
+			}
 			break;
 		case ghostBonus :
 			ghostModePower = true;

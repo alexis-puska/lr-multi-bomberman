@@ -39,19 +39,12 @@ public:
 	void winTheGame();
 	
 	void ABombeExplode();
+	bool triggerPowerBombe();
+	void releaseTrigger();
 	void ABombeIsSet();
 	void foundABonus(int bonusIndex);
-//	void takeAnEgg();
-//	void takeGlove();
-//	void ghostMode();
-//	void flameUp();
-//	void speedUp();
-//	void speedDown();
-//	void powerBombe();
-//	void bubleBombe();
-//	void radioBombe();
-//	void bombeNbUp();
-    
+	int getPlayerNumber();
+	bool walkOnWall();
     
 private:
 	/*
@@ -65,14 +58,14 @@ private:
 	int NbBombeMax;
 	int NBBombeRemaining;
 	float playerSpeed;
-	bool bubbleBombePower;
 	bool haveGlovePower;
 	bool ghostModePower;
-	bool powerBombePower;
-	bool radioBombePower;
+
+	
+	bool triggerBombe;
 	bool putABombe;
 	int flameStrengh;
-	
+	int bombeType;	
 	int invincibleTime;
 	
 	//Object variable

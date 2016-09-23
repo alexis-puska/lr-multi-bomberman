@@ -730,7 +730,7 @@ void Game::tick(){
 					int strenght = bombes[i]->getStrenght();
 					int posXBombe = bombes[i]->getPosX();
 					int posYBombe = bombes[i]->getPosY();
-					
+					bool isAPowerBombe = bombes[i]->isPowerBombe();
 					
 					/*
 					*DIRECTION
@@ -767,14 +767,18 @@ void Game::tick(){
 							case brickElement :
 								burnWalls.push_back(new BurnWall(posXBombe, posYBombe - j, ind, burnWallSprite, tab, tabBonus));
 								grid->burnAWall(posXBombe, posYBombe - j);
-								exitLoop = true;
+								if(!isAPowerBombe){
+									exitLoop = true;
+								}
 								aWallHasBurn = true;
 								break;
 							case bombeElement : 
 								for(unsigned int k=0;k<bombes.size();k++){
 									if(bombes[k] -> getCase() == posXBombe + (posYBombe - j) * sizeX){
 										bombes[k]->explode();
-										exitLoop = true;
+										if(!isAPowerBombe){
+											exitLoop = true;
+										}
 										break;
 									}
 								}
@@ -814,14 +818,18 @@ void Game::tick(){
 							case brickElement :
 								burnWalls.push_back(new BurnWall((posXBombe + j ), posYBombe, ind, burnWallSprite, tab, tabBonus));
 								grid->burnAWall((posXBombe + j ), posYBombe);
-								exitLoop = true;
+								if(!isAPowerBombe){
+									exitLoop = true;
+								}
 								aWallHasBurn = true;
 								break;
 							case bombeElement : 
 								for(unsigned int k=0;k<bombes.size();k++){
 									if(bombes[k] -> getCase() == (posXBombe + j ) + posYBombe * sizeX){
 										bombes[k]->explode();
-										exitLoop = true;
+										if(!isAPowerBombe){
+											exitLoop = true;
+										}
 										break;
 									}
 								}
@@ -861,14 +869,18 @@ void Game::tick(){
 							case brickElement :
 								burnWalls.push_back(new BurnWall(posXBombe, posYBombe + j, ind, burnWallSprite, tab, tabBonus));
 								grid->burnAWall(posXBombe, posYBombe + j);
-								exitLoop = true;
+								if(!isAPowerBombe){
+									exitLoop = true;
+								}
 								aWallHasBurn = true;
 								break;
 							case bombeElement : 
 								for(unsigned int k=0;k<bombes.size();k++){
 									if(bombes[k] -> getCase() == posXBombe + (posYBombe + j) * sizeX){
 										bombes[k]->explode();
-										exitLoop = true;
+										if(!isAPowerBombe){
+											exitLoop = true;
+										}
 										break;
 									}
 								}
@@ -908,13 +920,17 @@ void Game::tick(){
 							case brickElement :
 								burnWalls.push_back(new BurnWall((posXBombe - j ), posYBombe, ind, burnWallSprite, tab, tabBonus));
 								grid->burnAWall((posXBombe - j ), posYBombe);
-								exitLoop = true;
+								if(!isAPowerBombe){
+									exitLoop = true;
+								}
 								break;
 							case bombeElement : 
 								for(unsigned int k=0;k<bombes.size();k++){
 									if(bombes[k] -> getCase() == (posXBombe - j ) + posYBombe * sizeX){
 										bombes[k]->explode();
-										exitLoop = true;
+										if(!isAPowerBombe){
+											exitLoop = true;
+										}
 										aWallHasBurn = true;
 										break;
 									}
@@ -958,9 +974,21 @@ void Game::tick(){
 				if(players[i]->isAlive()){
 					nbPlayerAlive++;
 				}
-				if(players[i] -> wantPutBombe()){
-					bombes.push_back(players[i] -> addBombe());
-					players[i] -> ABombeIsSet();
+				if(!players[i] -> walkOnWall()){
+					if(players[i] -> wantPutBombe()){
+						bombes.push_back(players[i] -> addBombe());
+						players[i] -> ABombeIsSet();
+					}
+				}
+				if(players[i]->triggerPowerBombe()){
+					fprintf(stderr,"trigger\n");
+					for(unsigned int j=0;j<bombes.size();j++){
+						if(bombes[j]->getPlayer() == players[i]->getPlayerNumber()){
+												fprintf(stderr,"bombe found\n");
+							bombes[j]->explodeNow();	
+						}
+					}
+					players[i]->releaseTrigger();
 				}
 			}
 			
