@@ -46,12 +46,15 @@ static int metronome(void* data)
 		delay = gameTick - milliseconds;
 
 		if(delay > 0){
-//            fprintf(stderr, "%i\n", (int)delay);
+            //fprintf(stderr, "%i\n", (int)delay);
 			SDL_Delay(delay);
 		}else{
 			fprintf(stderr, "warning\n");
 		}
 	}
+	
+	
+	
 	return 0;
 }
 

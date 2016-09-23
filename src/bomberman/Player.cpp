@@ -37,10 +37,10 @@ enum playerKey{
 	keyPadA			= 8192,
 	keyPadB			= 16384,
 	keyPadY			= 32768	
-	};
-		
+};
 
-		
+
+
 enum playerMove{
 	none	=-1,
 	down	= 0,
@@ -48,7 +48,7 @@ enum playerMove{
 	left	= 2,
 	right	= 3
 };
-	
+
 enum playerSprite{
 	bomberman	= 0,	 
 	cossak		= 1,
@@ -112,12 +112,12 @@ Player::Player(unsigned short * in_keystateLibretro, bool isACpuPlayer, int inde
 	offsetSprite = 0;
 	previousDirection = down;
 	Uint32 rmask, gmask, bmask, amask;
-    amask = 0xff000000;
-    rmask = 0x00ff0000;
-    gmask = 0x0000ff00;
-    bmask = 0x000000ff;
-    int i;
-    int j;
+	amask = 0xff000000;
+	rmask = 0x00ff0000;
+	gmask = 0x0000ff00;
+	bmask = 0x000000ff;
+	int i;
+	int j;
 	
 	SDL_Surface * tempSurface;
 	switch(indexSprite){
@@ -152,10 +152,10 @@ Player::Player(unsigned short * in_keystateLibretro, bool isACpuPlayer, int inde
 	SDL_Rect srcTextureRect;
 	SDL_Rect destTextureRect;
 	destTextureRect.x = 0;
-    destTextureRect.y = 0;
-    destTextureRect.w = sprite_sizeW;
-    destTextureRect.h = sprite_sizeH;
-
+	destTextureRect.y = 0;
+	destTextureRect.w = sprite_sizeW;
+	destTextureRect.h = sprite_sizeH;
+	
 	playerSpriteWalk = new SDL_Surface * [12];
 	playerSpriteWalkBomb= new SDL_Surface * [12];
 	playerSpriteThrowBomb= new SDL_Surface * [8];
@@ -173,11 +173,11 @@ Player::Player(unsigned short * in_keystateLibretro, bool isACpuPlayer, int inde
 	for(i = 0 ; i < 3; i++){
 		for(j = 0; j < 4; j++){
 			srcTextureRect.x = i * sprite_sizeW;
-		    srcTextureRect.y = j * sprite_sizeH;
-		    srcTextureRect.w = sprite_sizeW;
-		    srcTextureRect.h = sprite_sizeH;
+			srcTextureRect.y = j * sprite_sizeH;
+			srcTextureRect.w = sprite_sizeW;
+			srcTextureRect.h = sprite_sizeH;
 			playerSpriteWalk[i + (j * 3)] =  SDL_CreateRGBSurface(0, sprite_sizeW, sprite_sizeH, 32, rmask, gmask, bmask, amask);
-        	SDL_BlitSurface(tempSurface, &srcTextureRect, playerSpriteWalk[i + (j * 3)], &destTextureRect);
+			SDL_BlitSurface(tempSurface, &srcTextureRect, playerSpriteWalk[i + (j * 3)], &destTextureRect);
 		}
 	}
 	
@@ -185,11 +185,11 @@ Player::Player(unsigned short * in_keystateLibretro, bool isACpuPlayer, int inde
 	for(i = 0 ; i < 3; i++){
 		for(j = 0; j < 4; j++){
 			srcTextureRect.x = (i+3) * sprite_sizeW;
-		    srcTextureRect.y = j * sprite_sizeH;
-		    srcTextureRect.w = sprite_sizeW;
-		    srcTextureRect.h = sprite_sizeH;
+			srcTextureRect.y = j * sprite_sizeH;
+			srcTextureRect.w = sprite_sizeW;
+			srcTextureRect.h = sprite_sizeH;
 			playerSpriteWalkBomb[i + (j * 3)] =  SDL_CreateRGBSurface(0, sprite_sizeW, sprite_sizeH, 32, rmask, gmask, bmask, amask);
-        	SDL_BlitSurface(tempSurface, &srcTextureRect, playerSpriteWalkBomb[i + (j * 3)], &destTextureRect);
+			SDL_BlitSurface(tempSurface, &srcTextureRect, playerSpriteWalkBomb[i + (j * 3)], &destTextureRect);
 		}
 	}
 	
@@ -197,52 +197,52 @@ Player::Player(unsigned short * in_keystateLibretro, bool isACpuPlayer, int inde
 	for(i = 0 ; i < 2; i++){
 		for(j = 0; j < 4; j++){
 			srcTextureRect.x = (i+6) * sprite_sizeW;
-		    srcTextureRect.y = j * sprite_sizeH;
-		    srcTextureRect.w = sprite_sizeW;
-		    srcTextureRect.h = sprite_sizeH;
+			srcTextureRect.y = j * sprite_sizeH;
+			srcTextureRect.w = sprite_sizeW;
+			srcTextureRect.h = sprite_sizeH;
 			playerSpriteThrowBomb[i + (j * 2)] =  SDL_CreateRGBSurface(0, sprite_sizeW, sprite_sizeH, 32, rmask, gmask, bmask, amask);
-        	SDL_BlitSurface(tempSurface, &srcTextureRect, playerSpriteThrowBomb[i + (j * 2)], &destTextureRect);
+			SDL_BlitSurface(tempSurface, &srcTextureRect, playerSpriteThrowBomb[i + (j * 2)], &destTextureRect);
 		}
 	}
 	
 	//playerSpriteOnLouis
 	for(j = 0 ; j < 4; j++){
 		srcTextureRect.x = 8 * sprite_sizeW;
-	    srcTextureRect.y = j * sprite_sizeH;
-	    srcTextureRect.w = sprite_sizeW;
-	    srcTextureRect.h = sprite_sizeH;
+		srcTextureRect.y = j * sprite_sizeH;
+		srcTextureRect.w = sprite_sizeW;
+		srcTextureRect.h = sprite_sizeH;
 		playerSpriteOnLouis[j] =  SDL_CreateRGBSurface(0, sprite_sizeW, sprite_sizeH, 32, rmask, gmask, bmask, amask);
-       	SDL_BlitSurface(tempSurface, &srcTextureRect, playerSpriteOnLouis[j], &destTextureRect);
+		SDL_BlitSurface(tempSurface, &srcTextureRect, playerSpriteOnLouis[j], &destTextureRect);
 	}
 	
 	//playerSpriteVictory
 	for(i = 0 ; i < 3; i++){
 		srcTextureRect.x = i * sprite_sizeW;
-	    srcTextureRect.y = 4 * sprite_sizeH;
-	    srcTextureRect.w = sprite_sizeW;
-	    srcTextureRect.h = sprite_sizeH;
+		srcTextureRect.y = 4 * sprite_sizeH;
+		srcTextureRect.w = sprite_sizeW;
+		srcTextureRect.h = sprite_sizeH;
 		playerSpriteVictory[i] =  SDL_CreateRGBSurface(0, sprite_sizeW, sprite_sizeH, 32, rmask, gmask, bmask, amask);
-       	SDL_BlitSurface(tempSurface, &srcTextureRect, playerSpriteVictory[i], &destTextureRect);
+		SDL_BlitSurface(tempSurface, &srcTextureRect, playerSpriteVictory[i], &destTextureRect);
 	}
 	
 	//playerSpriteAngry
 	for(i = 0 ; i < 3; i++){
 		srcTextureRect.x = i * sprite_sizeW;
-	    srcTextureRect.y = 5 * sprite_sizeH;
-	    srcTextureRect.w = sprite_sizeW;
-	    srcTextureRect.h = sprite_sizeH;
+		srcTextureRect.y = 5 * sprite_sizeH;
+		srcTextureRect.w = sprite_sizeW;
+		srcTextureRect.h = sprite_sizeH;
 		playerSpriteAngry[i] =  SDL_CreateRGBSurface(0, sprite_sizeW, sprite_sizeH, 32, rmask, gmask, bmask, amask);
-       	SDL_BlitSurface(tempSurface, &srcTextureRect, playerSpriteAngry[i], &destTextureRect);
+		SDL_BlitSurface(tempSurface, &srcTextureRect, playerSpriteAngry[i], &destTextureRect);
 	}
 	
 	//playerSpriteBurn
 	for(i = 0 ; i < 7; i++){
 		srcTextureRect.x = i * sprite_sizeW;
-	    srcTextureRect.y = 6 * sprite_sizeH;
-	    srcTextureRect.w = sprite_sizeW;
-	    srcTextureRect.h = sprite_sizeH;
+		srcTextureRect.y = 6 * sprite_sizeH;
+		srcTextureRect.w = sprite_sizeW;
+		srcTextureRect.h = sprite_sizeH;
 		playerSpriteBurn[i] =  SDL_CreateRGBSurface(0, sprite_sizeW, sprite_sizeH, 32, rmask, gmask, bmask, amask);
-       	SDL_BlitSurface(tempSurface, &srcTextureRect, playerSpriteBurn[i], &destTextureRect);
+		SDL_BlitSurface(tempSurface, &srcTextureRect, playerSpriteBurn[i], &destTextureRect);
 	}
 	SDL_FreeSurface(tempSurface);
 	
@@ -253,21 +253,21 @@ Player::Player(unsigned short * in_keystateLibretro, bool isACpuPlayer, int inde
 	for(i = 0 ; i < 3; i++){
 		for(j = 0; j < 4; j++){
 			srcTextureRect.x = i * sprite_sizeW;
-		    srcTextureRect.y = j * sprite_sizeH;
-		    srcTextureRect.w = sprite_sizeW;
-		    srcTextureRect.h = sprite_sizeH;
+			srcTextureRect.y = j * sprite_sizeH;
+			srcTextureRect.w = sprite_sizeW;
+			srcTextureRect.h = sprite_sizeH;
 			louisSprite[i + (j * 3)] =  SDL_CreateRGBSurface(0, sprite_sizeW, sprite_sizeH, 32, rmask, gmask, bmask, amask);
-        	SDL_BlitSurface(tempSurface, &srcTextureRect, louisSprite[i + (j * 3)], &destTextureRect);
+			SDL_BlitSurface(tempSurface, &srcTextureRect, louisSprite[i + (j * 3)], &destTextureRect);
 		}
 	}
 	
 	for(i = 0 ; i < 4; i++){
 		srcTextureRect.x = i * sprite_sizeW;
-	    srcTextureRect.y = 4 * sprite_sizeH;
-	    srcTextureRect.w = sprite_sizeW;
-	    srcTextureRect.h = sprite_sizeH;
+		srcTextureRect.y = 4 * sprite_sizeH;
+		srcTextureRect.w = sprite_sizeW;
+		srcTextureRect.h = sprite_sizeH;
 		louisSpriteBurn[i] =  SDL_CreateRGBSurface(0, sprite_sizeW, sprite_sizeH, 32, rmask, gmask, bmask, amask);
-       	SDL_BlitSurface(tempSurface, &srcTextureRect, louisSpriteBurn[i], &destTextureRect);
+		SDL_BlitSurface(tempSurface, &srcTextureRect, louisSpriteBurn[i], &destTextureRect);
 	}
 	
 	posX = startPositionX;
@@ -282,8 +282,8 @@ Player::Player(unsigned short * in_keystateLibretro, bool isACpuPlayer, int inde
 	SDL_FreeSurface(tempSurface);
 }
 
-Player::~Player()
-{
+
+Player::~Player(){
 	for(int i = 0; i < 12; i++){
 		SDL_FreeSurface(playerSpriteWalk[i]);
 	}
@@ -343,9 +343,9 @@ void Player::drawNormal(SDL_Surface * surfaceToDraw, bool animate){
 	SDL_Rect srcTextureRect;
 	SDL_Rect destTextureRect;
 	destTextureRect.x = (posX * blockSizeX) - (sprite_sizeW / 2);
-    destTextureRect.y = (posY * blockSizeY) - (sprite_sizeH - 7);
-    destTextureRect.w = sprite_sizeW;
-    destTextureRect.h = sprite_sizeH;
+	destTextureRect.y = (posY * blockSizeY) - (sprite_sizeH - 7);
+	destTextureRect.w = sprite_sizeW;
+	destTextureRect.h = sprite_sizeH;
 	srcTextureRect.x = 0;
 	srcTextureRect.y = 0;
 	srcTextureRect.w = sprite_sizeW;
@@ -355,7 +355,7 @@ void Player::drawNormal(SDL_Surface * surfaceToDraw, bool animate){
 			frameCounter = 0;
 			offsetSprite++;	
 			if(offsetSprite >=nbFrameForAnimation){
-				offsetSprite = 0;
+			offsetSprite = 0;
 			}
 		}
 		frameCounter++;
@@ -364,18 +364,18 @@ void Player::drawNormal(SDL_Surface * surfaceToDraw, bool animate){
 	}	
 	int offsetSpriteAnimation = 0;
 	switch (offsetSprite){
-		case 0:
-			offsetSpriteAnimation = 0;
-			break;	
-		case 1:
-			offsetSpriteAnimation = 1;
-			break;
-		case 2:
-			offsetSpriteAnimation = 0;
-			break;
-		case 3:
-			offsetSpriteAnimation = 2;
-			break;		
+	case 0:
+		offsetSpriteAnimation = 0;
+		break;	
+	case 1:
+		offsetSpriteAnimation = 1;
+		break;
+	case 2:
+		offsetSpriteAnimation = 0;
+		break;
+	case 3:
+		offsetSpriteAnimation = 2;
+		break;		
 	}
 	SDL_BlitSurface(playerSpriteWalk[(previousDirection * 3) + offsetSpriteAnimation], &srcTextureRect, surfaceToDraw, &destTextureRect);
 }
@@ -384,17 +384,17 @@ void Player::drawNormal(SDL_Surface * surfaceToDraw, bool animate){
 
 void Player::drawOnLouis(SDL_Surface * surfaceToDraw, bool animate){
 	Uint32 rmask, gmask, bmask, amask;
-    amask = 0xff000000;
-    rmask = 0x00ff0000;
-    gmask = 0x0000ff00;
-    bmask = 0x000000ff;
+	amask = 0xff000000;
+	rmask = 0x00ff0000;
+	gmask = 0x0000ff00;
+	bmask = 0x000000ff;
 	nbFrameForAnimation = animationOnLouis;
 	SDL_Rect srcTextureRect;
 	SDL_Rect destTextureRect;
 	destTextureRect.x = (posX * blockSizeX) - (sprite_sizeW / 2);
-    destTextureRect.y = (posY * blockSizeY) - (sprite_sizeH - 7);
-    destTextureRect.w = sprite_sizeW;
-    destTextureRect.h = sprite_sizeH;
+	destTextureRect.y = (posY * blockSizeY) - (sprite_sizeH - 7);
+	destTextureRect.w = sprite_sizeW;
+	destTextureRect.h = sprite_sizeH;
 	srcTextureRect.x = 0;
 	srcTextureRect.y = 0;
 	srcTextureRect.w = sprite_sizeW;
@@ -415,16 +415,16 @@ void Player::drawOnLouis(SDL_Surface * surfaceToDraw, bool animate){
 	switch (offsetSprite){
 		case 0:
 			offsetSpriteAnimation = 1;
-			break;	
+		break;	
 		case 1:
 			offsetSpriteAnimation = 0;
-			break;
+		break;
 		case 2:
 			offsetSpriteAnimation = 1;
-			break;
+		break;
 		case 3:
 			offsetSpriteAnimation = 2;
-			break;		
+		break;		
 	}
 	louisMergebuffer = SDL_CreateRGBSurface(0, sprite_sizeW, sprite_sizeH, 32, rmask, gmask, bmask, amask);
 	if(previousDirection == down){
@@ -446,9 +446,9 @@ void Player::drawWithBombe(SDL_Surface * surfaceToDraw, bool animate){
 	SDL_Rect srcTextureRect;
 	SDL_Rect destTextureRect;
 	destTextureRect.x = (posX * blockSizeX) - (sprite_sizeW / 2);
-    destTextureRect.y = (posY * blockSizeY) - (sprite_sizeH - 7);
-    destTextureRect.w = sprite_sizeW;
-    destTextureRect.h = sprite_sizeH;
+	destTextureRect.y = (posY * blockSizeY) - (sprite_sizeH - 7);
+	destTextureRect.w = sprite_sizeW;
+	destTextureRect.h = sprite_sizeH;
 	srcTextureRect.x = 0;
 	srcTextureRect.y = 0;
 	srcTextureRect.w = sprite_sizeW;
@@ -490,9 +490,9 @@ void Player::drawThrowBombe(SDL_Surface * surfaceToDraw, bool animate){
 	SDL_Rect srcTextureRect;
 	SDL_Rect destTextureRect;
 	destTextureRect.x = (posX * blockSizeX) - (sprite_sizeW / 2);
-    destTextureRect.y = (posY * blockSizeY) - (sprite_sizeH - 7);
-    destTextureRect.w = sprite_sizeW;
-    destTextureRect.h = sprite_sizeH;
+	destTextureRect.y = (posY * blockSizeY) - (sprite_sizeH - 7);
+	destTextureRect.w = sprite_sizeW;
+	destTextureRect.h = sprite_sizeH;
 	srcTextureRect.x = 0;
 	srcTextureRect.y = 0;
 	srcTextureRect.w = sprite_sizeW;
@@ -519,9 +519,9 @@ void Player::drawBurning(SDL_Surface * surfaceToDraw, bool animate){
 	SDL_Rect srcTextureRect;
 	SDL_Rect destTextureRect;
 	destTextureRect.x = (posX * blockSizeX) - (sprite_sizeW / 2);
-    destTextureRect.y = (posY * blockSizeY) - (sprite_sizeH - 7);
-    destTextureRect.w = sprite_sizeW;
-    destTextureRect.h = sprite_sizeH;
+	destTextureRect.y = (posY * blockSizeY) - (sprite_sizeH - 7);
+	destTextureRect.w = sprite_sizeW;
+	destTextureRect.h = sprite_sizeH;
 	srcTextureRect.x = 0;
 	srcTextureRect.y = 0;
 	srcTextureRect.w = sprite_sizeW;
@@ -533,9 +533,9 @@ void Player::drawBurning(SDL_Surface * surfaceToDraw, bool animate){
 			if(offsetSprite >=nbFrameForAnimation){
 				offsetSprite = 0;
 				playerState = dead;
-				return;
-			}
+			return;
 		}
+	}
 		frameCounter++;
 	}else{
 		offsetSprite = 0;
@@ -550,9 +550,9 @@ void Player::drawLouisBurning(SDL_Surface * surfaceToDraw, bool animate){
 	SDL_Rect srcTextureRect;
 	SDL_Rect destTextureRect;
 	destTextureRect.x = (posX * blockSizeX) - (sprite_sizeW / 2);
-    destTextureRect.y = (posY * blockSizeY) - (sprite_sizeH - 7);
-    destTextureRect.w = sprite_sizeW;
-    destTextureRect.h = sprite_sizeH;
+	destTextureRect.y = (posY * blockSizeY) - (sprite_sizeH - 7);
+	destTextureRect.w = sprite_sizeW;
+	destTextureRect.h = sprite_sizeH;
 	srcTextureRect.x = 0;
 	srcTextureRect.y = 0;
 	srcTextureRect.w = sprite_sizeW;
@@ -579,9 +579,9 @@ void Player::drawVictory(SDL_Surface * surfaceToDraw, bool animate){
 	SDL_Rect srcTextureRect;
 	SDL_Rect destTextureRect;
 	destTextureRect.x = (posX * blockSizeX) - (sprite_sizeW / 2);
-    destTextureRect.y = (posY * blockSizeY) - (sprite_sizeH - 7);
-    destTextureRect.w = sprite_sizeW;
-    destTextureRect.h = sprite_sizeH;
+	destTextureRect.y = (posY * blockSizeY) - (sprite_sizeH - 7);
+	destTextureRect.w = sprite_sizeW;
+	destTextureRect.h = sprite_sizeH;
 	srcTextureRect.x = 0;
 	srcTextureRect.y = 0;
 	srcTextureRect.w = sprite_sizeW;
@@ -623,18 +623,18 @@ void Player::drawCrying(SDL_Surface * surfaceToDraw, bool animate){
 	SDL_Rect srcTextureRect;
 	SDL_Rect destTextureRect;
 	destTextureRect.x = (posX * blockSizeX) - (sprite_sizeW / 2);
-    destTextureRect.y = (posY * blockSizeY) - (sprite_sizeH - 7);
-    destTextureRect.w = sprite_sizeW;
-    destTextureRect.h = sprite_sizeH;
+	destTextureRect.y = (posY * blockSizeY) - (sprite_sizeH - 7);
+	destTextureRect.w = sprite_sizeW;
+	destTextureRect.h = sprite_sizeH;
 	srcTextureRect.x = 0;
 	srcTextureRect.y = 0;
 	srcTextureRect.w = sprite_sizeW;
 	srcTextureRect.h = sprite_sizeH;
-
+	
 	if(animate){	
 		if(frameCounter > nbFrame){
-			frameCounter = 0;
-			offsetSprite++;	
+		frameCounter = 0;
+		offsetSprite++;	
 			if(offsetSprite >=nbFrameForAnimation){
 				offsetSprite = 0;
 			}
@@ -670,173 +670,172 @@ void Player::doSomething(SDL_Surface * surfaceToDraw){
 	bool animate = false;
 	if(playerState != dead || playerState == victory){
 		if(playerState != burning){
-			/*
-			* Direction of a player
-			*/
-			int roundX = floor(posX);
-			int roundY = floor(posY);
-			
-			if(tabBonus[roundX + roundY * sizeX] != noBonus && tab[roundX + roundY * sizeX] < brickElement){
-				foundABonus(tabBonus[roundX + roundY * sizeX]);
-			}
-			
-			if(invincibleTime == 0){
-				if(tab[roundX + roundY * sizeX] == explosionElement){
-					if(playerState == onLouis){
-						invincibleTime = 50;
-						playerState = normal;
-					}else{
-						playerState = burning;
-						animate = true;
-					}
-				}
-			}else{
-				invincibleTime--;	
-			}
-					
-			if(roundY > sizeY){
-				posY = 0.0;
-				roundY = 0;
-			}
-			
-			if(roundY < 0){
-				posY = sizeY + 0.9;
-				roundY = sizeY;
-			}
-	
-			float margeInf;
-			float margeSup;
-			
-			if(playerSpeed > 0.1){
-				margeInf = 0.51 - (playerSpeed/2);
-			 	margeSup = 0.49 + (playerSpeed/2);
-			}else{
-				margeInf = 0.49 - (playerSpeed/2);
-				margeSup = 0.51 + (playerSpeed/2);
-			}
-			
-			
-			
-			if(posX-(float)roundX >= margeInf && posX-(float)roundX <= margeSup){
-				posX = (float)floor(posX)+0.5;
-			}
-			
-			if(posY-(float)roundY >= margeInf && posY-(float)roundY <= margeSup){
-				posY = (float)floor(posY) + 0.5;
-			}
-			
-			int canPassBlock = 0;
-			if(ghostModePower == true){
-				canPassBlock = brickElement;
-			}else{
-				canPassBlock = explosionElement;
-			}
-			
-			if(keystate & keyPadLeft){
-				if(posX - roundX == 0.5){
-					if(!(tab[(roundX - 1) + (roundY * sizeX)] > canPassBlock)){		
-						posX = ( posX - playerSpeed );
-					}
-				}else{
-					if(posY - roundY > 0.5){
-						posY = ( posY - playerSpeed );
-					}else if(posY - roundY < 0.5){
-						posY = ( posY + playerSpeed );
-					}else{
-						posX = ( posX - playerSpeed );
-					}
-				}
-				previousDirection = left;
-				animate = true;
-			}
-			
-			if(keystate & keyPadRight){
-				if(posX - roundX == 0.5){
-					if(!(tab[(roundX + 1) + (roundY * sizeX)] > canPassBlock)){
-						posX = ( posX + playerSpeed );
-					}
-				}else{
-					if(posY - roundY > 0.5){
-						posY = ( posY - playerSpeed );
-					}else if(posY - roundY < 0.5){
-						posY = ( posY + playerSpeed );
-					}else{
-						posX = ( posX + playerSpeed );	
-					}
-				}
-				previousDirection = right;
-				animate = true;
-			}
-			
-			if(keystate & keyPadDown){
-				
-				if(posY - roundY == 0.5){
-					if(roundY >= (sizeY-1)){
-							posY = ( posY + playerSpeed );
-					}else{
-						if(!(tab[roundX + ((roundY + 1 ) * sizeX)] > canPassBlock)){
-							posY = ( posY + playerSpeed );
-						}
-					}
-				}else{
-					if(posX - roundX > 0.5){
-						posX = ( posX - playerSpeed );
-					}else if(posX - roundX < 0.5){
-						posX = ( posX + playerSpeed );
-					}else{
-						posY = ( posY + playerSpeed );
-					}
-				}
-				previousDirection = down;
-				animate = true;
-			}
-			
-			if(keystate & keyPadUp){
-				if(posY - roundY == 0.5){
-					if(roundY == 0){
-							posY = ( posY - playerSpeed );
-					}else{
-						if(!(tab[roundX + ((roundY - 1 ) * sizeX)] > canPassBlock)){
-							posY = ( posY - playerSpeed );
-						}
-					}
-				}else{
-					if(posX - roundX > 0.5){
-						posX = ( posX - playerSpeed );
-					}else if(posX - roundX < 0.5){
-						posX = ( posX + playerSpeed );
-					}else{
-						posY = ( posY - playerSpeed );
-					}
-				}
-				previousDirection = up;
-				animate = true;
-			}
-			
-			
-			/*
-			* ACTION OF A PLAYER
-			*/
-			
-			if(keystate & keyPadStart){
-				//display menu	
-			}
-			if(keystate & keyPadA){
-				putABombe = true;	
-			}
-			if(keystate & keyPadB){
-				if(bombeType == radioBombeType){
-					triggerBombe = true;	
-				}
-			}
-			if(keystate & keyPadX){
-				//display menu	
-			}
-			if(keystate & keyPadY){
-				//display menu	
-			}	
+		/*
+		* Direction of a player
+		*/
+		int roundX = floor(posX);
+		int roundY = floor(posY);
+		
+		if(tabBonus[roundX + roundY * sizeX] != noBonus && tab[roundX + roundY * sizeX] < brickElement){
+			foundABonus(tabBonus[roundX + roundY * sizeX]);
 		}
 		
+		if(invincibleTime == 0){
+			if(tab[roundX + roundY * sizeX] == explosionElement){
+				if(playerState == onLouis){
+					invincibleTime = 50;
+					playerState = normal;
+				}else{
+					playerState = burning;
+					animate = true;
+				}
+			}
+		}else{
+			invincibleTime--;	
+		}
+		
+		if(roundY > sizeY){
+			posY = 0.0;
+			roundY = 0;
+		}
+		
+		if(roundY < 0){
+			posY = sizeY + 0.9;
+			roundY = sizeY;
+		}
+		
+		float margeInf;
+		float margeSup;
+		
+		if(playerSpeed > 0.1){
+			margeInf = 0.51 - (playerSpeed/2);
+			margeSup = 0.49 + (playerSpeed/2);
+		}else{
+			margeInf = 0.49 - (playerSpeed/2);
+			margeSup = 0.51 + (playerSpeed/2);
+		}
+		
+		
+		
+		if(posX-(float)roundX >= margeInf && posX-(float)roundX <= margeSup){
+			posX = (float)floor(posX)+0.5;
+		}
+		
+		if(posY-(float)roundY >= margeInf && posY-(float)roundY <= margeSup){
+			posY = (float)floor(posY) + 0.5;
+		}
+		
+		int canPassBlock = 0;
+		if(ghostModePower == true){
+			canPassBlock = brickElement;
+		}else{
+			canPassBlock = explosionElement;
+		}
+		
+		if(keystate & keyPadLeft){
+			if(posX - roundX == 0.5){
+				if(!(tab[(roundX - 1) + (roundY * sizeX)] > canPassBlock)){		
+					posX = ( posX - playerSpeed );
+				}
+			}else{
+				if(posY - roundY > 0.5){
+					posY = ( posY - playerSpeed );
+				}else if(posY - roundY < 0.5){
+					posY = ( posY + playerSpeed );
+				}else{
+					posX = ( posX - playerSpeed );
+				}
+			}
+			previousDirection = left;
+			animate = true;
+		}
+		
+		if(keystate & keyPadRight){
+			if(posX - roundX == 0.5){
+				if(!(tab[(roundX + 1) + (roundY * sizeX)] > canPassBlock)){
+					posX = ( posX + playerSpeed );
+				}
+			}else{
+				if(posY - roundY > 0.5){
+					posY = ( posY - playerSpeed );
+				}else if(posY - roundY < 0.5){
+					posY = ( posY + playerSpeed );
+				}else{
+					posX = ( posX + playerSpeed );	
+				}
+			}
+			previousDirection = right;
+			animate = true;
+		}
+		
+		if(keystate & keyPadDown){
+			if(posY - roundY == 0.5){
+				if(roundY >= (sizeY-1)){
+					posY = ( posY + playerSpeed );
+				}else{
+					if(!(tab[roundX + ((roundY + 1 ) * sizeX)] > canPassBlock)){
+						posY = ( posY + playerSpeed );
+					}
+				}
+			}else{
+				if(posX - roundX > 0.5){
+					posX = ( posX - playerSpeed );
+				}else if(posX - roundX < 0.5){
+					posX = ( posX + playerSpeed );
+				}else{
+					posY = ( posY + playerSpeed );
+				}
+			}
+			previousDirection = down;
+			animate = true;
+		}
+		
+		if(keystate & keyPadUp){
+			if(posY - roundY == 0.5){
+				if(roundY == 0){
+					posY = ( posY - playerSpeed );
+				}else{
+					if(!(tab[roundX + ((roundY - 1 ) * sizeX)] > canPassBlock)){
+						posY = ( posY - playerSpeed );
+					}
+				}
+			}else{
+				if(posX - roundX > 0.5){
+					posX = ( posX - playerSpeed );
+				}else if(posX - roundX < 0.5){
+					posX = ( posX + playerSpeed );
+				}else{
+					posY = ( posY - playerSpeed );
+				}
+			}
+			previousDirection = up;
+			animate = true;
+		}
+		
+		
+		/*
+		* ACTION OF A PLAYER
+		*/
+		
+		if(keystate & keyPadStart){
+		//display menu	
+		}
+		if(keystate & keyPadA){
+			putABombe = true;	
+		}
+		if(keystate & keyPadB){
+			if(bombeType == radioBombeType){
+				triggerBombe = true;	
+			}
+		}
+		if(keystate & keyPadX){
+		//display menu	
+		}
+		if(keystate & keyPadY){
+		//display menu	
+		}	
+	}
+	
 	}
 	
 	switch(playerState){
@@ -881,7 +880,6 @@ Bombe * Player::addBombe(){
 	}
 	tab[(int)floor(posX) + ((int)floor(posY)*sizeX)] = bombeElement;
 	return new Bombe(strenght, (int)floor(posX), (int)floor(posY), bombeType, playerNumber, time, bombeSprite, tab);
-	
 }
 
 int Player::getPlayerNumber(){
@@ -939,9 +937,6 @@ void Player::winTheGame(){
 	playerState = victory;	
 }
 
-
-
-
 void Player::foundABonus(int bonusIndex){
 	int roundX = floor(posX);
 	int roundY = floor(posY);
@@ -950,7 +945,9 @@ void Player::foundABonus(int bonusIndex){
 			getAMalusBonus();
 			break;
 		case rollerBonus :
-			playerSpeed += 0.02;
+			if(playerSpeed < 0.15){
+				playerSpeed += 0.02;
+			}
 			break;
 		case fireBonus :
 			flameStrengh++;
@@ -979,7 +976,7 @@ void Player::foundABonus(int bonusIndex){
 			if(playerSpeed > 0.05){
 				playerSpeed -= 0.02;
 			}
-			break;
+		break;
 		case ghostBonus :
 			ghostModePower = true;
 			break;
@@ -992,7 +989,32 @@ void Player::foundABonus(int bonusIndex){
 }
 
 void Player::getAMalusBonus(){
-	
-	
+	srand (time(NULL));
+	/* generate secret number between 0 and 6: */
+	int malus = rand() % 7 ;
+	fprintf(stderr, "malus number : %i", malus);
+	switch(malus){
+		case 0:
+			//diarhee
+			break;
+		case 1:
+			//constipation
+			break;
+		case 2:
+			//slowBombe
+			break;			
+		case 3:
+			//fastBombe
+			break;
+		case 4:
+			//slowPlayer
+			break;
+		case 5:
+			//fastPlayer
+			break;
+		case 6:
+			//switchPlayer
+			break;
+	}
 }
 

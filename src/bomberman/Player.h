@@ -10,6 +10,7 @@
 
 
 #include <stdio.h>
+#include <time.h>
 #include "Bombe.h"
 #include "Grid.h"
 
@@ -33,47 +34,50 @@ public:
 	* Game Function
 	*/
 	Bombe * addBombe();
-	bool wantPutBombe();
-	//check for the end of game
-	bool isAlive();
-	void winTheGame();
 	
-	void ABombeExplode();
+	bool wantPutBombe();
 	bool triggerPowerBombe();
+	bool walkOnWall();
+	bool isAlive();
+	
+	void winTheGame();
+	void ABombeExplode();
 	void releaseTrigger();
 	void ABombeIsSet();
 	void foundABonus(int bonusIndex);
+	
 	int getPlayerNumber();
-	bool walkOnWall();
+	
     
 private:
 	/*
 	* VAR
 	*/
 	
-	//Game variable
-	float posX;
-	float posY;
-	int playerState;
-	int NbBombeMax;
-	int NBBombeRemaining;
-	float playerSpeed;
-	bool haveGlovePower;
-	bool ghostModePower;
-
-	
-	bool triggerBombe;
-	bool putABombe;
-	int flameStrengh;
-	int bombeType;	
-	int invincibleTime;
-	
 	//Object variable
 	bool cpu;
 	int playerNumber;
 	int characterSpriteIndex;
 	
+	//Game variable
+	float posX;
+	float posY;
+	float playerSpeed;
+	int playerState;
+	
+	bool ghostModePower;
 
+	//bombe variable
+	bool triggerBombe;
+	bool putABombe;
+	int flameStrengh;
+	int bombeType;
+	int NbBombeMax;
+	int NBBombeRemaining;
+	
+	//louis bunring time
+	int invincibleTime;
+	
 	//direction variable
 	unsigned short * in_keystate;
 	int previousDirection;
@@ -114,6 +118,7 @@ private:
 	void drawVictory(SDL_Surface * surfaceToDraw, bool animate);
 	void drawCrying(SDL_Surface * surfaceToDraw, bool animate);
 	
+	//malus function
 	void getAMalusBonus();
 };
 #endif

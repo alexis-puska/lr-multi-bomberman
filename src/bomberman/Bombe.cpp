@@ -2,14 +2,11 @@
 
 #define nbFrame 6
 
-
 Bombe::Bombe(int Strenght, int posXX, int posYY, int type, int numPlayerSetTheBombe, int nbTickBeforeExplostion, SDL_Surface ** miscSheet, int table[sizeX * sizeY]){
-
 	tab = table;
 	frameCounter = 0;
 	offsetSprite = 0;
 	nbFrameForAnimation = 4;
-
 	strenght = Strenght;
 	posX = posXX;
 	posY = posYY;
@@ -17,7 +14,6 @@ Bombe::Bombe(int Strenght, int posXX, int posYY, int type, int numPlayerSetTheBo
 	nbTickExplode = nbTickBeforeExplostion;
 	animation = miscSheet;
 	bombeType = type;
-	
 }
 
 Bombe::~Bombe(){
@@ -32,16 +28,6 @@ bool Bombe::isExplode(){
 	}else{
 		return false;
 	} 
-}
-
-void Bombe::explode(){
-	tab[posX + posY * sizeX ] = emptyElement;
-	nbTickExplode = 1;
-}
-
-void Bombe::explodeNow(){
-	tab[posX + posY * sizeX ] = emptyElement;
-	nbTickExplode = 0;
 }
 
 int Bombe::getStrenght(){
@@ -69,12 +55,25 @@ bool Bombe::isPowerBombe(){
 		return true;
 	}else{
 		return false;
-	} 
+	}
+}
+
+void Bombe::explodeNow(){
+	tab[posX + posY * sizeX ] = emptyElement;
+	nbTickExplode = 0;
 }
 
 void Bombe::pushBomb(int direction){
-	
+
 }
+
+
+void Bombe::explode(){
+	tab[posX + posY * sizeX ] = emptyElement;
+	nbTickExplode = 1;
+}
+
+
 
 void Bombe::tick(SDL_Surface * surfaceToDraw){
 	SDL_Rect dstRect;
@@ -92,7 +91,7 @@ void Bombe::tick(SDL_Surface * surfaceToDraw){
 	}
 	frameCounter++;
 	int offsetSpriteAnimation = 0;
-	switch (offsetSprite){
+		switch (offsetSprite){
 		case 0:
 			offsetSpriteAnimation = 1;
 			break;	
@@ -106,15 +105,15 @@ void Bombe::tick(SDL_Surface * surfaceToDraw){
 			offsetSpriteAnimation = 2;
 			break;		
 	}
-	
+
 	switch(bombeType){
 		case normalBombeType:
 		case powerBombeType:
 		case bubbleBombeType:
 			nbTickExplode--;
-			break;
+		break;
 		case radioBombeType:
-			break;	
+		break;	
 	}
 	SDL_BlitSurface(animation[offsetSpriteAnimation + bombeType * 3], NULL, surfaceToDraw, &dstRect);
 }
