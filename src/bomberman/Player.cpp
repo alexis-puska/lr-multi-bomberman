@@ -1064,7 +1064,6 @@ void Player::getAMalusBonus(){
 	
 	/* generate secret number between 0 and 6: */
 	int malus = rand() % 9 ;
-	malus = 7;
 	switch(malus){
 		case diarheeMalus:
 		case speedBombeMalus:
