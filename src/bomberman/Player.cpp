@@ -743,7 +743,8 @@ void Player::doSomething(SDL_Surface * surfaceToDraw){
 			canPassBlock = explosionElement;
 		}
 		
-		if(keystate & keyPadLeft){
+		//left
+		if(playerMalus != invDirectionMalus ? keystate & keyPadLeft : keystate & keyPadRight){
 			if(posX - roundX == 0.5){
 				if(!(tab[(roundX - 1) + (roundY * sizeX)] > canPassBlock)){		
 					posX = ( posX - playerSpeed );
@@ -761,7 +762,8 @@ void Player::doSomething(SDL_Surface * surfaceToDraw){
 			animate = true;
 		}
 		
-		if(keystate & keyPadRight){
+		//right
+		if(playerMalus != invDirectionMalus ? keystate & keyPadRight : keystate & keyPadLeft){
 			if(posX - roundX == 0.5){
 				if(!(tab[(roundX + 1) + (roundY * sizeX)] > canPassBlock)){
 					posX = ( posX + playerSpeed );
@@ -779,7 +781,8 @@ void Player::doSomething(SDL_Surface * surfaceToDraw){
 			animate = true;
 		}
 		
-		if(keystate & keyPadDown){
+		//down
+		if(playerMalus != invDirectionMalus ? keystate & keyPadDown : keystate & keyPadUp){
 			if(posY - roundY == 0.5){
 				if(roundY >= (sizeY-1)){
 					posY = ( posY + playerSpeed );
@@ -801,7 +804,8 @@ void Player::doSomething(SDL_Surface * surfaceToDraw){
 			animate = true;
 		}
 		
-		if(keystate & keyPadUp){
+		//up
+		if(playerMalus != invDirectionMalus ? keystate & keyPadUp : keystate & keyPadDown){
 			if(posY - roundY == 0.5){
 				if(roundY == 0){
 					posY = ( posY - playerSpeed );
@@ -917,6 +921,9 @@ Bombe * Player::addBombe(){
 		case slowBombeMalus:
 			time = 300;
 			break;
+		case miniBombeMalus:
+			strenght = 1;
+			break;
 	}
 	fprintf(stderr, "time : %i\n",time);
 	tab[(int)floor(posX) + ((int)floor(posY)*sizeX)] = bombeElement;
@@ -984,6 +991,7 @@ void Player::foundABonus(int bonusIndex){
 	switch(bonusIndex){
 		case deathBonus :
 			getAMalusBonus();
+			grid->placeNewDeathMalus();
 			break;
 		case rollerBonus :
 			if(playerSpeed < 0.15){
@@ -1055,8 +1063,8 @@ void Player::getAMalusBonus(){
 	nbTickMalus = 15 * 50;
 	
 	/* generate secret number between 0 and 6: */
-	int malus = rand() % 7 ;
-	
+	int malus = rand() % 9 ;
+	malus = 7;
 	switch(malus){
 		case diarheeMalus:
 		case speedBombeMalus:

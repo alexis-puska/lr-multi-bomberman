@@ -776,7 +776,7 @@ void Game::tick(){
 								break;
 							case brickElement :
 								burnWalls.push_back(new BurnWall(posXBombe, posYBombe - j, ind, burnWallSprite, tab, tabBonus));
-								grid->burnAWall(posXBombe, posYBombe - j);
+								grid->burnABrick(posXBombe, posYBombe - j);
 								if(!isAPowerBombe){
 									exitLoop = true;
 								}
@@ -827,7 +827,7 @@ void Game::tick(){
 								break;
 							case brickElement :
 								burnWalls.push_back(new BurnWall((posXBombe + j ), posYBombe, ind, burnWallSprite, tab, tabBonus));
-								grid->burnAWall((posXBombe + j ), posYBombe);
+								grid->burnABrick((posXBombe + j ), posYBombe);
 								if(!isAPowerBombe){
 									exitLoop = true;
 								}
@@ -878,7 +878,7 @@ void Game::tick(){
 								break;
 							case brickElement :
 								burnWalls.push_back(new BurnWall(posXBombe, posYBombe + j, ind, burnWallSprite, tab, tabBonus));
-								grid->burnAWall(posXBombe, posYBombe + j);
+								grid->burnABrick(posXBombe, posYBombe + j);
 								if(!isAPowerBombe){
 									exitLoop = true;
 								}
@@ -929,7 +929,7 @@ void Game::tick(){
 								break;
 							case brickElement :
 								burnWalls.push_back(new BurnWall((posXBombe - j ), posYBombe, ind, burnWallSprite, tab, tabBonus));
-								grid->burnAWall((posXBombe - j ), posYBombe);
+								grid->burnABrick((posXBombe - j ), posYBombe);
 								if(!isAPowerBombe){
 									exitLoop = true;
 								}

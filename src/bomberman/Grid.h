@@ -56,6 +56,8 @@ enum malusEnum{
 	slowDownMalus		= 4,
 	speedUpMalus		= 5,
 	switchPlayerMalus	= 6,
+	miniBombeMalus		= 7,
+	invDirectionMalus	= 8,
 };
 
 
@@ -70,10 +72,11 @@ class Grid
 	//configure the grid and build it
 	void configure(int levelNumber);
 	void generateGrid();
-	void resetSurface();    
+	void resetSurface();
 	
-	void burnAWall(int posX, int posY);
+	void burnABrick(int posX, int posY);
 	void burnBonus(int posX, int posY);
+	void placeNewDeathMalus();
 	
 	//get Image to render in retroarch
 	SDL_Surface * getGroundLayer();

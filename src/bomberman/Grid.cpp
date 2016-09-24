@@ -256,7 +256,7 @@ void Grid::generateGrid(){
     
 }
 
-void Grid::burnAWall(int posX, int posY){
+void Grid::burnABrick(int posX, int posY){
 	if(tab[posX + posY * sizeX] == brickElement){
 		SDL_Rect rect;
 		rect.x = posX * blockSizeX;
@@ -289,4 +289,16 @@ void Grid::burnBonus(int posX, int posY){
 	}
 }
 
-
+void Grid::placeNewDeathMalus(){
+	int ind = emptyCase[rand() % emptyCase.size() + 1];
+	while(tabBonus[ind] != noBonus){
+		ind = emptyCase[rand() % emptyCase.size() + 1];
+	}
+	tabBonus[ind] = deathBonus;
+	SDL_Rect dstrect;
+	dstrect.x = ((ind % sizeX) * blockSizeX) + 1;
+	dstrect.y = floor(ind / sizeX) * blockSizeY;
+	dstrect.w = 16;
+	dstrect.h = 16;
+	SDL_BlitSurface(bonusSprite[0], NULL, brickShadow, &dstrect);
+}
