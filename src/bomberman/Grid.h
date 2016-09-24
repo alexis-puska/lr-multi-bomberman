@@ -60,6 +60,13 @@ enum malusEnum{
 	invDirectionMalus	= 8,
 };
 
+enum kickDirectionEnum{
+	kickNone			=-1,
+	kickOnRight			= 0,
+	kickOnLeft			= 1,
+	kickOnUp			= 2,
+	kickOnDown			= 3,
+};
 
 class Grid
 {

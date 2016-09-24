@@ -159,7 +159,6 @@ Game::Game(int levelIndexInformation, int playerInformationParam[16][2], int gam
 	
 	vout_buf = vout_bufLibretro;
 	
-	fprintf(stderr, "generate one grid\n");
 	
 	
 	
@@ -753,7 +752,6 @@ void Game::tick(){
 					//CENTER
 					explosions.push_back(new Explosion(posXBombe, posYBombe, 0, explosionSprite, tab, tabBonus));
 					if(tabBonus[posXBombe + posYBombe * sizeX] != -1){
-						fprintf(stderr,"burn bonu\n");
 						grid->burnBonus(posXBombe, posYBombe);
 					}
 					
@@ -800,7 +798,6 @@ void Game::tick(){
 						if(!aWallHasBurn){
 							// if we don't have burn a wall, we can have a bonus in the case of table. we remove it !
 							if(tabBonus[posXBombe + (posYBombe-j) * sizeX] != -1){
-								fprintf(stderr,"burn bonus\n");
 								grid->burnBonus(posXBombe, posYBombe - j);
 							}
 						}
@@ -851,7 +848,6 @@ void Game::tick(){
 						if(!aWallHasBurn){
 							// if we don't have burn a wall, we can have a bonus in the case of table. we remove it !
 							if(tabBonus[ (posXBombe + j ) + posYBombe * sizeX] != -1){
-								fprintf(stderr,"burn bonus\n");
 								grid->burnBonus((posXBombe + j ), posYBombe);
 							}
 						}
@@ -902,7 +898,6 @@ void Game::tick(){
 						if(!aWallHasBurn){
 							// if we don't have burn a wall, we can have a bonus in the case of table. we remove it !
 							if(tabBonus[posXBombe + (posYBombe + j) * sizeX] != -1){
-								fprintf(stderr,"burn bonus\n");
 								grid->burnBonus(posXBombe, posYBombe + j);
 							}
 						}
@@ -953,7 +948,6 @@ void Game::tick(){
 						if(!aWallHasBurn){
 							// if we don't have burn a wall, we can have a bonus in the case of table. we remove it !
 							if(tabBonus[ (posXBombe - j ) + posYBombe * sizeX] != -1){
-								fprintf(stderr,"burn bonus\n");
 								grid->burnBonus((posXBombe - j ), posYBombe);
 							}
 						}
@@ -991,14 +985,22 @@ void Game::tick(){
 					}
 				}
 				if(players[i]->triggerPowerBombe()){
-					fprintf(stderr,"trigger\n");
 					for(unsigned int j=0;j<bombes.size();j++){
 						if(bombes[j]->getPlayer() == players[i]->getPlayerNumber()){
-												fprintf(stderr,"bombe found\n");
 							bombes[j]->explodeNow();	
 						}
 					}
 					players[i]->releaseTrigger();
+				}
+				
+				//kick treatment				
+				if(players[i] -> hasKickPower() && players[i]->isKickingBombe() != -1){
+					for(unsigned int j=0;j<bombes.size();j++){
+						if(bombes[j]->getCase() == players[i]->isKickingBombe()){
+							bombes[j]->pushBomb(players[i]->getKickDirection());
+							players[i]->releaseKick();
+						}
+					}
 				}
 			}
 			

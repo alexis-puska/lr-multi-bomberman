@@ -22,7 +22,7 @@ class Bombe
 {
 
 public:
-	Bombe(int Strenght, int posXX, int posYY, int type, int numPlayerSetTheBombe, int nbTickBeforeExplostion, SDL_Surface ** miscSheet, int table[sizeX * sizeY]);
+	Bombe(int Strenght, float posXX, float posYY, int type, int numPlayerSetTheBombe, int nbTickBeforeExplostion, SDL_Surface ** miscSheet, int table[sizeX * sizeY], float * tabPlayerCoordGame);
 	~Bombe();
 	bool isExplode();
 	bool isPowerBombe();
@@ -32,20 +32,23 @@ public:
 	void pushBomb(int direction);
 	void tick(SDL_Surface * surfaceToDraw);
 
+
 	int getStrenght();
 	int getPlayer();
 	int getPosX();
 	int getPosY();
 	int getCase();
 
-
 private:
 	SDL_Surface ** animation;
 	int * tab;
+	float * tabPlayerCoord;
 	
+	float posX;
+	float posY;
+	
+	int direction;
 	int nbTickExplode;
-	int posX;
-	int posY;
 	int strenght;
 	int player;
 	int bombeType;

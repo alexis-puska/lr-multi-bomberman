@@ -39,16 +39,21 @@ public:
 	bool triggerPowerBombe();
 	bool walkOnWall();
 	bool isAlive();
+	bool hasKickPower();
 	
 	void winTheGame();
 	void ABombeExplode();
 	void releaseTrigger();
 	void ABombeIsSet();
-	void foundABonus(int bonusIndex);
 	
+	//kick
+	int isKickingBombe();
+	int getKickDirection();
+	void releaseKick();
+	
+		
 	int getPlayerNumber();
 	
-    
 private:
 	/*
 	* VAR
@@ -71,6 +76,9 @@ private:
 	int previousBombeNumber;
 	
 	bool ghostModePower;
+	bool kickPower;
+	int kickIndex;
+	int kickDirection;
 
 	//bombe variable
 	bool triggerBombe;
@@ -128,5 +136,6 @@ private:
 	void getAMalusBonus();
 	void releaseMalus();
 	int findIndexPlayer();
+	void foundABonus(int bonusIndex);
 };
 #endif

@@ -102,6 +102,10 @@ Player::Player(unsigned short * in_keystateLibretro, bool isACpuPlayer, int inde
 	putABombe = false;
 	ghostModePower = false;
 	triggerBombe = false;
+	kickPower = false;
+	kickIndex = -1;
+	kickDirection = -1;
+	
 	flameStrengh = 2;
 	playerSpeed = 0.1;
 	nbTickMalus = -1;
@@ -540,6 +544,9 @@ void Player::drawBurning(SDL_Surface * surfaceToDraw, bool animate){
 			if(offsetSprite >=nbFrameForAnimation){
 				offsetSprite = 0;
 				playerState = dead;
+				fprintf(stderr,"reset player pos");
+				tabPlayerCoord[playerNumber * 2] = -1.0;
+				tabPlayerCoord[playerNumber * 2 + 1 ] = -1.0;
 			return;
 		}
 	}
@@ -748,6 +755,11 @@ void Player::doSomething(SDL_Surface * surfaceToDraw){
 			if(posX - roundX == 0.5){
 				if(!(tab[(roundX - 1) + (roundY * sizeX)] > canPassBlock)){		
 					posX = ( posX - playerSpeed );
+				}else if(kickPower){
+					if(tab[(roundX - 1) + (roundY * sizeX)] == bombeElement){
+						kickIndex = (roundX - 1) + (roundY * sizeX);
+						kickDirection = kickOnLeft;
+					}
 				}
 			}else{
 				if(posY - roundY > 0.5){
@@ -767,6 +779,11 @@ void Player::doSomething(SDL_Surface * surfaceToDraw){
 			if(posX - roundX == 0.5){
 				if(!(tab[(roundX + 1) + (roundY * sizeX)] > canPassBlock)){
 					posX = ( posX + playerSpeed );
+				}else if(kickPower){
+					if(tab[(roundX + 1) + (roundY * sizeX)] == bombeElement){
+						kickIndex = (roundX + 1) + (roundY * sizeX);
+						kickDirection = kickOnRight;
+					}				
 				}
 			}else{
 				if(posY - roundY > 0.5){
@@ -789,6 +806,11 @@ void Player::doSomething(SDL_Surface * surfaceToDraw){
 				}else{
 					if(!(tab[roundX + ((roundY + 1 ) * sizeX)] > canPassBlock)){
 						posY = ( posY + playerSpeed );
+					}else if(kickPower){
+						if(tab[roundX + ((roundY + 1 ) * sizeX)] == bombeElement){	
+							kickIndex = roundX + ((roundY + 1 ) * sizeX);
+							kickDirection = kickOnDown;
+						}
 					}
 				}
 			}else{
@@ -812,6 +834,11 @@ void Player::doSomething(SDL_Surface * surfaceToDraw){
 				}else{
 					if(!(tab[roundX + ((roundY - 1 ) * sizeX)] > canPassBlock)){
 						posY = ( posY - playerSpeed );
+					}else if(kickPower){
+						if(tab[roundX + ((roundY - 1 ) * sizeX)] == bombeElement){
+							kickIndex = roundX + ((roundY - 1 ) * sizeX);
+							kickDirection = kickOnUp;
+						}
 					}
 				}
 			}else{
@@ -887,19 +914,20 @@ void Player::doSomething(SDL_Surface * surfaceToDraw){
 			break;
 	}
 	
-	//malus treatment
-	tabPlayerCoord[playerNumber * 2] = posX;
-	tabPlayerCoord[playerNumber * 2 + 1 ] = posY;
-
-
-	if(nbTickMalus > 0){
-		nbTickMalus--;
-	}else if(nbTickMalus == 0){
-		releaseMalus();
-		nbTickMalus--;
-		fprintf(stderr, "fin malus %i", nbTickMalus);
+	if(playerState == dead){
+		tabPlayerCoord[playerNumber * 2] = -1.0;
+		tabPlayerCoord[playerNumber * 2 + 1 ] = -1.0;
+	}else{
+		//malus treatment
+		tabPlayerCoord[playerNumber * 2] = posX;
+		tabPlayerCoord[playerNumber * 2 + 1 ] = posY;
+		if(nbTickMalus > 0){
+			nbTickMalus--;
+		}else if(nbTickMalus == 0){
+			releaseMalus();
+			nbTickMalus--;
+		}
 	}
-	
 }
 
 Bombe * Player::addBombe(){
@@ -925,9 +953,8 @@ Bombe * Player::addBombe(){
 			strenght = 1;
 			break;
 	}
-	fprintf(stderr, "time : %i\n",time);
 	tab[(int)floor(posX) + ((int)floor(posY)*sizeX)] = bombeElement;
-	return new Bombe(strenght, (int)floor(posX), (int)floor(posY), bombeType, playerNumber, time, bombeSprite, tab);
+	return new Bombe(strenght, floor(posX) + 0.5, floor(posY) + 0.5, bombeType, playerNumber, time, bombeSprite, tab, tabPlayerCoord);
 }
 
 int Player::getPlayerNumber(){
@@ -939,7 +966,6 @@ bool Player::triggerPowerBombe(){
 }
 
 void Player::releaseTrigger(){
-	fprintf(stderr,"release");
 	triggerBombe = false;
 }
 
@@ -1009,6 +1035,7 @@ void Player::foundABonus(int bonusIndex){
 			NBBombeRemaining++;
 			break;
 		case kickBonus :
+			kickPower = true;
 			break;
 		case gloveBonus :
 			break;
@@ -1033,7 +1060,6 @@ void Player::foundABonus(int bonusIndex){
 			playerState = onLouis;
 			break;
 	}
-	fprintf(stderr,"take bonus %i\n", bonusIndex);
 	grid->burnBonus(roundX, roundY);
 }
 
@@ -1112,4 +1138,21 @@ int Player::findIndexPlayer(){
 	}
 	int idx = rand() % index.size();
 	return index[idx];
+}
+
+bool Player::hasKickPower(){
+	return kickPower;	
+}
+
+int Player::isKickingBombe(){
+	return kickIndex;
+}
+
+int Player::getKickDirection(){
+	return kickDirection;
+}
+
+void Player::releaseKick(){
+	kickDirection = kickNone;
+	kickIndex = -1;
 }

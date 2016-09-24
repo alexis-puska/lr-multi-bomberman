@@ -1,9 +1,11 @@
 #include "Bombe.h"
 
 #define nbFrame 6
+#define bombeMoveSpeed 0.2
 
-Bombe::Bombe(int Strenght, int posXX, int posYY, int type, int numPlayerSetTheBombe, int nbTickBeforeExplostion, SDL_Surface ** miscSheet, int table[sizeX * sizeY]){
+Bombe::Bombe(int Strenght, float posXX, float posYY, int type, int numPlayerSetTheBombe, int nbTickBeforeExplostion, SDL_Surface ** miscSheet, int table[sizeX * sizeY], float * tabPlayerCoordGame){
 	tab = table;
+	direction = -1;
 	frameCounter = 0;
 	offsetSprite = 0;
 	nbFrameForAnimation = 4;
@@ -14,16 +16,18 @@ Bombe::Bombe(int Strenght, int posXX, int posYY, int type, int numPlayerSetTheBo
 	nbTickExplode = nbTickBeforeExplostion;
 	animation = miscSheet;
 	bombeType = type;
+	tabPlayerCoord = tabPlayerCoordGame;
 }
 
 Bombe::~Bombe(){
 	animation = NULL;
 	tab = NULL;
+	tabPlayerCoord = NULL;
 }
 
 bool Bombe::isExplode(){
 	if(nbTickExplode ==0){
-		tab[posX + posY * sizeX ] = emptyElement;
+		tab[(int)floor(posX) + (int)floor(posY) * sizeX ] = emptyElement;
 		return true;
 	}else{
 		return false;
@@ -43,7 +47,7 @@ int Bombe::getPosY(){
 }
 
 int Bombe::getCase(){
-	return posX + posY * sizeX;	
+	return (int)floor(posX) + (int)floor(posY) * sizeX;	
 }
 
 int Bombe::getPlayer(){
@@ -59,29 +63,158 @@ bool Bombe::isPowerBombe(){
 }
 
 void Bombe::explodeNow(){
-	tab[posX + posY * sizeX ] = emptyElement;
+	tab[(int)floor(posX) + (int)floor(posY) * sizeX ] = emptyElement;
 	nbTickExplode = 0;
 }
 
-void Bombe::pushBomb(int direction){
-
-}
-
-
 void Bombe::explode(){
-	tab[posX + posY * sizeX ] = emptyElement;
+	tab[(int)floor(posX) + (int)floor(posY) * sizeX ] = emptyElement;
 	nbTickExplode = 1;
 }
 
-
+void Bombe::pushBomb(int directionPlayer){
+	direction = directionPlayer;
+	fprintf(stderr,"kick dir : %i\n",direction);
+}
 
 void Bombe::tick(SDL_Surface * surfaceToDraw){
 	SDL_Rect dstRect;
-	dstRect.x = posX * 18 +1;
-	dstRect.y = posY * 16;
+	dstRect.x = (posX * 18) - 8;
+	dstRect.y = (posY * 16) - 8;
 	dstRect.w = 16;
 	dstRect.h = 16;
 	
+	//correct value of position
+	float margeInf = 0.51 - (bombeMoveSpeed/2);
+	float margeSup = 0.49 + (bombeMoveSpeed/2);
+	int roundX = (int)floor(posX);
+	int roundY = (int)floor(posY);
+	
+	if(roundY + 1 == sizeY){
+		direction == -1;
+	}
+	
+	if(roundY-1 == 0){
+		direction == -1;
+	}
+	
+	if(posX-(float)roundX >= margeInf && posX-(float)roundX <= margeSup){
+		posX = (float)floor(posX)+0.5;
+	}
+	if(posY-(float)roundY >= margeInf && posY-(float)roundY <= margeSup){
+		posY = (float)floor(posY) + 0.5;
+	}
+	
+	
+	if(direction != -1)
+	{
+		if( tab[(int)floor(posX) + (int)floor(posY) * sizeX ] == explosionElement){
+			fprintf(stderr,"dans explosion");
+			explodeNow();
+		}else{
+			//bombe moved
+			tab[(int)floor(posX) + (int)floor(posY) * sizeX ] = emptyElement;
+			bool nextCaseIsPlayer = false;
+			switch(direction){
+				case kickOnRight :
+					if(posX - roundX == 0.5){
+						for(int i = 0; i < 16; i++){
+							if((int)floor(tabPlayerCoord[2*i]) == roundX + 1 && (int)floor(tabPlayerCoord[2*i+1]) == roundY){
+								nextCaseIsPlayer = true;
+								fprintf(stderr,"found player pos");
+							}	
+						}
+						if(!(tab[(roundX + 1) + (roundY * sizeX)] >= brickElement || nextCaseIsPlayer)){
+							posX += bombeMoveSpeed;
+						}else{
+							if(bombeType == bubbleBombeType){
+								direction = kickOnLeft;
+							}else{
+								direction = -1;	
+							}
+						}
+					}else{
+						posX += bombeMoveSpeed;	
+					}
+					break;
+				case kickOnLeft :
+					if(posX - roundX == 0.5){
+						for(int i = 0; i < 16; i++){
+							if((int)floor(tabPlayerCoord[2*i]) == roundX - 1 && (int)floor(tabPlayerCoord[2*i+1]) == roundY){
+								nextCaseIsPlayer = true;
+								fprintf(stderr,"found player pos");
+							}	
+						}
+						if(!(tab[(roundX - 1) + (roundY * sizeX)] >= brickElement || nextCaseIsPlayer)){
+							posX -= bombeMoveSpeed;
+						}else{
+							if(bombeType == bubbleBombeType){
+								direction = kickOnRight;
+							}else{
+								direction = -1;	
+							}
+						}
+					}else{
+						posX -= bombeMoveSpeed;
+					}
+					break;
+				case kickOnUp :
+					if(posY - roundY == 0.5){
+						for(int i = 0; i < 16; i++){
+							if((int)floor(tabPlayerCoord[2*i]) == roundX && (int)floor(tabPlayerCoord[2*i+1]) == roundY - 1){
+								nextCaseIsPlayer = true;
+								fprintf(stderr,"found player pos");
+							}	
+						}
+						if(!(tab[roundX + (roundY - 1) * sizeX] >= brickElement || nextCaseIsPlayer)){
+							posY -= bombeMoveSpeed;
+						}else{
+							if(bombeType == bubbleBombeType){
+								direction = kickOnDown;
+							}else{
+								direction = -1;	
+							}
+						}
+					}else{
+						posY -= bombeMoveSpeed;
+					}
+					break;
+				case kickOnDown :
+					if(posY - roundY == 0.5){
+						for(int i = 0; i < 16; i++){
+							if((int)floor(tabPlayerCoord[2*i]) == roundX && (int)floor(tabPlayerCoord[2*i+1]) == roundY + 1){
+								fprintf(stderr,"found player pos");
+								nextCaseIsPlayer = true;
+							}	
+						}
+						if(!(tab[roundX + (roundY + 1) * sizeX] >= brickElement || nextCaseIsPlayer)){
+							posY += bombeMoveSpeed;
+						}
+						else{
+							if(bombeType == bubbleBombeType){
+								direction = kickOnUp;
+							}else{
+								direction = -1;	
+							}
+						}
+					}else{
+						posY += bombeMoveSpeed;
+					}
+					break;
+			}
+			tab[(int)floor(posX) + (int)floor(posY) * sizeX ] = bombeElement;
+		}
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	//Animation
 	if(frameCounter > nbFrame){
 		frameCounter = 0;
 		offsetSprite++;	
