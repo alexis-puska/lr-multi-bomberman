@@ -249,6 +249,9 @@ void Bombe::tick(SDL_Surface * surfaceToDraw){
 			nbTickExplode--;
 		break;
 		case radioBombeType:
+			if(nbTickExplode == 1){
+				nbTickExplode--;
+			}
 		break;	
 	}
 	SDL_BlitSurface(animation[offsetSpriteAnimation + bombeType * 3], NULL, surfaceToDraw, &dstRect);
