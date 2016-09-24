@@ -52,9 +52,6 @@ static int metronome(void* data)
 			fprintf(stderr, "warning\n");
 		}
 	}
-	
-	
-	
 	return 0;
 }
 
@@ -365,7 +362,8 @@ Game::Game(int levelIndexInformation, int playerInformationParam[16][2], int gam
     
     //load for time display and generate header
     fragileBombersFont = TTF_OpenFont( "./resources/font/fragile_bombers.ttf", 16); //this opens a font style and sets a size
-
+	
+	suddenDeathCase = false;
 	generateHeader();
 	updateTimeDisplay();
 	mergeScreen(false);
@@ -512,8 +510,7 @@ void Game::mergeScreen(bool mergeResult){
     SDL_BlitSurface(grid->getGroundLayer()	, &mergeRect, screenBuffer, &mergeRect);
     SDL_BlitSurface(grid->getBricksLayer()	, &mergeRect, screenBuffer, &mergeRect);
     SDL_BlitSurface(playerBombeExplode		, &mergeRect, screenBuffer, &mergeRect);
-	SDL_BlitSurface(grid->getSkyLayer()	, &mergeRect, screenBuffer, &mergeRect);
-    
+	SDL_BlitSurface(grid->getSkyLayer()		, &mergeRect, screenBuffer, &mergeRect);
     if(mergeResult){
     	mergeRect.x = (630/2) - (overlayResult->w/2);
     	mergeRect.y = (360/2) - (overlayResult->h/2);
@@ -717,22 +714,26 @@ void Game::tick(){
 				break;
 			}
 			
+			
+			/*
+			*
+			*	UPDATE TIME DISPLAY
+			*
+			*/
 			if(nbTickForGameParam != -1){
 				nbTickForGame--;
 			    if(nbTickForGame % 50 == 0){
 			        updateTimeDisplay();
 			    }	
 			}
-			
 			SDL_FillRect(playerBombeExplode, NULL, SDL_MapRGBA(playerBombeExplode->format, 0, 0, 0, 0));
 			
-			if(suddenDeath && (nbTickForGame < (4 * sizeX * sizeY)) && nbTickForGame % 4 == 0){
-				//suddenDeath treatment
-				fprintf(stderr, "sudden death treatment");
-			}
- 			
 			
-			
+			/*
+			*
+			*	GAME PART : BOMBE
+			*
+			*/
 			for(unsigned int i=0;i<bombes.size();i++){
 				bombes[i] -> tick(playerBombeExplode);
 				if(bombes[i]->isExplode()){
@@ -964,7 +965,11 @@ void Game::tick(){
 					bombes.erase(bombes.begin()+i);
 				}
 			}
-			
+			/*
+			*
+			*	GAME PART : EXPLOSION
+			*
+			*/
 			for(unsigned int i=0 ; i< explosions.size() ; i++){
 				explosions[i] -> tick(playerBombeExplode);
 				if(explosions[i]->canBeDelete()){
@@ -972,6 +977,11 @@ void Game::tick(){
 				}
 			}
 			
+			/*
+			*
+			*	GAME PART : BURNING WALL
+			*
+			*/
 			for(unsigned int i=0 ; i< burnWalls.size() ; i++){
 				burnWalls[i] -> tick(playerBombeExplode);
 				if(burnWalls[i]->canBeDelete()){
@@ -979,6 +989,11 @@ void Game::tick(){
 				}
 			}
 			
+			/*
+			*
+			*	GAME PART : PLAYERS
+			*
+			*/
 			for(unsigned int i=0;i<players.size();i++){
 				players[i] -> doSomething(playerBombeExplode);
 				if(players[i]->isAlive()){
@@ -1020,7 +1035,90 @@ void Game::tick(){
 	    		gameState = generateResult;
 			}
 			
+			/*
+			*
+			*	SUDDEN DEATH PART !
+			*
+			*/
+			if(!suddenDeathCase){
+				if(suddenDeath && (nbTickForGame == (4 * (sizeX-2) * (sizeY-2))+ (34 * 5))){
+					fprintf(stderr,"init sudden death");
+					suddenDeathCase = true;
+					for(unsigned int i=0;i<players.size();i++){
+						//notify to players that the suddenDeath
+						players[i]->itSuddenDeathTime();
+					}
+					suddenDeathMinX = 1;
+					suddenDeathMaxX = 33;
+					suddenDeathMinY = 1;
+					suddenDeathMaxY = 19;
+					suddenDeathX = 1;
+					suddenDeathY = 1;
+					suddenDeathDirection = suddenDeathRight;
+				}
+			}else{
+				if(nbTickForGame % 4 == 0){
+					//add animation of falling wall
+					SuddenDeathAnimation * suddenDeathAnimation = new SuddenDeathAnimation(suddenDeathX, suddenDeathY, grid->getWallSprite(), tab, grid);
+					suddenDeathAnimations.push_back(suddenDeathAnimation);
+					suddenDeathAnimation = NULL;
+					
+					
+					switch(suddenDeathDirection){
+						case suddenDeathRight :
+							if(suddenDeathX < suddenDeathMaxX){
+								suddenDeathX++;
+							}else{
+								suddenDeathMinY++;
+								suddenDeathY++;
+								suddenDeathDirection = suddenDeathDown;
+							}
+							break;
+							
+						case suddenDeathDown :
+							if(suddenDeathY < suddenDeathMaxY){
+								suddenDeathY++;
+							}else{
+								suddenDeathMaxX--;
+								suddenDeathX--;
+								suddenDeathDirection = suddenDeathLeft;
+							}
+							break;
+							
+						case suddenDeathLeft :
+							if(suddenDeathX > suddenDeathMinX){
+								suddenDeathX--;
+							}else{
+								suddenDeathMaxY--;
+								suddenDeathY--;
+								suddenDeathDirection = suddenDeathUp;
+							}
+							break;
+							
+						case suddenDeathUp :
+							if(suddenDeathY > suddenDeathMinY){
+								suddenDeathY--;
+							}else{
+								suddenDeathMinX++;
+								suddenDeathX++;
+								suddenDeathDirection = suddenDeathRight;
+							}
+							break;
+							
+					}
+					
+				}
+//				purge old animation
+				for(unsigned int i=0 ; i< suddenDeathAnimations.size() ; i++){
+					if(suddenDeathAnimations[i]->canBeDeleted()){
+						suddenDeathAnimations.erase(suddenDeathAnimations.begin()+i);
+					}
+					suddenDeathAnimations[i] -> tick(playerBombeExplode);
+				}
+			}
+			
 			mergeScreen(false);
+			
 			break;
 			
 			
@@ -1064,11 +1162,12 @@ void Game::tick(){
 				gameState = gameWait;
 				generateHeader();
 				nbTickForGame = nbTickForGameParam;
-			
+				suddenDeathCase = false;			
     			players.clear();
     			bombes.clear();
 				explosions.clear();
 				burnWalls.clear();
+				suddenDeathAnimations.clear();
 				grid -> resetSurface();
 				grid -> generateGrid();
 				

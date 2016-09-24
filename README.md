@@ -57,7 +57,6 @@ Raspberry pi 2/3:
 
 ===============================
 **Next step :**
-- Game type sudden death
 - other level design (pirates, ring)
 - Artificial interlligence
 - Teleporter

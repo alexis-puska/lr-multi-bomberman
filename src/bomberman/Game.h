@@ -16,6 +16,7 @@
 
 #include "Player.h"
 #include "BurnWall.h"
+#include "SuddenDeathAnimation.h"
 
 #ifndef __MYCLASS_GAME
 #define __MYCLASS_GAME
@@ -51,6 +52,13 @@ enum playerTypeEnum{
 	HUMAN	= 0,
 	CPU 	= 1,
 	OFF		= 2	
+};
+
+enum suddenDeathDirection{
+	suddenDeathRight	= 0,
+	suddenDeathDown		= 1,
+	suddenDeathLeft		= 2,
+	suddenDeathUp		= 3,	
 };
 
 
@@ -98,7 +106,6 @@ private:
 	int cpuLevel;
 	int nbTickForGame;
 	int nbTickForGameParam;
-	bool suddenDeath;
 	bool badBomber;
 	int playerType[16];
 	int playerIndexTexture[16];
@@ -112,7 +119,16 @@ private:
 	bool requestStopGame;
 	bool configured;
 	
-	
+	//SUDDENT DEATH
+	bool suddenDeath;
+	bool suddenDeathCase;
+	int suddenDeathMinX;
+	int suddenDeathMaxX;
+	int suddenDeathMinY;
+	int suddenDeathMaxY;
+	int suddenDeathX;
+	int suddenDeathY;
+	int suddenDeathDirection;
 
 	//keystate of player
 	unsigned short * in_keystate;
@@ -123,6 +139,7 @@ private:
 	std::vector<Bombe *>bombes;
 	std::vector<Explosion *> explosions;
 	std::vector<BurnWall *> burnWalls;
+	std::vector<SuddenDeathAnimation *> suddenDeathAnimations;
 	
 	/*
 	*	GRID PART

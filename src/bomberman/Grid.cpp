@@ -61,6 +61,10 @@ SDL_Surface * Grid::getBricksLayer(){
 	return brickShadow;
 }
 
+SDL_Surface * Grid::getWallSprite(){
+   	return textures[17];
+}
+
 
 
 void Grid::configure(int levelNumber){
@@ -245,12 +249,12 @@ void Grid::generateGrid(){
 				ind = notEmptyCase[rand() % notEmptyCase.size()];
 			}
 			tabBonus[ind] = y;
-			SDL_Rect dstrect;
-			dstrect.x = ((ind % sizeX) * blockSizeX) + 1;
-			dstrect.y = floor(ind / sizeX) * blockSizeY;
-			dstrect.w = 16;
-			dstrect.h = 16;
-			//SDL_BlitSurface(bonusSprite[y], NULL, brickShadow, &dstrect);
+//			SDL_Rect dstrect;
+//			dstrect.x = ((ind % sizeX) * blockSizeX) + 1;
+//			dstrect.y = floor(ind / sizeX) * blockSizeY;
+//			dstrect.w = 16;
+//			dstrect.h = 16;
+//			SDL_BlitSurface(bonusSprite[y], NULL, brickShadow, &dstrect);
 		}
 	}
     
@@ -303,4 +307,14 @@ void Grid::placeNewDeathMalus(){
 	dstrect.w = 16;
 	dstrect.h = 16;
 	SDL_BlitSurface(bonusSprite[0], NULL, brickShadow, &dstrect);
+}
+
+void Grid::placeSuddenDeathWall(int x, int y){
+	SDL_Rect dstrect;
+	dstrect.x = x * blockSizeX;
+	dstrect.y = y * blockSizeY;
+	dstrect.w = 18;
+	dstrect.h = 16;
+	SDL_BlitSurface(textures[17], NULL, brickShadow, &dstrect);
+	tab[x + y * sizeX] = suddenDeathElement;
 }

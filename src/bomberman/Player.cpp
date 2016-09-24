@@ -103,6 +103,7 @@ Player::Player(unsigned short * in_keystateLibretro, bool isACpuPlayer, int inde
 	ghostModePower = false;
 	triggerBombe = false;
 	kickPower = false;
+	inSuddenDeathTime = false;
 	kickIndex = -1;
 	kickDirection = -1;
 	
@@ -698,11 +699,18 @@ void Player::doSomething(SDL_Surface * surfaceToDraw){
 		}
 		
 		if(invincibleTime == 0){
-			if(tab[roundX + roundY * sizeX] == explosionElement){
-				if(playerState == onLouis){
-					invincibleTime = 50;
-					playerState = normal;
-				}else{
+			if(!inSuddenDeathTime){
+				if(tab[roundX + roundY * sizeX] == explosionElement){
+					if(playerState == onLouis){
+						invincibleTime = 50;
+						playerState = normal;
+					}else{
+						playerState = burning;
+						animate = true;
+					}
+				}
+			}else{
+				if(tab[roundX + roundY * sizeX] == explosionElement || tab[roundX + roundY * sizeX] == suddenDeathElement){
 					playerState = burning;
 					animate = true;
 				}
@@ -1153,4 +1161,8 @@ int Player::getKickDirection(){
 void Player::releaseKick(){
 	kickDirection = kickNone;
 	kickIndex = -1;
+}
+
+void Player::itSuddenDeathTime(){
+	inSuddenDeathTime = true;	
 }

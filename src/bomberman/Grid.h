@@ -21,6 +21,7 @@ enum gridElementEnum{
 	brickElement		= 2,
 	bombeElement		= 3,
 	wallElement			= 4,
+	suddenDeathElement	= 5,
 };
 
 enum bombeTypeEnum{
@@ -84,11 +85,13 @@ class Grid
 	void burnABrick(int posX, int posY);
 	void burnBonus(int posX, int posY);
 	void placeNewDeathMalus();
+	void placeSuddenDeathWall(int x, int y);
 	
 	//get Image to render in retroarch
 	SDL_Surface * getGroundLayer();
 	SDL_Surface * getSkyLayer();
 	SDL_Surface * getBricksLayer();
+	SDL_Surface * getWallSprite();
 	
 	private:
 	

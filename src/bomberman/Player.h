@@ -53,6 +53,7 @@ public:
 	
 		
 	int getPlayerNumber();
+	void itSuddenDeathTime();
 	
 private:
 	/*
@@ -77,11 +78,13 @@ private:
 	
 	bool ghostModePower;
 	bool kickPower;
+	bool inSuddenDeathTime;
 	int kickIndex;
 	int kickDirection;
 
 	//bombe variable
 	bool triggerBombe;
+	bool releaseTriggerBombe;
 	bool putABombe;
 	int flameStrengh;
 	int bombeType;
