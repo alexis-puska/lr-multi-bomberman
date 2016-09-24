@@ -48,12 +48,14 @@ enum bonusEnum{
 };
 
 enum malusEnum{
-	diarhee			= 0,
-	constipation	= 1,
-	speedBombe		= 2,
-	slowBombe		= 3,
-	slowDown		= 4,
-	speed			= 5,
+	noMalus				= -1,
+	diarheeMalus		= 0,
+	constipationMalus	= 1,
+	speedBombeMalus		= 2,
+	slowBombeMalus		= 3,
+	slowDownMalus		= 4,
+	speedUpMalus		= 5,
+	switchPlayerMalus	= 6,
 };
 
 

@@ -59,7 +59,7 @@ class Game
 
 public:
 	Game();
-	Game(int levelIndexInformation, int playerInformation[16][2], int gameOption[4], SDL_Surface * vout_bufLibretro, unsigned short * in_keystateLibretro);
+	Game(int levelIndexInformation, int playerInformation[16][2], int gameOption[4], SDL_Surface * vout_bufLibretro, unsigned short * in_keystateLibretro, int nbPlayerConfigGame);
     ~Game();
 	bool isAlive();
 	bool isConfigured();
@@ -107,6 +107,7 @@ private:
 	int gameState;
 	int nbPlayerAlive;
 	int nbPlayerInGame;
+	int nbPlayerConfig;
 	bool isThreadAlive;
 	bool requestStopGame;
 	bool configured;
@@ -131,6 +132,7 @@ private:
 	//table of free/occuped part of the grid
     int * tab;
     int * tabBonus;
+    float * tabPlayerCoord;
     
 	//function
 	void copySurfaceToBackRenderer(SDL_Surface * src, SDL_Surface * dest, int x, int y);
@@ -138,6 +140,6 @@ private:
 	void generateHeader();
 	void updateTimeDisplay();
 	void drawResultOfGame();
-	
+
 };
 #endif

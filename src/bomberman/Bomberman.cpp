@@ -167,6 +167,7 @@ void Bomberman::tick(unsigned short in_keystateLibretro[16]){
 	if(currentStep != gameStep){
 		keyPressed();
 		
+		int nbPlayerConfig = 0;
 		//spash screen and start pressed !
 		if(previousPlayerKeystate[0] & keyPadStart && keychange[0]){
 			refreshBuffer = true;
@@ -194,7 +195,13 @@ void Bomberman::tick(unsigned short in_keystateLibretro[16]){
 					break;
 				case levelSelectionMenu:
 				cursorPosition = 0;
-					game = new Game(levelIndex, playerType,gameOption, vout_buf, in_keystate);
+					nbPlayerConfig = 0;
+					for(int i=0; i<16; i++){
+						if(playerType[i][0] <= 1){
+							nbPlayerConfig++;
+						}
+					}
+					game = new Game(levelIndex, playerType,gameOption, vout_buf, in_keystate, nbPlayerConfig);
 					currentStep = gameStep;
 					break;
 				case gameStep:

@@ -59,8 +59,8 @@ Raspberry pi 2/3:
 **Next step :**
 
 - Bonus (kick bombe, <del>flamme up, flamme max, bombe sup, louis, Gotta, roller, block pass</del>)
-- Malus (diarhee(put bombe every time), constipation(can't put a bombe), fast bombe, slow bombe, slow player, fast player, switch player)
-- Bombe type(<del>normal, radio, power, rubber</del>)
+- <del>Malus (diarhee(put bombe every time), constipation(can't put a bombe), fast bombe, slow bombe, slow player, fast player, switch player)</del>
+- <del>Bombe type(normal, radio, power, rubber</del>)
 - Power(kick, glove)
 - other level design (pirates, ring)
 - Artificial interlligence

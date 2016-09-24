@@ -80,6 +80,7 @@ Game::Game(){
 	requestStopGame = false;
 	tab = new int[sizeX * sizeY];
 	tabBonus = new int[sizeX * sizeY];
+	tabPlayerCoord = new float[16 * 2];
 }
 
 /*
@@ -87,9 +88,10 @@ Game::Game(){
 * constructor
 * 
 */
-Game::Game(int levelIndexInformation, int playerInformationParam[16][2], int gameOption[4], SDL_Surface *  vout_bufLibretro, unsigned short * in_keystateLibretro){
+Game::Game(int levelIndexInformation, int playerInformationParam[16][2], int gameOption[4], SDL_Surface *  vout_bufLibretro, unsigned short * in_keystateLibretro, int nbPlayerConfigGame){
 	gameState = gameWait;
 	nbPlayerInGame = 0;
+	nbPlayerConfig = nbPlayerConfigGame;
 	// Load Font
     fragileBombersFont = TTF_OpenFont( "./resources/font/fragile_bombers.ttf", 36); //this opens a font style and sets a size
 	
@@ -123,9 +125,13 @@ Game::Game(int levelIndexInformation, int playerInformationParam[16][2], int gam
 	requestStopGame = false;
 	tab = new int[sizeX * sizeY];
 	tabBonus = new int[sizeX * sizeY];
+	tabPlayerCoord = new float [16 * 2];
 	for(int i = 0; i < sizeX * sizeY; i++){
 		tab[i] = emptyElement;
 		tabBonus[i] = -1;
+	}
+	for(int i=0;i<16*2;i++){
+		tabPlayerCoord[i] = -1.0;
 	}
 	
 	levelIndex = levelIndexInformation;
@@ -336,14 +342,14 @@ Game::Game(int levelIndexInformation, int playerInformationParam[16][2], int gam
 		switch(playerType[i]){
 			case HUMAN:
 				// if a human link the next keystate of libretro, else link a empty value
-				player = new Player(&in_keystate[indexLibretro], false , indexTexture , startX, startY, i, tab, tabBonus, bombeSprite, grid);
+				player = new Player(&in_keystate[indexLibretro], false , indexTexture , startX, startY, i, tab, tabBonus, bombeSprite, grid, tabPlayerCoord, nbPlayerConfig);
 				players.push_back(player);
 				player = NULL;
 				indexLibretro++;
 				nbPlayerAlive++;
 				break;
 			case CPU:
-				player = new Player(&in_keystate_cpu[index], true , indexTexture , startX, startY, i, tab, tabBonus, bombeSprite, grid);
+				player = new Player(&in_keystate_cpu[index], true , indexTexture , startX, startY, i, tab, tabBonus, bombeSprite, grid, tabPlayerCoord, nbPlayerConfig);
 				players.push_back(player);
 				player = NULL;
 				in_keystate[index] = 0;
@@ -385,6 +391,7 @@ Game::~Game(){
 	free(grid);
 	free(tab);
 	free(tabBonus);
+	free(tabPlayerCoord);
 	in_keystate = NULL;
 	free(in_keystate_cpu);
 
@@ -1042,6 +1049,10 @@ void Game::tick(){
     	
     		//restart game
     		if(in_keystate[0] & keyPadStart){
+    			for(int i=0;i<16*2;i++){
+					tabPlayerCoord[i] = -1.0;
+				}
+
 				gameState = gameWait;
 				generateHeader();
 				nbTickForGame = nbTickForGameParam;
@@ -1066,14 +1077,14 @@ void Game::tick(){
 					switch(playerType[i]){
 						case HUMAN:
 							// if a human link the next keystate of libretro, else link a empty value
-							player = new Player(&in_keystate[indexLibretro], false , playerIndexTexture[i] , startX, startY, i, tab, tabBonus, bombeSprite, grid);
+							player = new Player(&in_keystate[indexLibretro], false , playerIndexTexture[i] , startX, startY, i, tab, tabBonus, bombeSprite, grid, tabPlayerCoord, nbPlayerConfig);
 							players.push_back(player);
 							player = NULL;
 							indexLibretro++;
 							nbPlayerInGame++;
 							break;
 						case CPU:
-							player = new Player(&in_keystate_cpu[index], true , playerIndexTexture[i] , startX, startY, i, tab, tabBonus, bombeSprite, grid);
+							player = new Player(&in_keystate_cpu[index], true , playerIndexTexture[i] , startX, startY, i, tab, tabBonus, bombeSprite, grid, tabPlayerCoord, nbPlayerConfig);
 							players.push_back(player);
 							player = NULL;
 							in_keystate[index] = 0;

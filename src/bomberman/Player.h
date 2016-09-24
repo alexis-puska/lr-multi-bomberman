@@ -26,7 +26,7 @@
 class Player
 {
 public:
-	Player(unsigned short * in_keystateLibretro, bool isACpuPlayer, int indexSprite, float startPositionX, float startPositionY, int playerNumberLibretro, int tab[sizeX * sizeY], int tableBonus[sizeX * sizeY], SDL_Surface ** bombeSpriteGame, Grid * gridParam);
+	Player(unsigned short * in_keystateLibretro, bool isACpuPlayer, int indexSprite, float startPositionX, float startPositionY, int playerNumberLibretro, int tab[sizeX * sizeY], int tableBonus[sizeX * sizeY], SDL_Surface ** bombeSpriteGame, Grid * gridParam, float * tabPlayerCoord, int nbPlayerConfigGame);
     ~Player();
     void doSomething(SDL_Surface * surfaceToDraw);
 
@@ -57,6 +57,7 @@ private:
 	//Object variable
 	bool cpu;
 	int playerNumber;
+	int nbPlayerConfig;
 	int characterSpriteIndex;
 	
 	//Game variable
@@ -64,6 +65,10 @@ private:
 	float posY;
 	float playerSpeed;
 	int playerState;
+	int nbTickMalus;
+	int playerMalus;
+	float previousSpeedValue;
+	int previousBombeNumber;
 	
 	bool ghostModePower;
 
@@ -91,6 +96,7 @@ private:
 	//pointer to the grid element;
 	int * tab;
 	int * tabBonus;
+	float * tabPlayerCoord;
 	SDL_Surface ** bombeSprite;
 	Grid * grid;
 	
@@ -120,5 +126,7 @@ private:
 	
 	//malus function
 	void getAMalusBonus();
+	void releaseMalus();
+	int findIndexPlayer();
 };
 #endif

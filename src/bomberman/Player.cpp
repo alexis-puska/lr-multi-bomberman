@@ -39,37 +39,35 @@ enum playerKey{
 	keyPadY			= 32768	
 };
 
-
-
 enum playerMove{
-	none	=-1,
-	down	= 0,
-	up		= 1,
-	left	= 2,
-	right	= 3
+	none					=-1,
+	down					= 0,
+	up						= 1,
+	left					= 2,
+	right					= 3
 };
 
 enum playerSprite{
-	bomberman	= 0,	 
-	cossak		= 1,
-	barbar		= 2,
-	chan		= 3,
-	kid			= 4,
-	pretty		= 5,
-	punk		= 6,
-	mexican		= 7	
+	bomberman				= 0,	 
+	cossak					= 1,
+	barbar					= 2,
+	chan					= 3,
+	kid						= 4,
+	pretty					= 5,
+	punk					= 6,
+	mexican					= 7	
 };
 
 enum playerStateEnum{
-	normal			= 0,
-	onLouis			= 1,
-	carryBombe		= 2,
-	throwBombe		= 3,
-	burning			= 4,
-	louisBurning	= 5,
-	victory			= 6,
-	crying			= 7,
-	dead			= 8
+	normal					= 0,
+	onLouis					= 1,
+	carryBombe				= 2,
+	throwBombe				= 3,
+	burning					= 4,
+	louisBurning			= 5,
+	victory					= 6,
+	crying					= 7,
+	dead					= 8
 };
 
 enum nbFrameAnimationEnum{
@@ -84,17 +82,17 @@ enum nbFrameAnimationEnum{
 };
 
 enum louisTypeEnum{
-	blueLouis		= 0,
-	yellowLouis		= 1,
-	pinkLouis		= 2,
-	greenLouis		= 3,
-	brownLouis		= 4
+	blueLouis				= 0,
+	yellowLouis				= 1,
+	pinkLouis				= 2,
+	greenLouis				= 3,
+	brownLouis				= 4
 };
 
 
 
-Player::Player(unsigned short * in_keystateLibretro, bool isACpuPlayer, int indexSprite, float startPositionX, float startPositionY, int playerNumberLibretro, int table[sizeX * sizeY], int tableBonus[sizeX * sizeY], SDL_Surface ** bombeSpriteGame, Grid * gridParam)
-{
+Player::Player(unsigned short * in_keystateLibretro, bool isACpuPlayer, int indexSprite, float startPositionX, float startPositionY, int playerNumberLibretro, int table[sizeX * sizeY], int tableBonus[sizeX * sizeY], SDL_Surface ** bombeSpriteGame, Grid * gridParam, float * tabPlayerCoordGame, int nbPlayerConfigGame){
+	srand(time(NULL));
 	grid = gridParam;
 	playerState = normal;
 	invincibleTime = 0;
@@ -106,7 +104,12 @@ Player::Player(unsigned short * in_keystateLibretro, bool isACpuPlayer, int inde
 	triggerBombe = false;
 	flameStrengh = 2;
 	playerSpeed = 0.1;
-	
+	nbTickMalus = -1;
+	playerMalus = noMalus;
+	previousBombeNumber = 0;
+	previousSpeedValue = 0.0;
+	tabPlayerCoord = tabPlayerCoordGame;
+	nbPlayerConfig = nbPlayerConfigGame;
 	
 	frameCounter = 0;
 	offsetSprite = 0;
@@ -272,10 +275,13 @@ Player::Player(unsigned short * in_keystateLibretro, bool isACpuPlayer, int inde
 	
 	posX = startPositionX;
 	posY = startPositionY;
+	
+	playerNumber = playerNumberLibretro;
+	tabPlayerCoord[playerNumber * 2] = posX;
+	tabPlayerCoord[playerNumber * 2 + 1 ] = posY;
 	cpu = isACpuPlayer;
 	tab = table;
 	tabBonus = tableBonus;
-	playerNumber = playerNumberLibretro;
 	characterSpriteIndex = indexSprite;
 	in_keystate = in_keystateLibretro;
 	bombeSprite = bombeSpriteGame;
@@ -327,6 +333,7 @@ Player::~Player(){
 	free(in_keystate);
 	tab = NULL;
 	tabBonus = NULL;
+	tabPlayerCoord = NULL;
 	grid = NULL;
 }
 
@@ -676,6 +683,10 @@ void Player::doSomething(SDL_Surface * surfaceToDraw){
 		int roundX = floor(posX);
 		int roundY = floor(posY);
 		
+		//update coordonate in global memory		
+		posX = tabPlayerCoord[playerNumber * 2];
+		posY = tabPlayerCoord[playerNumber * 2 + 1 ];
+
 		if(tabBonus[roundX + roundY * sizeX] != noBonus && tab[roundX + roundY * sizeX] < brickElement){
 			foundABonus(tabBonus[roundX + roundY * sizeX]);
 		}
@@ -821,7 +832,9 @@ void Player::doSomething(SDL_Surface * surfaceToDraw){
 		//display menu	
 		}
 		if(keystate & keyPadA){
-			putABombe = true;	
+			if(playerMalus != constipationMalus){
+				putABombe = true;
+			}
 		}
 		if(keystate & keyPadB){
 			if(bombeType == radioBombeType){
@@ -834,10 +847,15 @@ void Player::doSomething(SDL_Surface * surfaceToDraw){
 		if(keystate & keyPadY){
 		//display menu	
 		}	
+		
+		
+		
+		if(playerMalus == diarheeMalus){
+			putABombe = true;
+		}
 	}
 	
 	}
-	
 	switch(playerState){
 		case normal:
 			drawNormal(surfaceToDraw, animate);
@@ -864,6 +882,20 @@ void Player::doSomething(SDL_Surface * surfaceToDraw){
 			drawCrying(surfaceToDraw, animate);
 			break;
 	}
+	
+	//malus treatment
+	tabPlayerCoord[playerNumber * 2] = posX;
+	tabPlayerCoord[playerNumber * 2 + 1 ] = posY;
+
+
+	if(nbTickMalus > 0){
+		nbTickMalus--;
+	}else if(nbTickMalus == 0){
+		releaseMalus();
+		nbTickMalus--;
+		fprintf(stderr, "fin malus %i", nbTickMalus);
+	}
+	
 }
 
 Bombe * Player::addBombe(){
@@ -878,6 +910,15 @@ Bombe * Player::addBombe(){
 		case bubbleBombeType:
 			break;		
 	}
+	switch(playerMalus){
+		case speedBombeMalus:
+			time = 50;
+			break;			
+		case slowBombeMalus:
+			time = 300;
+			break;
+	}
+	fprintf(stderr, "time : %i\n",time);
 	tab[(int)floor(posX) + ((int)floor(posY)*sizeX)] = bombeElement;
 	return new Bombe(strenght, (int)floor(posX), (int)floor(posY), bombeType, playerNumber, time, bombeSprite, tab);
 }
@@ -988,33 +1029,80 @@ void Player::foundABonus(int bonusIndex){
 	grid->burnBonus(roundX, roundY);
 }
 
-void Player::getAMalusBonus(){
-	srand (time(NULL));
-	/* generate secret number between 0 and 6: */
-	int malus = rand() % 7 ;
-	fprintf(stderr, "malus number : %i", malus);
-	switch(malus){
-		case 0:
-			//diarhee
+
+void Player::releaseMalus(){
+	switch(playerMalus){
+		case constipationMalus:
+			NbBombeMax = previousBombeNumber;
+			NBBombeRemaining = previousBombeNumber;
 			break;
-		case 1:
-			//constipation
-			break;
-		case 2:
-			//slowBombe
-			break;			
-		case 3:
-			//fastBombe
-			break;
-		case 4:
-			//slowPlayer
-			break;
-		case 5:
-			//fastPlayer
-			break;
-		case 6:
-			//switchPlayer
+		case slowDownMalus:
+		case speedUpMalus:
+			playerSpeed = previousSpeedValue;
 			break;
 	}
+	playerMalus = noMalus;
 }
 
+
+
+void Player::getAMalusBonus(){
+	//reset in first Time the previous malus if exist
+	if(playerMalus != noMalus){
+		releaseMalus();
+	}
+	
+	nbTickMalus = 15 * 50;
+	
+	/* generate secret number between 0 and 6: */
+	int malus = rand() % 7 ;
+	
+	switch(malus){
+		case diarheeMalus:
+		case speedBombeMalus:
+		case slowBombeMalus:
+			nbTickMalus = 15 * 50;
+			break;
+		case constipationMalus:
+			previousBombeNumber = NbBombeMax;
+			NBBombeRemaining -= NbBombeMax;
+			nbTickMalus = 15 * 50;
+			break;
+		case slowDownMalus:
+			previousSpeedValue = playerSpeed;
+			playerSpeed = 0.04;
+			nbTickMalus = 15 * 50;
+			break;
+		case speedUpMalus:
+			previousSpeedValue = playerSpeed;
+			playerSpeed = 0.16;
+			nbTickMalus = 15 * 50;		
+			break;
+		case switchPlayerMalus:
+			int playerToSwitch = findIndexPlayer();
+			float toSwitchX = floor(tabPlayerCoord[playerToSwitch * 2]) + 0.5;
+			float toSwitchY = floor(tabPlayerCoord[playerToSwitch * 2 + 1]) + 0.5;
+			tabPlayerCoord[playerToSwitch * 2] = floor(tabPlayerCoord[playerNumber * 2]) + 0.5;
+			tabPlayerCoord[playerToSwitch * 2 + 1] = floor(tabPlayerCoord[playerNumber * 2 + 1]) + 0.5;
+			tabPlayerCoord[playerNumber * 2] = toSwitchX;
+			tabPlayerCoord[playerNumber * 2 + 1] = toSwitchY;
+			posX = toSwitchX;
+			posY = toSwitchY;
+			break;
+	}
+	playerMalus = malus;
+}
+
+
+int Player::findIndexPlayer(){
+	std::vector<int> index;
+	for(int i = 0; i < 16; i++){
+		if(i != playerNumber){
+			if(tabPlayerCoord[i * 2] != -1.0){
+				index.push_back(i);
+			}
+		}
+	}
+	int idx = rand() % index.size();
+	return index[idx];
+}
