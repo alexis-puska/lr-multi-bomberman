@@ -74,7 +74,6 @@ void Bombe::explode(){
 
 void Bombe::pushBomb(int directionPlayer){
 	direction = directionPlayer;
-	fprintf(stderr,"kick dir : %i\n",direction);
 }
 
 void Bombe::tick(SDL_Surface * surfaceToDraw){
@@ -110,7 +109,6 @@ void Bombe::tick(SDL_Surface * surfaceToDraw){
 	if(direction != -1)
 	{
 		if( tab[(int)floor(posX) + (int)floor(posY) * sizeX ] == explosionElement){
-			fprintf(stderr,"dans explosion");
 			explodeNow();
 		}else{
 			//bombe moved
@@ -122,7 +120,6 @@ void Bombe::tick(SDL_Surface * surfaceToDraw){
 						for(int i = 0; i < 16; i++){
 							if((int)floor(tabPlayerCoord[2*i]) == roundX + 1 && (int)floor(tabPlayerCoord[2*i+1]) == roundY){
 								nextCaseIsPlayer = true;
-								fprintf(stderr,"found player pos");
 							}	
 						}
 						if(!(tab[(roundX + 1) + (roundY * sizeX)] >= brickElement || nextCaseIsPlayer)){
@@ -143,7 +140,6 @@ void Bombe::tick(SDL_Surface * surfaceToDraw){
 						for(int i = 0; i < 16; i++){
 							if((int)floor(tabPlayerCoord[2*i]) == roundX - 1 && (int)floor(tabPlayerCoord[2*i+1]) == roundY){
 								nextCaseIsPlayer = true;
-								fprintf(stderr,"found player pos");
 							}	
 						}
 						if(!(tab[(roundX - 1) + (roundY * sizeX)] >= brickElement || nextCaseIsPlayer)){
@@ -164,7 +160,6 @@ void Bombe::tick(SDL_Surface * surfaceToDraw){
 						for(int i = 0; i < 16; i++){
 							if((int)floor(tabPlayerCoord[2*i]) == roundX && (int)floor(tabPlayerCoord[2*i+1]) == roundY - 1){
 								nextCaseIsPlayer = true;
-								fprintf(stderr,"found player pos");
 							}	
 						}
 						if(!(tab[roundX + (roundY - 1) * sizeX] >= brickElement || nextCaseIsPlayer)){
@@ -184,7 +179,6 @@ void Bombe::tick(SDL_Surface * surfaceToDraw){
 					if(posY - roundY == 0.5){
 						for(int i = 0; i < 16; i++){
 							if((int)floor(tabPlayerCoord[2*i]) == roundX && (int)floor(tabPlayerCoord[2*i+1]) == roundY + 1){
-								fprintf(stderr,"found player pos");
 								nextCaseIsPlayer = true;
 							}	
 						}

@@ -544,7 +544,6 @@ void Player::drawBurning(SDL_Surface * surfaceToDraw, bool animate){
 			if(offsetSprite >=nbFrameForAnimation){
 				offsetSprite = 0;
 				playerState = dead;
-				fprintf(stderr,"reset player pos");
 				tabPlayerCoord[playerNumber * 2] = -1.0;
 				tabPlayerCoord[playerNumber * 2 + 1 ] = -1.0;
 			return;

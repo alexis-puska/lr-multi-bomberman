@@ -267,7 +267,6 @@ void Grid::burnABrick(int posX, int posY){
 	}
 	
 	if(tabBonus[posX + posY * sizeX] != noBonus){
-		fprintf(stderr,"revele bonus\n");
 		SDL_Rect dstrect;
 		dstrect.x = posX * blockSizeX +1;
 		dstrect.y = posY * blockSizeY;
@@ -293,7 +292,6 @@ void Grid::burnBonus(int posX, int posY){
 }
 
 void Grid::placeNewDeathMalus(){
-    fprintf(stderr, "place new death malus\n");
 	int ind = emptyCase[rand() % emptyCase.size() + 1];
 	while(tabBonus[ind] != noBonus){
 		ind = emptyCase[rand() % emptyCase.size() + 1];
