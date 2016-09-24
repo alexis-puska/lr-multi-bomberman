@@ -90,13 +90,7 @@ void Bombe::tick(SDL_Surface * surfaceToDraw){
 	int roundX = (int)floor(posX);
 	int roundY = (int)floor(posY);
 	
-	if(roundY + 1 == sizeY){
-		direction == -1;
-	}
 	
-	if(roundY-1 == 0){
-		direction == -1;
-	}
 	
 	if(posX-(float)roundX >= margeInf && posX-(float)roundX <= margeSup){
 		posX = (float)floor(posX)+0.5;
@@ -105,6 +99,13 @@ void Bombe::tick(SDL_Surface * surfaceToDraw){
 		posY = (float)floor(posY) + 0.5;
 	}
 	
+	if(posY == (float)sizeY + 0.5){
+		direction == -1;
+	}
+	
+	if(posY == 0.5){
+		direction == -1;
+	}
 	
 	if(direction != -1)
 	{

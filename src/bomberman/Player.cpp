@@ -1017,7 +1017,6 @@ void Player::foundABonus(int bonusIndex){
 	switch(bonusIndex){
 		case deathBonus :
 			getAMalusBonus();
-			grid->placeNewDeathMalus();
 			break;
 		case rollerBonus :
 			if(playerSpeed < 0.15){

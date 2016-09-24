@@ -57,15 +57,12 @@ Raspberry pi 2/3:
 
 ===============================
 **Next step :**
-
-- <del>Bonus (kick bombe, flamme up, flamme max, bombe sup, louis, Gotta, roller, block pass</del>)
-- <del>Malus (diarhee(put bombe every time), constipation(can't put a bombe), fast bombe, slow bombe, slow player, fast player, switch player)</del>
-- <del>Bombe type(normal, radio, power, rubber</del>)
-- Power(<del>kick</del>, glove)
+- Game type sudden death
 - other level design (pirates, ring)
 - Artificial interlligence
 - Teleporter
-- Game type (badBomber, sudden death)
+- Game type bad bomber
 - Louis burning animation
 - Audio
 - Net (multiplayer over interner)
+- Power(glove)

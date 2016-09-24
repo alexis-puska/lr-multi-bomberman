@@ -285,11 +285,15 @@ void Grid::burnBonus(int posX, int posY){
 		rect.w = blockSizeX;
 		rect.h = blockSizeY;
 		SDL_FillRect(brickShadow, &rect, 0x000000);
+        if(tabBonus[posX + posY * sizeX] == deathBonus){
+            placeNewDeathMalus();
+        }
 		tabBonus[posX + posY * sizeX] = noBonus;
 	}
 }
 
 void Grid::placeNewDeathMalus(){
+    fprintf(stderr, "place new death malus\n");
 	int ind = emptyCase[rand() % emptyCase.size() + 1];
 	while(tabBonus[ind] != noBonus){
 		ind = emptyCase[rand() % emptyCase.size() + 1];
