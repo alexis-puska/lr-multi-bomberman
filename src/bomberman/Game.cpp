@@ -725,7 +725,13 @@ void Game::tick(){
 			}
 			
 			SDL_FillRect(playerBombeExplode, NULL, SDL_MapRGBA(playerBombeExplode->format, 0, 0, 0, 0));
-					
+			
+			if(suddenDeath && (nbTickForGame < (4 * sizeX * sizeY)) && nbTickForGame % 4 == 0){
+				//suddenDeath treatment
+				fprintf(stderr, "sudden death treatment");
+			}
+ 			
+			
 			
 			for(unsigned int i=0;i<bombes.size();i++){
 				bombes[i] -> tick(playerBombeExplode);
@@ -1101,6 +1107,4 @@ void Game::tick(){
     		break;
 	}
 }
-
-
 

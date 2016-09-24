@@ -26,7 +26,7 @@ Bombe::~Bombe(){
 }
 
 bool Bombe::isExplode(){
-	if(nbTickExplode ==0){
+	if(nbTickExplode == 0){
 		tab[(int)floor(posX) + (int)floor(posY) * sizeX ] = emptyElement;
 		return true;
 	}else{
@@ -99,17 +99,25 @@ void Bombe::tick(SDL_Surface * surfaceToDraw){
 	}
 	
 	if(posY == (float)sizeY + 0.5){
-		direction == -1;
+		if(bombeType == bubbleBombeType){
+			direction = kickOnUp;
+		}else{
+			direction = -1;
+		}
 	}
 	
 	if(posY == 0.5){
-		direction == -1;
+		if(bombeType == bubbleBombeType){
+			direction = kickOnDown;
+		}else{
+			direction = -1;
+		}
 	}
 	
 	if(direction != -1)
 	{
 		if( tab[(int)floor(posX) + (int)floor(posY) * sizeX ] == explosionElement){
-			explodeNow();
+			explode();
 		}else{
 			//bombe moved
 			tab[(int)floor(posX) + (int)floor(posY) * sizeX ] = emptyElement;
