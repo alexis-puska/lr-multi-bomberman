@@ -1,11 +1,11 @@
 #ifndef IS_OSX
-	#include <SDL2/SDL_image.h>
-	#include <SDL2/SDL_ttf.h>
-	#include <SDL2/SDL_thread.h>
+#include <SDL2/SDL_image.h>
+#include <SDL2/SDL_ttf.h>
+#include <SDL2/SDL_thread.h>
 #else
-	#include <SDL2_image/SDL_image.h>
-	#include <SDL2_ttf/SDL_ttf.h>
-	#include <SDL2/SDL_thread.h>
+#include <SDL2_image/SDL_image.h>
+#include <SDL2_ttf/SDL_ttf.h>
+#include <SDL2/SDL_thread.h>
 #endif
 
 #include <stdio.h>
@@ -18,44 +18,43 @@
 #define sizeX 35
 #define sizeY 21
 
-class Bombe
-{
+class Bombe {
 
-public:
-	Bombe(int Strenght, float posXX, float posYY, int type, int numPlayerSetTheBombe, int nbTickBeforeExplostion, SDL_Surface ** miscSheet, int table[sizeX * sizeY], float * tabPlayerCoordGame);
-	~Bombe();
-	bool isExplode();
-	bool isPowerBombe();
-	
-	void explode();
-	void explodeNow();
-	void pushBomb(int direction);
-	void tick(SDL_Surface * surfaceToDraw);
+	public:
+		Bombe(int Strenght, float posXX, float posYY, int type, int numPlayerSetTheBombe, int nbTickBeforeExplostion, SDL_Surface ** miscSheet, int table[sizeX * sizeY],
+				float * tabPlayerCoordGame);
+		~Bombe();
+		bool isExplode();
+		bool isPowerBombe();
 
+		void explode();
+		void explodeNow();
+		void pushBomb(int direction);
+		void tick(SDL_Surface * surfaceToDraw);
 
-	int getStrenght();
-	int getPlayer();
-	int getPosX();
-	int getPosY();
-	int getCase();
+		int getStrenght();
+		int getPlayer();
+		int getPosX();
+		int getPosY();
+		int getCase();
 
-private:
-	SDL_Surface ** animation;
-	int * tab;
-	float * tabPlayerCoord;
-	
-	float posX;
-	float posY;
-	
-	int direction;
-	int nbTickExplode;
-	int strenght;
-	int player;
-	int bombeType;
-	
-	//for animation	
-	int frameCounter;
-	int offsetSprite;
-	int nbFrameForAnimation;	
+	private:
+		SDL_Surface ** animation;
+		int * tab;
+		float * tabPlayerCoord;
+
+		float posX;
+		float posY;
+
+		int direction;
+		int nbTickExplode;
+		int strenght;
+		int player;
+		int bombeType;
+
+		//for animation	
+		int frameCounter;
+		int offsetSprite;
+		int nbFrameForAnimation;
 };
 #endif

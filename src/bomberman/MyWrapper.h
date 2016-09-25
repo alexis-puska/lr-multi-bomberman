@@ -7,8 +7,6 @@
 #include <SDL2_image/SDL_image.h>
 #endif
 
-
-
 #ifdef __cplusplus
 extern "C" {
 #endif

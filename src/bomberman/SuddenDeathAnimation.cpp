@@ -4,8 +4,7 @@
 #define spriteSizeY 16
 #define nbTickAnimation 1
 
-
-SuddenDeathAnimation::SuddenDeathAnimation(int posXX, int posYY, SDL_Surface * wallSprite, int table[sizeX * sizeY], Grid * gridGame){
+SuddenDeathAnimation::SuddenDeathAnimation(int posXX, int posYY, SDL_Surface * wallSprite, int table[sizeX * sizeY], Grid * gridGame) {
 	posX = posXX;
 	posY = posYY;
 	canDelete = false;
@@ -15,19 +14,19 @@ SuddenDeathAnimation::SuddenDeathAnimation(int posXX, int posYY, SDL_Surface * w
 	offset = 340;
 	frameCounter = 0;
 }
-SuddenDeathAnimation::~SuddenDeathAnimation(){
+SuddenDeathAnimation::~SuddenDeathAnimation() {
 	sprite = NULL;
 	tab = NULL;
 }
-void SuddenDeathAnimation::tick(SDL_Surface * surfaceToDraw){
-	if(offset == 0){
-		grid -> placeSuddenDeathWall(posX, posY);
+void SuddenDeathAnimation::tick(SDL_Surface * surfaceToDraw) {
+	if (offset == 0) {
+		grid->placeSuddenDeathWall(posX, posY);
 		canDelete = true;
 		return;
-	}else{
-		if(frameCounter == nbTickAnimation){
+	} else {
+		if (frameCounter == nbTickAnimation) {
 			offset = offset - 10;
-			frameCounter = 0;	
+			frameCounter = 0;
 		}
 	}
 	frameCounter++;
@@ -40,6 +39,6 @@ void SuddenDeathAnimation::tick(SDL_Surface * surfaceToDraw){
 	SDL_BlitSurface(sprite, NULL, surfaceToDraw, &dstRect);
 }
 
-bool SuddenDeathAnimation::canBeDeleted(){
+bool SuddenDeathAnimation::canBeDeleted() {
 	return canDelete;
 }

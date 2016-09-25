@@ -2,8 +2,7 @@
 
 #define nbFrame 4
 
-
-BurnWall::BurnWall(int posXX, int posYY, int index, SDL_Surface ** miscSheet, int table[sizeX * sizeY], int tableBonus[sizeX * sizeY]){
+BurnWall::BurnWall(int posXX, int posYY, int index, SDL_Surface ** miscSheet, int table[sizeX * sizeY], int tableBonus[sizeX * sizeY]) {
 	indexBurnWall = index;
 	posX = posXX;
 	posY = posYY;
@@ -15,34 +14,34 @@ BurnWall::BurnWall(int posXX, int posYY, int index, SDL_Surface ** miscSheet, in
 	nbFrameForAnimation = 6;
 	deleteAnimation = false;
 }
-	
-BurnWall::~BurnWall(){
+
+BurnWall::~BurnWall() {
 	animation = NULL;
 	tab = NULL;
 	tabBonus = NULL;
 }
-	
-bool BurnWall::canBeDelete(){
-	
-	if(deleteAnimation){
-	//remove grid status BurnWall
-		if(tab[posX + posY * sizeX] == brickElement){
-		tab[posX + posY * sizeX] = emptyElement;
+
+bool BurnWall::canBeDelete() {
+
+	if (deleteAnimation) {
+		//remove grid status BurnWall
+		if (tab[posX + posY * sizeX] == brickElement) {
+			tab[posX + posY * sizeX] = emptyElement;
 		}
 	}
 	return deleteAnimation;
 }
-	
-void BurnWall::tick(SDL_Surface * surfaceToDraw){
+
+void BurnWall::tick(SDL_Surface * surfaceToDraw) {
 	SDL_Rect dstRect;
 	dstRect.x = posX * 18;
 	dstRect.y = posY * 16;
 	dstRect.w = 18;
 	dstRect.h = 16;
-	if(frameCounter > nbFrame){
+	if (frameCounter > nbFrame) {
 		frameCounter = 0;
-		offsetSprite++;	
-		if(offsetSprite >= nbFrameForAnimation){
+		offsetSprite++;
+		if (offsetSprite >= nbFrameForAnimation) {
 			deleteAnimation = true;
 			return;
 		}
