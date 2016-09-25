@@ -2,7 +2,7 @@
 
 #define spriteSizeX 18
 #define spriteSizeY 16
-#define nbTickAnimation 5
+#define nbTickAnimation 1
 
 
 SuddenDeathAnimation::SuddenDeathAnimation(int posXX, int posYY, SDL_Surface * wallSprite, int table[sizeX * sizeY], Grid * gridGame){

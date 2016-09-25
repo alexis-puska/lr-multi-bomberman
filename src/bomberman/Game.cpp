@@ -147,7 +147,7 @@ Game::Game(int levelIndexInformation, int playerInformationParam[16][2], int gam
 	cpuLevel = gameOption[2];
 	if(gameOption[3] != -1){
 		nbTickForGame = gameOption[3] * 50 * 60;
-		nbTickForGameParam = nbTickForGame;
+        nbTickForGameParam = nbTickForGame;
 	}else{
 		nbTickForGame = gameOption[3];
 		nbTickForGameParam = nbTickForGame;
@@ -1041,7 +1041,7 @@ void Game::tick(){
 			*
 			*/
 			if(!suddenDeathCase){
-				if(suddenDeath && (nbTickForGame == (4 * (sizeX-2) * (sizeY-2))+ (34 * 5))){
+				if(suddenDeath && (nbTickForGame == (4 * (sizeX-2) * (sizeY-2))+ (34 * 1))){
 					fprintf(stderr,"init sudden death");
 					suddenDeathCase = true;
 					for(unsigned int i=0;i<players.size();i++){
