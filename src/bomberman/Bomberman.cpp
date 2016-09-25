@@ -5,6 +5,7 @@
 const static char *levelView = "./resources/sprite/level/LevelView.png";
 const static char *splashScreen = "./resources/image/SplashScreen.png";
 const static char *menuBackground = "./resources/image/MenuBackground.png";
+const static char *musiquePath = "./resources/musique/22-106-effects-7-jingles-21-voices.mp3";
 
 
 
@@ -129,6 +130,14 @@ Bomberman::Bomberman(SDL_Surface * vout_bufLibretro)
 	}
 	game = NULL;
 	SDL_FreeSurface(textureBuffer);
+	
+	
+	if(Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, MIX_DEFAULT_CHANNELS, 1024) == -1) //Initialisation de l'API Mixer
+	{
+	printf("%s", Mix_GetError());
+	}
+	musique = Mix_LoadMUS(musiquePath);
+	Mix_PlayMusic(musique, -1);
 }
 
 
@@ -136,6 +145,8 @@ Bomberman::Bomberman(SDL_Surface * vout_bufLibretro)
 
 Bomberman::~Bomberman()
 {   
+	Mix_FreeMusic(musique);
+	Mix_CloseAudio();
 	SDL_FreeSurface(screenBuffer);
 	SDL_FreeSurface(splashScreenSurface);
 	SDL_FreeSurface(menuBackgroundSurface);

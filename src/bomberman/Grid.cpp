@@ -62,7 +62,7 @@ SDL_Surface * Grid::getBricksLayer(){
 }
 
 SDL_Surface * Grid::getWallSprite(){
-   	return textures[17];
+   	return textures[16];
 }
 
 
@@ -315,6 +315,6 @@ void Grid::placeSuddenDeathWall(int x, int y){
 	dstrect.y = y * blockSizeY;
 	dstrect.w = 18;
 	dstrect.h = 16;
-	SDL_BlitSurface(textures[17], NULL, brickShadow, &dstrect);
+	SDL_BlitSurface(textures[16], NULL, brickShadow, &dstrect);
 	tab[x + y * sizeX] = suddenDeathElement;
 }

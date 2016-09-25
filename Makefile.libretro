@@ -46,7 +46,7 @@ endif
 ifeq ($(platform), unix)
 	TARGET := $(TARGET_NAME)_libretro.so
 	fpic := -fPIC
-	LIBS = -lSDL2_image -lSDL2_ttf -g `sdl2-config --static-libs` 
+	LIBS = -lSDL2_mixer -lSDL2_image -lSDL2_ttf -g `sdl2-config --static-libs` 
 	CFLAGS += `sdl2-config --cflags`
 	SHARED := -shared -Wl,--version-script=libretro/link.T
 	
@@ -66,10 +66,10 @@ else ifeq ($(platform), linux-portable)
 else ifeq ($(platform), osx)
 	TARGET := $(TARGET_NAME)_libretro.dylib
 	fpic := -fPIC
-	CFLAGS += -I/Library/Frameworks/SDL2.framework/Headers/ -I/Library/Frameworks/SDL2_image.framework/Headers/ -I/Library/Frameworks/SDL2_ttf.framework/Headers/ -F/Library/Frameworks/
+	CFLAGS += -I/Library/Frameworks/SDL2.framework/Headers/ -I/Library/Frameworks/SDL2_image.framework/Headers/ -I/Library/Frameworks/SDL2_ttf.framework/Headers/ -I/Library/Frameworks/SDL2_mixer.framework/Headers/ -F/Library/Frameworks/
 	CFLAGS += -DIS_OSX
 	SHARED := -dynamiclib
-	LIBS := -F/Library/Frameworks -framework SDL2 -framework SDL2_image -framework SDL2_ttf
+	LIBS := -F/Library/Frameworks -framework SDL2 -framework SDL2_image -framework SDL2_ttf -framework SDL2_mixer
 	OSXVER = `sw_vers -productVersion | cut -d. -f 2`
 	OSX_LT_MAVERICKS = `(( $(OSXVER) <= 9)) && echo "YES"`
 	fpic += -mmacosx-version-min=10.5
@@ -83,7 +83,7 @@ else ifeq ($(platform), rpi2)
 	CFLAGS += -marm -mcpu=cortex-a7 -mfpu=neon-vfpv4 -mfloat-abi=hard
 	ASFLAGS += -mcpu=cortex-a7 -mfpu=neon-vfpv4 -mfloat-abi=hard
 	LDFLAGS = -I/usr/include/SDL2  -lm
-	LIBS = -lSDL2_image -lSDL2_ttf -g `sdl2-config --static-libs` 
+	LIBS = -lSDL2_mixer -lSDL2_image -lSDL2_ttf -g `sdl2-config --static-libs` 
 	CFLAGS += `sdl2-config --cflags`
 	HAVE_NEON = 1
 	ARCH = arm
@@ -99,7 +99,7 @@ else ifeq ($(platform), rpi3)
 	CFLAGS += -marm -mcpu=cortex-a53 -mfpu=neon-fp-armv8 -mfloat-abi=hard
 	ASFLAGS += -mcpu=cortex-a53 -mfpu=neon-fp-armv8 -mfloat-abi=hard
 	LDFLAGS = -lm
-	LIBS = -lSDL2_image -lSDL2_ttf -g `sdl2-config --static-libs` 
+	LIBS = -lSDL2_mixer -lSDL2_image -lSDL2_ttf -g `sdl2-config --static-libs` 
 	CFLAGS += `sdl2-config --cflags`
 	#HAVE_NEON = 1
 	#ARCH = arm

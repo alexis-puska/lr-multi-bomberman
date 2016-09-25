@@ -4,11 +4,15 @@
 	#include <SDL2/SDL_image.h>
 	#include <SDL2/SDL_ttf.h>
 	#include <SDL2/SDL_thread.h>
+	#include <SDL2/SDL_mixer.h>
+
 #else
 	#include <SDL2_image/SDL_image.h>
 	#include <SDL2_ttf/SDL_ttf.h>
 	#include <SDL2/SDL_thread.h>
+	#include <SDL2_mixer/SDL_mixer.h>
 #endif
+
 
 #include <stdio.h>
 #include "Game.h"
@@ -97,7 +101,8 @@ class Bomberman {
 		bool anyPlayerkeychange;
 		unsigned short previousPlayerKeystate[16];
 		
-		
+		//musique
+		Mix_Music *musique;
 		
 		
 		/*
