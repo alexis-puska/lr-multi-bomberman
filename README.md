@@ -62,6 +62,5 @@ Raspberry pi 2/3:
 - Teleporter
 - Game type bad bomber
 - Louis burning animation
-- Audio
 - Net (multiplayer over interner)
 - Power(glove)
