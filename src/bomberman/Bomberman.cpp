@@ -5,7 +5,13 @@
 const static char *levelView = "./resources/sprite/level/LevelView.png";
 const static char *splashScreen = "./resources/image/SplashScreen.png";
 const static char *menuBackground = "./resources/image/MenuBackground.png";
-const static char *musiquePath = "./resources/musique/22-106-effects-7-jingles-21-voices.mp3";
+
+const static char *musiquePath = "./resources/musique/menu.mp3";
+const static char *battlePath = "./resources/musique/battle.mp3";
+
+const static char *valideSoundPath = "./resources/sound/valide.wav";
+const static char *cancelSoundPath = "./resources/sound/cancel.wav";
+const static char *bipSoundPath = "./resources/sound/bip.wav";
 
 const static char *BombermanSprite = "./resources/sprite/characters/AllBomberman.png";
 const static char *BombermanSpriteCossak = "./resources/sprite/characters/AllBombermanCossak.png";
@@ -124,16 +130,21 @@ Uint32 	rmask, gmask, bmask, amask;
 	game = NULL;
 	SDL_FreeSurface(textureBuffer);
 
-	if (Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, MIX_DEFAULT_CHANNELS, 1024) == -1) //Initialisation de l'API Mixer
-			{
+	if (Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, MIX_DEFAULT_CHANNELS, 1024) == -1) {
 		printf("%s", Mix_GetError());
 	}
 	musique = Mix_LoadMUS(musiquePath);
+
+	validSound = Mix_LoadWAV(valideSoundPath);
+	cancelSound = Mix_LoadWAV(cancelSoundPath);
+	bipSound = Mix_LoadWAV(bipSoundPath);
+
 	Mix_PlayMusic(musique, -1);
+	Mix_VolumeMusic (MIX_MAX_VOLUME);
+	Mix_AllocateChannels(3);
 }
 
 Bomberman::~Bomberman() {
-	Mix_FreeMusic (musique);
 	Mix_CloseAudio();
 	SDL_FreeSurface (screenBuffer);
 	SDL_FreeSurface (splashScreenSurface);
@@ -141,6 +152,9 @@ Bomberman::~Bomberman() {
 	for (int i = 0; i < 8; i++) {
 		SDL_FreeSurface (menuPlayerSprite[i]);
 	}
+	Mix_FreeMusic (musique); //Libération de la musique
+	Mix_CloseAudio();
+
 	TTF_CloseFont (fragileBombersFont);
 	TTF_Quit();
 	if (game) {
@@ -167,6 +181,7 @@ void Bomberman::tick(unsigned short in_keystateLibretro[16]) {
 		//spash screen and start pressed !
 		if (previousPlayerKeystate[0] & keyPadStart && keychange[0]) {
 			refreshBuffer = true;
+			Mix_PlayChannel(0, validSound, 0);
 			switch (currentStep) {
 				case home:
 					cursorPosition = 0;
@@ -199,11 +214,16 @@ void Bomberman::tick(unsigned short in_keystateLibretro[16]) {
 					}
 					game = new Game(levelIndex, playerType, gameOption, vout_buf, in_keystate, nbPlayerConfig);
 					currentStep = gameStep;
+					Mix_HaltMusic();
+					Mix_FreeMusic (musique);
+					musique = Mix_LoadMUS(battlePath);
+					Mix_PlayMusic(musique, -1);
 					break;
 				case gameStep:
 					break;
 			}
 		} else if (previousPlayerKeystate[0] & keyPadSelect && keychange[0]) {
+			Mix_PlayChannel(1, cancelSound, 0);
 			refreshBuffer = true;
 			switch (currentStep) {
 				case home:
@@ -270,6 +290,10 @@ void Bomberman::tick(unsigned short in_keystateLibretro[16]) {
 			game = NULL;
 			cursorPosition = levelIndex;
 			currentStep = levelSelectionMenu;
+			Mix_HaltMusic();
+			Mix_FreeMusic (musique);
+			musique = Mix_LoadMUS(musiquePath);
+			Mix_PlayMusic(musique, -1);
 		}
 	}
 }
@@ -327,36 +351,42 @@ void Bomberman::drawPlayerTypeMenu() {
 
 		if (previousPlayerKeystate[0] & keyPadRight && keychange[0]) {
 			cursorPosition += 4;
+			Mix_PlayChannel(2, bipSound, 0);
 			if (cursorPosition > 15) {
 				cursorPosition = cursorPosition % 4;
 			}
 		}
 		if (previousPlayerKeystate[0] & keyPadLeft && keychange[0]) {
 			cursorPosition -= 4;
+			Mix_PlayChannel(2, bipSound, 0);
 			if (cursorPosition < 0) {
 				cursorPosition += 16;
 			}
 		}
 		if (previousPlayerKeystate[0] & keyPadDown && keychange[0]) {
 			cursorPosition++;
+			Mix_PlayChannel(2, bipSound, 0);
 			if (cursorPosition > 15) {
 				cursorPosition = 0;
 			}
 		}
 		if (previousPlayerKeystate[0] & keyPadUp && keychange[0]) {
 			cursorPosition--;
+			Mix_PlayChannel(2, bipSound, 0);
 			if (cursorPosition < 0) {
 				cursorPosition = 15;
 			}
 		}
 		if (previousPlayerKeystate[0] & keyPadA && keychange[0]) {
 			playerType[cursorPosition][0]++;
+			Mix_PlayChannel(2, bipSound, 0);
 			if (playerType[cursorPosition][0] > 2) {
 				playerType[cursorPosition][0] = 0;
 			}
 		}
 		if (previousPlayerKeystate[0] & keyPadB && keychange[0]) {
 			playerType[cursorPosition][0]--;
+			Mix_PlayChannel(2, bipSound, 0);
 			if (playerType[cursorPosition][0] < 0) {
 				playerType[cursorPosition][0] = 2;
 			}
@@ -446,12 +476,14 @@ void Bomberman::drawPlayerSpriteMenu() {
 		for (int i = 0; i < 16; i++) {
 			if (previousPlayerKeystate[i] & keyPadRight && keychange[i]) {
 				playerType[i][1] = playerType[i][1] + 1;
+				Mix_PlayChannel(2, bipSound, 0);
 				if (playerType[i][1] > 7) {
 					playerType[i][1] = 0;
 				}
 			}
 			if (previousPlayerKeystate[i] & keyPadLeft && keychange[i]) {
 				playerType[i][1] = playerType[i][1] - 1;
+				Mix_PlayChannel(2, bipSound, 0);
 				if (playerType[i][1] < 0) {
 					playerType[i][1] = 7;
 				}
@@ -503,6 +535,7 @@ void Bomberman::drawGameOptionMenu() {
 		amask = 0xff000000;
 
 		if (previousPlayerKeystate[0] & keyPadRight && keychange[0]) {
+			Mix_PlayChannel(2, bipSound, 0);
 			switch (cursorPosition) {
 				case suddenDeathOption:
 				case badBomberOption:
@@ -531,6 +564,7 @@ void Bomberman::drawGameOptionMenu() {
 			}
 		}
 		if (previousPlayerKeystate[0] & keyPadLeft && keychange[0]) {
+			Mix_PlayChannel(2, bipSound, 0);
 			switch (cursorPosition) {
 				case suddenDeathOption:
 				case badBomberOption:
@@ -560,12 +594,14 @@ void Bomberman::drawGameOptionMenu() {
 			}
 		}
 		if (previousPlayerKeystate[0] & keyPadDown && keychange[0]) {
+			Mix_PlayChannel(2, bipSound, 0);
 			cursorPosition++;
 			if (cursorPosition > 3) {
 				cursorPosition = 0;
 			}
 		}
 		if (previousPlayerKeystate[0] & keyPadUp && keychange[0]) {
+			Mix_PlayChannel(2, bipSound, 0);
 			cursorPosition--;
 			if (cursorPosition < 0) {
 				cursorPosition = 3;
@@ -670,6 +706,7 @@ void Bomberman::drawLevelSelectionMenu() {
 		copySurfaceToBackRenderer(surfaceMessage, screenBuffer, ((640 / 2) - (surfaceMessage->w / 2)), 154);
 
 		if (previousPlayerKeystate[0] & keyPadRight && keychange[0]) {
+			Mix_PlayChannel(2, bipSound, 0);
 			cursorPosition++;
 			if (cursorPosition > 8) {
 				cursorPosition = 0;
@@ -677,6 +714,7 @@ void Bomberman::drawLevelSelectionMenu() {
 
 		}
 		if (previousPlayerKeystate[0] & keyPadLeft && keychange[0]) {
+			Mix_PlayChannel(2, bipSound, 0);
 			cursorPosition--;
 			if (cursorPosition < 0) {
 				cursorPosition = 8;

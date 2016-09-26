@@ -1,11 +1,12 @@
 #ifndef IS_OSX
 #include <SDL2/SDL_image.h>
 #include <SDL2/SDL_ttf.h>
-#include <SDL2/SDL_thread.h>
+#include <SDL2/SDL_mixer.h>
+
 #else
 #include <SDL2_image/SDL_image.h>
 #include <SDL2_ttf/SDL_ttf.h>
-#include <SDL2/SDL_thread.h>
+#include <SDL2_mixer/SDL_mixer.h>
 #endif
 
 #include <stdio.h>
@@ -21,7 +22,8 @@
 class Player {
 	public:
 		Player(unsigned short * in_keystateLibretro, bool isACpuPlayer, int indexSprite, float startPositionX, float startPositionY, int playerNumberLibretro, int tab[sizeX * sizeY],
-				int tableBonus[sizeX * sizeY], SDL_Surface ** bombeSpriteGame, Grid * gridParam, float * tabPlayerCoord, int nbPlayerConfigGame);
+				int tableBonus[sizeX * sizeY], SDL_Surface ** bombeSpriteGame, Grid * gridParam, float * tabPlayerCoord, int nbPlayerConfigGame, Mix_Chunk *louisSoundGame,
+				Mix_Chunk *playerKickSoundGame, Mix_Chunk *playerBurnSoundGame, Mix_Chunk *bombeBounceSoundGame);
 		~Player();
 		void doSomething(SDL_Surface * surfaceToDraw);
 
@@ -115,6 +117,12 @@ class Player {
 		SDL_Surface **louisSprite;
 		SDL_Surface **louisSpriteBurn;
 		SDL_Surface *louisMergebuffer;
+
+		//sound
+		Mix_Chunk *louisSound;
+		Mix_Chunk *playerBurnSound;
+		Mix_Chunk *playerKickSound;
+		Mix_Chunk *bombeBounceSound;
 
 		/*
 		 * FUNCTION For draw player

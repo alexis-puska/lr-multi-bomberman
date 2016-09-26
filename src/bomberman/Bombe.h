@@ -1,11 +1,12 @@
 #ifndef IS_OSX
 #include <SDL2/SDL_image.h>
 #include <SDL2/SDL_ttf.h>
-#include <SDL2/SDL_thread.h>
+#include <SDL2/SDL_mixer.h>
+
 #else
 #include <SDL2_image/SDL_image.h>
 #include <SDL2_ttf/SDL_ttf.h>
-#include <SDL2/SDL_thread.h>
+#include <SDL2_mixer/SDL_mixer.h>
 #endif
 
 #include <stdio.h>
@@ -22,7 +23,7 @@ class Bombe {
 
 	public:
 		Bombe(int Strenght, float posXX, float posYY, int type, int numPlayerSetTheBombe, int nbTickBeforeExplostion, SDL_Surface ** miscSheet, int table[sizeX * sizeY],
-				float * tabPlayerCoordGame);
+				float * tabPlayerCoordGame, Mix_Chunk *bombeBounceSoundGame);
 		~Bombe();
 		bool isExplode();
 		bool isPowerBombe();
@@ -42,6 +43,7 @@ class Bombe {
 		SDL_Surface ** animation;
 		int * tab;
 		float * tabPlayerCoord;
+		Mix_Chunk *bombeBounceSound;
 
 		float posX;
 		float posY;

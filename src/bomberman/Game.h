@@ -1,10 +1,12 @@
-#include <SDL2/SDL.h>
 #ifndef IS_OSX
 #include <SDL2/SDL_image.h>
 #include <SDL2/SDL_ttf.h>
+#include <SDL2/SDL_mixer.h>
+
 #else
 #include <SDL2_image/SDL_image.h>
 #include <SDL2_ttf/SDL_ttf.h>
+#include <SDL2_mixer/SDL_mixer.h>
 #endif
 
 #include <stdio.h>
@@ -67,6 +69,14 @@ class Game {
 	private:
 		//Font for Header and time remaining and pause message
 		TTF_Font* fragileBombersFont;
+
+		//sound
+		Mix_Chunk *fireSound;
+		Mix_Chunk *louisSound;
+		Mix_Chunk *playerBurnSound;
+		Mix_Chunk *playerKickSound;
+		Mix_Chunk *bombeBounceSound;
+		Mix_Chunk *endSound;
 
 		//variable
 		SDL_Thread * mainThread;

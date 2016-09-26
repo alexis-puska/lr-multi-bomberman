@@ -92,6 +92,9 @@ class Bomberman {
 
 		//musique
 		Mix_Music *musique;
+		Mix_Chunk *validSound;
+		Mix_Chunk *cancelSound;
+		Mix_Chunk *bipSound;
 
 		/*
 		 *

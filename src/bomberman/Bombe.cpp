@@ -3,7 +3,8 @@
 #define nbFrame 6
 #define bombeMoveSpeed 0.2
 
-Bombe::Bombe(int Strenght, float posXX, float posYY, int type, int numPlayerSetTheBombe, int nbTickBeforeExplostion, SDL_Surface ** miscSheet, int table[sizeX * sizeY], float * tabPlayerCoordGame) {
+Bombe::Bombe(int Strenght, float posXX, float posYY, int type, int numPlayerSetTheBombe, int nbTickBeforeExplostion, SDL_Surface ** miscSheet, int table[sizeX * sizeY], float * tabPlayerCoordGame,
+		Mix_Chunk *bombeBounceSoundGame) {
 	tab = table;
 	direction = -1;
 	frameCounter = 0;
@@ -17,12 +18,14 @@ Bombe::Bombe(int Strenght, float posXX, float posYY, int type, int numPlayerSetT
 	animation = miscSheet;
 	bombeType = type;
 	tabPlayerCoord = tabPlayerCoordGame;
+	bombeBounceSound = bombeBounceSoundGame;
 }
 
 Bombe::~Bombe() {
 	animation = NULL;
 	tab = NULL;
 	tabPlayerCoord = NULL;
+	bombeBounceSound = NULL;
 }
 
 bool Bombe::isExplode() {
@@ -131,6 +134,7 @@ void Bombe::tick(SDL_Surface * surfaceToDraw) {
 							posX += bombeMoveSpeed;
 						} else {
 							if (bombeType == bubbleBombeType) {
+								Mix_PlayChannel(1, bombeBounceSound, 0);
 								direction = kickOnLeft;
 							} else {
 								direction = -1;
@@ -151,6 +155,7 @@ void Bombe::tick(SDL_Surface * surfaceToDraw) {
 							posX -= bombeMoveSpeed;
 						} else {
 							if (bombeType == bubbleBombeType) {
+								Mix_PlayChannel(1, bombeBounceSound, 0);
 								direction = kickOnRight;
 							} else {
 								direction = -1;
@@ -171,6 +176,7 @@ void Bombe::tick(SDL_Surface * surfaceToDraw) {
 							posY -= bombeMoveSpeed;
 						} else {
 							if (bombeType == bubbleBombeType) {
+								Mix_PlayChannel(1, bombeBounceSound, 0);
 								direction = kickOnDown;
 							} else {
 								direction = -1;
@@ -191,6 +197,7 @@ void Bombe::tick(SDL_Surface * surfaceToDraw) {
 							posY += bombeMoveSpeed;
 						} else {
 							if (bombeType == bubbleBombeType) {
+								Mix_PlayChannel(1, bombeBounceSound, 0);
 								direction = kickOnUp;
 							} else {
 								direction = -1;
