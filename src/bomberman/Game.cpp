@@ -330,6 +330,7 @@ Game::Game(int levelIndexInformation, int playerInformationParam[16][2], int gam
 	int indexLibretro = 0;
 	int index = 0;
 	Player * player;
+	Brain * brain;
 
 	for (int i = 0; i < 16; i++) {
 
@@ -357,6 +358,11 @@ Game::Game(int levelIndexInformation, int playerInformationParam[16][2], int gam
 						playerKickSound, playerBurnSound, bombeBounceSound);
 				players.push_back(player);
 				player = NULL;
+				
+				brain = new Brain(&in_keystate_cpu[index], tab, tabPlayerCoord, nbPlayerConfig, i, floor(startX), floor(startX));
+				brains.push_back(brain);
+				brain = NULL;
+				
 				in_keystate[index] = 0;
 				index++;
 				nbPlayerAlive++;
@@ -389,6 +395,7 @@ Game::~Game() {
 	bombes.clear();
 	explosions.clear();
 	burnWalls.clear();
+	brains.clear();
 
 	free (grid);
 	free (tab);
@@ -992,6 +999,16 @@ void Game::tick() {
 			}
 
 			/*
+			*
+			*	BRAIN THINK'S
+			*
+			*/
+			for (unsigned int i = 0; i < brains.size(); i++) {
+				brains[i]->think();
+			}
+
+
+			/*
 			 *
 			 *	GAME PART : PLAYERS
 			 *
@@ -1171,6 +1188,7 @@ void Game::tick() {
 				explosions.clear();
 				burnWalls.clear();
 				suddenDeathAnimations.clear();
+				brains.clear();
 				grid->resetSurface();
 				grid->generateGrid();
 
@@ -1179,6 +1197,7 @@ void Game::tick() {
 				nbPlayerInGame = 0;
 
 				Player * player;
+				Brain * brain;
 
 				for (int i = 0; i < 16; i++) {
 					float startX = startPlayer[i][0];
@@ -1197,6 +1216,10 @@ void Game::tick() {
 							player = new Player(&in_keystate_cpu[index], true, playerIndexTexture[i], startX, startY, i, tab, tabBonus, bombeSprite, grid, tabPlayerCoord, nbPlayerConfig,
 									louisSound, playerKickSound, playerBurnSound, bombeBounceSound);
 							players.push_back(player);
+							brain = new Brain(&in_keystate_cpu[index], tab, tabPlayerCoord, nbPlayerConfig, i, floor(startX), floor(startX));
+							brains.push_back(brain);
+							brain = NULL;
+							
 							player = NULL;
 							in_keystate[index] = 0;
 							index++;

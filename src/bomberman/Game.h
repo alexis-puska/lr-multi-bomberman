@@ -16,6 +16,7 @@
 #include <algorithm>
 
 #include "Player.h"
+#include "Brain.h"
 #include "BurnWall.h"
 #include "SuddenDeathAnimation.h"
 
@@ -136,6 +137,7 @@ class Game {
 		std::vector<Explosion *> explosions;
 		std::vector<BurnWall *> burnWalls;
 		std::vector<SuddenDeathAnimation *> suddenDeathAnimations;
+		std::vector<Brain *> brains;
 
 		/*
 		 *	GRID PART
