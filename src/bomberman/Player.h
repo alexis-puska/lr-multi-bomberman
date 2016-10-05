@@ -23,7 +23,7 @@ class Player {
 	public:
 		Player(unsigned short * in_keystateLibretro, bool isACpuPlayer, int indexSprite, float startPositionX, float startPositionY, int playerNumberLibretro, int tab[sizeX * sizeY],
 				int tableBonus[sizeX * sizeY], SDL_Surface ** bombeSpriteGame, Grid * gridParam, float * tabPlayerCoord, int nbPlayerConfigGame, Mix_Chunk *louisSoundGame,
-				Mix_Chunk *playerKickSoundGame, Mix_Chunk *playerBurnSoundGame, Mix_Chunk *bombeBounceSoundGame, int indexInGame);
+				Mix_Chunk *playerKickSoundGame, Mix_Chunk *playerBurnSoundGame, Mix_Chunk *bombeBounceSoundGame);
 		~Player();
 		void doSomething(SDL_Surface * surfaceToDraw);
 
@@ -61,7 +61,6 @@ class Player {
 		int playerNumber;
 		int nbPlayerConfig;
 		int characterSpriteIndex;
-		int indexInGame;
 
 		//Game variable
 		float posX;
