@@ -60,7 +60,7 @@ enum louisTypeEnum {
 
 Player::Player(unsigned short * in_keystateLibretro, bool isACpuPlayer, int indexSprite, float startPositionX, float startPositionY, int playerNumberLibretro, int table[sizeX * sizeY],
 		int tableBonus[sizeX * sizeY], SDL_Surface ** bombeSpriteGame, Grid * gridParam, float * tabPlayerCoordGame, int nbPlayerConfigGame, Mix_Chunk *louisSoundGame,
-		Mix_Chunk *playerKickSoundGame, Mix_Chunk *playerBurnSoundGame, Mix_Chunk *bombeBounceSoundGame
+		Mix_Chunk *playerKickSoundGame, Mix_Chunk *playerBurnSoundGame, Mix_Chunk *bombeBounceSoundGame, int indexInGameGame
 
 		) {
 	srand (time(NULL));grid = gridParam;
@@ -74,6 +74,7 @@ Player::Player(unsigned short * in_keystateLibretro, bool isACpuPlayer, int inde
 	triggerBombe = false;
 	kickPower = false;
 	inSuddenDeathTime = false;
+	indexInGame = indexInGameGame;
 	kickIndex = -1;
 	kickDirection = -1;
 
@@ -924,7 +925,7 @@ Bombe * Player::addBombe() {
 			break;
 	}
 	tab[(int) floor(posX) + ((int) floor(posY) * sizeX)] = bombeElement;
-	return new Bombe(strenght, floor(posX) + 0.5, floor(posY) + 0.5, bombeType, playerNumber, time, bombeSprite, tab, tabPlayerCoord, bombeBounceSound);
+	return new Bombe(strenght, floor(posX) + 0.5, floor(posY) + 0.5, bombeType, indexInGame, time, bombeSprite, tab, tabPlayerCoord, bombeBounceSound);
 }
 
 int Player::getPlayerNumber() {
