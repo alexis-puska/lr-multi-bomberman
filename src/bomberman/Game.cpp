@@ -329,6 +329,7 @@ Game::Game(int levelIndexInformation, int playerInformationParam[16][2], int gam
 	in_keystate = in_keystateLibretro;
 	int indexLibretro = 0;
 	int index = 0;
+	int indexPlayerForGame = 0;
 	Player * player;
 	Brain * brain;
 
@@ -347,15 +348,16 @@ Game::Game(int levelIndexInformation, int playerInformationParam[16][2], int gam
 
 				// if a human link the next keystate of libretro, else link a empty value
 				player = new Player(&in_keystate[indexLibretro], false, indexTexture, startX, startY, i, tab, tabBonus, bombeSprite, grid, tabPlayerCoord, nbPlayerConfig, louisSound,
-						playerKickSound, playerBurnSound, bombeBounceSound);
+						playerKickSound, playerBurnSound, bombeBounceSound, indexPlayerForGame);
 				players.push_back(player);
 				player = NULL;
 				indexLibretro++;
 				nbPlayerAlive++;
+				indexPlayerForGame++;
 				break;
 			case CPU:
 				player = new Player(&in_keystate_cpu[index], true, indexTexture, startX, startY, i, tab, tabBonus, bombeSprite, grid, tabPlayerCoord, nbPlayerConfig, louisSound,
-						playerKickSound, playerBurnSound, bombeBounceSound);
+						playerKickSound, playerBurnSound, bombeBounceSound, indexPlayerForGame);
 				players.push_back(player);
 				player = NULL;
 				
@@ -366,6 +368,7 @@ Game::Game(int levelIndexInformation, int playerInformationParam[16][2], int gam
 				in_keystate[index] = 0;
 				index++;
 				nbPlayerAlive++;
+				indexPlayerForGame++;
 				break;
 			case OFF:
 				break;
@@ -1195,6 +1198,7 @@ void Game::tick() {
 				int indexLibretro = 0;
 				int index = 0;
 				nbPlayerInGame = 0;
+				int indexPlayerForGame = 0;
 
 				Player * player;
 				Brain * brain;
@@ -1206,15 +1210,16 @@ void Game::tick() {
 						case HUMAN:
 							// if a human link the next keystate of libretro, else link a empty value
 							player = new Player(&in_keystate[indexLibretro], false, playerIndexTexture[i], startX, startY, i, tab, tabBonus, bombeSprite, grid, tabPlayerCoord,
-									nbPlayerConfig, louisSound, playerKickSound, playerBurnSound, bombeBounceSound);
+									nbPlayerConfig, louisSound, playerKickSound, playerBurnSound, bombeBounceSound, indexPlayerForGame);
 							players.push_back(player);
 							player = NULL;
 							indexLibretro++;
 							nbPlayerInGame++;
+							indexPlayerForGame++;
 							break;
 						case CPU:
 							player = new Player(&in_keystate_cpu[index], true, playerIndexTexture[i], startX, startY, i, tab, tabBonus, bombeSprite, grid, tabPlayerCoord, nbPlayerConfig,
-									louisSound, playerKickSound, playerBurnSound, bombeBounceSound);
+									louisSound, playerKickSound, playerBurnSound, bombeBounceSound, indexPlayerForGame);
 							players.push_back(player);
 							brain = new Brain(&in_keystate_cpu[index], tab, tabPlayerCoord, nbPlayerConfig, i, floor(startX), floor(startX));
 							brains.push_back(brain);
@@ -1224,6 +1229,7 @@ void Game::tick() {
 							in_keystate[index] = 0;
 							index++;
 							nbPlayerInGame++;
+							indexPlayerForGame++;
 							break;
 						case OFF:
 							break;
