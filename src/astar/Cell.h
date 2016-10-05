@@ -5,6 +5,7 @@
 
 class Cell{
 	public:
+		Cell();
 		Cell(int i, int j);
 		void printHimself();
 		void setHeuristicCost(int cost);
@@ -14,11 +15,12 @@ class Cell{
 		void setParent(Cell * Parent);
 		Cell * getParent();
 		
-		
-	private:
+		int finalCost = 0; //G+H
 		int heuristicCost = 0;
-        int finalCost = 0; //G+H
+        
         int i, j;
         Cell * parent; 
+	private:
+		
 };
 #endif

@@ -1,5 +1,7 @@
 #include "Cell.h"
 
+Cell::Cell(){}
+
 Cell::Cell(int ii, int jj){
 	i = ii;
 	j = jj;
