@@ -265,6 +265,24 @@ Player::Player(unsigned short * in_keystateLibretro, bool isACpuPlayer, int inde
 	playerBurnSound = playerBurnSoundGame;
 	bombeBounceSound = bombeBounceSoundGame;
 
+	if(playerNumber == 0) {
+		astar = new AStar(tab, 35, 21);
+		astar -> init(0,0,5,5);
+		astar -> solve();
+		if(astar -> isSolved()) {
+			fprintf(stderr,"chemin vers cible : ");
+			Cell * current = astar->getEnd();
+			current ->printHimself();
+			while(true) {
+				if(!current->isOriginal()) {
+					fprintf(stderr," ->");
+					current->getParent()->printHimself();
+					current = current-> getParent();} else {break;}
+			}
+		} else {
+			fprintf(stderr,"pas de chemin possible vers cible \n");
+		}
+	}
 }
 
 Player::~Player() {
@@ -317,6 +335,7 @@ Player::~Player() {
 	playerKickSound = NULL;
 	playerBurnSound = NULL;
 	bombeBounceSound = NULL;
+	free (astar);
 }
 
 /*

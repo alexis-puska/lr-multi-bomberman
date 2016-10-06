@@ -1,12 +1,13 @@
 #include <stdio.h>
+#include <cstdlib>
 
 #ifndef __MYCLASS_CELL
 #define __MYCLASS_CELL
 
-class Cell{
+class Cell {
 	public:
 		Cell();
-		Cell(int i, int j);
+		Cell(int x, int y, bool original, int endX, int endY);
 		void printHimself();
 		void setHeuristicCost(int cost);
 		int getHeuristicCost();
@@ -14,13 +15,16 @@ class Cell{
 		int getFinalCost();
 		void setParent(Cell * Parent);
 		Cell * getParent();
-		
-		int finalCost = 0; //G+H
-		int heuristicCost = 0;
-        
-        int i, j;
-        Cell * parent; 
+		int getX();
+		int getY();
+		bool isOriginal();
+
 	private:
-		
+		int finalCost; //G+H
+		int heuristicCost;
+		int x, y;
+		bool origin;
+
+		Cell * parent;
 };
 #endif
