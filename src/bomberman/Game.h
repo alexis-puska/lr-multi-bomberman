@@ -58,7 +58,7 @@ class Game {
 
 	public:
 		Game();
-		Game(int levelIndexInformation, int playerInformation[16][2], int gameOption[4], SDL_Surface * vout_bufLibretro, unsigned short * in_keystateLibretro, int nbPlayerConfigGame);
+		Game(int levelIndex, int playerInformationParam[16][2], int gameOption[4], SDL_Surface * vout_buf, unsigned short * in_keystate, int nbPlayerConfig);
 		~Game();
 		bool isAlive();
 		bool isConfigured();

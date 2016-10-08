@@ -87,10 +87,15 @@ Game::Game() {
  * constructor
  * 
  */
-Game::Game(int levelIndexInformation, int playerInformationParam[16][2], int gameOption[4], SDL_Surface * vout_bufLibretro, unsigned short * in_keystateLibretro, int nbPlayerConfigGame) {
+Game::Game(int levelIndex, int playerInformationParam[16][2], int gameOption[4], SDL_Surface * vout_buf, unsigned short * in_keystate, int nbPlayerConfig) {
+	this->nbPlayerConfig = nbPlayerConfig;
+	this->vout_buf = vout_buf;
+	this->in_keystate = in_keystate;
+	this->levelIndex = levelIndex;
+	
 	gameState = gameWait;
 	nbPlayerInGame = 0;
-	nbPlayerConfig = nbPlayerConfigGame;
+	
 	// Load Font
 	fragileBombersFont = TTF_OpenFont("./resources/font/fragile_bombers.ttf", 36); //this opens a font style and sets a size
 
@@ -143,7 +148,7 @@ Game::Game(int levelIndexInformation, int playerInformationParam[16][2], int gam
 		tabPlayerCoord[i] = -1.0;
 	}
 
-	levelIndex = levelIndexInformation;
+	
 	if (gameOption[0] == 1) {
 		suddenDeath = true;
 	} else {
@@ -165,7 +170,7 @@ Game::Game(int levelIndexInformation, int playerInformationParam[16][2], int gam
 		nbTickForGameParam = nbTickForGame;
 	}
 
-	vout_buf = vout_bufLibretro;
+	
 
 	/*
 	 * LOAD MISC IMAGE : Bombe animation, explosion animation, bonus image, eggs image
@@ -215,7 +220,7 @@ Game::Game(int levelIndexInformation, int playerInformationParam[16][2], int gam
 		}
 	}
 
-	grid = new Grid(levelIndexInformation, tab, tabBonus, bonusSprite);
+	grid = new Grid(levelIndex, tab, tabBonus, bonusSprite);
 
 	// bombeSprite
 	for (i = 0; i < 3; i++) {
@@ -246,7 +251,7 @@ Game::Game(int levelIndexInformation, int playerInformationParam[16][2], int gam
 
 	for (i = 0; i < 3; i++) {
 		srcTextureRect.x = (i + 2) * 18;
-		srcTextureRect.y = (levelIndexInformation * 128) + (4 * 16);
+		srcTextureRect.y = (levelIndex * 128) + (4 * 16);
 		srcTextureRect.w = 18;
 		srcTextureRect.h = 16;
 		burnWallSprite[i] = SDL_CreateRGBSurface(0, 18, 16, 32, rmask, gmask, bmask, amask);
@@ -254,7 +259,7 @@ Game::Game(int levelIndexInformation, int playerInformationParam[16][2], int gam
 	}
 	for (i = 0; i < 3; i++) {
 		srcTextureRect.x = i * 18;
-		srcTextureRect.y = (levelIndexInformation * 128) + (5 * 16);
+		srcTextureRect.y = (levelIndex * 128) + (5 * 16);
 		srcTextureRect.w = 18;
 		srcTextureRect.h = 16;
 		burnWallSprite[i + 3] = SDL_CreateRGBSurface(0, 18, 16, 32, rmask, gmask, bmask, amask);
@@ -326,7 +331,7 @@ Game::Game(int levelIndexInformation, int playerInformationParam[16][2], int gam
 	for (int i = 0; i < 16; i++) {
 		in_keystate_cpu[i] = 0;
 	}
-	in_keystate = in_keystateLibretro;
+	
 	int indexLibretro = 0;
 	int index = 0;
 	int indexPlayerForGame = 0;
