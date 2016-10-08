@@ -5,14 +5,10 @@
 AStar::AStar(int * tab) {
 	this->tab = tab;
 	grid = new Cell*[sizeX * sizeY];
-	closed = new bool[sizeX * sizeY];
-	inOpen = new bool[sizeX * sizeY];
 }
 
 AStar::~AStar() {
 	tab = NULL;
-	free (inOpen);
-	free (closed);
 	for (int i = 0; i < sizeX * sizeY; i++) {
 		free (grid[i]);
 	}

@@ -27,8 +27,8 @@ class AStar {
 
 		int * tab;
 		Cell ** grid;
-		bool * closed;
-		bool * inOpen;
+		bool closed[sizeX * sizeY];
+		bool inOpen[sizeX * sizeY];
 		int startI, startJ;
 		int endI, endJ;
 
