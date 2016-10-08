@@ -31,10 +31,10 @@ void Brain::think(){
 	}
 	nbTick++;
 	
-		astar -> init(6,6,tabPlayerCoord[playerNumberControle*2],tabPlayerCoord[playerNumberControle*2+1]);
+		astar -> init(7,7,tabPlayerCoord[this->playerNumberControle*2],tabPlayerCoord[this->playerNumberControle*2+1]);
 		astar -> solve();
 		if(astar -> isSolved()) {
-			fprintf(stderr,"Brain %i : ", playerNumberControle);
+			fprintf(stderr,"Brain %i : ", this->playerNumberControle);
 			Cell current = astar->getEnd();
 			Cell * parent;
 			current.printHimself();
@@ -51,7 +51,7 @@ void Brain::think(){
 			free(parent);
 			fprintf(stderr,"\n");
 		} else {
-			fprintf(stderr,"Brain %i : pas de chemin possible vers cible \n");
+			fprintf(stderr,"Brain %i : pas de chemin possible vers cible \n", playerNumberControle);
 		}
 
 
