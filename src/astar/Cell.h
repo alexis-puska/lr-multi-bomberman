@@ -8,7 +8,7 @@
 class Cell {
 	public:
 		Cell();
-		Cell(int x, int y, bool origin, int endX, int endY);
+		void configure(int x, int y, bool origin, int endX, int endY);
 		~Cell();
 		void printHimself();
 		void setHeuristicCost(int cost);
@@ -19,6 +19,7 @@ class Cell {
 		Cell * getParent();
 		int getX();
 		int getY();
+		int getIndex();
 		bool isOriginal();
 
 	private:

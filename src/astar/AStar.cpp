@@ -4,15 +4,10 @@
 
 AStar::AStar(int * tab) {
 	this->tab = tab;
-	grid = new Cell*[sizeX * sizeY];
 }
 
 AStar::~AStar() {
 	tab = NULL;
-	for (int i = 0; i < sizeX * sizeY; i++) {
-		free (grid[i]);
-	}
-	free (grid);
 }
 
 void AStar::init(int startX, int startY, int endX, int endY) {
@@ -20,24 +15,17 @@ void AStar::init(int startX, int startY, int endX, int endY) {
 	startJ = startY;
 	endI = endX;
 	endJ = endY;
-	
-		
-	if(open.size()!=0){
-		while(open.size()!=0){
-			open.pop();	
-		}	
+		while(!open.empty()){
+		open.pop();
 	}
-	
-		
+
 	for (int i = 0; i < sizeX; i++) {
 		for (int j = 0; j < sizeY; j++) {
-		
 			if (startI == i && startJ == j) {
-				grid[i + j * sizeX] = new Cell(i, j, true, endX, endY);
+				grid[i + j * sizeX].configure(i, j, true, endX, endY);
 			} else {
-				grid[i + j * sizeX] = new Cell(i, j, false, endX, endY);
+				grid[i + j * sizeX].configure(i, j, false, endX, endY);
 			}
-		
 			closed[i + j * sizeX] = false;
 			inOpen[i + j * sizeX] = false;
 		}
@@ -45,51 +33,56 @@ void AStar::init(int startX, int startY, int endX, int endY) {
 }
 
 void AStar::solve() {
-
 	//add the start location to open list.
 
 	inOpen[startI + startJ * sizeX] = true;
 	open.push(grid[startI + startJ * sizeX]);
 
-	Cell * current;
+	Cell current;
 
+	
 	while (true) {
+		
+		if(open.empty()){
+			break;	
+		}
 		current = open.top();
 		open.pop();
-		if (!current) {
-			break;
-		}
-		closed[current->getX() + current->getY() * sizeX] = true;
+		
+		closed[current.getX() + current.getY() * sizeX] = true;
 
-		if (current->getX() == endI && current->getY() == endJ) {
+		if (current.getX() == endI && current.getY() == endJ) {
 			return;
 		}
 
-		Cell * t;
-		if (current->getX() - 1 >= 0) {
-			t = grid[current->getX() - 1 + current->getY() * sizeX];
-			checkAndUpdateCost(current, t, current->getFinalCost() + V_H_COST);
+		if (current.getX() - 1 >= 0) {
+			if(checkAndUpdateCost(&current, &grid[current.getX() - 1 + current.getY() * sizeX], current.getFinalCost() + V_H_COST))
+				open.push(grid[current.getX() - 1 + current.getY() * sizeX]);
+
 		}
 
-		if (current->getY() - 1 >= 0) {
-			t = grid[current->getX() + (current->getY() - 1) * sizeX];
-			checkAndUpdateCost(current, t, current->getFinalCost() + V_H_COST);
+		if (current.getY() - 1 >= 0) {
+			if(checkAndUpdateCost(&current, &grid[current.getX() + (current.getY() - 1) * sizeX], current.getFinalCost() + V_H_COST))
+				open.push(grid[current.getX() + (current.getY() - 1) * sizeX]);
+
 		}
 
-		if (current->getY() + 1 < sizeY) {
-			t = grid[current->getX() + (current->getY() + 1) * sizeX];
-			checkAndUpdateCost(current, t, current->getFinalCost() + V_H_COST);
+		if (current.getY() + 1 < sizeY) {
+			if(checkAndUpdateCost(&current, &grid[current.getX() + (current.getY() + 1) * sizeX], current.getFinalCost() + V_H_COST))
+				open.push(grid[current.getX() + (current.getY() + 1) * sizeX]);
+
 		}
 
-		if (current->getX() + 1 < sizeX) {
-			t = grid[(current->getX() + 1) + current->getY() * sizeX];
-			checkAndUpdateCost(current, t, current->getFinalCost() + V_H_COST);
+		if (current.getX() + 1 < sizeX) {
+			if(checkAndUpdateCost(&current, &grid[(current.getX() + 1) + current.getY() * sizeX], current.getFinalCost() + V_H_COST))
+				open.push(grid[(current.getX() + 1) + current.getY() * sizeX]);
 		}
+		
 	}
 
 }
 
-Cell * AStar::getEnd() {
+Cell AStar::getEnd() {
 	return grid[endI + endJ * sizeX];
 }
 
@@ -97,19 +90,20 @@ bool AStar::isSolved() {
 	return closed[endI + endJ * sizeX];
 }
 
-void AStar::checkAndUpdateCost(Cell * current, Cell * t, int cost) {
-	if (!t || closed[t->getX() + t->getY() * sizeX]) {
-		return;
+bool AStar::checkAndUpdateCost(Cell * current, Cell * t, int cost) {
+	if (closed[t->getX() + t->getY() * sizeX]) {
+		return false;
 	}
 	int t_final_cost = t->getHeuristicCost() + cost;
 	bool inOpenVal = inOpen[t->getX() + t->getY() * sizeX];
 	if (!inOpenVal || t_final_cost < t->getFinalCost()) {
 		t->setFinalCost(t_final_cost);
-		t->setParent(current);
+		t->setParent(&grid[current->getIndex()]);
 		if (!inOpenVal) {
 			inOpen[t->getX() + t->getY() * sizeX] = true;
-			open.push(t);
+			return true;
 		}
 	}
+	return false;
 }
 

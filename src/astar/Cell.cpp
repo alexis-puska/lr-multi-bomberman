@@ -3,21 +3,17 @@
 Cell::Cell() {
 }
 
-Cell::Cell(int x, int y, bool origin, int endX, int endY) {
+void Cell::configure(int x, int y, bool origin, int endX, int endY) {
 	this->x = x;
 	this->y = y;
 	finalCost = 0;
 	heuristicCost = abs(x - endX) + abs(y - endY);
-	if (heuristicCost == 0) {
-		fprintf(stderr, "original is here at : %i %i", x, y);
-	}
 	this->origin = origin;
+	this->parent = NULL;
 }
 
 Cell::~Cell(){
-	if(parent){
-		free(parent);
-	}
+	parent = NULL;
 }
 
 void Cell::setHeuristicCost(int cost) {
@@ -58,4 +54,8 @@ int Cell::getX() {
 
 int Cell::getY() {
 	return y;
+}
+
+int Cell::getIndex(){
+	return this->x + this->y*sizeX;	
 }

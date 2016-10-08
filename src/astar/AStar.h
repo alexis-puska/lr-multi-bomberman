@@ -9,8 +9,8 @@
 #define __MYCLASS_ASTAR
 
 struct CompareCell: public std::binary_function<Cell*, Cell*, bool> {
-		bool operator()(Cell* c1, Cell* c2) const {
-			return c1->getFinalCost() > c2->getFinalCost();
+		bool operator()(Cell & c1, Cell & c2) const {
+			return c1.getFinalCost() > c2.getFinalCost();
 		}
 };
 
@@ -21,18 +21,18 @@ class AStar {
 		void init(int startX, int startY, int endX, int endY);
 		void solve();
 		bool isSolved();
-		Cell * getEnd();
+		Cell getEnd();
 	private:
-		std::priority_queue<Cell*, std::vector<Cell*>, CompareCell> open;
+		std::priority_queue<Cell, std::vector<Cell>, CompareCell> open;
 
 		int * tab;
-		Cell ** grid;
+		Cell grid[sizeX * sizeY];
 		bool closed[sizeX * sizeY];
 		bool inOpen[sizeX * sizeY];
 		int startI, startJ;
 		int endI, endJ;
 
-		void checkAndUpdateCost(Cell * current, Cell * t, int cost);
+		bool checkAndUpdateCost(Cell * current, Cell * t, int cost);
 
 };
 #endif
