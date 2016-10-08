@@ -24,13 +24,27 @@ void AStar::init(int startX, int startY, int endX, int endY) {
 	startJ = startY;
 	endI = endX;
 	endJ = endY;
+	
+		
+	if(open.size()!=0){
+		while(open.size()!=0){
+			open.pop();	
+		}	
+	}
+	
+		
 	for (int i = 0; i < sizeX; i++) {
 		for (int j = 0; j < sizeY; j++) {
+			if(grid[i + j * sizeX]){
+				free(grid[i + j * sizeX]);
+			}
+		
 			if (startI == i && startJ == j) {
 				grid[i + j * sizeX] = new Cell(i, j, true, endX, endY);
 			} else {
 				grid[i + j * sizeX] = new Cell(i, j, false, endX, endY);
 			}
+		
 			closed[i + j * sizeX] = false;
 			inOpen[i + j * sizeX] = false;
 		}
@@ -48,6 +62,7 @@ void AStar::solve() {
 
 	while (true) {
 		current = open.top();
+		fprintf(stderr,"value cell : %i\n",current->getFinalCost());
 		open.pop();
 		if (!current) {
 			break;
@@ -79,6 +94,7 @@ void AStar::solve() {
 			checkAndUpdateCost(current, t, current->getFinalCost() + V_H_COST);
 		}
 	}
+
 }
 
 Cell * AStar::getEnd() {

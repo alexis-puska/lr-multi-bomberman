@@ -9,9 +9,11 @@ Brain::Brain(unsigned short * keystate, int tab[sizeX * sizeY], float * tabPlaye
 	this->posX = posX;
 	this->posY = posY;
 	nbTick = 0;
+	astar = new AStar(tab);
 }
 
 Brain::~Brain(){
+	free(astar);
 	keystate = NULL;
 	tab = NULL;
 	tabPlayerCoord = NULL;
@@ -28,4 +30,25 @@ void Brain::think(){
 		*keystate += (short)brainKeyLeft;
 	}
 	nbTick++;
+	
+if(playerNumberControle == 1){
+		astar -> init(0,0,5,5);
+		astar -> solve();
+		if(astar -> isSolved()) {
+			fprintf(stderr,"Brain N° %i chemin vers cible : ", playerNumberControle);
+			Cell * current = astar->getEnd();
+			current ->printHimself();
+			while(true) {
+				if(!current->isOriginal()) {
+					fprintf(stderr," ->");
+					current->getParent()->printHimself();
+					current = current-> getParent();} else {break;}
+			}
+			fprintf(stderr,"\n");
+		} else {
+			fprintf(stderr,"pas de chemin possible vers cible \n");
+		}
+}
+
+	
 }

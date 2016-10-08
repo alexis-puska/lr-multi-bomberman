@@ -14,7 +14,6 @@
 
 #include "Bombe.h"
 #include "Grid.h"
-#include "../astar/AStar.h"
 
 #define sizeX 35
 #define sizeY 21
@@ -144,7 +143,5 @@ class Player {
 		void releaseMalus();
 		int findIndexPlayer();
 		void foundABonus(int bonusIndex);
-
-		AStar * astar;
 };
 #endif

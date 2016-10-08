@@ -9,12 +9,13 @@ class Cell {
 	public:
 		Cell();
 		Cell(int x, int y, bool origin, int endX, int endY);
+		~Cell();
 		void printHimself();
 		void setHeuristicCost(int cost);
 		int getHeuristicCost();
 		void setFinalCost(int cost);
 		int getFinalCost();
-		void setParent(Cell * Parent);
+		void setParent(Cell * parent);
 		Cell * getParent();
 		int getX();
 		int getY();

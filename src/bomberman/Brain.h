@@ -9,6 +9,7 @@
 #endif
 
 #include <stdio.h>
+#include "../astar/AStar.h"
 
 #ifndef __MYCLASS_BRAIN
 #define __MYCLASS_BRAIN
@@ -54,5 +55,8 @@ class Brain {
 		int posY;
 		int playerNumberControle;
 		int nbTick;
+		
+		AStar * astar;
+		
 };
 #endif

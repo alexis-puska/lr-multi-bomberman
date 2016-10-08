@@ -265,26 +265,7 @@ Player::Player(unsigned short * in_keystate, bool isACpuPlayer, int indexSprite,
 		SDL_BlitSurface(tempSurface, &srcTextureRect, louisSpriteBurn[i], &destTextureRect);
 	}
 
-	SDL_FreeSurface(tempSurface);
-	
-	if(playerNumber == 0) {
-		astar = new AStar(tab);
-		astar -> init(0,0,5,5);
-		astar -> solve();
-		if(astar -> isSolved()) {
-			fprintf(stderr,"chemin vers cible : ");
-			Cell * current = astar->getEnd();
-			current ->printHimself();
-			while(true) {
-				if(!current->isOriginal()) {
-					fprintf(stderr," ->");
-					current->getParent()->printHimself();
-					current = current-> getParent();} else {break;}
-			}
-		} else {
-			fprintf(stderr,"pas de chemin possible vers cible \n");
-		}
-	}
+	SDL_FreeSurface(tempSurface);	
 }
 
 Player::~Player() {
@@ -337,7 +318,6 @@ Player::~Player() {
 	playerKickSound = NULL;
 	playerBurnSound = NULL;
 	bombeBounceSound = NULL;
-	free (astar);
 }
 
 /*

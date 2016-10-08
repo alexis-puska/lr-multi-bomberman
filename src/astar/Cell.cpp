@@ -14,6 +14,12 @@ Cell::Cell(int x, int y, bool origin, int endX, int endY) {
 	this->origin = origin;
 }
 
+Cell::~Cell(){
+	if(parent){
+		free(parent);
+	}
+}
+
 void Cell::setHeuristicCost(int cost) {
 	heuristicCost = cost;
 }
@@ -30,8 +36,8 @@ int Cell::getFinalCost() {
 	return finalCost;
 }
 
-void Cell::setParent(Cell * Parentt) {
-	parent = Parentt;
+void Cell::setParent(Cell * parent) {
+	this->parent = parent;
 }
 
 Cell * Cell::getParent() {
