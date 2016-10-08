@@ -58,13 +58,33 @@ enum louisTypeEnum {
 	blueLouis = 0, yellowLouis = 1, pinkLouis = 2, greenLouis = 3, brownLouis = 4
 };
 
-Player::Player(unsigned short * in_keystateLibretro, bool isACpuPlayer, int indexSprite, float startPositionX, float startPositionY, int playerNumberLibretro, int table[sizeX * sizeY],
-		int tableBonus[sizeX * sizeY], SDL_Surface ** bombeSpriteGame, Grid * gridParam, float * tabPlayerCoordGame, int nbPlayerConfigGame, Mix_Chunk *louisSoundGame,
-		Mix_Chunk *playerKickSoundGame, Mix_Chunk *playerBurnSoundGame, Mix_Chunk *bombeBounceSoundGame, int indexPlayerForGameGame
+Player::Player(unsigned short * in_keystate, bool isACpuPlayer, int indexSprite, float posX, float posY, int playerNumber, int tab[sizeX * sizeY],
+				int tabBonus[sizeX * sizeY], SDL_Surface ** bombeSprite, Grid * gridParam, float * tabPlayerCoord, int nbPlayerConfig, Mix_Chunk *louisSound,
+				Mix_Chunk *playerKickSound, Mix_Chunk *playerBurnSound, Mix_Chunk *bombeBounceSound, int indexPlayerForGame
 
 		) {
 	srand (time(NULL));grid = gridParam;
-	indexPlayerForGame = indexPlayerForGameGame;
+	this->indexPlayerForGame = indexPlayerForGame;
+	this->posX = posX;
+	this->posY = posY;
+	this->playerNumber = playerNumber;
+	this->cpu = isACpuPlayer;
+	this->tab = tab;
+	this->tabBonus = tabBonus;
+	this->characterSpriteIndex = indexSprite;
+	this->in_keystate = in_keystate;
+	this->bombeSprite = bombeSprite;
+	this->louisSound = louisSound;
+	this->playerKickSound = playerKickSound;
+	this->playerBurnSound = playerBurnSound;
+	this->bombeBounceSound = bombeBounceSound;
+	this->tabPlayerCoord = tabPlayerCoord;
+	this->nbPlayerConfig = nbPlayerConfig;
+	
+	
+	
+	tabPlayerCoord[playerNumber * 2] = posX;
+	tabPlayerCoord[playerNumber * 2 + 1 ] = posY;
 	playerState = normal;
 	invincibleTime = 0;
 	NbBombeMax = 2;
@@ -84,8 +104,7 @@ Player::Player(unsigned short * in_keystateLibretro, bool isACpuPlayer, int inde
 	playerMalus = noMalus;
 	previousBombeNumber = 0;
 	previousSpeedValue = 0.0;
-	tabPlayerCoord = tabPlayerCoordGame;
-	nbPlayerConfig = nbPlayerConfigGame;
+	
 
 	frameCounter = 0;
 	offsetSprite = 0;
@@ -143,7 +162,6 @@ Player::Player(unsigned short * in_keystateLibretro, bool isACpuPlayer, int inde
 	playerSpriteAngry= new SDL_Surface * [4];
 	playerSpriteBurn= new SDL_Surface * [7];
 	louisMergebuffer = new SDL_Surface;
-
 	louisSprite = new SDL_Surface * [12];
 	louisSpriteBurn = new SDL_Surface * [4];
 
@@ -247,26 +265,10 @@ Player::Player(unsigned short * in_keystateLibretro, bool isACpuPlayer, int inde
 		SDL_BlitSurface(tempSurface, &srcTextureRect, louisSpriteBurn[i], &destTextureRect);
 	}
 
-	posX = startPositionX;
-	posY = startPositionY;
-
-	playerNumber = playerNumberLibretro;
-	tabPlayerCoord[playerNumber * 2] = posX;
-	tabPlayerCoord[playerNumber * 2 + 1 ] = posY;
-	cpu = isACpuPlayer;
-	tab = table;
-	tabBonus = tableBonus;
-	characterSpriteIndex = indexSprite;
-	in_keystate = in_keystateLibretro;
-	bombeSprite = bombeSpriteGame;
 	SDL_FreeSurface(tempSurface);
-	louisSound = louisSoundGame;
-	playerKickSound = playerKickSoundGame;
-	playerBurnSound = playerBurnSoundGame;
-	bombeBounceSound = bombeBounceSoundGame;
-
+	
 	if(playerNumber == 0) {
-		astar = new AStar(tab, 35, 21);
+		astar = new AStar(tab);
 		astar -> init(0,0,5,5);
 		astar -> solve();
 		if(astar -> isSolved()) {

@@ -4,6 +4,7 @@
 
 #include "Cell.h"
 
+
 #ifndef __MYCLASS_ASTAR
 #define __MYCLASS_ASTAR
 
@@ -15,7 +16,7 @@ struct CompareCell: public std::binary_function<Cell*, Cell*, bool> {
 
 class AStar {
 	public:
-		AStar(int * table, int sizzX, int sizzY);
+		AStar(int * tab);
 		~AStar();
 		void init(int startX, int startY, int endX, int endY);
 		void solve();
@@ -25,8 +26,6 @@ class AStar {
 		std::priority_queue<Cell*, std::vector<Cell*>, CompareCell> open;
 
 		int * tab;
-		int sizX;
-		int sizY;
 		Cell ** grid;
 		bool * closed;
 		bool * inOpen;

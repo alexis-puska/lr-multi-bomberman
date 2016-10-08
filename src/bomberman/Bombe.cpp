@@ -3,22 +3,22 @@
 #define nbFrame 6
 #define bombeMoveSpeed 0.2
 
-Bombe::Bombe(int Strenght, float posXX, float posYY, int type, int numPlayerSetTheBombe, int nbTickBeforeExplostion, SDL_Surface ** miscSheet, int table[sizeX * sizeY], float * tabPlayerCoordGame,
-		Mix_Chunk *bombeBounceSoundGame) {
-	tab = table;
+Bombe::Bombe(int strenght, float posX, float posY, int bombeType, int player, int nbTickExplode, SDL_Surface ** animation, int tab[sizeX * sizeY], float * tabPlayerCoord,
+		Mix_Chunk *bombeBounceSound) {
+	this->strenght = strenght;
+	this->posX = posX;
+	this->posY = posY;
+	this->player = player;
+	this->nbTickExplode = nbTickExplode;
+	this->animation = animation;
+	this->bombeType = bombeType;
+	this->tabPlayerCoord = tabPlayerCoord;
+	this->bombeBounceSound = bombeBounceSound;
+	this->tab = tab;
 	direction = -1;
 	frameCounter = 0;
 	offsetSprite = 0;
 	nbFrameForAnimation = 4;
-	strenght = Strenght;
-	posX = posXX;
-	posY = posYY;
-	player = numPlayerSetTheBombe;
-	nbTickExplode = nbTickBeforeExplostion;
-	animation = miscSheet;
-	bombeType = type;
-	tabPlayerCoord = tabPlayerCoordGame;
-	bombeBounceSound = bombeBounceSoundGame;
 }
 
 Bombe::~Bombe() {

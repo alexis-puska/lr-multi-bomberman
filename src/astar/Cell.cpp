@@ -3,7 +3,7 @@
 Cell::Cell() {
 }
 
-Cell::Cell(int x, int y, bool original, int endX, int endY) {
+Cell::Cell(int x, int y, bool origin, int endX, int endY) {
 	this->x = x;
 	this->y = y;
 	finalCost = 0;
@@ -11,7 +11,7 @@ Cell::Cell(int x, int y, bool original, int endX, int endY) {
 	if (heuristicCost == 0) {
 		fprintf(stderr, "original is here at : %i %i", x, y);
 	}
-	origin = original;
+	this->origin = origin;
 }
 
 void Cell::setHeuristicCost(int cost) {

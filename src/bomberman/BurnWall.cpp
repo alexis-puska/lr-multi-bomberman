@@ -2,13 +2,13 @@
 
 #define nbFrame 4
 
-BurnWall::BurnWall(int posXX, int posYY, int index, SDL_Surface ** miscSheet, int table[sizeX * sizeY], int tableBonus[sizeX * sizeY]) {
-	indexBurnWall = index;
-	posX = posXX;
-	posY = posYY;
-	animation = miscSheet;
-	tab = table;
-	tabBonus = tableBonus;
+BurnWall::BurnWall(int posX, int posY, int index, SDL_Surface ** animation, int tab[sizeX * sizeY], int tabBonus[sizeX * sizeY]) {
+	this->indexBurnWall = index;
+	this->posX = posX;
+	this->posY = posY;
+	this->animation = animation;
+	this->tab = tab;
+	this->tabBonus = tabBonus;
 	frameCounter = 0;
 	offsetSprite = 0;
 	nbFrameForAnimation = 6;

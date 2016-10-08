@@ -1,13 +1,13 @@
 #include "Brain.h"
 
-Brain::Brain(unsigned short * keystateGame, int tabGame[sizeX * sizeY], float tabPlayerCoordGame[], int nbPlayerConfigGame, int playerNumberControleGame, int posXGame, int posYGame){
-	keystate = keystateGame;
-	tab = tabGame;
-	tabPlayerCoord = tabPlayerCoordGame;
-	nbPlayerConfig = nbPlayerConfigGame;
-	playerNumberControle = playerNumberControleGame;
-	posX = posXGame;
-	posY = posYGame;
+Brain::Brain(unsigned short * keystate, int tab[sizeX * sizeY], float * tabPlayerCoord, int nbPlayerConfig, int playerNumberControle, int posX, int posY){
+	this->keystate = keystate;
+	this->tab = tab;
+	this->tabPlayerCoord = tabPlayerCoord;
+	this->nbPlayerConfig = nbPlayerConfig;
+	this->playerNumberControle = playerNumberControle;
+	this->posX = posX;
+	this->posY = posY;
 	nbTick = 0;
 }
 

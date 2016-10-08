@@ -60,7 +60,7 @@ class Grid {
 
 	public:
 		Grid();
-		Grid(int levelIndex, int table[sizeX * sizeY], int tableBonus[sizeX * sizeY], SDL_Surface ** bonusSpriteGame);
+		Grid(int lvl, int tab[sizeX * sizeY], int tabBonus[sizeX * sizeY], SDL_Surface ** bonusSprite);
 		~Grid();
 
 		//configure the grid and build it

@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <cstdlib>
+#include "../bomberman/Grid.h"
 
 #ifndef __MYCLASS_CELL
 #define __MYCLASS_CELL
@@ -7,7 +8,7 @@
 class Cell {
 	public:
 		Cell();
-		Cell(int x, int y, bool original, int endX, int endY);
+		Cell(int x, int y, bool origin, int endX, int endY);
 		void printHimself();
 		void setHeuristicCost(int cost);
 		int getHeuristicCost();

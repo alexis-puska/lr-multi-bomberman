@@ -16,11 +16,11 @@ Grid::Grid() {
 	init();
 }
 
-Grid::Grid(int levelIndex, int table[sizeX * sizeY], int tableBonus[sizeX * sizeY], SDL_Surface ** bonusSpriteGame) {
-	bonusSprite = bonusSpriteGame;
-	lvl = levelIndex;
-	tab = table;
-	tabBonus = tableBonus;
+Grid::Grid(int lvl, int tab[sizeX * sizeY], int tabBonus[sizeX * sizeY], SDL_Surface ** bonusSprite) {
+	this->bonusSprite = bonusSprite;
+	this->lvl = lvl;
+	this->tab = tab;
+	this->tabBonus = tabBonus;
 	init();
 	generateGrid();
 }

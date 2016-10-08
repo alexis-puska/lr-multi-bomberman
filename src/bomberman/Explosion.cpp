@@ -2,13 +2,13 @@
 
 #define nbFrame 4
 
-Explosion::Explosion(int posXX, int posYY, int index, SDL_Surface ** miscSheet, int table[sizeX * sizeY], int tableBonus[sizeX * sizeY]) {
-	indexExplosion = index;
-	posX = posXX;
-	posY = posYY;
-	animation = miscSheet;
-	tab = table;
-	tabBonus = tableBonus;
+Explosion::Explosion(int posX, int posY, int index, SDL_Surface ** animation, int tab[sizeX * sizeY], int tabBonus[sizeX * sizeY]) {
+	this->indexExplosion = index;
+	this->posX = posX;
+	this->posY = posY;
+	this->animation = animation;
+	this->tab = tab;
+	this->tabBonus = tabBonus;
 	frameCounter = 0;
 	offsetSprite = 0;
 	nbFrameForAnimation = 7;

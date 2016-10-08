@@ -38,7 +38,7 @@ enum brainKey {
 class Brain {
 
 	public:
-		Brain(unsigned short * keystateGame, int tabGame[sizeX * sizeY], float * tabPlayerCoordGame, int nbPlayerConfigGame, int playerNumberControleGame, int posXGame, int posYGame);
+		Brain(unsigned short * keystate, int tab[sizeX * sizeY], float * tabPlayerCoord, int nbPlayerConfig, int playerNumberControle, int posX, int posY);
 		~Brain();
 		void think();
 	private:

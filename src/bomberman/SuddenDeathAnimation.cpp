@@ -4,15 +4,15 @@
 #define spriteSizeY 16
 #define nbTickAnimation 1
 
-SuddenDeathAnimation::SuddenDeathAnimation(int posXX, int posYY, SDL_Surface * wallSprite, int table[sizeX * sizeY], Grid * gridGame) {
-	posX = posXX;
-	posY = posYY;
-	canDelete = false;
-	sprite = wallSprite;
-	tab = table;
-	grid = gridGame;
+SuddenDeathAnimation::SuddenDeathAnimation(int posX, int posY, SDL_Surface * sprite, int tab[sizeX * sizeY], Grid * grid) {
+	this->posX = posX;
+	this->posY = posY;
+	this->sprite = sprite;
+	this->tab = tab;
+	this->grid = grid;
 	offset = 340;
 	frameCounter = 0;
+	canDelete = false;
 }
 SuddenDeathAnimation::~SuddenDeathAnimation() {
 	sprite = NULL;
