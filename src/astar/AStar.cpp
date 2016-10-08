@@ -39,7 +39,7 @@ void AStar::solve() {
 	open.push(grid[startI + startJ * sizeX]);
 
 	Cell current;
-
+	int adresse = 0;
 	
 	while (true) {
 		
@@ -56,26 +56,47 @@ void AStar::solve() {
 		}
 
 		if (current.getX() - 1 >= 0) {
-			if(checkAndUpdateCost(&current, &grid[current.getX() - 1 + current.getY() * sizeX], current.getFinalCost() + V_H_COST))
-				open.push(grid[current.getX() - 1 + current.getY() * sizeX]);
-
+			adresse = current.getX() - 1 + current.getY() * sizeX;
+			if(tab[adresse]< 3){
+				if(checkAndUpdateCost(&current, &grid[adresse], current.getFinalCost() + V_H_COST)){
+					open.push(grid[adresse]);
+				}
+			}else{
+				closed[adresse] = true;
+			}
 		}
 
 		if (current.getY() - 1 >= 0) {
-			if(checkAndUpdateCost(&current, &grid[current.getX() + (current.getY() - 1) * sizeX], current.getFinalCost() + V_H_COST))
-				open.push(grid[current.getX() + (current.getY() - 1) * sizeX]);
-
+			adresse = current.getX() + (current.getY() - 1) * sizeX;
+			if(tab[adresse]< 3){
+				if(checkAndUpdateCost(&current, &grid[adresse], current.getFinalCost() + V_H_COST)){
+					open.push(grid[adresse]);
+				}
+			}else{
+				closed[adresse] = true;
+			}
 		}
 
 		if (current.getY() + 1 < sizeY) {
-			if(checkAndUpdateCost(&current, &grid[current.getX() + (current.getY() + 1) * sizeX], current.getFinalCost() + V_H_COST))
-				open.push(grid[current.getX() + (current.getY() + 1) * sizeX]);
-
+			adresse = current.getX() + (current.getY() + 1) * sizeX;
+			if(tab[adresse]< 3){
+				if(checkAndUpdateCost(&current, &grid[current.getX() + (current.getY() + 1) * sizeX], current.getFinalCost() + V_H_COST)){
+					open.push(grid[adresse]);
+				}
+			}else{
+				closed[adresse] = true;
+			}
 		}
 
 		if (current.getX() + 1 < sizeX) {
-			if(checkAndUpdateCost(&current, &grid[(current.getX() + 1) + current.getY() * sizeX], current.getFinalCost() + V_H_COST))
-				open.push(grid[(current.getX() + 1) + current.getY() * sizeX]);
+			adresse = (current.getX() + 1) + current.getY() * sizeX;
+			if(tab[adresse]< 3){
+				if(checkAndUpdateCost(&current, &grid[adresse], current.getFinalCost() + V_H_COST)){
+					open.push(grid[adresse]);
+				}
+			}else{
+				closed[adresse] = true;
+			}
 		}
 		
 	}
