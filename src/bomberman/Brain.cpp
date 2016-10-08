@@ -31,24 +31,23 @@ void Brain::think(){
 	}
 	nbTick++;
 	
-if(playerNumberControle == 1){
-		astar -> init(0,0,5,5);
-		astar -> solve();
-		if(astar -> isSolved()) {
-			fprintf(stderr,"Brain N° %i chemin vers cible : ", playerNumberControle);
-			Cell * current = astar->getEnd();
-			current ->printHimself();
-			while(true) {
-				if(!current->isOriginal()) {
-					fprintf(stderr," ->");
-					current->getParent()->printHimself();
-					current = current-> getParent();} else {break;}
-			}
-			fprintf(stderr,"\n");
-		} else {
-			fprintf(stderr,"pas de chemin possible vers cible \n");
-		}
-}
+//		astar -> init(5,5,tabPlayerCoord[playerNumberControle*2],tabPlayerCoord[playerNumberControle*2+1]);
+//		astar -> solve();
+//		if(astar -> isSolved()) {
+//			fprintf(stderr,"Brain N° %i chemin vers cible : ", playerNumberControle);
+//			Cell * current = astar->getEnd();
+//			current ->printHimself();
+//			while(true) {
+//				if(!current->isOriginal()) {
+//					fprintf(stderr," ->");
+//					current->getParent()->printHimself();
+//					current = current-> getParent();} else {break;}
+//			}
+//			fprintf(stderr,"\n");
+//		} else {
+//			fprintf(stderr,"pas de chemin possible vers cible \n");
+//		}
+
 
 	
 }

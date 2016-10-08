@@ -64,6 +64,9 @@ public class AStar {
         
         while(true){ 
             current = open.poll();
+            if(current != null){
+                System.out.println("value cell : " + current.finalCost);
+            }
             if(current==null)break;
             closed[current.i][current.j]=true; 
 
@@ -174,8 +177,9 @@ public class AStar {
     }
      
     public static void main(String[] args) throws Exception{   
-        test(1, 5, 5, 0, 0, 3, 2, new int[][]{{0,4},{2,2},{3,1},{3,3}}); 
-        test(2, 10, 10, 0, 2, 3, 2, new int[][]{{0,4},{2,2},{3,1},{3,3}});   
+        test(1, 5, 5, 0, 0, 3, 2, new int[][]{{0,4},{2,2},{3,1},{3,3}});
+//        test(1, 10, 10, 0, 0, 5, 5, new int[][]{}); 
+        test(2, 10, 10, 0, 2, 3, 2, new int[][]{{0,4},{2,2},{3,1},{3,3}});
         test(3, 7, 7, 2, 1, 5, 4, new int[][]{{4,1},{4,3},{5,3},{2,3}});
         
         test(1, 5, 5, 0, 0, 4, 4, new int[][]{{3,4},{3,3},{4,3}});

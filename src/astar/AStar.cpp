@@ -35,9 +35,6 @@ void AStar::init(int startX, int startY, int endX, int endY) {
 		
 	for (int i = 0; i < sizeX; i++) {
 		for (int j = 0; j < sizeY; j++) {
-			if(grid[i + j * sizeX]){
-				free(grid[i + j * sizeX]);
-			}
 		
 			if (startI == i && startJ == j) {
 				grid[i + j * sizeX] = new Cell(i, j, true, endX, endY);
@@ -62,7 +59,6 @@ void AStar::solve() {
 
 	while (true) {
 		current = open.top();
-		fprintf(stderr,"value cell : %i\n",current->getFinalCost());
 		open.pop();
 		if (!current) {
 			break;
@@ -84,12 +80,12 @@ void AStar::solve() {
 			checkAndUpdateCost(current, t, current->getFinalCost() + V_H_COST);
 		}
 
-		if (current->getY() + 1 < sizeX) {
+		if (current->getY() + 1 < sizeY) {
 			t = grid[current->getX() + (current->getY() + 1) * sizeX];
 			checkAndUpdateCost(current, t, current->getFinalCost() + V_H_COST);
 		}
 
-		if (current->getX() + 1 < sizeY) {
+		if (current->getX() + 1 < sizeX) {
 			t = grid[(current->getX() + 1) + current->getY() * sizeX];
 			checkAndUpdateCost(current, t, current->getFinalCost() + V_H_COST);
 		}

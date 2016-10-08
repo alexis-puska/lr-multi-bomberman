@@ -10,7 +10,7 @@
 
 struct CompareCell: public std::binary_function<Cell*, Cell*, bool> {
 		bool operator()(Cell* c1, Cell* c2) const {
-			return c1->getFinalCost() < c2->getFinalCost() ? -1 : c1->getFinalCost() > c2->getFinalCost() ? 1 : 0;
+			return c1->getFinalCost() > c2->getFinalCost();
 		}
 };
 
