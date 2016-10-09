@@ -12,7 +12,7 @@ void Cell::configure(int x, int y, bool origin, int endX, int endY) {
 	this->parent = NULL;
 }
 
-Cell::~Cell(){
+Cell::~Cell() {
 	parent = NULL;
 }
 
@@ -56,6 +56,6 @@ int Cell::getY() {
 	return y;
 }
 
-int Cell::getIndex(){
-	return this->x + this->y*sizeX;	
+int Cell::getIndex() {
+	return this->x + this->y * sizeX;
 }

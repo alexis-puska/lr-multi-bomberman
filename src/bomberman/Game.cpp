@@ -48,7 +48,7 @@ static int metronome(void* data) {
 		delay = gameTick - milliseconds;
 
 		if (delay > 0) {
-			fprintf(stderr, "%i\n", (int)delay);
+			fprintf(stderr, "%i\n", (int) delay);
 			SDL_Delay(delay);
 		} else {
 			fprintf(stderr, "warning\n");
@@ -92,10 +92,10 @@ Game::Game(int levelIndex, int playerInformationParam[16][2], int gameOption[4],
 	this->vout_buf = vout_buf;
 	this->in_keystate = in_keystate;
 	this->levelIndex = levelIndex;
-	
+
 	gameState = gameWait;
 	nbPlayerInGame = 0;
-	
+
 	// Load Font
 	fragileBombersFont = TTF_OpenFont("./resources/font/fragile_bombers.ttf", 36); //this opens a font style and sets a size
 
@@ -148,7 +148,6 @@ Game::Game(int levelIndex, int playerInformationParam[16][2], int gameOption[4],
 		tabPlayerCoord[i] = -1.0;
 	}
 
-	
 	if (gameOption[0] == 1) {
 		suddenDeath = true;
 	} else {
@@ -169,8 +168,6 @@ Game::Game(int levelIndex, int playerInformationParam[16][2], int gameOption[4],
 		nbTickForGame = gameOption[3];
 		nbTickForGameParam = nbTickForGame;
 	}
-
-	
 
 	/*
 	 * LOAD MISC IMAGE : Bombe animation, explosion animation, bonus image, eggs image
@@ -331,7 +328,7 @@ Game::Game(int levelIndex, int playerInformationParam[16][2], int gameOption[4],
 	for (int i = 0; i < 16; i++) {
 		in_keystate_cpu[i] = 0;
 	}
-	
+
 	int indexLibretro = 0;
 	int index = 0;
 	int indexPlayerForGame = 0;
@@ -365,11 +362,11 @@ Game::Game(int levelIndex, int playerInformationParam[16][2], int gameOption[4],
 						playerKickSound, playerBurnSound, bombeBounceSound, indexPlayerForGame);
 				players.push_back(player);
 				player = NULL;
-				
+
 				brain = new Brain(&in_keystate_cpu[index], tab, tabPlayerCoord, nbPlayerConfig, i, floor(startX), floor(startX));
 				brains.push_back(brain);
 				brain = NULL;
-				
+
 				in_keystate[index] = 0;
 				index++;
 				nbPlayerAlive++;
@@ -1007,14 +1004,13 @@ void Game::tick() {
 			}
 
 			/*
-			*
-			*	BRAIN THINK'S
-			*
-			*/
+			 *
+			 *	BRAIN THINK'S
+			 *
+			 */
 			for (unsigned int i = 0; i < brains.size(); i++) {
 				brains[i]->think();
 			}
-
 
 			/*
 			 *
@@ -1229,7 +1225,7 @@ void Game::tick() {
 							brain = new Brain(&in_keystate_cpu[index], tab, tabPlayerCoord, nbPlayerConfig, i, floor(startX), floor(startX));
 							brains.push_back(brain);
 							brain = NULL;
-							
+
 							player = NULL;
 							in_keystate[index] = 0;
 							index++;

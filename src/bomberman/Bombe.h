@@ -23,7 +23,7 @@ class Bombe {
 
 	public:
 		Bombe(int strenght, float posX, float posY, int bombeType, int player, int nbTickExplode, SDL_Surface ** animation, int tab[sizeX * sizeY], float * tabPlayerCoord,
-		Mix_Chunk *bombeBounceSound);
+				Mix_Chunk *bombeBounceSound);
 		~Bombe();
 		bool isExplode();
 		bool isPowerBombe();

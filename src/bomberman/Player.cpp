@@ -58,9 +58,9 @@ enum louisTypeEnum {
 	blueLouis = 0, yellowLouis = 1, pinkLouis = 2, greenLouis = 3, brownLouis = 4
 };
 
-Player::Player(unsigned short * in_keystate, bool isACpuPlayer, int indexSprite, float posX, float posY, int playerNumber, int tab[sizeX * sizeY],
-				int tabBonus[sizeX * sizeY], SDL_Surface ** bombeSprite, Grid * gridParam, float * tabPlayerCoord, int nbPlayerConfig, Mix_Chunk *louisSound,
-				Mix_Chunk *playerKickSound, Mix_Chunk *playerBurnSound, Mix_Chunk *bombeBounceSound, int indexPlayerForGame
+Player::Player(unsigned short * in_keystate, bool isACpuPlayer, int indexSprite, float posX, float posY, int playerNumber, int tab[sizeX * sizeY], int tabBonus[sizeX * sizeY],
+		SDL_Surface ** bombeSprite, Grid * gridParam, float * tabPlayerCoord, int nbPlayerConfig, Mix_Chunk *louisSound, Mix_Chunk *playerKickSound, Mix_Chunk *playerBurnSound,
+		Mix_Chunk *bombeBounceSound, int indexPlayerForGame
 
 		) {
 	srand (time(NULL));grid = gridParam;
@@ -80,9 +80,7 @@ Player::Player(unsigned short * in_keystate, bool isACpuPlayer, int indexSprite,
 	this->bombeBounceSound = bombeBounceSound;
 	this->tabPlayerCoord = tabPlayerCoord;
 	this->nbPlayerConfig = nbPlayerConfig;
-	
-	
-	
+
 	tabPlayerCoord[playerNumber * 2] = posX;
 	tabPlayerCoord[playerNumber * 2 + 1 ] = posY;
 	playerState = normal;
@@ -104,7 +102,6 @@ Player::Player(unsigned short * in_keystate, bool isACpuPlayer, int indexSprite,
 	playerMalus = noMalus;
 	previousBombeNumber = 0;
 	previousSpeedValue = 0.0;
-	
 
 	frameCounter = 0;
 	offsetSprite = 0;
@@ -265,7 +262,7 @@ Player::Player(unsigned short * in_keystate, bool isACpuPlayer, int indexSprite,
 		SDL_BlitSurface(tempSurface, &srcTextureRect, louisSpriteBurn[i], &destTextureRect);
 	}
 
-	SDL_FreeSurface(tempSurface);	
+	SDL_FreeSurface(tempSurface);
 }
 
 Player::~Player() {
@@ -685,7 +682,7 @@ void Player::doSomething(SDL_Surface * surfaceToDraw) {
 				invincibleTime--;
 			}
 
-			if (roundY > sizeY-1) {
+			if (roundY > sizeY - 1) {
 				posY = 0.0;
 				roundY = 0;
 			}
@@ -900,9 +897,9 @@ void Player::doSomething(SDL_Surface * surfaceToDraw) {
 			nbTickMalus--;
 		}
 	}
-	
+
 	//correct value for AStar
-	if(floor(tabPlayerCoord[playerNumber * 2 + 1]) > sizeY - 1){
+	if (floor(tabPlayerCoord[playerNumber * 2 + 1]) > sizeY - 1) {
 		tabPlayerCoord[playerNumber * 2 + 1] = 0;
 	}
 }

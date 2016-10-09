@@ -22,9 +22,9 @@
 #define __MYCLASS_PLAYER
 class Player {
 	public:
-		Player(unsigned short * in_keystate, bool isACpuPlayer, int indexSprite, float startPositionX, float startPositionY, int playerNumber, int tab[sizeX * sizeY],
-				int tabBonus[sizeX * sizeY], SDL_Surface ** bombeSprite, Grid * gridParam, float * tabPlayerCoord, int nbPlayerConfig, Mix_Chunk *louisSoun,
-				Mix_Chunk *playerKickSound, Mix_Chunk *playerBurnSound, Mix_Chunk *bombeBounceSound, int indexPlayerForGame);
+		Player(unsigned short * in_keystate, bool isACpuPlayer, int indexSprite, float startPositionX, float startPositionY, int playerNumber, int tab[sizeX * sizeY], int tabBonus[sizeX * sizeY],
+				SDL_Surface ** bombeSprite, Grid * gridParam, float * tabPlayerCoord, int nbPlayerConfig, Mix_Chunk *louisSoun, Mix_Chunk *playerKickSound, Mix_Chunk *playerBurnSound,
+				Mix_Chunk *bombeBounceSound, int indexPlayerForGame);
 		~Player();
 		void doSomething(SDL_Surface * surfaceToDraw);
 

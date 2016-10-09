@@ -4,7 +4,6 @@
 
 #include "Cell.h"
 
-
 #ifndef __MYCLASS_ASTAR
 #define __MYCLASS_ASTAR
 
@@ -18,7 +17,7 @@ class AStar {
 	public:
 		AStar(int * tab);
 		~AStar();
-		void init(int startX, int startY, int endX, int endY);
+		void init(int startX, int startY, int endX, int endY, int searchlevel);
 		void solve();
 		bool isSolved();
 		Cell getEnd();
@@ -29,8 +28,9 @@ class AStar {
 		Cell grid[sizeX * sizeY];
 		bool closed[sizeX * sizeY];
 		bool inOpen[sizeX * sizeY];
-		int startI, startJ;
-		int endI, endJ;
+		int startX, startY;
+		int endX, endY;
+		int searchlevel;
 
 		bool checkAndUpdateCost(Cell * current, Cell * t, int cost);
 

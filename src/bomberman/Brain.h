@@ -55,8 +55,8 @@ class Brain {
 		int posY;
 		int playerNumberControle;
 		int nbTick;
-		
+
 		AStar * astar;
-		
+
 };
 #endif
