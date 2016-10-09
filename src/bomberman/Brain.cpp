@@ -31,7 +31,7 @@ void Brain::think(){
 	}
 	nbTick++;
 	
-		astar -> init(7,7,tabPlayerCoord[this->playerNumberControle*2],tabPlayerCoord[this->playerNumberControle*2+1]);
+		astar -> init(tabPlayerCoord[0],tabPlayerCoord[1],tabPlayerCoord[this->playerNumberControle*2],tabPlayerCoord[this->playerNumberControle*2+1]);
 		astar -> solve();
 		if(astar -> isSolved()) {
 			fprintf(stderr,"Brain %i : ", this->playerNumberControle);

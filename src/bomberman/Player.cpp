@@ -685,14 +685,14 @@ void Player::doSomething(SDL_Surface * surfaceToDraw) {
 				invincibleTime--;
 			}
 
-			if (roundY > sizeY) {
+			if (roundY > sizeY-1) {
 				posY = 0.0;
 				roundY = 0;
 			}
 
 			if (roundY < 0) {
-				posY = sizeY + 0.9;
-				roundY = sizeY;
+				posY = sizeY - 0.1;
+				roundY = sizeY - 1;
 			}
 
 			float margeInf;
@@ -899,6 +899,11 @@ void Player::doSomething(SDL_Surface * surfaceToDraw) {
 			releaseMalus();
 			nbTickMalus--;
 		}
+	}
+	
+	//correct value for AStar
+	if(floor(tabPlayerCoord[playerNumber * 2 + 1]) > sizeY - 1){
+		tabPlayerCoord[playerNumber * 2 + 1] = 0;
 	}
 }
 
