@@ -57,7 +57,7 @@ void AStar::solve() {
 		}
 		if (current.getX() - 1 >= 0) {
 			adresse = current.getX() - 1 + current.getY() * sizeX;
-			if (tab[adresse] < searchlevel) {
+			if (tab[adresse] < searchlevel || tab[adresse]==3) {
 				if (checkAndUpdateCost(&current, &grid[adresse], current.getFinalCost() + V_H_COST)) {
 					open.push(grid[adresse]);
 				}
@@ -68,7 +68,7 @@ void AStar::solve() {
 
 		if (current.getY() - 1 >= 0) {
 			adresse = current.getX() + (current.getY() - 1) * sizeX;
-			if (tab[adresse] < searchlevel) {
+			if (tab[adresse] < searchlevel || tab[adresse]==3) {
 				if (checkAndUpdateCost(&current, &grid[adresse], current.getFinalCost() + V_H_COST)) {
 					open.push(grid[adresse]);
 				}
@@ -79,7 +79,7 @@ void AStar::solve() {
 
 		if (current.getY() + 1 < sizeY) {
 			adresse = current.getX() + (current.getY() + 1) * sizeX;
-			if (tab[adresse] < searchlevel) {
+			if (tab[adresse] < searchlevel || tab[adresse]==3) {
 				if (checkAndUpdateCost(&current, &grid[current.getX() + (current.getY() + 1) * sizeX], current.getFinalCost() + V_H_COST)) {
 					open.push(grid[adresse]);
 				}
@@ -90,7 +90,7 @@ void AStar::solve() {
 
 		if (current.getX() + 1 < sizeX) {
 			adresse = (current.getX() + 1) + current.getY() * sizeX;
-			if (tab[adresse] < searchlevel) {
+			if (tab[adresse] < searchlevel || tab[adresse]==3) {
 				if (checkAndUpdateCost(&current, &grid[adresse], current.getFinalCost() + V_H_COST)) {
 					open.push(grid[adresse]);
 				}

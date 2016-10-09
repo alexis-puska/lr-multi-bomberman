@@ -39,24 +39,30 @@ enum brainKey {
 class Brain {
 
 	public:
-		Brain(unsigned short * keystate, int tab[sizeX * sizeY], float * tabPlayerCoord, int nbPlayerConfig, int playerNumberControle, int posX, int posY);
+		Brain(unsigned short * keystate, int tab[sizeX * sizeY], float * tabCord, int nbPlayer, int playerNumber);
 		~Brain();
 		void think();
+		
+		
 	private:
 		//keystate of the player taht will be command by this brain
 		unsigned short * keystate;
 		//tab representing the map of the game
 		int * tab;
 		//tab contains the players coordinate
-		float * tabPlayerCoord;
+		float * tabCord;
 		//nb player of the game (CPU or human)
-		int nbPlayerConfig;
-		int posX;
-		int posY;
-		int playerNumberControle;
-		int nbTick;
-
+		int nbPlayer;
+		int playerNumber;
 		AStar * astar;
+		int targetPlayer;
+		int curX, curY;
+//		int nbTick;
+		
+		
+		
+		int findNearPlayer();
+		float calcDistance(int x1, int y1, int x2, int y2);
 
 };
 #endif

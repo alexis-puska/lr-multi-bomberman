@@ -1,14 +1,13 @@
 #include "Brain.h"
 
-Brain::Brain(unsigned short * keystate, int tab[sizeX * sizeY], float * tabPlayerCoord, int nbPlayerConfig, int playerNumberControle, int posX, int posY) {
+Brain::Brain(unsigned short * keystate, int tab[sizeX * sizeY], float * tabCord, int nbPlayer, int playerNumber) {
 	this->keystate = keystate;
 	this->tab = tab;
-	this->tabPlayerCoord = tabPlayerCoord;
-	this->nbPlayerConfig = nbPlayerConfig;
-	this->playerNumberControle = playerNumberControle;
-	this->posX = posX;
-	this->posY = posY;
-	nbTick = 0;
+	this->tabCord = tabCord;
+	this->nbPlayer = nbPlayer;
+	this->playerNumber = playerNumber;
+	this->targetPlayer = -1;
+//	nbTick = 0;
 	astar = new AStar(tab);
 }
 
@@ -16,11 +15,13 @@ Brain::~Brain() {
 	free (astar);
 	keystate = NULL;
 	tab = NULL;
-	tabPlayerCoord = NULL;
+	tabCord = NULL;
 }
 
 void Brain::think() {
 	*keystate = (short) 0;
+	
+	
 	if (nbTick >= 20) {
 		nbTick = 0;
 	}
@@ -30,28 +31,78 @@ void Brain::think() {
 		*keystate += (short) brainKeyLeft;
 	}
 	nbTick++;
-
-	astar->init(tabPlayerCoord[0], tabPlayerCoord[1], tabPlayerCoord[this->playerNumberControle * 2], tabPlayerCoord[this->playerNumberControle * 2 + 1], 3);
-	astar->solve();
+	
+	
+	//if(targetPlayer == -1){
+		targetPlayer = findNearPlayer();
+		astar->init(tabCord[targetPlayer*2], tabCord[targetPlayer*2+1], tabCord[this->playerNumber * 2], tabCord[this->playerNumber * 2 + 1], 3);
+		astar->solve();
+	//}
+	
 	if (astar->isSolved()) {
-		fprintf(stderr, "Brain %i : ", this->playerNumberControle);
 		Cell current = astar->getEnd();
 		Cell * parent;
 		current.printHimself();
 		parent = current.getParent();
+		
+		
+		if(parent){
+			if(parent->getX()>current.getX()){
+				*keystate += (short) brainKeyRight;
+			}else if(parent->getX()<current.getX()){
+				*keystate += (short) brainKeyLeft;
+			}else if(parent->getY()<current.getY()){
+				*keystate += (short) brainKeyUp;
+			}else if(parent->getY()>current.getY()){
+				*keystate += (short) brainKeyDown;
+			}
+		}
+			
+		
 		while (true) {
 			if (parent) {
-				fprintf(stderr, " ->");
+				fprintf(stderr, " ");
 				parent->printHimself();
 				parent = parent->getParent();
 			} else {
 				break;
 			}
 		}
-		free(parent);
+		parent = NULL;
 		fprintf(stderr, "\n");
 	} else {
-		fprintf(stderr, "Brain %i : pas de chemin possible vers cible \n", playerNumberControle);
+		fprintf(stderr, "NO PATH\n");
 	}
+	
 
+}
+
+
+
+
+int Brain::findNearPlayer() {
+	float minDistance = -1.0;
+	float res = 0.0;
+	int target = -1;
+	for(int i=0; i<16; i++){
+		if(playerNumber != i){
+			res = calcDistance(tabCord[playerNumber*2], tabCord[playerNumber*2+1], tabCord[i*2], tabCord[i*2+1]);
+			if(minDistance == -1.0 || res < minDistance){
+				minDistance = res;
+				target = i;
+			}
+		}
+	}
+	fprintf(stderr, "Br%2i %2i ", playerNumber, target);
+	return target;
+}
+
+float Brain::calcDistance(int x1, int y1, int x2, int y2){
+	if(x1 == x2){
+		return abs(y1 - y2);
+	}else if(y1 == y2){
+		return abs(x1 - x2);
+	}else{
+		return sqrt(pow(abs(x1 - x2),2) + pow(abs(y1 - y2),2));
+	}
 }

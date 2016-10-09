@@ -363,7 +363,7 @@ Game::Game(int levelIndex, int playerInformationParam[16][2], int gameOption[4],
 				players.push_back(player);
 				player = NULL;
 
-				brain = new Brain(&in_keystate_cpu[index], tab, tabPlayerCoord, nbPlayerConfig, i, floor(startX), floor(startX));
+				brain = new Brain(&in_keystate_cpu[index], tab, tabPlayerCoord, nbPlayerConfig, i);
 				brains.push_back(brain);
 				brain = NULL;
 
@@ -1222,7 +1222,7 @@ void Game::tick() {
 							player = new Player(&in_keystate_cpu[index], true, playerIndexTexture[i], startX, startY, i, tab, tabBonus, bombeSprite, grid, tabPlayerCoord, nbPlayerConfig,
 									louisSound, playerKickSound, playerBurnSound, bombeBounceSound, indexPlayerForGame);
 							players.push_back(player);
-							brain = new Brain(&in_keystate_cpu[index], tab, tabPlayerCoord, nbPlayerConfig, i, floor(startX), floor(startX));
+							brain = new Brain(&in_keystate_cpu[index], tab, tabPlayerCoord, nbPlayerConfig, i);
 							brains.push_back(brain);
 							brain = NULL;
 

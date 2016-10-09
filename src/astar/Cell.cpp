@@ -45,7 +45,7 @@ bool Cell::isOriginal() {
 }
 
 void Cell::printHimself() {
-	fprintf(stderr, "[ %i, %i]", x, y);
+	fprintf(stderr, "[%2i,%2i]", x, y);
 }
 
 int Cell::getX() {
