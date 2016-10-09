@@ -22,15 +22,15 @@ void Brain::think() {
 	*keystate = (short) 0;
 	
 	
-	if (nbTick >= 20) {
-		nbTick = 0;
-	}
-	if (nbTick < 10) {
-		*keystate += (short) brainKeyRight;
-	} else {
-		*keystate += (short) brainKeyLeft;
-	}
-	nbTick++;
+//	if (nbTick >= 20) {
+//		nbTick = 0;
+//	}
+//	if (nbTick < 10) {
+//		*keystate += (short) brainKeyRight;
+//	} else {
+//		*keystate += (short) brainKeyLeft;
+//	}
+//	nbTick++;
 	
 	
 	//if(targetPlayer == -1){
