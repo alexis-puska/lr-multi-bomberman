@@ -1,22 +1,22 @@
 #include <stdio.h>
 #include <cstdlib>
-#include "../bomberman/Grid.h"
+#include "Grid.h"
 
-#ifndef __MYCLASS_CELL
-#define __MYCLASS_CELL
+#ifndef __MYCLASS_AStarCell
+#define __MYCLASS_AStarCell
 
-class Cell {
+class AStarCell {
 	public:
-		Cell();
+		AStarCell();
 		void configure(int x, int y, bool origin, int endX, int endY);
-		~Cell();
+		~AStarCell();
 		void printHimself();
 		void setHeuristicCost(int cost);
 		int getHeuristicCost();
 		void setFinalCost(int cost);
 		int getFinalCost();
-		void setParent(Cell * parent);
-		Cell * getParent();
+		void setParent(AStarCell * parent);
+		AStarCell * getParent();
 		int getX();
 		int getY();
 		int getIndex();
@@ -28,6 +28,6 @@ class Cell {
 		int x, y;
 		bool origin;
 
-		Cell * parent;
+		AStarCell * parent;
 };
 #endif

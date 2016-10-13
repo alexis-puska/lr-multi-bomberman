@@ -9,7 +9,7 @@
 #endif
 
 #include <stdio.h>
-#include "../astar/AStar.h"
+#include "AStar.h"
 
 #ifndef __MYCLASS_BRAIN
 #define __MYCLASS_BRAIN

@@ -38,8 +38,8 @@ OBJS += src/bomberman/BurnWall.o
 OBJS += src/bomberman/Cursor.o
 OBJS += src/bomberman/SuddenDeathAnimation.o
 OBJS += src/bomberman/Brain.o
-OBJS += src/astar/Cell.o
-OBJS += src/astar/AStar.o
+OBJS += src/bomberman/AStarCell.o
+OBJS += src/bomberman/AStar.o
 
 
 #COMPILATION

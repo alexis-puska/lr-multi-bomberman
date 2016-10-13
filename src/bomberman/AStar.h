@@ -2,13 +2,13 @@
 #include <vector>
 #include <stdio.h>
 
-#include "Cell.h"
+#include "AStarCell.h"
 
 #ifndef __MYCLASS_ASTAR
 #define __MYCLASS_ASTAR
 
-struct CompareCell: public std::binary_function<Cell*, Cell*, bool> {
-		bool operator()(Cell & c1, Cell & c2) const {
+struct CompareAStarCell: public std::binary_function<AStarCell*, AStarCell*, bool> {
+		bool operator()(AStarCell & c1, AStarCell & c2) const {
 			return c1.getFinalCost() > c2.getFinalCost();
 		}
 };
@@ -20,19 +20,20 @@ class AStar {
 		void init(int startX, int startY, int endX, int endY, int searchlevel);
 		void solve();
 		bool isSolved();
-		Cell getEnd();
+		AStarCell getEnd();
 	private:
-		std::priority_queue<Cell, std::vector<Cell>, CompareCell> open;
+		std::priority_queue<AStarCell, std::vector<AStarCell>, CompareAStarCell> open;
 
 		int * tab;
-		Cell grid[sizeX * sizeY];
+		AStarCell grid[sizeX * sizeY];
 		bool closed[sizeX * sizeY];
 		bool inOpen[sizeX * sizeY];
 		int startX, startY;
 		int endX, endY;
 		int searchlevel;
+		bool ignoreBombe;
 
-		bool checkAndUpdateCost(Cell * current, Cell * t, int cost);
+		bool checkAndUpdateCost(AStarCell * current, AStarCell * t, int cost);
 
 };
 #endif

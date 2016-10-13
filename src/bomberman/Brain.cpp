@@ -35,13 +35,13 @@ void Brain::think() {
 	
 	//if(targetPlayer == -1){
 		targetPlayer = findNearPlayer();
-		astar->init(tabCord[targetPlayer*2], tabCord[targetPlayer*2+1], tabCord[this->playerNumber * 2], tabCord[this->playerNumber * 2 + 1], 3);
+		astar->init(tabCord[targetPlayer*2], tabCord[targetPlayer*2+1], tabCord[this->playerNumber * 2], tabCord[this->playerNumber * 2 + 1], 2);
 		astar->solve();
 	//}
 	
 	if (astar->isSolved()) {
-		Cell current = astar->getEnd();
-		Cell * parent;
+		AStarCell current = astar->getEnd();
+		AStarCell * parent;
 		current.printHimself();
 		parent = current.getParent();
 		
@@ -85,12 +85,14 @@ int Brain::findNearPlayer() {
 	float res = 0.0;
 	int target = -1;
 	for(int i=0; i<16; i++){
-		if(playerNumber != i){
+		if(playerNumber != i && tabCord[i*2] != -1){
+			
 			res = calcDistance(tabCord[playerNumber*2], tabCord[playerNumber*2+1], tabCord[i*2], tabCord[i*2+1]);
-			if(minDistance == -1.0 || res < minDistance){
-				minDistance = res;
-				target = i;
-			}
+				if(minDistance == -1.0 || res < minDistance){
+					minDistance = res;
+					target = i;
+				}
+			
 		}
 	}
 	fprintf(stderr, "Br%2i %2i ", playerNumber, target);

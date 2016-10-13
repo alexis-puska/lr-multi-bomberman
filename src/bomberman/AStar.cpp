@@ -19,6 +19,10 @@ void AStar::init(int startX, int startY, int endX, int endY, int searchlevel) {
 	while (!open.empty()) {
 		open.pop();
 	}
+	ignoreBombe = false;
+	if(tab[endX + endY * sizeX] == 3){
+		ignoreBombe = true;
+	}
 
 	for (int i = 0; i < sizeX; i++) {
 		for (int j = 0; j < sizeY; j++) {
@@ -39,7 +43,7 @@ void AStar::solve() {
 	inOpen[startX + startY * sizeX] = true;
 	open.push(grid[startX + startY * sizeX]);
 
-	Cell current;
+	AStarCell current;
 	int adresse = 0;
 
 	while (true) {
@@ -57,7 +61,7 @@ void AStar::solve() {
 		}
 		if (current.getX() - 1 >= 0) {
 			adresse = current.getX() - 1 + current.getY() * sizeX;
-			if (tab[adresse] < searchlevel || tab[adresse]==3) {
+			if (tab[adresse] < searchlevel || ignoreBombe) {
 				if (checkAndUpdateCost(&current, &grid[adresse], current.getFinalCost() + V_H_COST)) {
 					open.push(grid[adresse]);
 				}
@@ -68,7 +72,7 @@ void AStar::solve() {
 
 		if (current.getY() - 1 >= 0) {
 			adresse = current.getX() + (current.getY() - 1) * sizeX;
-			if (tab[adresse] < searchlevel || tab[adresse]==3) {
+			if (tab[adresse] < searchlevel || ignoreBombe) {
 				if (checkAndUpdateCost(&current, &grid[adresse], current.getFinalCost() + V_H_COST)) {
 					open.push(grid[adresse]);
 				}
@@ -79,7 +83,7 @@ void AStar::solve() {
 
 		if (current.getY() + 1 < sizeY) {
 			adresse = current.getX() + (current.getY() + 1) * sizeX;
-			if (tab[adresse] < searchlevel || tab[adresse]==3) {
+			if (tab[adresse] < searchlevel || ignoreBombe) {
 				if (checkAndUpdateCost(&current, &grid[current.getX() + (current.getY() + 1) * sizeX], current.getFinalCost() + V_H_COST)) {
 					open.push(grid[adresse]);
 				}
@@ -90,7 +94,7 @@ void AStar::solve() {
 
 		if (current.getX() + 1 < sizeX) {
 			adresse = (current.getX() + 1) + current.getY() * sizeX;
-			if (tab[adresse] < searchlevel || tab[adresse]==3) {
+			if (tab[adresse] < searchlevel  || ignoreBombe) {
 				if (checkAndUpdateCost(&current, &grid[adresse], current.getFinalCost() + V_H_COST)) {
 					open.push(grid[adresse]);
 				}
@@ -103,7 +107,7 @@ void AStar::solve() {
 
 }
 
-Cell AStar::getEnd() {
+AStarCell AStar::getEnd() {
 	return grid[endX + endY * sizeX];
 }
 
@@ -111,7 +115,7 @@ bool AStar::isSolved() {
 	return closed[endX + endY * sizeX];
 }
 
-bool AStar::checkAndUpdateCost(Cell * current, Cell * t, int cost) {
+bool AStar::checkAndUpdateCost(AStarCell * current, AStarCell * t, int cost) {
 	if (closed[t->getX() + t->getY() * sizeX]) {
 		return false;
 	}
