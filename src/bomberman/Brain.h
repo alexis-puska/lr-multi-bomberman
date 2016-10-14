@@ -10,6 +10,7 @@
 
 #include <stdio.h>
 #include "AStar.h"
+#include "BFS.h"
 
 #ifndef __MYCLASS_BRAIN
 #define __MYCLASS_BRAIN
@@ -55,6 +56,7 @@ class Brain {
 		int nbPlayer;
 		int playerNumber;
 		AStar * astar;
+		BFS * bfs;
 		int targetPlayer;
 		int curX, curY;
 //		int nbTick;

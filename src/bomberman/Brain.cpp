@@ -9,10 +9,12 @@ Brain::Brain(unsigned short * keystate, int tab[sizeX * sizeY], float * tabCord,
 	this->targetPlayer = -1;
 //	nbTick = 0;
 	astar = new AStar(tab);
+	bfs = new BFS(tab);
 }
 
 Brain::~Brain() {
 	free (astar);
+	free (bfs);
 	keystate = NULL;
 	tab = NULL;
 	tabCord = NULL;
@@ -33,11 +35,19 @@ void Brain::think() {
 //	nbTick++;
 	
 	
-	//if(targetPlayer == -1){
+	if(tabCord[targetPlayer*2] != -1){
+		bfs->reset();
+		fprintf(stderr,"%i ",bfs->solve(tabCord[targetPlayer*2]+  tabCord[targetPlayer*2+1]* sizeX, 3));
+	}
+	
+	
+	
+	
+	if(targetPlayer == -1){
 		targetPlayer = findNearPlayer();
 		astar->init(tabCord[targetPlayer*2], tabCord[targetPlayer*2+1], tabCord[this->playerNumber * 2], tabCord[this->playerNumber * 2 + 1], 2);
 		astar->solve();
-	//}
+	}
 	
 	if (astar->isSolved()) {
 		AStarCell current = astar->getEnd();

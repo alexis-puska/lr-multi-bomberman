@@ -646,8 +646,10 @@ void Player::doSomething(SDL_Surface * surfaceToDraw) {
 			posX = tabPlayerCoord[playerNumber * 2];
 			posY = tabPlayerCoord[playerNumber * 2 + 1];
 
-			if (tabBonus[roundX + roundY * sizeX] != noBonus && tab[roundX + roundY * sizeX] < brickElement) {
-				foundABonus (tabBonus[roundX + roundY * sizeX]);
+			if(roundX + roundY * sizeX<sizeX*sizeY){
+				if (tabBonus[roundX + roundY * sizeX] != noBonus && tab[roundX + roundY * sizeX] < brickElement) {
+					foundABonus (tabBonus[roundX + roundY * sizeX]);
+				}
 			}
 
 			if (invincibleTime == 0) {

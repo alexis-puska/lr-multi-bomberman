@@ -40,6 +40,7 @@ OBJS += src/bomberman/SuddenDeathAnimation.o
 OBJS += src/bomberman/Brain.o
 OBJS += src/bomberman/AStarCell.o
 OBJS += src/bomberman/AStar.o
+OBJS += src/bomberman/BFS.o
 
 
 #COMPILATION
