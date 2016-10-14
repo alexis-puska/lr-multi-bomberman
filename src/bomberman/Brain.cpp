@@ -43,11 +43,12 @@ void Brain::think() {
 	
 	
 	
-	if(targetPlayer == -1){
+
 		targetPlayer = findNearPlayer();
+		fprintf(stderr,"%i ", targetPlayer);
 		astar->init(tabCord[targetPlayer*2], tabCord[targetPlayer*2+1], tabCord[this->playerNumber * 2], tabCord[this->playerNumber * 2 + 1], 2);
 		astar->solve();
-	}
+
 	
 	if (astar->isSolved()) {
 		AStarCell current = astar->getEnd();
