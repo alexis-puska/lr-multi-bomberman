@@ -937,6 +937,10 @@ int Player::getPlayerNumber() {
 	return playerNumber;
 }
 
+int Player::getIndexPlayerForGame() {
+	return indexPlayerForGame;
+}
+
 bool Player::triggerPowerBombe() {
 	return triggerBombe;
 }

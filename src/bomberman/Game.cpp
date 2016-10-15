@@ -1030,7 +1030,7 @@ void Game::tick() {
 				}
 				if (players[i]->triggerPowerBombe()) {
 					for (unsigned int j = 0; j < bombes.size(); j++) {
-						if (bombes[j]->getPlayer() == players[i]->getPlayerNumber()) {
+						if (bombes[j]->getPlayer() == players[i]->getIndexPlayerForGame()) {
 							bombes[j]->explodeNow();
 						}
 					}

@@ -51,6 +51,7 @@ class Player {
 
 		int getPlayerNumber();
 		void itSuddenDeathTime();
+		int getIndexPlayerForGame(); 
 
 	private:
 		/*
