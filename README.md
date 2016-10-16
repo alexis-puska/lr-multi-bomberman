@@ -57,10 +57,15 @@ Raspberry pi 2/3:
 
 ===============================
 **Next step :**
-- other level design (pirates, ring)
-- Artificial interlligence
+- Artificial interlligence (current work)
+- refactoring of code (change size of map for future pirate map, change the level structure definition for variante / bonus per level / teleporter)
+- flamme un level 3 and 9 goes over the top and bottom of the map
 - Teleporter
+- other level design (pirates, ring)
+- level variante
+- menu to set number of bonus
 - Game type bad bomber
 - Louis burning animation
+- louis type
 - Net (multiplayer over interner)
 - Power(glove)
