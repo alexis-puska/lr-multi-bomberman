@@ -69,3 +69,15 @@ Raspberry pi 2/3:
 - louis type
 - Net (multiplayer over interner)
 - Power(glove)
+
+
+convoyeur (3 * 8)
+bouton (2)
+rail (8)
+fleche (4)
+fleche rotative (4)
+bloc level 3 (1)
+trou (3)
+mine sous marine (4)
+sable mouvant (4)
+teleporter (3)
