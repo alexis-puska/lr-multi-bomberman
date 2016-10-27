@@ -179,7 +179,30 @@ int BFS::findSecure(int startIndex) {
 			}
 		}
 	}
-	return -1;
+
+	int startX = startIndex % sizeX;
+	int startY = floor(startIndex / sizeX);
+	int endX = indexTest % sizeX;
+	int endY = floor(indexTest / sizeX);
+
+	//même ligne
+	if (endX == startX) {
+		if (startY >= endY) {
+			//up
+			return -1;
+		} else if (startY < endY) {
+			//down
+			return -3;
+		}
+	} else if (startY == endY) {
+		if (startX <= endX) {
+			//right
+			return -2;
+		} else if (startX > endX) {
+			//left
+			return -4;
+		}
+	}
 }
 
 void BFS::pushSecure(int index) {
@@ -201,7 +224,6 @@ bool BFS::isSecure(int idx) {
 			return false;
 		}
 		x--;
-
 	}
 	x = calcX;
 	y = calcY;

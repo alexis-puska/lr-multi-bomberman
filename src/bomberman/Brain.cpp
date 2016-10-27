@@ -44,7 +44,7 @@ void Brain::think() {
 //	astar->init(tabCord[targetPlayer * 2], tabCord[targetPlayer * 2 + 1], tabCord[this->playerNumber * 2], tabCord[this->playerNumber * 2 + 1], 2);
 //	astar->solve();
 
-		if (secureIndex != -1) {
+		if (secureIndex >= 0) {
 			astar->init(secureIndex % sizeX, floor(secureIndex / sizeX), tabCord[this->playerNumber * 2], tabCord[this->playerNumber * 2 + 1], 2);
 			astar->solve();
 			if (astar->isSolved()) {
@@ -86,6 +86,21 @@ void Brain::think() {
 
 //				fprintf(stderr, "NO PATH\n");
 
+			}
+		} else {
+			switch (secureIndex) {
+				case -1:
+					*keystate += (short) brainKeyUp;
+					break;
+				case -2:
+					*keystate += (short) brainKeyRight;
+					break;
+				case -3:
+					*keystate += (short) brainKeyDown;
+					break;
+				case -4:
+					*keystate += (short) brainKeyLeft;
+					break;
 			}
 		}
 	}
