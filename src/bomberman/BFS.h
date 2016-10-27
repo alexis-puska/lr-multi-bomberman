@@ -12,12 +12,20 @@ class BFS {
 		~BFS();
 		int solve(int startIndex, int typeSearch, bool ignoreWall);
 		int findNextBrick(int startIndex);
+		int findSecure(int startIndex);
+		bool isSecure(int indexTest);
+
+		void resetSecure();
 		void reset();
 		void printTested();
+		void printTestedSecure();
 	private:
-		void push(int index);
-		std::queue<int> open;
 		int * tab;
+		std::queue<int> open;
 		bool tested[sizeX * sizeY];
+		std::queue<int> openSecure;
+		bool testedSecure[sizeX * sizeY];
+		void push(int index);
+		void pushSecure(int index);
 };
 #endif
