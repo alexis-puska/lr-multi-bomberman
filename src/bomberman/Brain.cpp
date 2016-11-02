@@ -18,6 +18,7 @@ Brain::~Brain() {
 	keystate = NULL;
 	tab = NULL;
 	tabCord = NULL;
+	prevDir = none;
 }
 
 void Brain::think() {
@@ -37,6 +38,7 @@ void Brain::think() {
 
 		bfs->resetSecure();
 		int secureIndex = bfs->findSecure(startIndex);
+		fprintf(stderr,"%i secure %i", playerNumber, secureIndex);
 //			bfs->printTestedSecure();
 
 //	targetPlayer = findNearPlayer();
@@ -60,19 +62,50 @@ void Brain::think() {
 				if (parent) {
 					if (parent->getX() > current.getX()) {
 						*keystate += (short) brainKeyRight;
+						prevDir = right;
 					} else if (parent->getX() < current.getX()) {
 						*keystate += (short) brainKeyLeft;
+						prevDir = left;
 					} else if (parent->getY() < current.getY()) {
 						*keystate += (short) brainKeyUp;
+						prevDir = up;
 					} else if (parent->getY() > current.getY()) {
 						*keystate += (short) brainKeyDown;
+						prevDir = down;
+					}
+				}else{
+					switch(prevDir){
+					case right:
+						*keystate += (short) brainKeyRight;
+						if(tabCord[this->playerNumber * 2] - floor(tabCord[this->playerNumber * 2]) > 0.4){
+							prevDir = none;	
+						}
+						break;
+					case left:
+						*keystate += (short) brainKeyLeft;
+						if(tabCord[this->playerNumber * 2] - floor(tabCord[this->playerNumber * 2]) < 0.6){
+							prevDir = none;	
+						}
+						break;
+					case up:
+						*keystate += (short) brainKeyUp;
+						if(tabCord[this->playerNumber * 2+1] - floor(tabCord[this->playerNumber * 2+1]) < 0.6){
+							prevDir = none;
+						}
+						break;
+					case down:
+						*keystate += (short) brainKeyDown;
+						if(tabCord[this->playerNumber * 2+1] - floor(tabCord[this->playerNumber * 2+1]) > 0.4){
+							prevDir = none;
+						}
+						break;
 					}
 				}
 
 				while (true) {
 					if (parent) {
-//							fprintf(stderr, " ");
-//							parent->printHimself();
+							fprintf(stderr, " ");
+							parent->printHimself();
 						parent = parent->getParent();
 					} else {
 						break;
@@ -80,7 +113,7 @@ void Brain::think() {
 				}
 				parent = NULL;
 
-//				fprintf(stderr, "\n");
+				fprintf(stderr, "\n");
 
 //			} else {
 

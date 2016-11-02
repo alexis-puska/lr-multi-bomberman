@@ -37,6 +37,10 @@ enum brainKey {
 	brainKeyY = 32768
 };
 
+enum brainMove {
+	none = -1, down = 0, up = 1, left = 2, right = 3
+};
+
 class Brain {
 
 	public:
@@ -59,7 +63,7 @@ class Brain {
 		BFS * bfs;
 		int targetPlayer;
 		int curX, curY;
-//		int nbTick;
+		int prevDir;
 		
 		
 		
