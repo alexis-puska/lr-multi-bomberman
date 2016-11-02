@@ -44,7 +44,7 @@ enum brainMove {
 class Brain {
 
 	public:
-		Brain(unsigned short * keystate, int tab[sizeX * sizeY], float * tabCord, int nbPlayer, int playerNumber);
+		Brain(unsigned short * keystate, int tab[sizeX * sizeY], float * tabCord, int nbPlayer, int playerNumber, int cpuLevel);
 		~Brain();
 		void think();
 		
@@ -64,11 +64,15 @@ class Brain {
 		int targetPlayer;
 		int curX, curY;
 		int prevDir;
+		int cpuLevel;
+		int idxOwnBombe;
+		bool dropBombe;
 		
 		
 		
 		int findNearPlayer();
 		float calcDistance(int x1, int y1, int x2, int y2);
+		int walkToObjectif(int objectif);
 
 };
 #endif

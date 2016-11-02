@@ -1,15 +1,18 @@
 #include "Brain.h"
 
-Brain::Brain(unsigned short * keystate, int tab[sizeX * sizeY], float * tabCord, int nbPlayer, int playerNumber) {
+Brain::Brain(unsigned short * keystate, int tab[sizeX * sizeY], float * tabCord, int nbPlayer, int playerNumber, int cpuLevel) {
 	this->keystate = keystate;
 	this->tab = tab;
 	this->tabCord = tabCord;
 	this->nbPlayer = nbPlayer;
 	this->playerNumber = playerNumber;
 	this->targetPlayer = -1;
+	this->cpuLevel = cpuLevel;
 //	nbTick = 0;
 	astar = new AStar(tab);
 	bfs = new BFS(tab);
+	prevDir = none;
+	dropBombe = false;
 }
 
 Brain::~Brain() {
@@ -18,11 +21,15 @@ Brain::~Brain() {
 	keystate = NULL;
 	tab = NULL;
 	tabCord = NULL;
-	prevDir = none;
 }
 
 void Brain::think() {
 	*keystate = (short) 0;
+	
+	if(dropBombe){
+		//*keystate += brainKeyA;
+		dropBombe = false;
+	}
 
 	if (tabCord[playerNumber * 2] != -1) {
 		int startIndex = int(floor(tabCord[playerNumber * 2]) + floor(tabCord[playerNumber * 2 + 1]) * sizeX);
@@ -30,98 +37,17 @@ void Brain::think() {
 
 		bfs->reset();
 		wallIndex = bfs->solve(startIndex, 3, false);
-//		fprintf(stderr, "br %i %i ", playerNumber, wallIndex);
 
 		bfs->reset();
 		wallIndex = bfs->findNextBrick(startIndex);
-//		fprintf(stderr, "%i ", wallIndex);
 
 		bfs->resetSecure();
 		int secureIndex = bfs->findSecure(startIndex);
-		fprintf(stderr,"%i secure %i", playerNumber, secureIndex);
-//			bfs->printTestedSecure();
 
-//	targetPlayer = findNearPlayer();
-
-//	astar->init(tabCord[targetPlayer * 2], tabCord[targetPlayer * 2 + 1], tabCord[this->playerNumber * 2], tabCord[this->playerNumber * 2 + 1], 2);
-//	astar->solve();
-
-		if (secureIndex >= 0) {
-			astar->init(secureIndex % sizeX, floor(secureIndex / sizeX), tabCord[this->playerNumber * 2], tabCord[this->playerNumber * 2 + 1], 2);
-			astar->solve();
-			if (astar->isSolved()) {
-				AStarCell current = astar->getEnd();
-				AStarCell * parent;
-				//current.printHimself();
-				parent = current.getParent();
-
-				//			if(parent->getFinalCost() == 0){
-				//				*keystate += brainKeyA;
-				//			}
-
-				if (parent) {
-					if (parent->getX() > current.getX()) {
-						*keystate += (short) brainKeyRight;
-						prevDir = right;
-					} else if (parent->getX() < current.getX()) {
-						*keystate += (short) brainKeyLeft;
-						prevDir = left;
-					} else if (parent->getY() < current.getY()) {
-						*keystate += (short) brainKeyUp;
-						prevDir = up;
-					} else if (parent->getY() > current.getY()) {
-						*keystate += (short) brainKeyDown;
-						prevDir = down;
-					}
-				}else{
-					switch(prevDir){
-					case right:
-						*keystate += (short) brainKeyRight;
-						if(tabCord[this->playerNumber * 2] - floor(tabCord[this->playerNumber * 2]) > 0.4){
-							prevDir = none;	
-						}
-						break;
-					case left:
-						*keystate += (short) brainKeyLeft;
-						if(tabCord[this->playerNumber * 2] - floor(tabCord[this->playerNumber * 2]) < 0.6){
-							prevDir = none;	
-						}
-						break;
-					case up:
-						*keystate += (short) brainKeyUp;
-						if(tabCord[this->playerNumber * 2+1] - floor(tabCord[this->playerNumber * 2+1]) < 0.6){
-							prevDir = none;
-						}
-						break;
-					case down:
-						*keystate += (short) brainKeyDown;
-						if(tabCord[this->playerNumber * 2+1] - floor(tabCord[this->playerNumber * 2+1]) > 0.4){
-							prevDir = none;
-						}
-						break;
-					}
-				}
-
-				while (true) {
-					if (parent) {
-							fprintf(stderr, " ");
-							parent->printHimself();
-						parent = parent->getParent();
-					} else {
-						break;
-					}
-				}
-				parent = NULL;
-
-				fprintf(stderr, "\n");
-
-//			} else {
-
-//				fprintf(stderr, "NO PATH\n");
-
-			}
-		} else {
-			switch (secureIndex) {
+		if(secureIndex >= 0){
+			walkToObjectif(secureIndex);
+		}else{
+			switch (wallIndex) {
 				case -1:
 					*keystate += (short) brainKeyUp;
 					break;
@@ -134,10 +60,80 @@ void Brain::think() {
 				case -4:
 					*keystate += (short) brainKeyLeft;
 					break;
-			}
-		}
+			}	
+		}	
 	}
 }
+
+int Brain::walkToObjectif(int objectif){
+	astar->init(objectif % sizeX, floor(objectif / sizeX), tabCord[this->playerNumber * 2], tabCord[this->playerNumber * 2 + 1], 2);
+	astar->solve();
+	if (astar->isSolved()) {
+		AStarCell current = astar->getEnd();
+		AStarCell * parent;
+
+		parent = current.getParent();
+		
+		if((int)floor(tabCord[this->playerNumber * 2]) +  (int)floor(tabCord[this->playerNumber * 2 + 1]) * sizeX == objectif){
+			dropBombe = true;
+		}
+		
+		if (parent) {
+			if (parent->getX() > current.getX()) {
+				*keystate += (short) brainKeyRight;
+				prevDir = right;
+			} else if (parent->getX() < current.getX()) {
+				*keystate += (short) brainKeyLeft;
+				prevDir = left;
+			} else if (parent->getY() < current.getY()) {
+				*keystate += (short) brainKeyUp;
+				prevDir = up;
+			} else if (parent->getY() > current.getY()) {
+				*keystate += (short) brainKeyDown;
+				prevDir = down;
+			}
+		}else{
+			switch(prevDir){
+				case right:
+					*keystate += (short) brainKeyRight;
+					if(tabCord[this->playerNumber * 2] - floor(tabCord[this->playerNumber * 2]) > 0.4){
+						prevDir = none;	
+					}
+				break;
+				case left:
+					*keystate += (short) brainKeyLeft;
+					if(tabCord[this->playerNumber * 2] - floor(tabCord[this->playerNumber * 2]) < 0.6){
+						prevDir = none;	
+					}
+				break;
+				case up:
+					*keystate += (short) brainKeyUp;
+					if(tabCord[this->playerNumber * 2+1] - floor(tabCord[this->playerNumber * 2+1]) < 0.6){
+						prevDir = none;
+					}
+				break;
+				case down:
+					*keystate += (short) brainKeyDown;
+					if(tabCord[this->playerNumber * 2+1] - floor(tabCord[this->playerNumber * 2+1]) > 0.4){
+						prevDir = none;
+					}
+				break;
+			}
+		}
+			
+		while (true) {
+			if (parent) {
+				fprintf(stderr, " ");
+				parent->printHimself();
+				parent = parent->getParent();
+			} else {
+				break;
+			}
+		}
+		parent = NULL;
+	}
+}
+
 
 int Brain::findNearPlayer() {
 	float minDistance = -1.0;
