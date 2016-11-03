@@ -12,20 +12,34 @@ class BFS {
 		~BFS();
 		int solve(int startIndex, int typeSearch, bool ignoreWall);
 		int findNextBrick(int startIndex);
+		void addIgnoreCase(int index);
+		
 		int findSecure(int startIndex);
 		bool isSecure(int indexTest);
 
+		bool checkDropBombe(int startIndex);
+		bool isChecked(int idx, int startIndex);
+
 		void resetSecure();
 		void reset();
+		void resetCheckDropBombe();
+		
 		void printTested();
 		void printTestedSecure();
+		
+		
 	private:
 		int * tab;
 		std::queue<int> open;
 		bool tested[sizeX * sizeY];
 		std::queue<int> openSecure;
 		bool testedSecure[sizeX * sizeY];
+		
+		bool checkCase[sizeX * sizeY];
+		std::queue<int> openCheck;
+			
 		void push(int index);
 		void pushSecure(int index);
+		void pushChecked(int index);
 };
 #endif

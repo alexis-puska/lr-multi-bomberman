@@ -8,11 +8,22 @@ Brain::Brain(unsigned short * keystate, int tab[sizeX * sizeY], float * tabCord,
 	this->playerNumber = playerNumber;
 	this->targetPlayer = -1;
 	this->cpuLevel = cpuLevel;
+	this->idxOwnBombe = -1;
+
+	this->objectifIndex = 0;
 //	nbTick = 0;
 	astar = new AStar(tab);
 	bfs = new BFS(tab);
 	prevDir = none;
-	dropBombe = false;
+	switch(this->cpuLevel){
+		case 1:
+			brainStep = lvl1CheckCanDropBomb;
+			break;
+		case 2:
+			break;
+		case 3:	
+			break;	
+	}
 }
 
 Brain::~Brain() {
@@ -23,49 +34,144 @@ Brain::~Brain() {
 	tabCord = NULL;
 }
 
+
+
+
 void Brain::think() {
 	*keystate = (short) 0;
 	
-	if(dropBombe){
-		//*keystate += brainKeyA;
-		dropBombe = false;
-	}
-
 	if (tabCord[playerNumber * 2] != -1) {
-		int startIndex = int(floor(tabCord[playerNumber * 2]) + floor(tabCord[playerNumber * 2 + 1]) * sizeX);
-		int wallIndex = 0;
-
-		bfs->reset();
-		wallIndex = bfs->solve(startIndex, 3, false);
-
-		bfs->reset();
-		wallIndex = bfs->findNextBrick(startIndex);
-
-		bfs->resetSecure();
-		int secureIndex = bfs->findSecure(startIndex);
-
-		if(secureIndex >= 0){
-			walkToObjectif(secureIndex);
-		}else{
-			switch (wallIndex) {
-				case -1:
-					*keystate += (short) brainKeyUp;
-					break;
-				case -2:
-					*keystate += (short) brainKeyRight;
-					break;
-				case -3:
-					*keystate += (short) brainKeyDown;
-					break;
-				case -4:
-					*keystate += (short) brainKeyLeft;
-					break;
-			}	
-		}	
+		currentIndex = int(floor(tabCord[playerNumber * 2]) + floor(tabCord[playerNumber * 2 + 1]) * sizeX);
+	}else{
+		currentIndex = -1;
+	}
+	switch(this->cpuLevel){
+		case 1:
+			level1();
+			break;
+		case 2:
+			break;
+		case 3:	
+			break;
 	}
 }
 
+
+/*
+	lvl1CheckCanDropBomb = 0,	
+	lvl1DropBomb = 1,
+	lvl1GoSecure = 2,
+	lvl1WaitBombeExplode = 3,
+	lvl1FindNearWall = 4, 
+	lvl1WalkToNearWall = 5
+	lvl1WalkToWall = 6
+*/
+
+
+void Brain::level1() {
+	
+	switch(brainStep){
+		case lvl1CheckCanDropBomb:
+		fprintf(stderr,"%i lvl1CheckCanDropBomb \n", playerNumber);
+			bfs->resetCheckDropBombe();
+			objectifIndex = bfs->findNextBrick(currentIndex);
+			if(objectifIndex!=-1){
+				if(bfs->checkDropBombe(objectifIndex)){
+					brainStep = lvl1WalkToNearWall;
+				}else{
+					bfs->addIgnoreCase(objectifIndex);
+				}
+			}
+			break;
+		case lvl1WalkToNearWall:
+		fprintf(stderr,"%i lvl1WalkToNearWall \n", playerNumber);
+			if(walkToObjectif(objectifIndex) == 1){
+				brainStep = lvl1DropBomb;
+			}
+			break;	
+		case lvl1DropBomb:
+		fprintf(stderr,"%i lvl1DropBomb \n", playerNumber);
+				*keystate += brainKeyA;
+				idxOwnBombe = currentIndex;
+				brainStep = lvl1GoSecure;
+			break;
+		case lvl1GoSecure:
+		fprintf(stderr,"%i lvl1GoSecure \n", playerNumber);
+			bfs->resetSecure();
+			objectifIndex = bfs->findSecure(currentIndex);
+			if(objectifIndex >= 0){
+				if(walkToObjectif(objectifIndex) == 0){
+					brainStep = lvl1WaitBombeExplode;
+				}
+			}	
+			break;
+		case lvl1WaitBombeExplode:
+		fprintf(stderr,"%i lvl1WaitBombeExplode \n", playerNumber);
+			if(tab[idxOwnBombe] == 0){
+				brainStep = lvl1FindNearWall;
+			}
+			break;
+		case lvl1FindNearWall:
+			fprintf(stderr,"%i lvl1FindNearWall \n", playerNumber);
+			bfs->reset();
+			objectifIndex = bfs->findNextBrick(currentIndex);
+			brainStep = lvl1CheckCanDropBomb;
+			break;
+		}
+	
+	
+	
+	
+
+//	if (currentIndex != -1) {
+//		
+//		int wallIndex = 0;
+//
+//		bfs->reset();
+//		wallIndex = bfs->solve(currentIndex, 3, false);
+//
+//		bfs->reset();
+//		wallIndex = bfs->findNextBrick(currentIndex);
+//
+//		bfs->resetSecure();
+//		int secureIndex = bfs->findSecure(currentIndex);
+//
+//		if(secureIndex >= 0){
+//			walkToObjectif(secureIndex);
+//		}else{
+//			switch (wallIndex) {
+//				case -1:
+//					*keystate += (short) brainKeyUp;
+//					break;
+//				case -2:
+//					*keystate += (short) brainKeyRight;
+//					break;
+//				case -3:
+//					*keystate += (short) brainKeyDown;
+//					break;
+//				case -4:
+//					*keystate += (short) brainKeyLeft;
+//					break;
+//			}	
+//		}	
+//	}	
+	
+}
+
+void Brain::level2() {
+}
+
+void Brain::level3() {
+}
+
+
+
+
+
+
+
 int Brain::walkToObjectif(int objectif){
+
 	astar->init(objectif % sizeX, floor(objectif / sizeX), tabCord[this->playerNumber * 2], tabCord[this->playerNumber * 2 + 1], 2);
 	astar->solve();
 	if (astar->isSolved()) {
@@ -73,10 +179,6 @@ int Brain::walkToObjectif(int objectif){
 		AStarCell * parent;
 
 		parent = current.getParent();
-		
-		if((int)floor(tabCord[this->playerNumber * 2]) +  (int)floor(tabCord[this->playerNumber * 2 + 1]) * sizeX == objectif){
-			dropBombe = true;
-		}
 		
 		if (parent) {
 			if (parent->getX() > current.getX()) {
@@ -120,17 +222,21 @@ int Brain::walkToObjectif(int objectif){
 				break;
 			}
 		}
+				
+		int nbCaseRemaining = 0;
 			
 		while (true) {
 			if (parent) {
-				fprintf(stderr, " ");
-				parent->printHimself();
+//				fprintf(stderr, " ");
+//				parent->printHimself();
 				parent = parent->getParent();
+				nbCaseRemaining++;
 			} else {
 				break;
 			}
 		}
 		parent = NULL;
+		return nbCaseRemaining;
 	}
 }
 

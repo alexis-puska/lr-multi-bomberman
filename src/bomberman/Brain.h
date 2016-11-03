@@ -41,6 +41,15 @@ enum brainMove {
 	none = -1, down = 0, up = 1, left = 2, right = 3
 };
 
+enum brain1step {
+	lvl1CheckCanDropBomb = 0,	
+	lvl1DropBomb = 1,
+	lvl1GoSecure = 2,
+	lvl1WaitBombeExplode = 3,
+	lvl1FindNearWall = 4, 
+	lvl1WalkToNearWall = 5
+};
+
 class Brain {
 
 	public:
@@ -62,15 +71,20 @@ class Brain {
 		AStar * astar;
 		BFS * bfs;
 		int targetPlayer;
-		int curX, curY;
+		int currentIndex;
 		int prevDir;
 		int cpuLevel;
 		int idxOwnBombe;
-		bool dropBombe;
-		
+
+		int brainStep;
+
+		int objectifIndex;
 		
 		
 		int findNearPlayer();
+		void level1();
+		void level2();
+		void level3();
 		float calcDistance(int x1, int y1, int x2, int y2);
 		int walkToObjectif(int objectif);
 

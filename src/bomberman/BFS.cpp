@@ -37,6 +37,10 @@ void BFS::printTested() {
 	fprintf(stderr, "\n\n\n\n\n");
 }
 
+void BFS::addIgnoreCase(int index){
+	tested[index] = true;
+}
+
 /*
  * function for brain to search an object 
  */
@@ -259,4 +263,83 @@ bool BFS::isSecure(int idx) {
 		y++;
 	}
 	return true;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+void BFS::resetCheckDropBombe() {
+	for (int i = 0; i < sizeX * sizeY; i++) {
+		if (tab[i] == wallElement || tab[i] == bombeElement || tab[i] == brickElement) {
+			checkCase[i] = true;
+		} else {
+			checkCase[i] = false;
+		}
+	}
+	while (!openCheck.empty()) {
+		openCheck.pop();
+	}
+}
+
+bool BFS::checkDropBombe(int startIndex) {
+	int indexTest = 0;
+	openCheck.push(startIndex);
+	while (openCheck.size() > 0) {
+		indexTest = openCheck.front();
+		openCheck.pop();
+
+		if (isChecked(indexTest, startIndex)) {
+			fprintf(stderr,"true");
+			return true;
+		} else {
+			checkCase[indexTest] = true;
+		}
+
+		if (((indexTest % sizeX) - 1) >= 0) {
+			if (!checkCase[indexTest - 1]) {
+				pushChecked(indexTest - 1);
+			}
+		}
+		if (((indexTest % sizeX) + 1) < sizeX) {
+			if (!checkCase[indexTest + 1]) {
+				pushChecked(indexTest + 1);
+			}
+		}
+		if ((indexTest - sizeX) >= 0) {
+			if (!checkCase[indexTest - sizeX]) {
+				pushChecked(indexTest - sizeX);
+			}
+		}
+		if ((indexTest + sizeX) < sizeY * sizeX) {
+			if (!checkCase[indexTest + sizeX]) {
+				pushChecked(indexTest + sizeX);
+			}
+		}
+	}
+	return false;
+}
+
+void BFS::pushChecked(int index) {
+	checkCase[index] = true;
+	openCheck.push(index);
+}
+
+bool BFS::isChecked(int idx, int startIndex) {	
+	int calcX = idx % sizeX;
+	int calcY = floor(idx / sizeX);
+	int startCalcX = startIndex % sizeX;
+	int startCalcY = floor(startIndex / sizeX);
+	if(calcX != startCalcX && calcY != startCalcY){
+		return true;
+	}else{
+		return false;	
+	}
 }
