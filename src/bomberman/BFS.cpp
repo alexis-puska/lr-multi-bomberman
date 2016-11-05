@@ -4,6 +4,7 @@
 
 BFS::BFS(int * tab) {
 	this->tab = tab;
+	resetCheckDropBombe();
 	for (int i = 0; i < sizeX * sizeY; i++) {
 		tested[i] = false;
 		if (tab[i] == wallElement || tab[i] == bombeElement || tab[i] == brickElement) {
@@ -18,9 +19,16 @@ BFS::~BFS() {
 	tab = NULL;
 }
 
-void BFS::reset() {
+void BFS::reset(bool withIgnoredCase) {
 	for (int i = 0; i < sizeX * sizeY; i++) {
 		tested[i] = false;
+	}
+	if(withIgnoredCase){
+		ignoredCase.clear();	
+	}else{
+		for (unsigned int i = 0; i < ignoredCase.size(); i++){
+			tested[ignoredCase[i]] = true;
+		}
 	}
 	while (!open.empty()) {
 		open.pop();
@@ -38,7 +46,7 @@ void BFS::printTested() {
 }
 
 void BFS::addIgnoreCase(int index){
-	tested[index] = true;
+	ignoredCase.push_back(index);
 }
 
 /*
@@ -291,39 +299,63 @@ void BFS::resetCheckDropBombe() {
 
 bool BFS::checkDropBombe(int startIndex) {
 	int indexTest = 0;
+	int index = 0;
+	resetCheckDropBombe();
 	openCheck.push(startIndex);
 	while (openCheck.size() > 0) {
 		indexTest = openCheck.front();
 		openCheck.pop();
 
 		if (isChecked(indexTest, startIndex)) {
-			fprintf(stderr,"true");
 			return true;
 		} else {
 			checkCase[indexTest] = true;
 		}
 
+
+		
 		if (((indexTest % sizeX) - 1) >= 0) {
-			if (!checkCase[indexTest - 1]) {
-				pushChecked(indexTest - 1);
+			index = indexTest - 1;
+			if (tab[index] == wallElement || tab[index] == bombeElement || tab[index] == brickElement) {
+				checkCase[index] = true;
+			}else{
+				if (!checkCase[index]) {
+					pushChecked(index);
+				}
 			}
 		}
 		if (((indexTest % sizeX) + 1) < sizeX) {
-			if (!checkCase[indexTest + 1]) {
-				pushChecked(indexTest + 1);
+			index = indexTest + 1;
+			if (tab[index] == wallElement || tab[index] == bombeElement || tab[index] == brickElement) {
+				checkCase[index] = true;
+			}else{
+				if (!checkCase[index]) {
+					pushChecked(index);
+				}
 			}
 		}
 		if ((indexTest - sizeX) >= 0) {
-			if (!checkCase[indexTest - sizeX]) {
-				pushChecked(indexTest - sizeX);
+			index = indexTest - sizeX;
+			if (tab[index] == wallElement || tab[index] == bombeElement || tab[index] == brickElement) {
+				checkCase[index] = true;
+			}else{
+				if (!checkCase[index]) {
+					pushChecked(index);
+				}
 			}
 		}
 		if ((indexTest + sizeX) < sizeY * sizeX) {
-			if (!checkCase[indexTest + sizeX]) {
-				pushChecked(indexTest + sizeX);
+			index = indexTest + sizeX;
+			if (tab[index] == wallElement || tab[index] == bombeElement || tab[index] == brickElement) {
+				checkCase[index] = true;
+			}else{
+				if (!checkCase[index]) {
+					pushChecked(index);
+				}
 			}
 		}
 	}
+
 	return false;
 }
 
@@ -332,7 +364,10 @@ void BFS::pushChecked(int index) {
 	openCheck.push(index);
 }
 
-bool BFS::isChecked(int idx, int startIndex) {	
+bool BFS::isChecked(int idx, int startIndex) {
+	if(idx == startIndex){
+		return false;
+	}
 	int calcX = idx % sizeX;
 	int calcY = floor(idx / sizeX);
 	int startCalcX = startIndex % sizeX;

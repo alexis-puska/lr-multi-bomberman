@@ -11,7 +11,6 @@ Brain::Brain(unsigned short * keystate, int tab[sizeX * sizeY], float * tabCord,
 	this->idxOwnBombe = -1;
 
 	this->objectifIndex = 0;
-//	nbTick = 0;
 	astar = new AStar(tab);
 	bfs = new BFS(tab);
 	prevDir = none;
@@ -38,6 +37,7 @@ Brain::~Brain() {
 
 
 void Brain::think() {
+	
 	*keystate = (short) 0;
 	
 	if (tabCord[playerNumber * 2] != -1) {
@@ -72,31 +72,29 @@ void Brain::level1() {
 	
 	switch(brainStep){
 		case lvl1CheckCanDropBomb:
-		fprintf(stderr,"%i lvl1CheckCanDropBomb \n", playerNumber);
 			bfs->resetCheckDropBombe();
+			bfs->reset(false);
 			objectifIndex = bfs->findNextBrick(currentIndex);
 			if(objectifIndex!=-1){
-				if(bfs->checkDropBombe(objectifIndex)){
-					brainStep = lvl1WalkToNearWall;
-				}else{
-					bfs->addIgnoreCase(objectifIndex);
-				}
+				brainStep = lvl1WalkToNearWall;
 			}
 			break;
 		case lvl1WalkToNearWall:
-		fprintf(stderr,"%i lvl1WalkToNearWall \n", playerNumber);
 			if(walkToObjectif(objectifIndex) == 1){
-				brainStep = lvl1DropBomb;
+				if(bfs->checkDropBombe(currentIndex)){
+					brainStep = lvl1DropBomb;
+				}else{
+					bfs->addIgnoreCase(objectifIndex);
+					objectifIndex = bfs->findNextBrick(currentIndex);
+				}
 			}
 			break;	
 		case lvl1DropBomb:
-		fprintf(stderr,"%i lvl1DropBomb \n", playerNumber);
 				*keystate += brainKeyA;
 				idxOwnBombe = currentIndex;
 				brainStep = lvl1GoSecure;
 			break;
 		case lvl1GoSecure:
-		fprintf(stderr,"%i lvl1GoSecure \n", playerNumber);
 			bfs->resetSecure();
 			objectifIndex = bfs->findSecure(currentIndex);
 			if(objectifIndex >= 0){
@@ -106,14 +104,12 @@ void Brain::level1() {
 			}	
 			break;
 		case lvl1WaitBombeExplode:
-		fprintf(stderr,"%i lvl1WaitBombeExplode \n", playerNumber);
 			if(tab[idxOwnBombe] == 0){
 				brainStep = lvl1FindNearWall;
 			}
 			break;
 		case lvl1FindNearWall:
-			fprintf(stderr,"%i lvl1FindNearWall \n", playerNumber);
-			bfs->reset();
+			bfs->reset(true);
 			objectifIndex = bfs->findNextBrick(currentIndex);
 			brainStep = lvl1CheckCanDropBomb;
 			break;

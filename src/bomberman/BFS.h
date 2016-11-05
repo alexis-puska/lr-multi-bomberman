@@ -21,7 +21,7 @@ class BFS {
 		bool isChecked(int idx, int startIndex);
 
 		void resetSecure();
-		void reset();
+		void reset(bool withIgnoredCase);
 		void resetCheckDropBombe();
 		
 		void printTested();
@@ -31,6 +31,7 @@ class BFS {
 	private:
 		int * tab;
 		std::queue<int> open;
+		std::vector<int> ignoredCase;
 		bool tested[sizeX * sizeY];
 		std::queue<int> openSecure;
 		bool testedSecure[sizeX * sizeY];
