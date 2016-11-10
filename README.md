@@ -10,6 +10,7 @@
 
 - Linux / Ubuntu
 ```
+sudo apt-get install libsdl2-image-mixer
 sudo apt-get install libsdl2-image-dev
 sudo apt-get install libsdl2-ttf-dev
 sudo apt-get install libsdl2-dev
@@ -18,7 +19,7 @@ sudo apt-get install libsdl2-dev
 
 - Raspberry pi 2/3 : 
 ```
-sudo apt-get install -y make libsdl2-dev libsdl2-image-dev libsdl2-ttf-dev
+sudo apt-get install -y make libsdl2-dev libsdl2-image-dev libsdl2-ttf-dev libsdl2-mixer-dev
 ```
 
 
@@ -28,6 +29,7 @@ Download the SDL2 library
 https://www.libsdl.org/release/SDL2-2.0.4.dmg
 https://www.libsdl.org/projects/SDL_ttf/release/SDL2_ttf-2.0.14.dmg
 https://www.libsdl.org/projects/SDL_image/release/SDL2_image-2.0.1.dmg
+https://www.libsdl.org/projects/SDL_mixer/release/SDL2_mixer-2.0.1.dmg
 unzip and install the SDL2_image.framework, SDL2_ttf.framework, SDL2.framework inside the folder : /Library/Frameworks/
 ```
 
