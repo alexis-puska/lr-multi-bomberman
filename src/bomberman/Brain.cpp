@@ -234,6 +234,7 @@ int Brain::walkToObjectif(int objectif){
 		parent = NULL;
 		return nbCaseRemaining;
 	}
+	return 0;
 }
 
 

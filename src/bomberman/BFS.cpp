@@ -215,6 +215,7 @@ int BFS::findSecure(int startIndex) {
 			return -4;
 		}
 	}
+	return -1;
 }
 
 void BFS::pushSecure(int index) {
