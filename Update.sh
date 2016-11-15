@@ -1,2 +1,2 @@
-cd /opt/pi/RetroPie/splashscreens/lr-multi-bomberman
+cd /home/pi/RetroPie/roms/lr-multi-bomberman
 git pull
