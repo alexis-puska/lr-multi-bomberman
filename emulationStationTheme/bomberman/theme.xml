@@ -9,7 +9,7 @@
 			<pos>0 0</pos>
 			<origin>0 0</origin>
 			<size>1 1</size>
-			<path>./../art/carbon_fiber.png</path>
+			<path>./art/bomberman_background.png</path>
 		</image>
 		
 		<image name="overlay" extra="true">
@@ -48,7 +48,7 @@
 			<pos>0 0</pos>
 			<origin>0 0</origin>
 			<size>1 1</size>
-			<path>./../art/carbon_fiber.png</path>
+			<path>./art/bomberman_background.png</path>
 		</image>
 		
 		<image name="logo2" extra="true">
