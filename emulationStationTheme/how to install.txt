@@ -1,0 +1,13 @@
+add this xml fragment to es_systems.cfg in /etc/emulationstation
+
+  <system>
+    <name>bomberman</name>
+    <fullname>bomberman</fullname>
+    <plateform>bomberman</plateform>
+    <path>/home/pi/RetroPie/splashscreens/lr-multi-bomberman</path>
+    <command>sudo %ROM%</command>
+    <!--<command>/opt/retropie/emulators/retroarch/bin/retroarch -L %ROM% --config /opt/retropie/configs/all/retroarch.cfg</command>-->
+    <extension>.sh</extension>
+    <theme>bomberman</theme>
+  </system>
+
