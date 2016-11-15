@@ -58,7 +58,7 @@ Raspberry pi 2/3:
 ```
 
 ===============================
-Installation on retropie : 
+**Installation on retropie :**
 
 add this xml fragment to es_systems.cfg file in /etc/emulationstation/es_systems.cfg
 ```
