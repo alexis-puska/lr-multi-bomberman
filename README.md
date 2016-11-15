@@ -58,6 +58,42 @@ Raspberry pi 2/3:
 ```
 
 ===============================
+Installation on retropie : 
+
+add this xml fragment to es_systems.cfg file in /etc/emulationstation/es_systems.cfg
+```
+  <system>
+    <name>bomberman</name>
+    <fullname>bomberman</fullname>
+    <plateform>bomberman</plateform>
+    <path>/home/pi/RetroPie/roms/lr-multi-bomberman</path>
+    <command>sudo %ROM%</command>
+    <!--<command>/opt/retropie/emulators/retroarch/bin/retroarch -L %ROM% --config /opt/retropie/configs/all/retroarch.cfg</command>-->
+    <extension>.sh</extension>
+    <theme>bomberman</theme>
+  </system>
+```
+
+
+in a folder clone the project : 
+```
+cd /home/pi/RetroPie/roms
+git clone https://github.com/alexis-puska/lr-multi-bomberman.git
+cd lr-multi-bomberman
+chmod +x Update.sh
+chmod +x Compile\ pi.sh
+chmod +x Bomberman.sh
+./Compile\ pi.sh
+cd emulationStationTheme
+sudo cp -avr bomberman /etc/emulationstation/themes/carbon
+sudo reboot
+```
+
+After this step lr-multi-bomberman is installed, compile, and integrated in emulation station on retropie distribution. If an update of code is made, you can just launch the UPDATE line in emulation station, COMPILE PI and launch the game with BOMBERMAN :) Enjoy !
+
+
+===============================
+
 **Next step :**
 - Artificial interlligence (current work)
 - refactoring of code (change size of map for future pirate map, change the level structure definition for variante / bonus per level / teleporter)
@@ -83,3 +119,4 @@ trou (3)
 mine sous marine (4)
 sable mouvant (4)
 teleporter (3)
+
