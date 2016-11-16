@@ -85,6 +85,8 @@ class Brain {
 		void level1();
 		void level2();
 		void level3();
+		void level4();
+		void level5();
 		float calcDistance(int x1, int y1, int x2, int y2);
 		int walkToObjectif(int objectif);
 

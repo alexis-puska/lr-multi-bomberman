@@ -171,9 +171,19 @@ void Brain::level1() {
 }
 
 void Brain::level2() {
+	level1();
 }
 
 void Brain::level3() {
+	level1();
+}
+
+void Brain::level4() {
+	level1();
+}
+
+void Brain::level5() {
+	level1();
 }
 
 
