@@ -548,8 +548,8 @@ void Bomberman::drawGameOptionMenu() {
 				case cpuLevelOption:
 					gameOption[cursorPosition] = gameOption[cursorPosition] + 1;
 					if (gameOption[cursorPosition] < 1) {
-						gameOption[cursorPosition] = 3;
-					} else if (gameOption[cursorPosition] > 3) {
+						gameOption[cursorPosition] = 5;
+					} else if (gameOption[cursorPosition] > 5) {
 						gameOption[cursorPosition] = 1;
 					}
 					break;
@@ -558,7 +558,7 @@ void Bomberman::drawGameOptionMenu() {
 					if (gameOption[cursorPosition] > 6) {
 						gameOption[cursorPosition] = -1;
 					} else if (gameOption[cursorPosition] == 0) {
-						gameOption[cursorPosition] = 3;
+						gameOption[cursorPosition] = 2;
 					}
 					break;
 			}
@@ -577,14 +577,14 @@ void Bomberman::drawGameOptionMenu() {
 				case cpuLevelOption:
 					gameOption[cursorPosition] = gameOption[cursorPosition] - 1;
 					if (gameOption[cursorPosition] < 1) {
-						gameOption[cursorPosition] = 3;
-					} else if (gameOption[cursorPosition] > 3) {
+						gameOption[cursorPosition] = 5;
+					} else if (gameOption[cursorPosition] > 5) {
 						gameOption[cursorPosition] = 1;
 					}
 					break;
 				case timeLevelOption:
 					gameOption[cursorPosition] = gameOption[cursorPosition] - 1;
-					if (gameOption[cursorPosition] == 2) {
+					if (gameOption[cursorPosition] == 1) {
 						gameOption[cursorPosition] = -1;
 					} else if (gameOption[cursorPosition] == -2) {
 						gameOption[cursorPosition] = 6;

@@ -19,9 +19,17 @@ Brain::Brain(unsigned short * keystate, int tab[sizeX * sizeY], float * tabCord,
 			brainStep = lvl1CheckCanDropBomb;
 			break;
 		case 2:
+			brainStep = lvl1CheckCanDropBomb;
 			break;
 		case 3:	
-			break;	
+			brainStep = lvl1CheckCanDropBomb;
+			break;
+		case 4:
+			brainStep = lvl1CheckCanDropBomb;
+			break;
+		case 5:	
+			brainStep = lvl1CheckCanDropBomb;
+			break;
 	}
 }
 
@@ -50,8 +58,16 @@ void Brain::think() {
 			level1();
 			break;
 		case 2:
+			level1();
 			break;
 		case 3:	
+			level1();
+			break;
+		case 4:
+			level1();
+			break;
+		case 5:	
+			level1();
 			break;
 	}
 }
