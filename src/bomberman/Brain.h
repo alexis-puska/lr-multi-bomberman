@@ -9,6 +9,7 @@
 #endif
 
 #include <stdio.h>
+#include <time.h>
 #include "AStar.h"
 #include "BFS.h"
 
