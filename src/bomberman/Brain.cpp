@@ -31,6 +31,7 @@ Brain::Brain(unsigned short * keystate, int tab[sizeX * sizeY], float * tabCord,
 			brainStep = lvl1CheckCanDropBomb;
 			break;
 	}
+	srand (time(NULL));
 }
 
 Brain::~Brain() {
@@ -93,6 +94,21 @@ void Brain::level1() {
 			objectifIndex = bfs->findNextBrick(currentIndex);
 			if(objectifIndex!=-1){
 				brainStep = lvl1WalkToNearWall;
+			}else{
+				fprintf(stderr,"here\n");
+				
+				if((rand() % 7 + 1)>=1) {
+					while(true){
+						objectifIndex = rand() % (sizeX * sizeY) + 1;
+						if(tab[objectifIndex] == emptyElement) {
+							brainStep = lvl1WalkToNearWall;
+							break;	
+						}
+
+					}
+				}else{
+					brainStep = lvl1DropBomb;
+				}
 			}
 			break;
 		case lvl1WalkToNearWall:

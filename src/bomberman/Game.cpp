@@ -704,6 +704,7 @@ void Game::tick() {
 	rmask = 0x00ff0000;
 	gmask = 0x0000ff00;
 	bmask = 0x000000ff;
+	int posYcalc = 0;
 
 	switch (gameState) {
 
@@ -749,6 +750,7 @@ void Game::tick() {
 			 *	GAME PART : BOMBE
 			 *
 			 */
+			 
 			for (unsigned int i = 0; i < bombes.size(); i++) {
 				bombes[i]->tick(playerBombeExplode);
 				if (bombes[i]->isExplode()) {
@@ -785,9 +787,14 @@ void Game::tick() {
 						if (exitLoop == true) {
 							break;
 						}
+						posYcalc = posYBombe - j;
+						if(posYcalc < 0){
+							posYcalc = sizeY + posYcalc;
+						}
+						
 
 						//explostion and wall
-						switch (tab[posXBombe + (posYBombe - j) * sizeX]) {
+						switch (tab[posXBombe + posYcalc * sizeX]) {
 							case emptyElement:
 							case explosionElement:
 								if (j == strenght) {
@@ -795,11 +802,11 @@ void Game::tick() {
 								} else {
 									ind = 2;
 								}
-								explosions.push_back(new Explosion(posXBombe, posYBombe - j, ind, explosionSprite, tab, tabBonus));
+								explosions.push_back(new Explosion(posXBombe, posYcalc, ind, explosionSprite, tab, tabBonus));
 								break;
 							case brickElement:
-								burnWalls.push_back(new BurnWall(posXBombe, posYBombe - j, ind, burnWallSprite, tab, tabBonus));
-								grid->burnABrick(posXBombe, posYBombe - j);
+								burnWalls.push_back(new BurnWall(posXBombe, posYcalc, ind, burnWallSprite, tab, tabBonus));
+								grid->burnABrick(posXBombe, posYcalc);
 								if (!isAPowerBombe) {
 									exitLoop = true;
 								}
@@ -807,7 +814,7 @@ void Game::tick() {
 								break;
 							case bombeElement:
 								for (unsigned int k = 0; k < bombes.size(); k++) {
-									if (bombes[k]->getCase() == posXBombe + (posYBombe - j) * sizeX) {
+									if (bombes[k]->getCase() == posXBombe + posYcalc * sizeX) {
 										bombes[k]->explode();
 										if (!isAPowerBombe) {
 											exitLoop = true;
@@ -822,8 +829,8 @@ void Game::tick() {
 						}
 						if (!aWallHasBurn) {
 							// if we don't have burn a wall, we can have a bonus in the case of table. we remove it !
-							if (tabBonus[posXBombe + (posYBombe - j) * sizeX] != -1) {
-								grid->burnBonus(posXBombe, posYBombe - j);
+							if (tabBonus[posXBombe + posYcalc * sizeX] != -1) {
+								grid->burnBonus(posXBombe, posYcalc);
 							}
 						}
 					}
@@ -884,8 +891,13 @@ void Game::tick() {
 						if (exitLoop == true) {
 							break;
 						}
+						
+						posYcalc = posYBombe + j;
+						if(posYcalc >= sizeY){
+							posYcalc = posYcalc - sizeY;
+						}
 
-						switch (tab[posXBombe + (posYBombe + j) * sizeX]) {
+						switch (tab[posXBombe + posYcalc * sizeX]) {
 							case emptyElement:
 							case explosionElement:
 								if (j == strenght) {
@@ -893,11 +905,11 @@ void Game::tick() {
 								} else {
 									ind = 6;
 								}
-								explosions.push_back(new Explosion(posXBombe, posYBombe + j, ind, explosionSprite, tab, tabBonus));
+								explosions.push_back(new Explosion(posXBombe, posYcalc, ind, explosionSprite, tab, tabBonus));
 								break;
 							case brickElement:
-								burnWalls.push_back(new BurnWall(posXBombe, posYBombe + j, ind, burnWallSprite, tab, tabBonus));
-								grid->burnABrick(posXBombe, posYBombe + j);
+								burnWalls.push_back(new BurnWall(posXBombe, posYcalc, ind, burnWallSprite, tab, tabBonus));
+								grid->burnABrick(posXBombe, posYcalc);
 								if (!isAPowerBombe) {
 									exitLoop = true;
 								}
@@ -905,7 +917,7 @@ void Game::tick() {
 								break;
 							case bombeElement:
 								for (unsigned int k = 0; k < bombes.size(); k++) {
-									if (bombes[k]->getCase() == posXBombe + (posYBombe + j) * sizeX) {
+									if (bombes[k]->getCase() == posXBombe + posYcalc * sizeX) {
 										bombes[k]->explode();
 										if (!isAPowerBombe) {
 											exitLoop = true;
@@ -920,8 +932,8 @@ void Game::tick() {
 						}
 						if (!aWallHasBurn) {
 							// if we don't have burn a wall, we can have a bonus in the case of table. we remove it !
-							if (tabBonus[posXBombe + (posYBombe + j) * sizeX] != -1) {
-								grid->burnBonus(posXBombe, posYBombe + j);
+							if (tabBonus[posXBombe + posYBombe * sizeX] != -1) {
+								grid->burnBonus(posXBombe, posYBombe);
 							}
 						}
 
