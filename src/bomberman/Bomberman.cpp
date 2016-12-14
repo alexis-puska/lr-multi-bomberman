@@ -14,9 +14,7 @@ const static char *BombermanSpritePunk = "./resources/sprite/characters/AllBombe
 const static char *BombermanSpriteMexican = "./resources/sprite/characters/AllBombermanMexican.png";
 
 Bomberman::Bomberman(SDL_Surface * vout_bufLibretro) {
-	
-	
-	Sprite& sprite=Sprite::Instance();
+	Sprite::Instance();
 	Sound::Instance();
 	Sound::Instance().startMenuMusique();
 	
@@ -201,10 +199,13 @@ void Bomberman::tick(unsigned short in_keystateLibretro[16]) {
 					}
 					game = new Game(levelIndex, playerType, gameOption, vout_buf, in_keystate, nbPlayerConfig);
 					currentStep = gameStep;
-					//Mix_HaltMusic();
-					//Mix_FreeMusic (musique);
-					//musique = Mix_LoadMUS(battlePath);
-					//Mix_PlayMusic(musique, -1);
+					
+					
+					Sound::Instance().stopMusique();
+					Sound::Instance().startBattleMusique();
+					//TODO
+					
+					
 					break;
 				case gameStep:
 					break;
@@ -277,10 +278,8 @@ void Bomberman::tick(unsigned short in_keystateLibretro[16]) {
 			game = NULL;
 			cursorPosition = levelIndex;
 			currentStep = levelSelectionMenu;
-			//Mix_HaltMusic();
-			//Mix_FreeMusic (musique);
-			//musique = Mix_LoadMUS(musiquePath);
-			//Mix_PlayMusic(musique, -1);
+			Sound::Instance().stopMusique();
+			Sound::Instance().startMenuMusique();
 		}
 	}
 }

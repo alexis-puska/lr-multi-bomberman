@@ -17,7 +17,7 @@ class Sound {
 		
 		void startBattleMusique();
 		void startMenuMusique();
-		void StopMusique();
+		void stopMusique();
 		void playValidSound();		
 		void playCancelSound();
 		void playBipSound();
@@ -30,8 +30,8 @@ class Sound {
 		
 		
 	private:
-		Sound& operator= (const Sound&){}
-		Sound (const Sound&){}
+		Sound& operator= (const Sound&);
+		Sound (const Sound&);
 		static Sound m_instance;
 		
 		//musique

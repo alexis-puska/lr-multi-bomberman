@@ -112,9 +112,7 @@ Game::Game(int levelIndex, int playerInformationParam[16][2], int gameOption[4],
 	SDL_FreeSurface(surfaceMessage);
 	TTF_CloseFont (fragileBombersFont);
 
-	Mix_VolumeMusic(MIX_MAX_VOLUME / 3);
-	Mix_AllocateChannels(6);
-
+	
 	// init variable or surface
 	screenBuffer = SDL_CreateRGBSurface(0, 630, 336, 32, rmask, gmask, bmask, amask);
 	playerBombeExplode = SDL_CreateRGBSurface(0, 630, 336, 32, rmask, gmask, bmask, amask);

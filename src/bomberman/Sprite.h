@@ -20,8 +20,8 @@ class Sprite {
 		Sprite();
 		~Sprite();
 	private:
-		Sprite& operator= (const Sprite&){}
-		Sprite (const Sprite&){}
+		Sprite& operator= (const Sprite&);
+		Sprite (const Sprite&);
 		static Sprite m_instance;
 		
 		

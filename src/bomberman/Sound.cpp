@@ -64,14 +64,16 @@ Sound& Sound::Instance()
 }
 
 void Sound::startBattleMusique(){
+	Mix_VolumeMusic(MIX_MAX_VOLUME / 3);
 	Mix_PlayMusic(battle, -1);
 }
 
 void Sound::startMenuMusique(){
+	Mix_VolumeMusic (MIX_MAX_VOLUME);
 	Mix_PlayMusic(menu, -1);
 }
 
-void Sound::StopMusique(){
+void Sound::stopMusique(){
 	Mix_HaltMusic();
 }
 
