@@ -59,10 +59,7 @@ enum louisTypeEnum {
 };
 
 Player::Player(unsigned short * in_keystate, bool isACpuPlayer, int indexSprite, float posX, float posY, int playerNumber, int tab[sizeX * sizeY], int tabBonus[sizeX * sizeY],
-		SDL_Surface ** bombeSprite, Grid * gridParam, float * tabPlayerCoord, int nbPlayerConfig, Mix_Chunk *louisSound, Mix_Chunk *playerKickSound, Mix_Chunk *playerBurnSound,
-		Mix_Chunk *bombeBounceSound, int indexPlayerForGame
-
-		) {
+		SDL_Surface ** bombeSprite, Grid * gridParam, float * tabPlayerCoord, int nbPlayerConfig, int indexPlayerForGame) {
 	srand (time(NULL));grid = gridParam;
 	this->indexPlayerForGame = indexPlayerForGame;
 	this->posX = posX;
@@ -74,10 +71,6 @@ Player::Player(unsigned short * in_keystate, bool isACpuPlayer, int indexSprite,
 	this->characterSpriteIndex = indexSprite;
 	this->in_keystate = in_keystate;
 	this->bombeSprite = bombeSprite;
-	this->louisSound = louisSound;
-	this->playerKickSound = playerKickSound;
-	this->playerBurnSound = playerBurnSound;
-	this->bombeBounceSound = bombeBounceSound;
 	this->tabPlayerCoord = tabPlayerCoord;
 	this->nbPlayerConfig = nbPlayerConfig;
 
@@ -311,10 +304,6 @@ Player::~Player() {
 	tabBonus = NULL;
 	tabPlayerCoord = NULL;
 	grid = NULL;
-	louisSound = NULL;
-	playerKickSound = NULL;
-	playerBurnSound = NULL;
-	bombeBounceSound = NULL;
 }
 
 /*
@@ -658,11 +647,10 @@ void Player::doSomething(SDL_Surface * surfaceToDraw) {
 						if (playerState == onLouis) {
 							invincibleTime = 50;
 							playerState = normal;
-							Mix_PlayChannel(2, playerBurnSound, 0);
+							Sound::Instance().playPlayerBurnSound();
 						} else {
 							playerState = burning;
-							louisSound = NULL;
-							Mix_PlayChannel(2, playerBurnSound, 0);
+							Sound::Instance().playPlayerBurnSound();
 
 							animate = true;
 						}
@@ -672,10 +660,10 @@ void Player::doSomething(SDL_Surface * surfaceToDraw) {
 						if (playerState == onLouis) {
 							invincibleTime = 50;
 							playerState = normal;
-							Mix_PlayChannel(2, playerBurnSound, 0);
+							Sound::Instance().playPlayerBurnSound();
 						} else {
 							playerState = burning;
-							Mix_PlayChannel(2, playerBurnSound, 0);
+							Sound::Instance().playPlayerBurnSound();
 							animate = true;
 						}
 					}
@@ -728,7 +716,7 @@ void Player::doSomething(SDL_Surface * surfaceToDraw) {
 					} else if (kickPower) {
 						if (tab[(roundX - 1) + (roundY * sizeX)] == bombeElement) {
 							kickIndex = (roundX - 1) + (roundY * sizeX);
-							Mix_PlayChannel(3, playerKickSound, 0);
+							Sound::Instance().playPlayerKickSound();
 							kickDirection = kickOnLeft;
 						}
 					}
@@ -753,7 +741,7 @@ void Player::doSomething(SDL_Surface * surfaceToDraw) {
 					} else if (kickPower) {
 						if (tab[(roundX + 1) + (roundY * sizeX)] == bombeElement) {
 							kickIndex = (roundX + 1) + (roundY * sizeX);
-							Mix_PlayChannel(3, playerKickSound, 0);
+							Sound::Instance().playPlayerKickSound();
 							kickDirection = kickOnRight;
 						}
 					}
@@ -781,7 +769,7 @@ void Player::doSomething(SDL_Surface * surfaceToDraw) {
 						} else if (kickPower) {
 							if (tab[roundX + ((roundY + 1) * sizeX)] == bombeElement) {
 								kickIndex = roundX + ((roundY + 1) * sizeX);
-								Mix_PlayChannel(3, playerKickSound, 0);
+								Sound::Instance().playPlayerKickSound();
 								kickDirection = kickOnDown;
 							}
 						}
@@ -810,7 +798,7 @@ void Player::doSomething(SDL_Surface * surfaceToDraw) {
 						} else if (kickPower) {
 							if (tab[roundX + ((roundY - 1) * sizeX)] == bombeElement) {
 								kickIndex = roundX + ((roundY - 1) * sizeX);
-								Mix_PlayChannel(3, playerKickSound, 0);
+								Sound::Instance().playPlayerKickSound();
 								kickDirection = kickOnUp;
 							}
 						}
@@ -930,7 +918,7 @@ Bombe * Player::addBombe() {
 			break;
 	}
 	tab[(int) floor(posX) + ((int) floor(posY) * sizeX)] = bombeElement;
-	return new Bombe(strenght, floor(posX) + 0.5, floor(posY) + 0.5, bombeType, indexPlayerForGame, time, bombeSprite, tab, tabPlayerCoord, bombeBounceSound);
+	return new Bombe(strenght, floor(posX) + 0.5, floor(posY) + 0.5, bombeType, indexPlayerForGame, time, bombeSprite, tab, tabPlayerCoord);
 }
 
 int Player::getPlayerNumber() {
@@ -1037,7 +1025,7 @@ void Player::foundABonus(int bonusIndex) {
 			break;
 		case eggBonus:
 			playerState = onLouis;
-			Mix_PlayChannel(4, louisSound, 0);
+			Sound::Instance().playLouisSound();
 			break;
 	}
 	grid->burnBonus(roundX, roundY);

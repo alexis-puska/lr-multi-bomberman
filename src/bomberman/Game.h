@@ -17,6 +17,7 @@
 
 #include "Player.h"
 #include "Brain.h"
+#include "Sound.h"
 #include "BurnWall.h"
 #include "SuddenDeathAnimation.h"
 
@@ -70,14 +71,6 @@ class Game {
 	private:
 		//Font for Header and time remaining and pause message
 		TTF_Font* fragileBombersFont;
-
-		//sound
-		Mix_Chunk *fireSound;
-		Mix_Chunk *louisSound;
-		Mix_Chunk *playerBurnSound;
-		Mix_Chunk *playerKickSound;
-		Mix_Chunk *bombeBounceSound;
-		Mix_Chunk *endSound;
 
 		//variable
 		SDL_Thread * mainThread;

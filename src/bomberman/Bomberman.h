@@ -16,6 +16,8 @@
 #include <stdio.h>
 #include "Game.h"
 #include "Cursor.h"
+#include "Sprite.h"
+#include "Sound.h"
 
 enum bombermanStepEnum {
 	home = 0,					//spashscreen
@@ -73,11 +75,9 @@ class Bomberman {
 		//image of the different level available
 		SDL_Surface **menuLevelSprite;
 
-		//SplashScreen
-		SDL_Surface *splashScreenSurface;
+		
 
-		//background for menu
-		SDL_Surface *menuBackgroundSurface;
+		
 
 		//Font for menu and Game
 		TTF_Font* fragileBombersFont;
@@ -90,11 +90,7 @@ class Bomberman {
 		bool anyPlayerkeychange;
 		unsigned short previousPlayerKeystate[16];
 
-		//musique
-		Mix_Music *musique;
-		Mix_Chunk *validSound;
-		Mix_Chunk *cancelSound;
-		Mix_Chunk *bipSound;
+		
 
 		/*
 		 *

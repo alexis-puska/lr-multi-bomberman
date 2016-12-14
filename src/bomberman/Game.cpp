@@ -8,13 +8,6 @@ const static char *fireSprite = "./resources/sprite/other/Fire.png";
 const static char *levelSprite = "./resources/sprite/level/AllLevel.png";
 const static char *background = "./resources/image/EmptyBackground.png";
 
-const static char *fireSoundPath = "./resources/sound/fire.wav";
-const static char *LouisSoundPath = "./resources/sound/louis.wav";
-const static char *bounceSoundPath = "./resources/sound/bounce.wav";
-const static char *playerBurnSoundPath = "./resources/sound/burn.wav";
-const static char *playerKickSoundPath = "./resources/sound/kick.wav";
-const static char *endSoundPath = "./resources/sound/end.wav";
-
 const static char *BombermanSprite = "./resources/sprite/characters/AllBomberman.png";
 const static char *BombermanSpriteCossak = "./resources/sprite/characters/AllBombermanCossak.png";
 const static char *BombermanSpriteBarbar = "./resources/sprite/characters/AllBombermanBarbar.png";
@@ -118,13 +111,6 @@ Game::Game(int levelIndex, int playerInformationParam[16][2], int gameOption[4],
 	copySurfaceToBackRenderer(surfaceMessage, overlay, ((640 / 2) - (surfaceMessage->w / 2)), 194);
 	SDL_FreeSurface(surfaceMessage);
 	TTF_CloseFont (fragileBombersFont);
-
-	fireSound = Mix_LoadWAV(fireSoundPath);
-	louisSound = Mix_LoadWAV(LouisSoundPath);
-	bombeBounceSound = Mix_LoadWAV(bounceSoundPath);
-	playerBurnSound = Mix_LoadWAV(playerBurnSoundPath);
-	playerKickSound = Mix_LoadWAV(playerKickSoundPath);
-	endSound = Mix_LoadWAV(endSoundPath);
 
 	Mix_VolumeMusic(MIX_MAX_VOLUME / 3);
 	Mix_AllocateChannels(6);
@@ -349,8 +335,7 @@ Game::Game(int levelIndex, int playerInformationParam[16][2], int gameOption[4],
 			case HUMAN:
 
 				// if a human link the next keystate of libretro, else link a empty value
-				player = new Player(&in_keystate[indexLibretro], false, indexTexture, startX, startY, i, tab, tabBonus, bombeSprite, grid, tabPlayerCoord, nbPlayerConfig, louisSound,
-						playerKickSound, playerBurnSound, bombeBounceSound, indexPlayerForGame);
+				player = new Player(&in_keystate[indexLibretro], false, indexTexture, startX, startY, i, tab, tabBonus, bombeSprite, grid, tabPlayerCoord, nbPlayerConfig, indexPlayerForGame);
 				players.push_back(player);
 				player = NULL;
 				indexLibretro++;
@@ -358,8 +343,7 @@ Game::Game(int levelIndex, int playerInformationParam[16][2], int gameOption[4],
 				indexPlayerForGame++;
 				break;
 			case CPU:
-				player = new Player(&in_keystate_cpu[index], true, indexTexture, startX, startY, i, tab, tabBonus, bombeSprite, grid, tabPlayerCoord, nbPlayerConfig, louisSound,
-						playerKickSound, playerBurnSound, bombeBounceSound, indexPlayerForGame);
+				player = new Player(&in_keystate_cpu[index], true, indexTexture, startX, startY, i, tab, tabBonus, bombeSprite, grid, tabPlayerCoord, nbPlayerConfig, indexPlayerForGame);
 				players.push_back(player);
 				player = NULL;
 
@@ -408,13 +392,6 @@ Game::~Game() {
 	free (tabPlayerCoord);
 	in_keystate = NULL;
 	free (in_keystate_cpu);
-
-	Mix_FreeChunk (fireSound);
-	Mix_FreeChunk (louisSound);
-	Mix_FreeChunk (bombeBounceSound);
-	Mix_FreeChunk (playerBurnSound);
-	Mix_FreeChunk (playerKickSound);
-	Mix_FreeChunk (endSound);
 
 	vout_buf = NULL;
 	SDL_FreeSurface (overlay);
@@ -755,7 +732,7 @@ void Game::tick() {
 				bombes[i]->tick(playerBombeExplode);
 				if (bombes[i]->isExplode()) {
 
-					Mix_PlayChannel(0, fireSound, 0);
+					Sound::Instance().playFireSound();
 
 					players[bombes[i]->getPlayer()]->ABombeExplode();
 
@@ -1178,7 +1155,7 @@ void Game::tick() {
 			}
 			break;
 		case generateResult:
-			Mix_PlayChannel(5, endSound, 0);
+			Sound::Instance().playEndSound();
 			drawResultOfGame();
 			gameState = gameEnd;
 		case gameEnd:
@@ -1223,7 +1200,7 @@ void Game::tick() {
 						case HUMAN:
 							// if a human link the next keystate of libretro, else link a empty value
 							player = new Player(&in_keystate[indexLibretro], false, playerIndexTexture[i], startX, startY, i, tab, tabBonus, bombeSprite, grid, tabPlayerCoord,
-									nbPlayerConfig, louisSound, playerKickSound, playerBurnSound, bombeBounceSound, indexPlayerForGame);
+									nbPlayerConfig, indexPlayerForGame);
 							players.push_back(player);
 							player = NULL;
 							indexLibretro++;
@@ -1232,7 +1209,7 @@ void Game::tick() {
 							break;
 						case CPU:
 							player = new Player(&in_keystate_cpu[index], true, playerIndexTexture[i], startX, startY, i, tab, tabBonus, bombeSprite, grid, tabPlayerCoord, nbPlayerConfig,
-									louisSound, playerKickSound, playerBurnSound, bombeBounceSound, indexPlayerForGame);
+									indexPlayerForGame);
 							players.push_back(player);
 							brain = new Brain(&in_keystate_cpu[index], tab, tabPlayerCoord, nbPlayerConfig, i, cpuLevel);
 							brains.push_back(brain);

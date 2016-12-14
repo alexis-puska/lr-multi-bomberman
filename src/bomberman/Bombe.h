@@ -12,6 +12,7 @@
 #include <stdio.h>
 #include "Explosion.h"
 #include "Grid.h"
+#include "Sound.h"
 
 #ifndef __MYCLASS_BOMBE
 #define __MYCLASS_BOMBE
@@ -22,8 +23,7 @@
 class Bombe {
 
 	public:
-		Bombe(int strenght, float posX, float posY, int bombeType, int player, int nbTickExplode, SDL_Surface ** animation, int tab[sizeX * sizeY], float * tabPlayerCoord,
-				Mix_Chunk *bombeBounceSound);
+		Bombe(int strenght, float posX, float posY, int bombeType, int player, int nbTickExplode, SDL_Surface ** animation, int tab[sizeX * sizeY], float * tabPlayerCoord);
 		~Bombe();
 		bool isExplode();
 		bool isPowerBombe();
@@ -43,7 +43,6 @@ class Bombe {
 		SDL_Surface ** animation;
 		int * tab;
 		float * tabPlayerCoord;
-		Mix_Chunk *bombeBounceSound;
 
 		float posX;
 		float posY;

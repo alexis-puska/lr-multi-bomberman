@@ -23,8 +23,7 @@
 class Player {
 	public:
 		Player(unsigned short * in_keystate, bool isACpuPlayer, int indexSprite, float startPositionX, float startPositionY, int playerNumber, int tab[sizeX * sizeY], int tabBonus[sizeX * sizeY],
-				SDL_Surface ** bombeSprite, Grid * gridParam, float * tabPlayerCoord, int nbPlayerConfig, Mix_Chunk *louisSoun, Mix_Chunk *playerKickSound, Mix_Chunk *playerBurnSound,
-				Mix_Chunk *bombeBounceSound, int indexPlayerForGame);
+				SDL_Surface ** bombeSprite, Grid * gridParam, float * tabPlayerCoord, int nbPlayerConfig, int indexPlayerForGame);
 		~Player();
 		void doSomething(SDL_Surface * surfaceToDraw);
 
@@ -120,12 +119,6 @@ class Player {
 		SDL_Surface **louisSprite;
 		SDL_Surface **louisSpriteBurn;
 		SDL_Surface *louisMergebuffer;
-
-		//sound
-		Mix_Chunk *louisSound;
-		Mix_Chunk *playerBurnSound;
-		Mix_Chunk *playerKickSound;
-		Mix_Chunk *bombeBounceSound;
 
 		/*
 		 * FUNCTION For draw player

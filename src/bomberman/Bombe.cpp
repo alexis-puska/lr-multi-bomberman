@@ -3,8 +3,7 @@
 #define nbFrame 6
 #define bombeMoveSpeed 0.2
 
-Bombe::Bombe(int strenght, float posX, float posY, int bombeType, int player, int nbTickExplode, SDL_Surface ** animation, int tab[sizeX * sizeY], float * tabPlayerCoord,
-		Mix_Chunk *bombeBounceSound) {
+Bombe::Bombe(int strenght, float posX, float posY, int bombeType, int player, int nbTickExplode, SDL_Surface ** animation, int tab[sizeX * sizeY], float * tabPlayerCoord) {
 	this->strenght = strenght;
 	this->posX = posX;
 	this->posY = posY;
@@ -13,7 +12,6 @@ Bombe::Bombe(int strenght, float posX, float posY, int bombeType, int player, in
 	this->animation = animation;
 	this->bombeType = bombeType;
 	this->tabPlayerCoord = tabPlayerCoord;
-	this->bombeBounceSound = bombeBounceSound;
 	this->tab = tab;
 	direction = -1;
 	frameCounter = 0;
@@ -25,7 +23,6 @@ Bombe::~Bombe() {
 	animation = NULL;
 	tab = NULL;
 	tabPlayerCoord = NULL;
-	bombeBounceSound = NULL;
 }
 
 bool Bombe::isExplode() {
@@ -134,7 +131,7 @@ void Bombe::tick(SDL_Surface * surfaceToDraw) {
 							posX += bombeMoveSpeed;
 						} else {
 							if (bombeType == bubbleBombeType) {
-								Mix_PlayChannel(1, bombeBounceSound, 0);
+								Sound::Instance().playBombeBounceSound();
 								direction = kickOnLeft;
 							} else {
 								direction = -1;
@@ -155,7 +152,7 @@ void Bombe::tick(SDL_Surface * surfaceToDraw) {
 							posX -= bombeMoveSpeed;
 						} else {
 							if (bombeType == bubbleBombeType) {
-								Mix_PlayChannel(1, bombeBounceSound, 0);
+								Sound::Instance().playBombeBounceSound();
 								direction = kickOnRight;
 							} else {
 								direction = -1;
@@ -176,7 +173,7 @@ void Bombe::tick(SDL_Surface * surfaceToDraw) {
 							posY -= bombeMoveSpeed;
 						} else {
 							if (bombeType == bubbleBombeType) {
-								Mix_PlayChannel(1, bombeBounceSound, 0);
+								Sound::Instance().playBombeBounceSound();
 								direction = kickOnDown;
 							} else {
 								direction = -1;
@@ -197,7 +194,7 @@ void Bombe::tick(SDL_Surface * surfaceToDraw) {
 							posY += bombeMoveSpeed;
 						} else {
 							if (bombeType == bubbleBombeType) {
-								Mix_PlayChannel(1, bombeBounceSound, 0);
+								Sound::Instance().playBombeBounceSound();
 								direction = kickOnUp;
 							} else {
 								direction = -1;
