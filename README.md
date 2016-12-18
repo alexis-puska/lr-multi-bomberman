@@ -19,7 +19,7 @@ sudo apt-get install libsdl2-dev
 
 - Raspberry pi 2/3 : 
 ```
-sudo apt-get install -y make libsdl2-dev libsdl2-image-dev libsdl2-ttf-dev libsdl2-mixer-dev
+sudo apt-get install -y make libsdl2-dev libsdl2-image-dev libsdl2-ttf-dev libsdl2-mixer-dev libXinerama-dev libXi-dev libXrandr-dev libXss-dev libXCursor-dev
 ```
 
 
