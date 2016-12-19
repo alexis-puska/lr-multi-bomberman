@@ -18,6 +18,10 @@ sudo apt-get install libsdl2-dev
 
 
 - Raspberry pi 2/3 : 
+reset smb password : smbpasswd -a pi
+reset ssh token : ssh-keygen -R "ip";
+sudo apt-get update
+sudo apt-get upgrade
 ```
 sudo apt-get install -y make libsdl2-dev libsdl2-image-dev libsdl2-ttf-dev libsdl2-mixer-dev libXinerama-dev libXi-dev libXrandr-dev libXss-dev libXCursor-dev
 ```
