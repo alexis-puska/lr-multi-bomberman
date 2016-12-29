@@ -34,6 +34,7 @@ Sprite::Sprite()
 	spriteCursorSurface = IMG_Load(spriteFirePath);
 	spriteFireSurface = IMG_Load(spriteMiscPath);
 	spriteMiscSurface = IMG_Load(spriteCursorPath);
+	cropSurface();
 }
 
 Sprite::~Sprite()
@@ -51,24 +52,12 @@ Sprite::~Sprite()
 	SDL_FreeSurface (spriteBombermanPunkSurface);
 	SDL_FreeSurface (spriteCursorSurface);
 	SDL_FreeSurface (spriteFireSurface);
-	SDL_FreeSurface (spriteMiscSurface);
-	
-	
+	SDL_FreeSurface (spriteMiscSurface);	
 }
 
 Sprite& Sprite::Instance()
 {
     return m_instance;
-}
-
-SDL_Surface* Sprite::getSplashScreen(){
-	return splashScreenSurface;
-}
-
-SDL_Surface* Sprite::getMenuBackground(){
-	
-	
-	return menuBackgroundSurface;
 }
 
 /***********************************************
@@ -307,3 +296,29 @@ SDL_Surface* Sprite::upPlayerBrownColor(SDL_Surface* surface){
 	return surface;
 }
 
+/********************************************
+ * 
+ *		CROP SURFACE
+ * 
+ ********************************************/
+ void Sprite::cropSurface(){
+	 
+ }
+ 
+ /********************************************
+ * 
+ *		REQUEST FUNCTION
+ * 
+ ********************************************/
+ 
+SDL_Surface* Sprite::getSplashScreen(){
+	return splashScreenSurface;
+}
+
+SDL_Surface* Sprite::getMenuBackground(){
+	return menuBackgroundSurface;
+}
+ 
+ SDL_Surface* Sprite::players(int type, int color, int mvt, int pos){
+	 return null;
+}

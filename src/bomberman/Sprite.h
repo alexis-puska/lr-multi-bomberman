@@ -19,10 +19,12 @@ class Sprite {
 		SDL_Surface* getMenuBackground();
 		Sprite();
 		~Sprite();
+		SDL_Surface* players(int type, int color, int mvt, int pos);
 	private:
 		Sprite& operator= (const Sprite&);
 		Sprite (const Sprite&);
 		static Sprite m_instance;
+		void cropSurface();
 		
 		/*
 		 * INFORMATION FUNCTIN
