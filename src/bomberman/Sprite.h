@@ -22,20 +22,46 @@ class Sprite {
 	private:
 		Sprite& operator= (const Sprite&);
 		Sprite (const Sprite&);
-		SDL_Surface* replaceColor(SDL_Surface* surface, int src, int dest);
-		void getColorInSurface(SDL_Surface* surface);
 		static Sprite m_instance;
 		
+		/*
+		 * INFORMATION FUNCTIN
+		 */
+		void getColorInSurface(SDL_Surface* surface);
 		
+		/*
+		 * COLOR FUNCTION
+		 */
+		SDL_Surface* replaceColor(SDL_Surface* surface, int src, int dest);
+		SDL_Surface* upPlayerGreyColor(SDL_Surface* surface);
+		SDL_Surface* upPlayerRedColor(SDL_Surface* surface);
+		SDL_Surface* upPlayerBlueColor(SDL_Surface* surface);
+		SDL_Surface* upPlayerGreenColor(SDL_Surface* surface);
+		SDL_Surface* upPlayerGoldColor(SDL_Surface* surface);
+		SDL_Surface* upPlayerBrownColor(SDL_Surface* surface);
 		
-		
+		/*
+		 * SURFACE
+		 */ 
 		//SplashScreen
 		SDL_Surface *splashScreenSurface;
 		//background for menu
 		SDL_Surface *menuBackgroundSurface;
 		
-		SDL_Surface *allBombermanSurface;
+		SDL_Surface *spriteBombermanSurface;
+		SDL_Surface *spriteBombermanBarbarSurface;
+		SDL_Surface *spriteBombermanChanSurface;
+		SDL_Surface *spriteBombermanCossakSurface;
+		SDL_Surface *spriteBombermanKidSurface;
+		SDL_Surface *spriteBombermanMexicanSurface;
+		SDL_Surface *spriteBombermanPrettySurface;
+		SDL_Surface *spriteBombermanPunkSurface;
+		SDL_Surface *spriteCursorSurface;
+		SDL_Surface *spriteFireSurface;
+		SDL_Surface *spriteMiscSurface;
 		
-	
+		SDL_Surface **playerSprite;
+		
+		
 };
 #endif
