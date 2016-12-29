@@ -22,6 +22,8 @@ class Sprite {
 	private:
 		Sprite& operator= (const Sprite&);
 		Sprite (const Sprite&);
+		SDL_Surface* replaceColor(SDL_Surface* surface, int src, int dest);
+		void getColorInSurface(SDL_Surface* surface);
 		static Sprite m_instance;
 		
 		
@@ -31,6 +33,8 @@ class Sprite {
 		SDL_Surface *splashScreenSurface;
 		//background for menu
 		SDL_Surface *menuBackgroundSurface;
+		
+		SDL_Surface *allBombermanSurface;
 		
 	
 };
