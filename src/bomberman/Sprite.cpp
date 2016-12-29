@@ -320,5 +320,5 @@ SDL_Surface* Sprite::getMenuBackground(){
 }
  
  SDL_Surface* Sprite::players(int type, int color, int mvt, int pos){
-	 return null;
+	 return NULL;
 }
