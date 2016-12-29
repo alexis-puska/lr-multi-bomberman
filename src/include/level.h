@@ -358,6 +358,7 @@ typedef Variante Variante;
 
 struct Level{
 	char nom[20];
+	int a;
 	Variante var[4];	
 };
 
@@ -366,7 +367,7 @@ typedef Level Level;
 const Level test[10]=
 {
 	{
-		"Blockbuster",
+		"Blockbuster",1,
 		{//level0
 			{//Variante 0 level 0
 				0, true,
@@ -430,7 +431,7 @@ const Level test[10]=
 		    }
 		}
 	},{
-		"Splish-Splash",
+		"Splish-Splash",1,
 		{//level 1
 			{
 				0, true,
@@ -464,7 +465,7 @@ const Level test[10]=
 			}
 		}		
 	},{
-		"Peekaboo",
+		"Peekaboo",1,
 		{//level 2
 			{
 				0, true,
@@ -498,7 +499,7 @@ const Level test[10]=
 			}
 		}		
 	},{
-		"Slip N' Slide",
+		"Slip N' Slide",1,
 		{//level 3
 			{
 				0, true,
@@ -532,7 +533,7 @@ const Level test[10]=
 			}
 		}		
 	},{
-		"Move N' Groove",
+		"Move N' Groove",1,
 		{//level 4
 			{
 				0, true,
@@ -566,7 +567,7 @@ const Level test[10]=
 			}
 		}		
 	},{
-		"Sandman",
+		"Sandman",1,
 		{//level 5
 			{
 				0, true,
@@ -600,7 +601,7 @@ const Level test[10]=
 			}
 		}		
 	},{
-		"Spitfire",
+		"Spitfire",1,
 		{//level 6
 			{
 				0, true,
@@ -634,7 +635,7 @@ const Level test[10]=
 			}
 		}		
 	},{
-		"Seesaw",
+		"Seesaw",1,
 		{//level 7
 			{
 				0, true,
@@ -668,7 +669,7 @@ const Level test[10]=
 			}
 		}		
 	},{
-		"Jungle Boogie",
+		"Jungle Boogie",1,
 		{//level 8
 			{
 				0, true,
