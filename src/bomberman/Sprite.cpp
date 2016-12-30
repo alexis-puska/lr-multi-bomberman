@@ -1,6 +1,10 @@
 #include "Sprite.h"
 #include <vector>
 
+#define nbSpritePlayer	63
+#define nbColorPlayer	7
+#define nbPlayer		16
+
 const static char *splashScreen = "./resources/image/SplashScreen.png";
 const static char *menuBackground = "./resources/image/MenuBackground.png";
 const static char *spriteBombermanPath = "./resources/sprite/characters/AllBomberman.png";
@@ -302,7 +306,7 @@ SDL_Surface* Sprite::upPlayerBrownColor(SDL_Surface* surface){
  * 
  ********************************************/
  void Sprite::cropSurface(){
-	 
+	 //TODO
  }
  
  /********************************************
@@ -320,5 +324,6 @@ SDL_Surface* Sprite::getMenuBackground(){
 }
  
  SDL_Surface* Sprite::players(int type, int color, int mvt, int pos){
+	 //TODO
 	 return NULL;
 }

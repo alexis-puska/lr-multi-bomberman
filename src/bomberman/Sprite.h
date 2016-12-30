@@ -63,7 +63,5 @@ class Sprite {
 		SDL_Surface *spriteMiscSurface;
 		
 		SDL_Surface **playerSprite;
-		
-		
 };
 #endif
