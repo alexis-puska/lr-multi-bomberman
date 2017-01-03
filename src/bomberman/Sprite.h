@@ -27,8 +27,10 @@
 #define nbSmallSpriteLevel	40
 #define nbLargeSpriteLevel	2
 
-#define spriteSizeWidth		30
-#define spriteSizeHeight	42
+#define spritePlayerSizeWidth	30
+#define spritePlayerSizeHeight	42
+
+#define spriteCursorSize	16
 
 class Sprite {
 
