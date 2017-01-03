@@ -77,8 +77,6 @@ class Sprite {
 		//background for menu
 		SDL_Surface *menuBackgroundSurface;
 
-		SDL_Surface *spritePreviewLevelSurface;
-
 		SDL_Surface **playerSprite;
 		SDL_Surface **louisSprite;
 		SDL_Surface **fireSprite;
