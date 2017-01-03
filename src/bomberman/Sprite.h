@@ -11,6 +11,25 @@
 #ifndef __MYCLASS_SPRITE
 #define __MYCLASS_SPRITE
 
+#define nbSpritePlayer		53
+#define nbColorPlayer		7
+#define nbPlayer			16
+#define nbTypePlayer		8
+
+#define nbSpriteLouis		27
+#define nbTypeLouis 		5
+
+#define nbLevel			9
+#define nbFireSprite		36
+#define nbMiscSprite		40
+#define nbCursorSprite		4
+
+#define nbSmallSpriteLevel	40
+#define nbLargeSpriteLevel	2
+
+#define spriteSizeWidth		30
+#define spriteSizeHeight	42
+
 class Sprite {
 
 	public:
@@ -21,19 +40,27 @@ class Sprite {
 		~Sprite();
 		SDL_Surface* players(int type, int color, int mvt, int pos);
 	private:
-		Sprite& operator= (const Sprite&);
-		Sprite (const Sprite&);
+		Sprite& operator=(const Sprite&);
+		Sprite(const Sprite&);
 		static Sprite m_instance;
 		void cropSurface();
-		
+		void cropPlayerSurface(SDL_Surface*, int offset);
+		void cropPreviewLevelSurface(SDL_Surface * surface);
+		void cropMiscSurface(SDL_Surface * surface);
+		void cropFireSurface(SDL_Surface * surface);
+		void cropCursorSurface(SDL_Surface * surface);
+		void cropLevelSurface(SDL_Surface * surface);
+		void cropLouisSurface(SDL_Surface * surface);
+
 		/*
 		 * INFORMATION FUNCTIN
 		 */
 		void getColorInSurface(SDL_Surface* surface);
-		
+
 		/*
 		 * COLOR FUNCTION
 		 */
+		SDL_Surface* applyColor(SDL_Surface * surface, int color);
 		SDL_Surface* replaceColor(SDL_Surface* surface, int src, int dest);
 		SDL_Surface* upPlayerGreyColor(SDL_Surface* surface);
 		SDL_Surface* upPlayerRedColor(SDL_Surface* surface);
@@ -41,27 +68,23 @@ class Sprite {
 		SDL_Surface* upPlayerGreenColor(SDL_Surface* surface);
 		SDL_Surface* upPlayerGoldColor(SDL_Surface* surface);
 		SDL_Surface* upPlayerBrownColor(SDL_Surface* surface);
-		
+
 		/*
 		 * SURFACE
-		 */ 
+		 */
 		//SplashScreen
 		SDL_Surface *splashScreenSurface;
 		//background for menu
 		SDL_Surface *menuBackgroundSurface;
-		
-		SDL_Surface *spriteBombermanSurface;
-		SDL_Surface *spriteBombermanBarbarSurface;
-		SDL_Surface *spriteBombermanChanSurface;
-		SDL_Surface *spriteBombermanCossakSurface;
-		SDL_Surface *spriteBombermanKidSurface;
-		SDL_Surface *spriteBombermanMexicanSurface;
-		SDL_Surface *spriteBombermanPrettySurface;
-		SDL_Surface *spriteBombermanPunkSurface;
-		SDL_Surface *spriteCursorSurface;
-		SDL_Surface *spriteFireSurface;
-		SDL_Surface *spriteMiscSurface;
-		
+
+		SDL_Surface *spritePreviewLevelSurface;
+
 		SDL_Surface **playerSprite;
+		SDL_Surface **louisSprite;
+		SDL_Surface **fireSprite;
+		SDL_Surface **miscSprite;
+		SDL_Surface **cursorSprite;
+		SDL_Surface **previewLevelSprite;
+		SDL_Surface **levelSprite;
 };
 #endif

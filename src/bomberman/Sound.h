@@ -12,13 +12,13 @@
 class Sound {
 	public:
 		static Sound& Instance();
-				Sound();
+		Sound();
 		~Sound();
-		
+
 		void startBattleMusique();
 		void startMenuMusique();
 		void stopMusique();
-		void playValidSound();		
+		void playValidSound();
 		void playCancelSound();
 		void playBipSound();
 		void playFireSound();
@@ -27,13 +27,12 @@ class Sound {
 		void playPlayerKickSound();
 		void playBombeBounceSound();
 		void playEndSound();
-		
-		
+
 	private:
-		Sound& operator= (const Sound&);
-		Sound (const Sound&);
+		Sound& operator=(const Sound&);
+		Sound(const Sound&);
 		static Sound m_instance;
-		
+
 		//musique
 		Mix_Music *menu;
 		Mix_Music *battle;

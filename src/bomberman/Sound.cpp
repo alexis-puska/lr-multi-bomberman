@@ -16,15 +16,14 @@ const static char *endSoundPath = "./resources/sound/end.wav";
 
 Sound Sound::m_instance = Sound();
 
-Sound::Sound()
-{
-	fprintf(stderr,"Init sound system\n");
+Sound::Sound() {
+	fprintf(stderr, "Init sound system\n");
 	if (Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, MIX_DEFAULT_CHANNELS, 1024) == -1) {
 		printf("%s", Mix_GetError());
 	}
-    menu = Mix_LoadMUS(musiquePath);
-    battle = Mix_LoadMUS(battlePath);
-    
+	menu = Mix_LoadMUS(musiquePath);
+	battle = Mix_LoadMUS(battlePath);
+
 	validSound = Mix_LoadWAV(valideSoundPath);
 	cancelSound = Mix_LoadWAV(cancelSoundPath);
 	bipSound = Mix_LoadWAV(bipSoundPath);
@@ -34,18 +33,17 @@ Sound::Sound()
 	playerKickSound = Mix_LoadWAV(playerKickSoundPath);
 	bombeBounceSound = Mix_LoadWAV(bounceSoundPath);
 	endSound = Mix_LoadWAV(endSoundPath);
-	
+
 	Mix_PlayMusic(menu, -1);
 	Mix_VolumeMusic (MIX_MAX_VOLUME);
 	Mix_AllocateChannels(9);
 }
 
-Sound::~Sound()
-{
-	fprintf(stderr,"close sound system\n");
-    Mix_CloseAudio();
-    Mix_FreeMusic (menu);
-    Mix_FreeMusic (battle);
+Sound::~Sound() {
+	fprintf(stderr, "close sound system\n");
+	Mix_CloseAudio();
+	Mix_FreeMusic (menu);
+	Mix_FreeMusic (battle);
 	Mix_FreeChunk (validSound);
 	Mix_FreeChunk (cancelSound);
 	Mix_FreeChunk (bipSound);
@@ -58,57 +56,56 @@ Sound::~Sound()
 	Mix_CloseAudio();
 }
 
-Sound& Sound::Instance()
-{
-    return m_instance;
+Sound& Sound::Instance() {
+	return m_instance;
 }
 
-void Sound::startBattleMusique(){
+void Sound::startBattleMusique() {
 	Mix_VolumeMusic(MIX_MAX_VOLUME / 3);
 	Mix_PlayMusic(battle, -1);
 }
 
-void Sound::startMenuMusique(){
+void Sound::startMenuMusique() {
 	Mix_VolumeMusic (MIX_MAX_VOLUME);
 	Mix_PlayMusic(menu, -1);
 }
 
-void Sound::stopMusique(){
+void Sound::stopMusique() {
 	Mix_HaltMusic();
 }
 
-void Sound::playValidSound(){
+void Sound::playValidSound() {
 	Mix_PlayChannel(0, validSound, 0);
 }
 
-void Sound::playCancelSound(){
+void Sound::playCancelSound() {
 	Mix_PlayChannel(1, cancelSound, 0);
 }
 
-void Sound::playBipSound(){
+void Sound::playBipSound() {
 	Mix_PlayChannel(2, bipSound, 0);
 }
 
-void Sound::playFireSound(){
+void Sound::playFireSound() {
 	Mix_PlayChannel(3, fireSound, 0);
 }
 
-void Sound::playLouisSound(){
+void Sound::playLouisSound() {
 	Mix_PlayChannel(4, louisSound, 0);
 }
 
-void Sound::playPlayerBurnSound(){
+void Sound::playPlayerBurnSound() {
 	Mix_PlayChannel(5, playerBurnSound, 0);
 }
 
-void Sound::playPlayerKickSound(){
+void Sound::playPlayerKickSound() {
 	Mix_PlayChannel(6, playerKickSound, 0);
 }
 
-void Sound::playBombeBounceSound(){
+void Sound::playBombeBounceSound() {
 	Mix_PlayChannel(7, bombeBounceSound, 0);
 }
 
-void Sound::playEndSound(){
+void Sound::playEndSound() {
 	Mix_PlayChannel(8, endSound, 0);
 }
