@@ -62,7 +62,7 @@ class Sprite {
 		/*
 		 * COLOR FUNCTION
 		 */
-		SDL_Surface* applyColor(SDL_Surface * surface, int color);
+		SDL_Surface* applyPlayerColor(SDL_Surface * surface, int color);
 		SDL_Surface* replaceColor(SDL_Surface* surface, int src, int dest);
 		SDL_Surface* upPlayerGreyColor(SDL_Surface* surface);
 		SDL_Surface* upPlayerRedColor(SDL_Surface* surface);
@@ -70,6 +70,11 @@ class Sprite {
 		SDL_Surface* upPlayerGreenColor(SDL_Surface* surface);
 		SDL_Surface* upPlayerGoldColor(SDL_Surface* surface);
 		SDL_Surface* upPlayerBrownColor(SDL_Surface* surface);
+		SDL_Surface* applyLouisColor(SDL_Surface * surface, int color);
+		SDL_Surface* upLouisGoldColor(SDL_Surface* surface);
+		SDL_Surface* upLouisGreenColor(SDL_Surface* surface);
+		SDL_Surface* upLouisPinkColor(SDL_Surface* surface);
+		SDL_Surface* upLouisBrownColor(SDL_Surface* surface);
 
 		/*
 		 * SURFACE

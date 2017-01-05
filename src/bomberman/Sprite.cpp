@@ -312,7 +312,7 @@ SDL_Surface* Sprite::upPlayerBrownColor(SDL_Surface* surface) {
  * 5 : Gold
  * 6 : Brown
  ********************************************/
-SDL_Surface* Sprite::applyColor(SDL_Surface * surface, int color) {
+SDL_Surface* Sprite::applyPlayerColor(SDL_Surface * surface, int color) {
 	switch (color) {
 		case 0:
 			return surface;
@@ -329,7 +329,82 @@ SDL_Surface* Sprite::applyColor(SDL_Surface * surface, int color) {
 		case 6:
 			return upPlayerBrownColor(surface);
 	}
+	return surface;
 }
+
+
+/*********************************************
+ * CLASSIQUE to GOLD
+ * 0xff0051b5 -> dark blue
+ * 0xff00a2ff -> light blue
+ ********************************************/
+SDL_Surface* Sprite::upLouisGoldColor(SDL_Surface* surface) {
+	replaceColor(surface, 0xff0051b5, 0xffe8b000);
+	replaceColor(surface, 0xff00a2ff, 0xfff8d000);
+	return surface;
+}
+
+/*********************************************
+ * CLASSIQUE to GREEN
+ * 0xff0051b5 -> dark blue
+ * 0xff00a2ff -> light blue
+ ********************************************/
+SDL_Surface* Sprite::upLouisGreenColor(SDL_Surface* surface) {
+	replaceColor(surface, 0xff0051b5, 0xffd050d0);
+	replaceColor(surface, 0xff00a2ff, 0xfff878f8);
+	return surface;
+}
+
+/*********************************************
+ * CLASSIQUE to ROSE
+ * 0xff0051b5 -> dark blue
+ * 0xff00a2ff -> light blue
+ ********************************************/
+SDL_Surface* Sprite::upLouisPinkColor(SDL_Surface* surface) {
+	replaceColor(surface, 0xff0051b5, 0xff00b010);
+	replaceColor(surface, 0xff00a2ff, 0xff00f830);
+	return surface;
+}
+
+/*********************************************
+ * CLASSIQUE to BROWN
+ * 0xff0051b5 -> dark blue
+ * 0xff00a2ff -> light blue
+ ********************************************/
+SDL_Surface* Sprite::upLouisBrownColor(SDL_Surface* surface) {
+	replaceColor(surface, 0xff0051b5, 0xff684040);
+	replaceColor(surface, 0xff00a2ff, 0xff906868);
+	return surface;
+}
+
+/*********************************************
+ * Apply a ramplace set of color to a louis sprite
+ * 0 : None
+ * 1 : Gold
+ * 2 : Green
+ * 3 : Pink
+ * 4 : Brown
+ ********************************************/
+SDL_Surface* Sprite::applyLouisColor(SDL_Surface * surface, int color){
+	switch (color) {
+		case 0:
+			return surface;
+		case 1:
+			return upLouisGoldColor(surface);
+		case 2:
+			return upLouisGreenColor(surface);
+		case 3:
+			return upLouisPinkColor(surface);
+		case 4:
+			return upLouisBrownColor(surface);
+	}
+	return surface;
+}
+
+
+
+
+
 
 /********************************************
  * 
@@ -477,7 +552,7 @@ void Sprite::cropPlayerSurface(SDL_Surface* surface, int offset) {
 					srcTextureRect.h = spritePlayerSizeHeight;
 					playerSprite[index] = SDL_CreateRGBSurface(0, spritePlayerSizeWidth, spritePlayerSizeHeight, 32, rmask, gmask, bmask, amask);
 					SDL_BlitSurface(surface, &srcTextureRect, playerSprite[index], &destTextureRect);
-					applyColor(playerSprite[index], color);
+					applyPlayerColor(playerSprite[index], color);
 					index++;
 				}
 			}
@@ -489,7 +564,7 @@ void Sprite::cropPlayerSurface(SDL_Surface* surface, int offset) {
 					srcTextureRect.h = spritePlayerSizeHeight;
 					playerSprite[index] = SDL_CreateRGBSurface(0, spritePlayerSizeWidth, spritePlayerSizeHeight, 32, rmask, gmask, bmask, amask);
 					SDL_BlitSurface(surface, &srcTextureRect, playerSprite[index], &destTextureRect);
-					applyColor(playerSprite[index], color);
+					applyPlayerColor(playerSprite[index], color);
 					index++;
 				}
 			}
@@ -500,7 +575,7 @@ void Sprite::cropPlayerSurface(SDL_Surface* surface, int offset) {
 				srcTextureRect.h = spritePlayerSizeHeight;
 				playerSprite[index] = SDL_CreateRGBSurface(0, spritePlayerSizeWidth, spritePlayerSizeHeight, 32, rmask, gmask, bmask, amask);
 				SDL_BlitSurface(surface, &srcTextureRect, playerSprite[index], &destTextureRect);
-				applyColor(playerSprite[index], color);
+				applyPlayerColor(playerSprite[index], color);
 				index++;
 			}
 		}
