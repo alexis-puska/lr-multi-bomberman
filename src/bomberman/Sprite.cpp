@@ -14,9 +14,10 @@ const static char *spriteBombermanPunkPath = "./resources/sprite/characters/AllB
 const static char *spriteLouisPath = "./resources/sprite/characters/AllLouis.png";
 const static char *spriteFirePath = "./resources/sprite/other/Fire.png";
 const static char *spriteMiscPath = "./resources/sprite/other/Misc.png";
-const static char *spriteCursorPath = "./resources/sprite/other/Cursor.png";
 const static char *spritePreviewLevelPath = "./resources/sprite/level/LevelView.png";
 const static char *spriteLevelPath = "./resources/sprite/level/AllLevel.png";
+const static char *spriteTrolleyPath = "./resources/sprite/other/trolley.png";
+const static char *spriteSpaceShipPath = "./resources/sprite/other/spaceShip.png";
 
 Sprite Sprite::m_instance = Sprite();
 
@@ -26,9 +27,11 @@ Sprite::Sprite() {
 	louisSprite = new SDL_Surface *[nbSpriteLouisX * nbSpriteLouisY * nbTypeLouis];
 	fireSprite = new SDL_Surface *[nbFireSpriteX * nbFireSpriteY];
 	bombeSprite = new SDL_Surface *[nbBombeSpriteX * nbBombeSpriteY];
-	bonusSprite = new SDL_Surface *[nbBonusSpriteX * nbBonusSpriteX];
+	bonusSprite = new SDL_Surface *[nbBonusSpriteX * nbBonusSpriteY];
 	previewLevelSprite = new SDL_Surface *[nbLevel];
 	levelSprite = new SDL_Surface *[nbLevel * nbSmallSpriteLevelX * nbSmallSpriteLevelY + nbLevel * nbLargeSpriteLevelX * nbLargeSpriteLevelY];
+	spaceShipSprite = new SDL_Surface *[nbSpaceShipSpriteX * nbSpaceShipSpriteY];
+	trolleySprite = new SDL_Surface *[nbTrolleySpriteX * nbTrolleySpriteY];
 	splashScreenSurface = IMG_Load(splashScreen);
 	menuBackgroundSurface = IMG_Load(menuBackground);
 	cropSurface();
@@ -57,6 +60,12 @@ Sprite::~Sprite() {
 	for (int i = 0; i < nbLevel * nbSmallSpriteLevelX * nbSmallSpriteLevelY + nbLevel * nbLargeSpriteLevelX * nbLargeSpriteLevelY; i++) {
 		SDL_FreeSurface(levelSprite[i]);
 	}
+	for (int i = 0; i < nbTrolleySpriteX * nbTrolleySpriteY; i++) {
+		SDL_FreeSurface(trolleySprite[i]);
+	}
+	for (int i = 0; i < nbSpaceShipSpriteX * nbSpaceShipSpriteY; i++) {
+		SDL_FreeSurface(spaceShipSprite[i]);
+	}
 	SDL_FreeSurface(splashScreenSurface);
 	SDL_FreeSurface(menuBackgroundSurface);
 	free(playerSprite);
@@ -66,6 +75,8 @@ Sprite::~Sprite() {
 	free(bonusSprite);
 	free(previewLevelSprite);
 	free(levelSprite);
+	free(trolleySprite);
+	free(spaceShipSprite);
 }
 
 Sprite& Sprite::Instance() {
@@ -427,11 +438,16 @@ void Sprite::cropSurface() {
 	cropPlayerSurface(IMG_Load(spriteBombermanPunkPath), nbSpritePlayerX * nbSpritePlayerY * nbColorPlayer * 6);
 	cropPlayerSurface(IMG_Load(spriteBombermanMexicanPath), nbSpritePlayerX * nbSpritePlayerY * nbColorPlayer * 7);
 	cropFireSurface(IMG_Load(spriteFirePath));
-	cropBombeSurface(IMG_Load(spriteMiscPath));
-	cropBonusSurface(IMG_Load(spriteMiscPath));
+	SDL_Surface * misc = IMG_Load(spriteMiscPath);
+	cropBombeSurface(misc);
+	cropBonusSurface(misc);
+	SDL_FreeSurface(misc);
 	cropPreviewLevelSurface(IMG_Load(spritePreviewLevelPath));
 	cropLevelSurface(IMG_Load(spriteLevelPath));
 	cropLouisSurface(IMG_Load(spriteLouisPath));
+	cropTrolleySurface(IMG_Load(spriteTrolleyPath));
+	cropSpaceShipSurface(IMG_Load(spriteSpaceShipPath));
+
 }
 
 void Sprite::cropLevelSurface(SDL_Surface * surface) {
@@ -455,6 +471,7 @@ void Sprite::cropLevelSurface(SDL_Surface * surface) {
 				srcTextureRect.w = smallSpriteLevelSizeWidth;
 				srcTextureRect.h = smallSpriteLevelSizeHeight;
 				levelSprite[index] = SDL_CreateRGBSurface(0, smallSpriteLevelSizeWidth, smallSpriteLevelSizeHeight, 32, rmask, gmask, bmask, amask);
+				SDL_BlitSurface(surface, &srcTextureRect, levelSprite[index], &destTextureRect);
 				index++;
 			}
 		}
@@ -469,6 +486,7 @@ void Sprite::cropLevelSurface(SDL_Surface * surface) {
 				srcTextureRect.w = largeSpriteLevelSizeWidth;
 				srcTextureRect.h = largeSpriteLevelSizeHeight;
 				levelSprite[index] = SDL_CreateRGBSurface(0, largeSpriteLevelSizeWidth, largeSpriteLevelSizeHeight, 32, rmask, gmask, bmask, amask);
+				SDL_BlitSurface(surface, &srcTextureRect, levelSprite[index], &destTextureRect);
 				index++;
 			}
 		}
@@ -497,6 +515,7 @@ void Sprite::cropLouisSurface(SDL_Surface * surface) {
 				srcTextureRect.w = spriteLouisSizeWidth;
 				srcTextureRect.h = spriteLouisSizeHeight;
 				louisSprite[index] = SDL_CreateRGBSurface(0, spriteLouisSizeWidth, spriteLouisSizeHeight, 32, rmask, gmask, bmask, amask);
+				SDL_BlitSurface(surface, &srcTextureRect, louisSprite[index], &destTextureRect);
 				index++;
 			}
 		}
@@ -524,6 +543,7 @@ void Sprite::cropPreviewLevelSurface(SDL_Surface * surface) {
 			srcTextureRect.w = levelPreviewSizeWidth;
 			srcTextureRect.h = levelPreviewSizeHeight;
 			previewLevelSprite[index] = SDL_CreateRGBSurface(0, levelPreviewSizeWidth, levelPreviewSizeHeight, 32, rmask, gmask, bmask, amask);
+			SDL_BlitSurface(surface, &srcTextureRect, previewLevelSprite[index], &destTextureRect);
 			index++;
 		}
 	}
@@ -545,15 +565,15 @@ void Sprite::cropBombeSurface(SDL_Surface * surface) {
 	destTextureRect.h = defaultSpriteSize;
 	for (int i = 0; i < nbBombeSpriteX; i++) {
 		for (int j = 0; j < nbBombeSpriteY; j++) {
-			srcTextureRect.x = i * defaultSpriteSize;
+			srcTextureRect.x = (i + 2) * defaultSpriteSize;
 			srcTextureRect.y = j * defaultSpriteSize;
 			srcTextureRect.w = defaultSpriteSize;
 			srcTextureRect.h = defaultSpriteSize;
 			bombeSprite[index] = SDL_CreateRGBSurface(0, defaultSpriteSize, defaultSpriteSize, 32, rmask, gmask, bmask, amask);
+			SDL_BlitSurface(surface, &srcTextureRect, bombeSprite[index], &destTextureRect);
 			index++;
 		}
 	}
-	SDL_FreeSurface(surface);
 }
 
 void Sprite::cropBonusSurface(SDL_Surface * surface) {
@@ -580,7 +600,6 @@ void Sprite::cropBonusSurface(SDL_Surface * surface) {
 			index++;
 		}
 	}
-	SDL_FreeSurface(surface);
 }
 
 void Sprite::cropFireSurface(SDL_Surface * surface) {
@@ -603,6 +622,61 @@ void Sprite::cropFireSurface(SDL_Surface * surface) {
 			srcTextureRect.w = defaultSpriteSize;
 			srcTextureRect.h = defaultSpriteSize;
 			fireSprite[index] = SDL_CreateRGBSurface(0, defaultSpriteSize, defaultSpriteSize, 32, rmask, gmask, bmask, amask);
+			SDL_BlitSurface(surface, &srcTextureRect, fireSprite[index], &destTextureRect);
+			index++;
+		}
+	}
+	SDL_FreeSurface(surface);
+}
+
+void Sprite::cropTrolleySurface(SDL_Surface * surface) {
+	int index = 0;
+	Uint32 rmask, gmask, bmask, amask;
+	amask = 0xff000000;
+	rmask = 0x00ff0000;
+	gmask = 0x0000ff00;
+	bmask = 0x000000ff;
+	SDL_Rect srcTextureRect;
+	SDL_Rect destTextureRect;
+	destTextureRect.x = 0;
+	destTextureRect.y = 0;
+	destTextureRect.w = trolleySpriteSizeWidth;
+	destTextureRect.h = trolleySpriteSizeHeight;
+	for (int i = 0; i < nbTrolleySpriteX; i++) {
+		for (int j = 0; j < nbTrolleySpriteY; j++) {
+			srcTextureRect.x = i * trolleySpriteSizeWidth;
+			srcTextureRect.y = j * trolleySpriteSizeHeight;
+			srcTextureRect.w = trolleySpriteSizeWidth;
+			srcTextureRect.h = trolleySpriteSizeHeight;
+			trolleySprite[index] = SDL_CreateRGBSurface(0, trolleySpriteSizeWidth, trolleySpriteSizeHeight, 32, rmask, gmask, bmask, amask);
+			SDL_BlitSurface(surface, &srcTextureRect, trolleySprite[index], &destTextureRect);
+			index++;
+		}
+	}
+	SDL_FreeSurface(surface);
+}
+
+void Sprite::cropSpaceShipSurface(SDL_Surface * surface) {
+	int index = 0;
+	Uint32 rmask, gmask, bmask, amask;
+	amask = 0xff000000;
+	rmask = 0x00ff0000;
+	gmask = 0x0000ff00;
+	bmask = 0x000000ff;
+	SDL_Rect srcTextureRect;
+	SDL_Rect destTextureRect;
+	destTextureRect.x = 0;
+	destTextureRect.y = 0;
+	destTextureRect.w = spaceShipSpriteSizeWidth;
+	destTextureRect.h = spaceShipSpriteSizeHeight;
+	for (int i = 0; i < nbSpaceShipSpriteX; i++) {
+		for (int j = 0; j < nbSpaceShipSpriteY; j++) {
+			srcTextureRect.x = i * spaceShipSpriteSizeWidth;
+			srcTextureRect.y = j * spaceShipSpriteSizeHeight;
+			srcTextureRect.w = spaceShipSpriteSizeWidth;
+			srcTextureRect.h = spaceShipSpriteSizeHeight;
+			spaceShipSprite[index] = SDL_CreateRGBSurface(0, spaceShipSpriteSizeWidth, spaceShipSpriteSizeHeight, 32, rmask, gmask, bmask, amask);
+			SDL_BlitSurface(surface, &srcTextureRect, spaceShipSprite[index], &destTextureRect);
 			index++;
 		}
 	}

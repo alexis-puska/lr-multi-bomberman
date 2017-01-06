@@ -50,6 +50,17 @@
 #define largeSpriteLevelSizeWidth	54
 #define largeSpriteLevelSizeHeight	48
 
+
+#define nbTrolleySpriteX		4
+#define nbTrolleySpriteY		1
+#define trolleySpriteSizeWidth	30
+#define trolleySpriteSizeHeight	42
+
+#define nbSpaceShipSpriteX		2
+#define nbSpaceShipSpriteY		4
+#define spaceShipSpriteSizeWidth	30
+#define spaceShipSpriteSizeHeight	42
+
 class Sprite {
 
 	public:
@@ -71,6 +82,9 @@ class Sprite {
 		void cropBonusSurface(SDL_Surface * surface);
 		void cropLevelSurface(SDL_Surface * surface);
 		void cropLouisSurface(SDL_Surface * surface);
+		void cropTrolleySurface(SDL_Surface * surface);
+		void cropSpaceShipSurface(SDL_Surface * surface);
+
 
 		/*
 		 * INFORMATION FUNCTIN
@@ -109,5 +123,7 @@ class Sprite {
 		SDL_Surface **bombeSprite;
 		SDL_Surface **previewLevelSprite;
 		SDL_Surface **levelSprite;
+		SDL_Surface **trolleySprite;
+		SDL_Surface **spaceShipSprite;
 };
 #endif
