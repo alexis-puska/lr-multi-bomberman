@@ -11,26 +11,44 @@
 #ifndef __MYCLASS_SPRITE
 #define __MYCLASS_SPRITE
 
-#define nbSpritePlayer		53
-#define nbColorPlayer		7
-#define nbPlayer			16
-#define nbTypePlayer		8
-
-#define nbSpriteLouis		27
-#define nbTypeLouis 		5
-
-#define nbLevel			9
-#define nbFireSprite		36
-#define nbMiscSprite		40
-#define nbCursorSprite		4
-
-#define nbSmallSpriteLevel	40
-#define nbLargeSpriteLevel	2
-
-#define spritePlayerSizeWidth	30
+#define nbSpritePlayerX			9
+#define nbSpritePlayerY			7
+#define spritePlayerSizeWidth		30
 #define spritePlayerSizeHeight	42
+#define nbColorPlayer			7
+#define nbPlayer				16
+#define nbTypePlayer			8
 
-#define spriteCursorSize	16
+#define nbSpriteLouisX			5
+#define nbSpriteLouisY			7
+#define spriteLouisSizeWidth		30
+#define spriteLouisSizeHeight		42
+#define nbTypeLouis 			5
+
+#define nbLevel				9
+#define defaultSpriteSize		16
+
+#define nbFireSpriteX			4
+#define nbFireSpriteY			9
+#define nbBombeSpriteX			3
+#define nbBombeSpriteY			4
+#define nbBonusSpriteX			2
+#define nbBonusSpriteY			7
+
+#define levelPreviewSizeWidth		128
+#define levelPreviewSizeHeight	110
+#define nbLevelPreviewX			3
+#define nbLevelPreviewY			3
+
+
+#define nbSmallSpriteLevelX		5
+#define nbSmallSpriteLevelY		8
+#define nbLargeSpriteLevelX		1
+#define nbLargeSpriteLevelY		2
+#define smallSpriteLevelSizeWidth	18
+#define smallSpriteLevelSizeHeight	16
+#define largeSpriteLevelSizeWidth	54
+#define largeSpriteLevelSizeHeight	48
 
 class Sprite {
 
@@ -48,9 +66,9 @@ class Sprite {
 		void cropSurface();
 		void cropPlayerSurface(SDL_Surface*, int offset);
 		void cropPreviewLevelSurface(SDL_Surface * surface);
-		void cropMiscSurface(SDL_Surface * surface);
+		void cropBombeSurface(SDL_Surface * surface);
 		void cropFireSurface(SDL_Surface * surface);
-		void cropCursorSurface(SDL_Surface * surface);
+		void cropBonusSurface(SDL_Surface * surface);
 		void cropLevelSurface(SDL_Surface * surface);
 		void cropLouisSurface(SDL_Surface * surface);
 
@@ -87,8 +105,8 @@ class Sprite {
 		SDL_Surface **playerSprite;
 		SDL_Surface **louisSprite;
 		SDL_Surface **fireSprite;
-		SDL_Surface **miscSprite;
-		SDL_Surface **cursorSprite;
+		SDL_Surface **bonusSprite;
+		SDL_Surface **bombeSprite;
 		SDL_Surface **previewLevelSprite;
 		SDL_Surface **levelSprite;
 };

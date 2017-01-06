@@ -17,8 +17,7 @@ Bomberman::Bomberman(SDL_Surface * vout_bufLibretro) {
 	Sprite::Instance();
 	Sound::Instance();
 	Sound::Instance().startMenuMusique();
-	
-	
+
 	//Init TTF feature
 	TTF_Init();
 
@@ -39,8 +38,6 @@ Uint32 	rmask, gmask, bmask, amask;
 
 	//init all surface
 	screenBuffer = SDL_CreateRGBSurface(0, 640, 360, 32, rmask, gmask, bmask, amask);
-
-
 
 	copySurfaceToBackRenderer(Sprite::Instance().getSplashScreen(), screenBuffer, 0, 0);
 
@@ -126,21 +123,17 @@ Uint32 	rmask, gmask, bmask, amask;
 	game = NULL;
 	SDL_FreeSurface(textureBuffer);
 
-
-	
 }
 
 Bomberman::~Bomberman() {
-	
-	SDL_FreeSurface (screenBuffer);
 
+	SDL_FreeSurface(screenBuffer);
 
 	for (int i = 0; i < 8; i++) {
-		SDL_FreeSurface (menuPlayerSprite[i]);
+		SDL_FreeSurface(menuPlayerSprite[i]);
 	}
-	
 
-	TTF_CloseFont (fragileBombersFont);
+	TTF_CloseFont(fragileBombersFont);
 	TTF_Quit();
 	if (game) {
 		if (game->isConfigured()) {
@@ -148,7 +141,7 @@ Bomberman::~Bomberman() {
 				game->exitGame();
 			}
 		}
-		free (game);
+		free(game);
 	}
 }
 
@@ -199,13 +192,11 @@ void Bomberman::tick(unsigned short in_keystateLibretro[16]) {
 					}
 					game = new Game(levelIndex, playerType, gameOption, vout_buf, in_keystate, nbPlayerConfig);
 					currentStep = gameStep;
-					
-					
+
 					Sound::Instance().stopMusique();
 					Sound::Instance().startBattleMusique();
 					//TODO
-					
-					
+
 					break;
 				case gameStep:
 					break;
@@ -274,7 +265,7 @@ void Bomberman::tick(unsigned short in_keystateLibretro[16]) {
 	} else {
 		if (game->isRequestStopGame()) {
 			game->exitGame();
-			free (game);
+			free(game);
 			game = NULL;
 			cursorPosition = levelIndex;
 			currentStep = levelSelectionMenu;

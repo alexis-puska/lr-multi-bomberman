@@ -75,10 +75,6 @@ class Bomberman {
 		//image of the different level available
 		SDL_Surface **menuLevelSprite;
 
-		
-
-		
-
 		//Font for menu and Game
 		TTF_Font* fragileBombersFont;
 
@@ -89,8 +85,6 @@ class Bomberman {
 		bool keychange[16];
 		bool anyPlayerkeychange;
 		unsigned short previousPlayerKeystate[16];
-
-		
 
 		/*
 		 *
