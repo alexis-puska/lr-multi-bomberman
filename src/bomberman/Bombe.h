@@ -21,7 +21,7 @@
 class Bombe {
 
 	public:
-		Bombe(int strenght, float posX, float posY, int bombeType, int player, int nbTickExplode, SDL_Surface ** animation, int tab[sizeX * sizeY], float * tabPlayerCoord);
+		Bombe(int strenght, float posX, float posY, int bombeType, int player, int nbTickExplode, int tab[sizeX * sizeY], float * tabPlayerCoord);
 		~Bombe();
 		bool isExplode();
 		bool isPowerBombe();
@@ -38,7 +38,6 @@ class Bombe {
 		int getCase();
 
 	private:
-		SDL_Surface ** animation;
 		int * tab;
 		float * tabPlayerCoord;
 

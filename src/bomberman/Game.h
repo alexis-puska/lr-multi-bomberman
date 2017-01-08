@@ -78,7 +78,6 @@ class Game {
 		SDL_Surface * overlayResult;
 
 		//spite for animation
-		SDL_Surface ** bombeSprite;
 		SDL_Surface ** bonusSprite;
 		SDL_Surface ** eggsSprite;
 		SDL_Surface ** burnWallSprite;

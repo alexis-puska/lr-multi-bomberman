@@ -75,6 +75,7 @@ class Sprite {
 		SDL_Surface* players(int type, int color, int mvt, int pos);
 		SDL_Surface* getCursor(int pos);
 		SDL_Surface* getFire(int x, int y);
+		SDL_Surface* getBombe(int x, int y);
 	private:
 		Sprite& operator=(const Sprite&);
 		Sprite(const Sprite&);

@@ -752,3 +752,7 @@ SDL_Surface* Sprite::getCursor(int pos){
 SDL_Surface* Sprite::getFire(int x, int y){
 	return fireSprite[y * nbFireSpriteX + x];
 }
+
+SDL_Surface* Sprite::getBombe(int x, int y){
+	return bombeSprite[y * nbBombeSpriteX + x];
+}

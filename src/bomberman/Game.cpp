@@ -157,7 +157,7 @@ Game::Game(int levelIndex, int playerInformationParam[16][2], int gameOption[4],
 	 */
 
 
-	bombeSprite = new SDL_Surface *[12];
+
 	bonusSprite = new SDL_Surface *[14];
 	eggsSprite = new SDL_Surface *[2];
 	burnWallSprite = new SDL_Surface *[6];
@@ -188,18 +188,6 @@ Game::Game(int levelIndex, int playerInformationParam[16][2], int gameOption[4],
 	}
 
 	grid = new Grid(levelIndex, tab, tabBonus, bonusSprite);
-
-	// bombeSprite
-	for (i = 0; i < 3; i++) {
-		for (j = 0; j < 4; j++) {
-			srcTextureRect.x = (i + 2) * 16;
-			srcTextureRect.y = j * 16;
-			srcTextureRect.w = 16;
-			srcTextureRect.h = 16;
-			bombeSprite[i + (j * 3)] = SDL_CreateRGBSurface(0, 16, 16, 32, rmask, gmask, bmask, amask);
-			SDL_BlitSurface(tempSurface, &srcTextureRect, bombeSprite[i + (j * 3)], &destTextureRect);
-		}
-	}
 
 	// eggsSprite
 	for (i = 0; i < 2; i++) {
@@ -319,7 +307,7 @@ Game::Game(int levelIndex, int playerInformationParam[16][2], int gameOption[4],
 			case HUMAN:
 
 				// if a human link the next keystate of libretro, else link a empty value
-				player = new Player(&in_keystate[indexLibretro], false, indexTexture, startX, startY, i, tab, tabBonus, bombeSprite, grid, tabPlayerCoord, nbPlayerConfig, indexPlayerForGame);
+				player = new Player(&in_keystate[indexLibretro], false, indexTexture, startX, startY, i, tab, tabBonus, grid, tabPlayerCoord, nbPlayerConfig, indexPlayerForGame);
 				players.push_back(player);
 				player = NULL;
 				indexLibretro++;
@@ -327,7 +315,7 @@ Game::Game(int levelIndex, int playerInformationParam[16][2], int gameOption[4],
 				indexPlayerForGame++;
 				break;
 			case CPU:
-				player = new Player(&in_keystate_cpu[index], true, indexTexture, startX, startY, i, tab, tabBonus, bombeSprite, grid, tabPlayerCoord, nbPlayerConfig, indexPlayerForGame);
+				player = new Player(&in_keystate_cpu[index], true, indexTexture, startX, startY, i, tab, tabBonus, grid, tabPlayerCoord, nbPlayerConfig, indexPlayerForGame);
 				players.push_back(player);
 				player = NULL;
 
@@ -385,9 +373,6 @@ Game::~Game() {
 
 	
 	for (int i = 0; i < 12; i++) {
-		SDL_FreeSurface (bombeSprite[i]);
-	}
-	for (int i = 0; i < 12; i++) {
 		SDL_FreeSurface (bonusSprite[i]);
 	}
 	for (int i = 0; i < 2; i++) {
@@ -400,7 +385,7 @@ Game::~Game() {
 		SDL_FreeSurface (headerPlayerSprite[i]);
 	}
 
-	free (bombeSprite);
+
 	free (bonusSprite);
 	free (eggsSprite);
 	free (burnWallSprite);
@@ -1180,7 +1165,7 @@ void Game::tick() {
 					switch (playerType[i]) {
 						case HUMAN:
 							// if a human link the next keystate of libretro, else link a empty value
-							player = new Player(&in_keystate[indexLibretro], false, playerIndexTexture[i], startX, startY, i, tab, tabBonus, bombeSprite, grid, tabPlayerCoord,
+							player = new Player(&in_keystate[indexLibretro], false, playerIndexTexture[i], startX, startY, i, tab, tabBonus, grid, tabPlayerCoord,
 									nbPlayerConfig, indexPlayerForGame);
 							players.push_back(player);
 							player = NULL;
@@ -1189,7 +1174,7 @@ void Game::tick() {
 							indexPlayerForGame++;
 							break;
 						case CPU:
-							player = new Player(&in_keystate_cpu[index], true, playerIndexTexture[i], startX, startY, i, tab, tabBonus, bombeSprite, grid, tabPlayerCoord, nbPlayerConfig,
+							player = new Player(&in_keystate_cpu[index], true, playerIndexTexture[i], startX, startY, i, tab, tabBonus, grid, tabPlayerCoord, nbPlayerConfig,
 									indexPlayerForGame);
 							players.push_back(player);
 							brain = new Brain(&in_keystate_cpu[index], tab, tabPlayerCoord, nbPlayerConfig, i, cpuLevel);

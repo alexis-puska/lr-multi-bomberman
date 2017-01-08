@@ -3,13 +3,12 @@
 #define nbFrame 6
 #define bombeMoveSpeed 0.2
 
-Bombe::Bombe(int strenght, float posX, float posY, int bombeType, int player, int nbTickExplode, SDL_Surface ** animation, int tab[sizeX * sizeY], float * tabPlayerCoord) {
+Bombe::Bombe(int strenght, float posX, float posY, int bombeType, int player, int nbTickExplode, int tab[sizeX * sizeY], float * tabPlayerCoord) {
 	this->strenght = strenght;
 	this->posX = posX;
 	this->posY = posY;
 	this->player = player;
 	this->nbTickExplode = nbTickExplode;
-	this->animation = animation;
 	this->bombeType = bombeType;
 	this->tabPlayerCoord = tabPlayerCoord;
 	this->tab = tab;
@@ -20,7 +19,6 @@ Bombe::Bombe(int strenght, float posX, float posY, int bombeType, int player, in
 }
 
 Bombe::~Bombe() {
-	animation = NULL;
 	tab = NULL;
 	tabPlayerCoord = NULL;
 }
@@ -246,5 +244,5 @@ void Bombe::tick(SDL_Surface * surfaceToDraw) {
 			}
 			break;
 	}
-	SDL_BlitSurface(animation[offsetSpriteAnimation + bombeType * 3], NULL, surfaceToDraw, &dstRect);
+	SDL_BlitSurface(Sprite::Instance().getBombe(offsetSpriteAnimation,bombeType), NULL, surfaceToDraw, &dstRect);
 }

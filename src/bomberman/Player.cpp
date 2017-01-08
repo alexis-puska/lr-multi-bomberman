@@ -59,7 +59,7 @@ enum louisTypeEnum {
 };
 
 Player::Player(unsigned short * in_keystate, bool isACpuPlayer, int indexSprite, float posX, float posY, int playerNumber, int tab[sizeX * sizeY], int tabBonus[sizeX * sizeY],
-		SDL_Surface ** bombeSprite, Grid * gridParam, float * tabPlayerCoord, int nbPlayerConfig, int indexPlayerForGame) {
+		Grid * gridParam, float * tabPlayerCoord, int nbPlayerConfig, int indexPlayerForGame) {
 	srand (time(NULL));grid = gridParam;
 	this->indexPlayerForGame = indexPlayerForGame;
 	this->posX = posX;
@@ -70,7 +70,6 @@ Player::Player(unsigned short * in_keystate, bool isACpuPlayer, int indexSprite,
 	this->tabBonus = tabBonus;
 	this->characterSpriteIndex = indexSprite;
 	this->in_keystate = in_keystate;
-	this->bombeSprite = bombeSprite;
 	this->tabPlayerCoord = tabPlayerCoord;
 	this->nbPlayerConfig = nbPlayerConfig;
 
@@ -296,8 +295,6 @@ Player::~Player() {
 	free (playerSpriteBurn);
 	free (louisSprite);
 	free (louisSpriteBurn);
-
-	free (bombeSprite);
 
 	free (in_keystate);
 	tab = NULL;
@@ -918,7 +915,7 @@ Bombe * Player::addBombe() {
 			break;
 	}
 	tab[(int) floor(posX) + ((int) floor(posY) * sizeX)] = bombeElement;
-	return new Bombe(strenght, floor(posX) + 0.5, floor(posY) + 0.5, bombeType, indexPlayerForGame, time, bombeSprite, tab, tabPlayerCoord);
+	return new Bombe(strenght, floor(posX) + 0.5, floor(posY) + 0.5, bombeType, indexPlayerForGame, time, tab, tabPlayerCoord);
 }
 
 int Player::getPlayerNumber() {
