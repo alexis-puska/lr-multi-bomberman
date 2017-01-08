@@ -2,13 +2,13 @@
 
 #define nbFrame 4
 
-BurnWall::BurnWall(int posX, int posY, int index, SDL_Surface ** animation, int tab[sizeX * sizeY], int tabBonus[sizeX * sizeY]) {
+BurnWall::BurnWall(int posX, int posY, int index, int levelIndex, int tab[sizeX * sizeY], int tabBonus[sizeX * sizeY]) {
 	this->indexBurnWall = index;
 	this->posX = posX;
 	this->posY = posY;
-	this->animation = animation;
 	this->tab = tab;
 	this->tabBonus = tabBonus;
+	this->levelIndex = levelIndex;
 	frameCounter = 0;
 	offsetSprite = 0;
 	nbFrameForAnimation = 6;
@@ -16,7 +16,6 @@ BurnWall::BurnWall(int posX, int posY, int index, SDL_Surface ** animation, int 
 }
 
 BurnWall::~BurnWall() {
-	animation = NULL;
 	tab = NULL;
 	tabBonus = NULL;
 }
@@ -47,5 +46,5 @@ void BurnWall::tick(SDL_Surface * surfaceToDraw) {
 		}
 	}
 	frameCounter++;
-	SDL_BlitSurface(animation[offsetSprite], NULL, surfaceToDraw, &dstRect);
+	SDL_BlitSurface(Sprite::Instance().getBurnWall(offsetSprite, levelIndex), NULL, surfaceToDraw, &dstRect);
 }

@@ -160,7 +160,7 @@ Game::Game(int levelIndex, int playerInformationParam[16][2], int gameOption[4],
 
 	bonusSprite = new SDL_Surface *[14];
 	eggsSprite = new SDL_Surface *[2];
-	burnWallSprite = new SDL_Surface *[6];
+
 	headerPlayerSprite = new SDL_Surface *[16];
 
 	SDL_Surface * tempSurface;
@@ -200,27 +200,7 @@ Game::Game(int levelIndex, int playerInformationParam[16][2], int gameOption[4],
 	}
 	SDL_FreeSurface(tempSurface);
 
-	// Load Surface for burn wall animation
-	// levelIndexInformation
-	tempSurface = IMG_Load(levelSprite);
-
-	for (i = 0; i < 3; i++) {
-		srcTextureRect.x = (i + 2) * 18;
-		srcTextureRect.y = (levelIndex * 128) + (4 * 16);
-		srcTextureRect.w = 18;
-		srcTextureRect.h = 16;
-		burnWallSprite[i] = SDL_CreateRGBSurface(0, 18, 16, 32, rmask, gmask, bmask, amask);
-		SDL_BlitSurface(tempSurface, &srcTextureRect, burnWallSprite[i], &destTextureRect);
-	}
-	for (i = 0; i < 3; i++) {
-		srcTextureRect.x = i * 18;
-		srcTextureRect.y = (levelIndex * 128) + (5 * 16);
-		srcTextureRect.w = 18;
-		srcTextureRect.h = 16;
-		burnWallSprite[i + 3] = SDL_CreateRGBSurface(0, 18, 16, 32, rmask, gmask, bmask, amask);
-		SDL_BlitSurface(tempSurface, &srcTextureRect, burnWallSprite[i + 3], &destTextureRect);
-	}
-	SDL_FreeSurface(tempSurface);
+	
 
 	/*
 	 * PLAYER INFORMATION
@@ -378,9 +358,6 @@ Game::~Game() {
 	for (int i = 0; i < 2; i++) {
 		SDL_FreeSurface (eggsSprite[i]);
 	}
-	for (int i = 0; i < 6; i++) {
-		SDL_FreeSurface (burnWallSprite[i]);
-	}
 	for (int i = 0; i < 16; i++) {
 		SDL_FreeSurface (headerPlayerSprite[i]);
 	}
@@ -388,7 +365,6 @@ Game::~Game() {
 
 	free (bonusSprite);
 	free (eggsSprite);
-	free (burnWallSprite);
 	free (headerPlayerSprite);
 
 	TTF_CloseFont (fragileBombersFont);
@@ -748,7 +724,7 @@ void Game::tick() {
 								explosions.push_back(new Explosion(posXBombe, posYcalc, ind, tab, tabBonus));
 								break;
 							case brickElement:
-								burnWalls.push_back(new BurnWall(posXBombe, posYcalc, ind, burnWallSprite, tab, tabBonus));
+								burnWalls.push_back(new BurnWall(posXBombe, posYcalc, ind, levelIndex, tab, tabBonus));
 								grid->burnABrick(posXBombe, posYcalc);
 								if (!isAPowerBombe) {
 									exitLoop = true;
@@ -797,7 +773,7 @@ void Game::tick() {
 								explosions.push_back(new Explosion((posXBombe + j), posYBombe, ind, tab, tabBonus));
 								break;
 							case brickElement:
-								burnWalls.push_back(new BurnWall((posXBombe + j), posYBombe, ind, burnWallSprite, tab, tabBonus));
+								burnWalls.push_back(new BurnWall((posXBombe + j), posYBombe, ind, levelIndex, tab, tabBonus));
 								grid->burnABrick((posXBombe + j), posYBombe);
 								if (!isAPowerBombe) {
 									exitLoop = true;
@@ -851,7 +827,7 @@ void Game::tick() {
 								explosions.push_back(new Explosion(posXBombe, posYcalc, ind, tab, tabBonus));
 								break;
 							case brickElement:
-								burnWalls.push_back(new BurnWall(posXBombe, posYcalc, ind, burnWallSprite, tab, tabBonus));
+								burnWalls.push_back(new BurnWall(posXBombe, posYcalc, ind, levelIndex, tab, tabBonus));
 								grid->burnABrick(posXBombe, posYcalc);
 								if (!isAPowerBombe) {
 									exitLoop = true;
@@ -901,7 +877,7 @@ void Game::tick() {
 								explosions.push_back(new Explosion((posXBombe - j), posYBombe, ind, tab, tabBonus));
 								break;
 							case brickElement:
-								burnWalls.push_back(new BurnWall((posXBombe - j), posYBombe, ind, burnWallSprite, tab, tabBonus));
+								burnWalls.push_back(new BurnWall((posXBombe - j), posYBombe, ind, levelIndex, tab, tabBonus));
 								grid->burnABrick((posXBombe - j), posYBombe);
 								if (!isAPowerBombe) {
 									exitLoop = true;

@@ -52,6 +52,7 @@
 #define smallSpriteLevelSizeHeight	16
 #define largeSpriteLevelSizeWidth	54
 #define largeSpriteLevelSizeHeight	48
+#define burnWallStartSprite 22
 
 
 #define nbTrolleySpriteX		4
@@ -77,6 +78,7 @@ class Sprite {
 		SDL_Surface* getLevelPreview(int pos);
 		SDL_Surface* getFire(int x, int y);
 		SDL_Surface* getBombe(int x, int y);
+		SDL_Surface* getBurnWall(int pos, int levelIndex);
 	private:
 		Sprite& operator=(const Sprite&);
 		Sprite(const Sprite&);

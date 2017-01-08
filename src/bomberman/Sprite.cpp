@@ -465,10 +465,10 @@ void Sprite::cropLevelSurface(SDL_Surface * surface) {
 		destTextureRect.w = smallSpriteLevelSizeWidth;
 		destTextureRect.h = smallSpriteLevelSizeHeight;
 		
-			for (int j = 0; j < nbSmallSpriteLevelY; j++) {
-		for (int i = 0; i < nbSmallSpriteLevelX; i++) {
+		for (int j = 0; j < nbSmallSpriteLevelY; j++) {
+			for (int i = 0; i < nbSmallSpriteLevelX; i++) {
 				srcTextureRect.x = i * smallSpriteLevelSizeWidth;
-				srcTextureRect.y = j * smallSpriteLevelSizeHeight;
+				srcTextureRect.y = j * smallSpriteLevelSizeHeight + (smallSpriteLevelSizeHeight * nbSmallSpriteLevelY * level);
 				srcTextureRect.w = smallSpriteLevelSizeWidth;
 				srcTextureRect.h = smallSpriteLevelSizeHeight;
 				levelSprite[index] = SDL_CreateRGBSurface(0, smallSpriteLevelSizeWidth, smallSpriteLevelSizeHeight, 32, rmask, gmask, bmask, amask);
@@ -481,10 +481,10 @@ void Sprite::cropLevelSurface(SDL_Surface * surface) {
 		destTextureRect.w = largeSpriteLevelSizeWidth;
 		destTextureRect.h = largeSpriteLevelSizeHeight;
 		
-			for (int j = 0; j < nbLargeSpriteLevelY; j++) {
-		for (int i = 0; i < nbLargeSpriteLevelX; i++) {
+		for (int j = 0; j < nbLargeSpriteLevelY; j++) {
+			for (int i = 0; i < nbLargeSpriteLevelX; i++) {
 				srcTextureRect.x = i * largeSpriteLevelSizeWidth;
-				srcTextureRect.y = j * largeSpriteLevelSizeHeight;
+				srcTextureRect.y = j * largeSpriteLevelSizeHeight + (smallSpriteLevelSizeHeight * nbLargeSpriteLevelY * level);
 				srcTextureRect.w = largeSpriteLevelSizeWidth;
 				srcTextureRect.h = largeSpriteLevelSizeHeight;
 				levelSprite[index] = SDL_CreateRGBSurface(0, largeSpriteLevelSizeWidth, largeSpriteLevelSizeHeight, 32, rmask, gmask, bmask, amask);
@@ -759,4 +759,9 @@ SDL_Surface* Sprite::getBombe(int x, int y){
 
 SDL_Surface* Sprite::getLevelPreview(int pos){
 	return previewLevelSprite[pos];
+}
+
+SDL_Surface* Sprite::getBurnWall(int pos, int levelIndex){
+	int spriteNumber = ((nbSmallSpriteLevelX * nbSmallSpriteLevelY) + (nbLargeSpriteLevelX * nbLargeSpriteLevelY)) * levelIndex + burnWallStartSprite + pos;
+	return levelSprite[spriteNumber];	
 }
