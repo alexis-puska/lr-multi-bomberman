@@ -70,6 +70,7 @@ class Sprite {
 		Sprite();
 		~Sprite();
 		SDL_Surface* players(int type, int color, int mvt, int pos);
+		SDL_Surface* getCursor(int pos);
 	private:
 		Sprite& operator=(const Sprite&);
 		Sprite(const Sprite&);

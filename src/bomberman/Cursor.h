@@ -9,6 +9,7 @@
 #endif
 #include <stdio.h>
 
+
 #ifndef __MYCLASS_CURSOR
 #define __MYCLASS_CURSOR
 class Cursor {
@@ -16,19 +17,15 @@ class Cursor {
 	public:
 		Cursor();
 		~Cursor();
-
 		SDL_Surface * getCurrentFrame();
 		bool isAlive();
 		int getPosition();
 		void setPosition(int newPosition);
 		void startAnimation();
 		void stopAnimation();
-
 	private:
 		bool isThreadAlive;
 		int position;
-
 		SDL_Thread *cursorThread;
-		SDL_Surface **cursor;
 };
 #endif

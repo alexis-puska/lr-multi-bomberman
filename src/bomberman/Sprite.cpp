@@ -464,8 +464,9 @@ void Sprite::cropLevelSurface(SDL_Surface * surface) {
 		destTextureRect.y = 0;
 		destTextureRect.w = smallSpriteLevelSizeWidth;
 		destTextureRect.h = smallSpriteLevelSizeHeight;
-		for (int i = 0; i < nbSmallSpriteLevelX; i++) {
+		
 			for (int j = 0; j < nbSmallSpriteLevelY; j++) {
+		for (int i = 0; i < nbSmallSpriteLevelX; i++) {
 				srcTextureRect.x = i * smallSpriteLevelSizeWidth;
 				srcTextureRect.y = j * smallSpriteLevelSizeHeight;
 				srcTextureRect.w = smallSpriteLevelSizeWidth;
@@ -479,8 +480,9 @@ void Sprite::cropLevelSurface(SDL_Surface * surface) {
 		destTextureRect.y = 0;
 		destTextureRect.w = largeSpriteLevelSizeWidth;
 		destTextureRect.h = largeSpriteLevelSizeHeight;
-		for (int i = 0; i < nbLargeSpriteLevelX; i++) {
+		
 			for (int j = 0; j < nbLargeSpriteLevelY; j++) {
+		for (int i = 0; i < nbLargeSpriteLevelX; i++) {
 				srcTextureRect.x = i * largeSpriteLevelSizeWidth;
 				srcTextureRect.y = j * largeSpriteLevelSizeHeight;
 				srcTextureRect.w = largeSpriteLevelSizeWidth;
@@ -508,8 +510,9 @@ void Sprite::cropLouisSurface(SDL_Surface * surface) {
 	destTextureRect.w = spriteLouisSizeWidth;
 	destTextureRect.h = spriteLouisSizeHeight;
 	for (int louis = 0; louis < nbTypeLouis; louis++) {
-		for (int i = 0; i < nbSpriteLouisX; i++) {
+		
 			for (int j = 0; j < nbSpriteLouisY; j++) {
+		for (int i = 0; i < nbSpriteLouisX; i++) {
 				srcTextureRect.x = i * spriteLouisSizeWidth;
 				srcTextureRect.y = j * spriteLouisSizeHeight;
 				srcTextureRect.w = spriteLouisSizeWidth;
@@ -536,8 +539,9 @@ void Sprite::cropPreviewLevelSurface(SDL_Surface * surface) {
 	destTextureRect.y = 0;
 	destTextureRect.w = levelPreviewSizeWidth;
 	destTextureRect.h = levelPreviewSizeHeight;
-	for (int i = 0; i < nbLevelPreviewX; i++) {
+	
 		for (int j = 0; j < nbLevelPreviewY; j++) {
+	for (int i = 0; i < nbLevelPreviewX; i++) {
 			srcTextureRect.x = i * levelPreviewSizeWidth;
 			srcTextureRect.y = j * levelPreviewSizeHeight;
 			srcTextureRect.w = levelPreviewSizeWidth;
@@ -563,8 +567,8 @@ void Sprite::cropBombeSurface(SDL_Surface * surface) {
 	destTextureRect.y = 0;
 	destTextureRect.w = defaultSpriteSize;
 	destTextureRect.h = defaultSpriteSize;
-	for (int i = 0; i < nbBombeSpriteX; i++) {
-		for (int j = 0; j < nbBombeSpriteY; j++) {
+	for (int j = 0; j < nbBombeSpriteY; j++) {
+		for (int i = 0; i < nbBombeSpriteX; i++) {	
 			srcTextureRect.x = (i + 2) * defaultSpriteSize;
 			srcTextureRect.y = j * defaultSpriteSize;
 			srcTextureRect.w = defaultSpriteSize;
@@ -589,8 +593,8 @@ void Sprite::cropBonusSurface(SDL_Surface * surface) {
 	destTextureRect.y = 0;
 	destTextureRect.w = defaultSpriteSize;
 	destTextureRect.h = defaultSpriteSize;
-	for (int i = 0; i < nbBonusSpriteX; i++) {
-		for (int j = 0; j < nbBonusSpriteY; j++) {
+	for (int j = 0; j < nbBonusSpriteY; j++) {
+		for (int i = 0; i < nbBonusSpriteX; i++) {
 			srcTextureRect.x = i * defaultSpriteSize;
 			srcTextureRect.y = j * defaultSpriteSize;
 			srcTextureRect.w = defaultSpriteSize;
@@ -615,8 +619,9 @@ void Sprite::cropFireSurface(SDL_Surface * surface) {
 	destTextureRect.y = 0;
 	destTextureRect.w = defaultSpriteSize;
 	destTextureRect.h = defaultSpriteSize;
-	for (int i = 0; i < nbFireSpriteX; i++) {
+	
 		for (int j = 0; j < nbFireSpriteY; j++) {
+	for (int i = 0; i < nbFireSpriteX; i++) {
 			srcTextureRect.x = i * defaultSpriteSize;
 			srcTextureRect.y = j * defaultSpriteSize;
 			srcTextureRect.w = defaultSpriteSize;
@@ -642,8 +647,9 @@ void Sprite::cropTrolleySurface(SDL_Surface * surface) {
 	destTextureRect.y = 0;
 	destTextureRect.w = trolleySpriteSizeWidth;
 	destTextureRect.h = trolleySpriteSizeHeight;
-	for (int i = 0; i < nbTrolleySpriteX; i++) {
+	
 		for (int j = 0; j < nbTrolleySpriteY; j++) {
+	for (int i = 0; i < nbTrolleySpriteX; i++) {
 			srcTextureRect.x = i * trolleySpriteSizeWidth;
 			srcTextureRect.y = j * trolleySpriteSizeHeight;
 			srcTextureRect.w = trolleySpriteSizeWidth;
@@ -669,8 +675,9 @@ void Sprite::cropSpaceShipSurface(SDL_Surface * surface) {
 	destTextureRect.y = 0;
 	destTextureRect.w = spaceShipSpriteSizeWidth;
 	destTextureRect.h = spaceShipSpriteSizeHeight;
-	for (int i = 0; i < nbSpaceShipSpriteX; i++) {
+	
 		for (int j = 0; j < nbSpaceShipSpriteY; j++) {
+	for (int i = 0; i < nbSpaceShipSpriteX; i++) {
 			srcTextureRect.x = i * spaceShipSpriteSizeWidth;
 			srcTextureRect.y = j * spaceShipSpriteSizeHeight;
 			srcTextureRect.w = spaceShipSpriteSizeWidth;
@@ -698,8 +705,9 @@ void Sprite::cropPlayerSurface(SDL_Surface* surface, int offset) {
 	destTextureRect.h = spritePlayerSizeHeight;
 	for (int type = 0; type < nbTypePlayer; type++) {
 		for (int color = 0; color < nbColorPlayer; color++) {
-			for (int i = 0; i < nbSpritePlayerX; i++) {
+			
 				for (int j = 0; j < nbSpritePlayerY; j++) {
+			for (int i = 0; i < nbSpritePlayerX; i++) {
 					srcTextureRect.x = i * spritePlayerSizeWidth;
 					srcTextureRect.y = j * spritePlayerSizeHeight;
 					srcTextureRect.w = spritePlayerSizeWidth;
@@ -732,4 +740,11 @@ SDL_Surface* Sprite::getMenuBackground() {
 SDL_Surface* Sprite::players(int type, int color, int mvt, int pos) {
 //TODO
 	return NULL;
+}
+
+SDL_Surface* Sprite::getCursor(int pos){
+	if(pos > 2){
+		return bombeSprite[pos-2];
+	}
+	return bombeSprite[pos];
 }
