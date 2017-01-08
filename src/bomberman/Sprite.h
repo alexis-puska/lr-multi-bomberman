@@ -16,7 +16,7 @@
 #define spritePlayerSizeWidth		30
 #define spritePlayerSizeHeight	42
 #define nbColorPlayer			7
-#define nbPlayer				16
+//#define nbPlayer				16
 #define nbTypePlayer			8
 
 #define nbSpriteLouisX			5
@@ -30,6 +30,9 @@
 
 #define nbFireSpriteX			4
 #define nbFireSpriteY			9
+#define smallSpriteFireSizeWidth	18
+#define smallSpriteFireSizeHeight	16
+
 #define nbBombeSpriteX			3
 #define nbBombeSpriteY			4
 #define nbBonusSpriteX			2
@@ -71,6 +74,7 @@ class Sprite {
 		~Sprite();
 		SDL_Surface* players(int type, int color, int mvt, int pos);
 		SDL_Surface* getCursor(int pos);
+		SDL_Surface* getFire(int x, int y);
 	private:
 		Sprite& operator=(const Sprite&);
 		Sprite(const Sprite&);

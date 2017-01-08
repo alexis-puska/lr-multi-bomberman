@@ -2,11 +2,10 @@
 
 #define nbFrame 4
 
-Explosion::Explosion(int posX, int posY, int index, SDL_Surface ** animation, int tab[sizeX * sizeY], int tabBonus[sizeX * sizeY]) {
+Explosion::Explosion(int posX, int posY, int index,  int tab[sizeX * sizeY], int tabBonus[sizeX * sizeY]) {
 	this->indexExplosion = index;
 	this->posX = posX;
 	this->posY = posY;
-	this->animation = animation;
 	this->tab = tab;
 	this->tabBonus = tabBonus;
 	frameCounter = 0;
@@ -18,7 +17,6 @@ Explosion::Explosion(int posX, int posY, int index, SDL_Surface ** animation, in
 }
 
 Explosion::~Explosion() {
-	animation = NULL;
 	tab = NULL;
 	tabBonus = NULL;
 }
@@ -71,5 +69,5 @@ void Explosion::tick(SDL_Surface * surfaceToDraw) {
 			offsetSpriteAnimation = 3;
 			break;
 	}
-	SDL_BlitSurface(animation[offsetSpriteAnimation + (indexExplosion * 4)], NULL, surfaceToDraw, &dstRect);
+	SDL_BlitSurface(Sprite::Instance().getFire(offsetSpriteAnimation,indexExplosion), NULL, surfaceToDraw, &dstRect);
 }

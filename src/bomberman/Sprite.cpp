@@ -617,16 +617,16 @@ void Sprite::cropFireSurface(SDL_Surface * surface) {
 	SDL_Rect destTextureRect;
 	destTextureRect.x = 0;
 	destTextureRect.y = 0;
-	destTextureRect.w = defaultSpriteSize;
-	destTextureRect.h = defaultSpriteSize;
+	destTextureRect.w = smallSpriteFireSizeWidth;
+	destTextureRect.h = smallSpriteFireSizeHeight;
 	
-		for (int j = 0; j < nbFireSpriteY; j++) {
-	for (int i = 0; i < nbFireSpriteX; i++) {
-			srcTextureRect.x = i * defaultSpriteSize;
-			srcTextureRect.y = j * defaultSpriteSize;
-			srcTextureRect.w = defaultSpriteSize;
-			srcTextureRect.h = defaultSpriteSize;
-			fireSprite[index] = SDL_CreateRGBSurface(0, defaultSpriteSize, defaultSpriteSize, 32, rmask, gmask, bmask, amask);
+	for (int j = 0; j < nbFireSpriteY; j++) {
+		for (int i = 0; i < nbFireSpriteX; i++) {
+			srcTextureRect.x = i * smallSpriteFireSizeWidth;
+			srcTextureRect.y = j * smallSpriteFireSizeHeight;
+			srcTextureRect.w = smallSpriteFireSizeWidth;
+			srcTextureRect.h = smallSpriteFireSizeHeight;
+			fireSprite[index] = SDL_CreateRGBSurface(0, smallSpriteFireSizeWidth, smallSpriteFireSizeHeight, 32, rmask, gmask, bmask, amask);
 			SDL_BlitSurface(surface, &srcTextureRect, fireSprite[index], &destTextureRect);
 			index++;
 		}
@@ -747,4 +747,8 @@ SDL_Surface* Sprite::getCursor(int pos){
 		return bombeSprite[pos-2];
 	}
 	return bombeSprite[pos];
+}
+
+SDL_Surface* Sprite::getFire(int x, int y){
+	return fireSprite[y * nbFireSpriteX + x];
 }

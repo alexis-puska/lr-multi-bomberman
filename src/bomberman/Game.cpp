@@ -4,7 +4,6 @@
 
 Uint32 rmask, gmask, bmask, amask;
 const static char *misc = "./resources/sprite/other/Misc.png";
-const static char *fireSprite = "./resources/sprite/other/Fire.png";
 const static char *levelSprite = "./resources/sprite/level/AllLevel.png";
 const static char *background = "./resources/image/EmptyBackground.png";
 
@@ -157,14 +156,14 @@ Game::Game(int levelIndex, int playerInformationParam[16][2], int gameOption[4],
 	 * LOAD MISC IMAGE : Bombe animation, explosion animation, bonus image, eggs image
 	 */
 
-	explosionSprite = new SDL_Surface *[36];
+
 	bombeSprite = new SDL_Surface *[12];
 	bonusSprite = new SDL_Surface *[14];
 	eggsSprite = new SDL_Surface *[2];
 	burnWallSprite = new SDL_Surface *[6];
 	headerPlayerSprite = new SDL_Surface *[16];
 
-	SDL_Surface * tempSurface = IMG_Load(fireSprite);
+	SDL_Surface * tempSurface;
 	SDL_Rect srcTextureRect;
 	SDL_Rect destTextureRect;
 	destTextureRect.x = 0;
@@ -174,19 +173,6 @@ Game::Game(int levelIndex, int playerInformationParam[16][2], int gameOption[4],
 
 	int i = 0;
 	int j = 0;
-	// explosionSprite
-	for (i = 0; i < 4; i++) {
-		for (j = 0; j < 9; j++) {
-			srcTextureRect.x = i * 18;
-			srcTextureRect.y = j * 16;
-			srcTextureRect.w = 18;
-			srcTextureRect.h = 16;
-			explosionSprite[i + (j * 4)] = SDL_CreateRGBSurface(0, 18, 16, 32, rmask, gmask, bmask, amask);
-			SDL_BlitSurface(tempSurface, &srcTextureRect, explosionSprite[i + (j * 4)], &destTextureRect);
-		}
-	}
-
-	SDL_FreeSurface(tempSurface);
 	tempSurface = IMG_Load(misc);
 
 	// bonusSprite
@@ -397,9 +383,7 @@ Game::~Game() {
 	SDL_FreeSurface (screenBuffer);
 	SDL_FreeSurface (playerBombeExplode);
 
-	for (int i = 0; i < 36; i++) {
-		SDL_FreeSurface (explosionSprite[i]);
-	}
+	
 	for (int i = 0; i < 12; i++) {
 		SDL_FreeSurface (bombeSprite[i]);
 	}
@@ -416,7 +400,6 @@ Game::~Game() {
 		SDL_FreeSurface (headerPlayerSprite[i]);
 	}
 
-	free (explosionSprite);
 	free (bombeSprite);
 	free (bonusSprite);
 	free (eggsSprite);
@@ -752,7 +735,7 @@ void Game::tick() {
 					int ind = 0;
 
 					//CENTER
-					explosions.push_back(new Explosion(posXBombe, posYBombe, 0, explosionSprite, tab, tabBonus));
+					explosions.push_back(new Explosion(posXBombe, posYBombe, 0, tab, tabBonus));
 					if (tabBonus[posXBombe + posYBombe * sizeX] != -1) {
 						grid->burnBonus(posXBombe, posYBombe);
 					}
@@ -777,7 +760,7 @@ void Game::tick() {
 								} else {
 									ind = 2;
 								}
-								explosions.push_back(new Explosion(posXBombe, posYcalc, ind, explosionSprite, tab, tabBonus));
+								explosions.push_back(new Explosion(posXBombe, posYcalc, ind, tab, tabBonus));
 								break;
 							case brickElement:
 								burnWalls.push_back(new BurnWall(posXBombe, posYcalc, ind, burnWallSprite, tab, tabBonus));
@@ -826,7 +809,7 @@ void Game::tick() {
 								} else {
 									ind = 8;
 								}
-								explosions.push_back(new Explosion((posXBombe + j), posYBombe, ind, explosionSprite, tab, tabBonus));
+								explosions.push_back(new Explosion((posXBombe + j), posYBombe, ind, tab, tabBonus));
 								break;
 							case brickElement:
 								burnWalls.push_back(new BurnWall((posXBombe + j), posYBombe, ind, burnWallSprite, tab, tabBonus));
@@ -880,7 +863,7 @@ void Game::tick() {
 								} else {
 									ind = 6;
 								}
-								explosions.push_back(new Explosion(posXBombe, posYcalc, ind, explosionSprite, tab, tabBonus));
+								explosions.push_back(new Explosion(posXBombe, posYcalc, ind, tab, tabBonus));
 								break;
 							case brickElement:
 								burnWalls.push_back(new BurnWall(posXBombe, posYcalc, ind, burnWallSprite, tab, tabBonus));
@@ -930,7 +913,7 @@ void Game::tick() {
 								} else {
 									ind = 4;
 								}
-								explosions.push_back(new Explosion((posXBombe - j), posYBombe, ind, explosionSprite, tab, tabBonus));
+								explosions.push_back(new Explosion((posXBombe - j), posYBombe, ind, tab, tabBonus));
 								break;
 							case brickElement:
 								burnWalls.push_back(new BurnWall((posXBombe - j), posYBombe, ind, burnWallSprite, tab, tabBonus));

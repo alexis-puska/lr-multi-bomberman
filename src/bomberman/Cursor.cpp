@@ -1,5 +1,4 @@
 #include "Cursor.h"
-#include "Sprite.h"
 
 #define frameFrequence 100
 

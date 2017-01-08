@@ -10,6 +10,7 @@
 
 #include <stdio.h>
 #include "Grid.h"
+#include "Sprite.h"
 
 #ifndef __MYCLASS_EXPLOSION
 #define __MYCLASS_EXPLOSION
@@ -20,13 +21,12 @@
 class Explosion {
 
 	public:
-		Explosion(int posX, int posY, int index, SDL_Surface ** animation, int tab[sizeX * sizeY], int tabBonus[sizeX * sizeY]);
+		Explosion(int posX, int posY, int index, int tab[sizeX * sizeY], int tabBonus[sizeX * sizeY]);
 		~Explosion();
 		void tick(SDL_Surface * surfaceToDraw);
 		bool canBeDelete();
 
 	private:
-		SDL_Surface ** animation;
 		int * tab;
 		int * tabBonus;
 		int posX;
