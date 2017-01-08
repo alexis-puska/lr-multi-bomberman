@@ -4,12 +4,6 @@
 #include <time.h>
 #include <vector>
 
-#define blockSizeX 18
-#define blockSizeY 16
-#define largeBlockSizeX 54
-#define largeBlockSizeY 48
-
-const static char *levelSprite = "./resources/sprite/level/AllLevel.png";
 
 Grid::Grid() {
 	lvl = 0;
@@ -26,16 +20,6 @@ Grid::Grid(int lvl, int tab[sizeX * sizeY], int tabBonus[sizeX * sizeY], SDL_Sur
 }
 
 Grid::~Grid() {
-	int i;
-	for (i = 0; i < 40; i++) {
-		SDL_FreeSurface (textures[i]);
-	}
-	for (i = 0; i < 2; i++) {
-		SDL_FreeSurface (skys[i]);
-	}
-	free (textures);
-	free (skys);
-
 	SDL_FreeSurface (ground);
 	SDL_FreeSurface (brickShadow);
 	SDL_FreeSurface (skyFixe);
@@ -57,7 +41,7 @@ SDL_Surface * Grid::getBricksLayer() {
 }
 
 SDL_Surface * Grid::getWallSprite() {
-	return textures[16];
+	return Sprite::Instance().getLevel(wallSpriteIndex, lvl);
 }
 
 void Grid::configure(int levelNumber) {
@@ -76,53 +60,9 @@ void Grid::init() {
 	rmask = 0x00ff0000;
 	gmask = 0x0000ff00;
 	bmask = 0x000000ff;
-
-	//buffer for loading textures
-	SDL_Surface *textureBuffer = IMG_Load(levelSprite);
-
-	//initialise the surface Tab
-	textures = new SDL_Surface*[40];
-	skys = new SDL_Surface*[2];
-
-	//rectangle for cropped the texture
-	SDL_Rect textureRect;
-	SDL_Rect skyRect;
-	SDL_Rect destTextureRect;
-
-	int offset = lvl * 128;
-
-	//CROPPING textures level
-	destTextureRect.x = 0;
-	destTextureRect.y = 0;
-	destTextureRect.w = blockSizeX;
-	destTextureRect.h = blockSizeY;
-	for (int i = 0; i < 5; i++) {
-		for (int j = 0; j < 8; j++) {
-			textureRect.x = i * blockSizeX;
-			textureRect.y = offset + (j * blockSizeY);
-			textureRect.w = blockSizeX;
-			textureRect.h = blockSizeY;
-			textures[i + (j * 5)] = SDL_CreateRGBSurface(0, blockSizeX, blockSizeY, 32, rmask, gmask, bmask, amask);
-			SDL_BlitSurface(textureBuffer, &textureRect, textures[i + (j * 5)], &destTextureRect);
-		}
-	}
-
-	destTextureRect.x = 0;
-	destTextureRect.y = 0;
-	destTextureRect.w = 54;
-	destTextureRect.h = 48;
-	for (int k = 0; k < 2; k++) {
-		skyRect.x = 90;
-		skyRect.y = offset + (k * 48);
-		skyRect.w = 54;
-		skyRect.h = 48;
-		skys[k] = SDL_CreateRGBSurface(0, 54, 48, 32, rmask, gmask, bmask, amask);
-		SDL_BlitSurface(textureBuffer, &skyRect, skys[k], &destTextureRect);
-	}
 	ground = SDL_CreateRGBSurface(0, 630, 336, 32, rmask, gmask, bmask, amask);
 	brickShadow = SDL_CreateRGBSurface(0, 630, 336, 32, rmask, gmask, bmask, amask);
 	skyFixe = SDL_CreateRGBSurface(0, 630, 336, 32, rmask, gmask, bmask, amask);
-	SDL_FreeSurface(textureBuffer);
 }
 
 void Grid::resetSurface() {
@@ -175,40 +115,40 @@ for	(int i = 0; i < sizeX * sizeY; i++) {
 	SDL_Rect skyRect;
 	srcrect.x = 0;
 	srcrect.y = 0;
-	srcrect.w = blockSizeX;
-	srcrect.h = blockSizeY;
+	srcrect.w = smallSpriteLevelSizeWidth;
+	srcrect.h = smallSpriteLevelSizeHeight;
 
 	skyRect.x = 0;
 	skyRect.y = 0;
-	skyRect.w = largeBlockSizeX;
-	skyRect.h = largeBlockSizeY;
+	skyRect.w = largeSpriteLevelSizeWidth;
+	skyRect.h = largeSpriteLevelSizeHeight;
 
 	for(int i = 0; i < sizeX; i++) {
 		for(int j = 0; j < sizeY; j++) {
-			dstrect.x = i * blockSizeX;
-			dstrect.y = j * blockSizeY;
-			dstrect.w = blockSizeX;
-			dstrect.h = blockSizeY;
+			dstrect.x = i * smallSpriteLevelSizeWidth;
+			dstrect.y = j * smallSpriteLevelSizeHeight;
+			dstrect.w = smallSpriteLevelSizeWidth;
+			dstrect.h = smallSpriteLevelSizeHeight;
 			int textureIndex = level[lvl][j][i];
-			SDL_BlitSurface(textures[18], &srcrect, ground, &dstrect);
+			SDL_BlitSurface(Sprite::Instance().getLevel(18, lvl), &srcrect, ground, &dstrect);
 			if(textureIndex < 40) {
-				SDL_BlitSurface(textures[textureIndex], &srcrect, ground, &dstrect);
+				SDL_BlitSurface(Sprite::Instance().getLevel(textureIndex, lvl), &srcrect, ground, &dstrect);
 			} else {
-				dstrect.x = (i-1) * blockSizeX;
-				dstrect.y = (j-1) * blockSizeY;
-				dstrect.w = largeBlockSizeX;
-				dstrect.h = largeBlockSizeY;
-				SDL_BlitSurface(skys[textureIndex % 40], &skyRect, skyFixe, &dstrect);
+				dstrect.x = (i-1) * smallSpriteLevelSizeWidth;
+				dstrect.y = (j-1) * smallSpriteLevelSizeHeight;
+				dstrect.w = largeSpriteLevelSizeWidth;
+				dstrect.h = largeSpriteLevelSizeHeight;
+				SDL_BlitSurface(Sprite::Instance().getLevel(skyStartSpriteIndex, lvl), &skyRect, skyFixe, &dstrect);
 			}
 			if(tab[i+(j*sizeX)] == brickElement) {
 				if(reservedSpot[j][i] == 0) {
 					if(textureIndex == 40) {
-						dstrect.x = i * blockSizeX;
-						dstrect.y = j * blockSizeY;
-						dstrect.w = blockSizeX;
-						dstrect.h = blockSizeY;
+						dstrect.x = i * smallSpriteLevelSizeWidth;
+						dstrect.y = j * smallSpriteLevelSizeHeight;
+						dstrect.w = smallSpriteLevelSizeWidth;
+						dstrect.h = smallSpriteLevelSizeHeight;
 					}
-					SDL_BlitSurface(textures[21], &srcrect, brickShadow, &dstrect);
+					SDL_BlitSurface(Sprite::Instance().getLevel(21, lvl), &srcrect, brickShadow, &dstrect);
 				} else {
 					//reservedSpot !
 					tab[i+(j*sizeX)] = emptyElement;
@@ -225,8 +165,8 @@ for	(int i = 0; i < sizeX * sizeY; i++) {
 		}
 		tabBonus[ind] = deathBonus;
 		SDL_Rect dstrect;
-		dstrect.x = ((ind % sizeX) * blockSizeX) + 1;
-		dstrect.y = floor(ind / sizeX) * blockSizeY;
+		dstrect.x = ((ind % sizeX) * smallSpriteLevelSizeWidth) + 1;
+		dstrect.y = floor(ind / sizeX) * smallSpriteLevelSizeHeight;
 		dstrect.w = 16;
 		dstrect.h = 16;
 		SDL_BlitSurface(bonusSprite[0], NULL, brickShadow, &dstrect);
@@ -241,8 +181,8 @@ for	(int i = 0; i < sizeX * sizeY; i++) {
 			}
 			tabBonus[ind] = y;
 //			SDL_Rect dstrect;
-//			dstrect.x = ((ind % sizeX) * blockSizeX) + 1;
-//			dstrect.y = floor(ind / sizeX) * blockSizeY;
+//			dstrect.x = ((ind % sizeX) * smallSpriteLevelSizeWidth) + 1;
+//			dstrect.y = floor(ind / sizeX) * smallSpriteLevelSizeHeight;
 //			dstrect.w = 16;
 //			dstrect.h = 16;
 //			SDL_BlitSurface(bonusSprite[y], NULL, brickShadow, &dstrect);
@@ -254,17 +194,17 @@ for	(int i = 0; i < sizeX * sizeY; i++) {
 void Grid::burnABrick(int posX, int posY) {
 	if (tab[posX + posY * sizeX] == brickElement) {
 		SDL_Rect rect;
-		rect.x = posX * blockSizeX;
-		rect.y = posY * blockSizeY;
-		rect.w = blockSizeX;
-		rect.h = blockSizeY;
+		rect.x = posX * smallSpriteLevelSizeWidth;
+		rect.y = posY * smallSpriteLevelSizeHeight;
+		rect.w = smallSpriteLevelSizeWidth;
+		rect.h = smallSpriteLevelSizeHeight;
 		SDL_FillRect(brickShadow, &rect, 0x000000);
 	}
 
 	if (tabBonus[posX + posY * sizeX] != noBonus) {
 		SDL_Rect dstrect;
-		dstrect.x = posX * blockSizeX + 1;
-		dstrect.y = posY * blockSizeY;
+		dstrect.x = posX * smallSpriteLevelSizeWidth + 1;
+		dstrect.y = posY * smallSpriteLevelSizeHeight;
 		dstrect.w = 16;
 		dstrect.h = 16;
 		SDL_BlitSurface(bonusSprite[tabBonus[posX + posY * sizeX]], NULL, brickShadow, &dstrect);
@@ -274,10 +214,10 @@ void Grid::burnABrick(int posX, int posY) {
 void Grid::burnBonus(int posX, int posY) {
 	if (tabBonus[posX + posY * sizeX] != noBonus) {
 		SDL_Rect rect;
-		rect.x = posX * blockSizeX;
-		rect.y = posY * blockSizeY;
-		rect.w = blockSizeX;
-		rect.h = blockSizeY;
+		rect.x = posX * smallSpriteLevelSizeWidth;
+		rect.y = posY * smallSpriteLevelSizeHeight;
+		rect.w = smallSpriteLevelSizeWidth;
+		rect.h = smallSpriteLevelSizeHeight;
 		SDL_FillRect(brickShadow, &rect, 0x000000);
 		if (tabBonus[posX + posY * sizeX] == deathBonus) {
 			placeNewDeathMalus();
@@ -293,8 +233,8 @@ void Grid::placeNewDeathMalus() {
 	}
 	tabBonus[ind] = deathBonus;
 	SDL_Rect dstrect;
-	dstrect.x = ((ind % sizeX) * blockSizeX) + 1;
-	dstrect.y = floor(ind / sizeX) * blockSizeY;
+	dstrect.x = ((ind % sizeX) * smallSpriteLevelSizeWidth) + 1;
+	dstrect.y = floor(ind / sizeX) * smallSpriteLevelSizeHeight;
 	dstrect.w = 16;
 	dstrect.h = 16;
 	SDL_BlitSurface(bonusSprite[0], NULL, brickShadow, &dstrect);
@@ -302,10 +242,10 @@ void Grid::placeNewDeathMalus() {
 
 void Grid::placeSuddenDeathWall(int x, int y) {
 	SDL_Rect dstrect;
-	dstrect.x = x * blockSizeX;
-	dstrect.y = y * blockSizeY;
+	dstrect.x = x * smallSpriteLevelSizeWidth;
+	dstrect.y = y * smallSpriteLevelSizeHeight;
 	dstrect.w = 18;
 	dstrect.h = 16;
-	SDL_BlitSurface(textures[16], NULL, brickShadow, &dstrect);
+	SDL_BlitSurface(Sprite::Instance().getLevel(suddenDeathWallSpriteIndex, lvl), NULL, brickShadow, &dstrect);
 	tab[x + y * sizeX] = suddenDeathElement;
 }

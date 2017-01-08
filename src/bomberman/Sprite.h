@@ -53,7 +53,9 @@
 #define largeSpriteLevelSizeWidth	54
 #define largeSpriteLevelSizeHeight	48
 #define burnWallStartSprite 22
-#define suddenDeathWallSprite	16
+#define suddenDeathWallSpriteIndex	16
+#define wallSpriteIndex				16
+#define skyStartSpriteIndex			40
 
 
 #define nbTrolleySpriteX		4

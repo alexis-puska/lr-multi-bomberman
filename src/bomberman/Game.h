@@ -80,7 +80,6 @@ class Game {
 		//spite for animation
 		SDL_Surface ** bonusSprite;
 		SDL_Surface ** eggsSprite;
-		SDL_Surface ** burnWallSprite;
 		//sprite for header
 		SDL_Surface ** headerPlayerSprite;
 

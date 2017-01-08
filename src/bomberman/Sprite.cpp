@@ -483,8 +483,8 @@ void Sprite::cropLevelSurface(SDL_Surface * surface) {
 		
 		for (int j = 0; j < nbLargeSpriteLevelY; j++) {
 			for (int i = 0; i < nbLargeSpriteLevelX; i++) {
-				srcTextureRect.x = i * largeSpriteLevelSizeWidth;
-				srcTextureRect.y = j * largeSpriteLevelSizeHeight + (smallSpriteLevelSizeHeight * nbLargeSpriteLevelY * level);
+				srcTextureRect.x = i * largeSpriteLevelSizeWidth +(smallSpriteLevelSizeWidth * nbSmallSpriteLevelX);
+				srcTextureRect.y = j * largeSpriteLevelSizeHeight+ (smallSpriteLevelSizeHeight * nbSmallSpriteLevelY * level);
 				srcTextureRect.w = largeSpriteLevelSizeWidth;
 				srcTextureRect.h = largeSpriteLevelSizeHeight;
 				levelSprite[index] = SDL_CreateRGBSurface(0, largeSpriteLevelSizeWidth, largeSpriteLevelSizeHeight, 32, rmask, gmask, bmask, amask);

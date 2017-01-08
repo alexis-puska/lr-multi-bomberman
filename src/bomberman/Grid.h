@@ -5,6 +5,7 @@
 #include <SDL2_image/SDL_image.h>
 #endif
 #include <vector>
+#include "Sprite.h"
 
 #ifndef __MYCLASS_GRID
 #define __MYCLASS_GRID
@@ -88,8 +89,6 @@ class Grid {
 		 Sky texture is on the right block size 162 * 288 px
 		 Each texture size is 54 x 48 px
 		 */
-		SDL_Surface **textures;
-		SDL_Surface **skys;
 		SDL_Surface **bonusSprite;
 
 		//Layers to draw the game

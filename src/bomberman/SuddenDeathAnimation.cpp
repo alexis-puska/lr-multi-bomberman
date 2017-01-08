@@ -34,7 +34,7 @@ void SuddenDeathAnimation::tick(SDL_Surface * surfaceToDraw) {
 	dstRect.y = posY * smallSpriteLevelSizeHeight - offset;
 	dstRect.w = 18;
 	dstRect.h = 16;
-	SDL_BlitSurface(Sprite::Instance().getLevel(suddenDeathWallSprite, levelIndex), NULL, surfaceToDraw, &dstRect);
+	SDL_BlitSurface(Sprite::Instance().getLevel(suddenDeathWallSpriteIndex, levelIndex), NULL, surfaceToDraw, &dstRect);
 }
 
 bool SuddenDeathAnimation::canBeDeleted() {
