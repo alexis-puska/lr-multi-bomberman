@@ -72,9 +72,6 @@ class Bomberman {
 		//image of differente sprite of player
 		SDL_Surface **menuPlayerSprite;
 
-		//image of the different level available
-		SDL_Surface **menuLevelSprite;
-
 		//Font for menu and Game
 		TTF_Font* fragileBombersFont;
 

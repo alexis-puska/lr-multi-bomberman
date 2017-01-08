@@ -756,3 +756,7 @@ SDL_Surface* Sprite::getFire(int x, int y){
 SDL_Surface* Sprite::getBombe(int x, int y){
 	return bombeSprite[y * nbBombeSpriteX + x];
 }
+
+SDL_Surface* Sprite::getLevelPreview(int pos){
+	return previewLevelSprite[pos];
+}

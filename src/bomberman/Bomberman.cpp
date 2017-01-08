@@ -2,7 +2,6 @@
 
 #include <time.h>
 
-const static char *levelView = "./resources/sprite/level/LevelView.png";
 
 const static char *BombermanSprite = "./resources/sprite/characters/AllBomberman.png";
 const static char *BombermanSpriteCossak = "./resources/sprite/characters/AllBombermanCossak.png";
@@ -101,37 +100,11 @@ Uint32 	rmask, gmask, bmask, amask;
 	SDL_BlitSurface(textureBuffer, &dstRect, menuPlayerSprite[7], &dstRect);
 	SDL_FreeSurface(textureBuffer);
 
-	//init Level sprite for menu
-	textureBuffer = IMG_Load(levelView);
-	SDL_Rect srcRect;
-	dstRect.x = 0;
-	dstRect.y = 0;
-	dstRect.w = 128;
-	dstRect.h = 110;
-
-	menuLevelSprite = new SDL_Surface*[9];
-	for (int j = 0; j < 3; j++) {
-		for (int i = 0; i < 3; i++) {
-			srcRect.x = i * 128;
-			srcRect.y = j * 110;
-			srcRect.w = 128;
-			srcRect.h = 110;
-			menuLevelSprite[j * 3 + i] = SDL_CreateRGBSurface(0, 128, 110, 32, rmask, gmask, bmask, amask);
-			SDL_BlitSurface(textureBuffer, &srcRect, menuLevelSprite[j * 3 + i], &dstRect);
-		}
-	}
-	game = NULL;
-	SDL_FreeSurface(textureBuffer);
-
 }
 
 Bomberman::~Bomberman() {
 
 	SDL_FreeSurface(screenBuffer);
-
-	for (int i = 0; i < 8; i++) {
-		SDL_FreeSurface(menuPlayerSprite[i]);
-	}
 
 	TTF_CloseFont(fragileBombersFont);
 	TTF_Quit();
@@ -685,7 +658,7 @@ void Bomberman::drawLevelSelectionMenu() {
 		if (previousPlayerKeystate[0] & keyPadRight && keychange[0]) {
 			Sound::Instance().playBipSound();
 			cursorPosition++;
-			if (cursorPosition > 8) {
+			if (cursorPosition > nbLevel-1) {
 				cursorPosition = 0;
 			}
 
@@ -694,11 +667,11 @@ void Bomberman::drawLevelSelectionMenu() {
 			Sound::Instance().playBipSound();
 			cursorPosition--;
 			if (cursorPosition < 0) {
-				cursorPosition = 8;
+				cursorPosition = nbLevel-1;
 			}
 		}
 
-		copySurfaceToBackRenderer(menuLevelSprite[cursorPosition], screenBuffer, ((640 / 2) - (menuLevelSprite[cursorPosition]->w / 2)), 200);
+		copySurfaceToBackRenderer(Sprite::Instance().getLevelPreview(cursorPosition), screenBuffer, ((640 / 2) - (levelPreviewSizeWidth / 2)), 200);
 
 		refreshBuffer = false;
 		SDL_FreeSurface(menu);
