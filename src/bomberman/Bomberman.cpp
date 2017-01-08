@@ -2,7 +2,6 @@
 
 #include <time.h>
 
-
 const static char *BombermanSprite = "./resources/sprite/characters/AllBomberman.png";
 const static char *BombermanSpriteCossak = "./resources/sprite/characters/AllBombermanCossak.png";
 const static char *BombermanSpriteBarbar = "./resources/sprite/characters/AllBombermanBarbar.png";
@@ -658,7 +657,7 @@ void Bomberman::drawLevelSelectionMenu() {
 		if (previousPlayerKeystate[0] & keyPadRight && keychange[0]) {
 			Sound::Instance().playBipSound();
 			cursorPosition++;
-			if (cursorPosition > nbLevel-1) {
+			if (cursorPosition > nbLevel - 1) {
 				cursorPosition = 0;
 			}
 
@@ -667,7 +666,7 @@ void Bomberman::drawLevelSelectionMenu() {
 			Sound::Instance().playBipSound();
 			cursorPosition--;
 			if (cursorPosition < 0) {
-				cursorPosition = nbLevel-1;
+				cursorPosition = nbLevel - 1;
 			}
 		}
 

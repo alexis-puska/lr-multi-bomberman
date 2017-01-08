@@ -68,6 +68,10 @@
 #define spaceShipSpriteSizeWidth	30
 #define spaceShipSpriteSizeHeight	42
 
+enum playerMove {
+	none = -1, down = 0, up = 1, left = 2, right = 3
+};
+
 class Sprite {
 
 	public:
@@ -83,6 +87,18 @@ class Sprite {
 		SDL_Surface* getBombe(int x, int y);
 		SDL_Surface* getBurnWall(int pos, int levelIndex);
 		SDL_Surface* getLevel(int pos, int levelIndex);
+		//player
+		SDL_Surface* playerDrawNormal(int type, int color, int move, int pos);
+		SDL_Surface* drawOnLouis(int type, int color, int move);
+		SDL_Surface* drawWithBombe(int type, int color, int move, int pos);
+		SDL_Surface* drawThrowBombe(int type, int color, int move, int pos);
+		SDL_Surface* drawBurning(int type, int color, int move, int pos);
+		SDL_Surface* drawLouisBurning(int type, int color, int move, int pos);
+		SDL_Surface* drawVictory(int type, int color, int pos);
+		SDL_Surface* drawCrying(int type, int color, int pos);
+		SDL_Surface* drawLouis(int louisType, int move, int pos);
+		
+		
 	private:
 		Sprite& operator=(const Sprite&);
 		Sprite(const Sprite&);
@@ -97,6 +113,7 @@ class Sprite {
 		void cropLouisSurface(SDL_Surface * surface);
 		void cropTrolleySurface(SDL_Surface * surface);
 		void cropSpaceShipSurface(SDL_Surface * surface);
+		int calcStartIndexPlayer(int type, int color);
 
 
 		/*

@@ -38,17 +38,8 @@ enum brainKey {
 	brainKeyY = 32768
 };
 
-enum brainMove {
-	none = -1, down = 0, up = 1, left = 2, right = 3
-};
-
 enum brain1step {
-	lvl1CheckCanDropBomb = 0,	
-	lvl1DropBomb = 1,
-	lvl1GoSecure = 2,
-	lvl1WaitBombeExplode = 3,
-	lvl1FindNearWall = 4, 
-	lvl1WalkToNearWall = 5
+	lvl1CheckCanDropBomb = 0, lvl1DropBomb = 1, lvl1GoSecure = 2, lvl1WaitBombeExplode = 3, lvl1FindNearWall = 4, lvl1WalkToNearWall = 5
 };
 
 class Brain {
@@ -57,8 +48,7 @@ class Brain {
 		Brain(unsigned short * keystate, int tab[sizeX * sizeY], float * tabCord, int nbPlayer, int playerNumber, int cpuLevel);
 		~Brain();
 		void think();
-		
-		
+
 	private:
 		//keystate of the player taht will be command by this brain
 		unsigned short * keystate;
@@ -80,8 +70,7 @@ class Brain {
 		int brainStep;
 
 		int objectifIndex;
-		
-		
+
 		int findNearPlayer();
 		void level1();
 		void level2();

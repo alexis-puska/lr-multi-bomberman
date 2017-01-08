@@ -4,7 +4,6 @@
 #include <time.h>
 #include <vector>
 
-
 Grid::Grid() {
 	lvl = 0;
 	init();
@@ -20,9 +19,9 @@ Grid::Grid(int lvl, int tab[sizeX * sizeY], int tabBonus[sizeX * sizeY], SDL_Sur
 }
 
 Grid::~Grid() {
-	SDL_FreeSurface (ground);
-	SDL_FreeSurface (brickShadow);
-	SDL_FreeSurface (skyFixe);
+	SDL_FreeSurface(ground);
+	SDL_FreeSurface(brickShadow);
+	SDL_FreeSurface(skyFixe);
 	tab = NULL;
 	tabBonus = NULL;
 	bonusSprite = NULL;
@@ -71,9 +70,9 @@ void Grid::resetSurface() {
 	rmask = 0x00ff0000;
 	gmask = 0x0000ff00;
 	bmask = 0x000000ff;
-	SDL_FreeSurface (ground);
-	SDL_FreeSurface (brickShadow);
-	SDL_FreeSurface (skyFixe);
+	SDL_FreeSurface(ground);
+	SDL_FreeSurface(brickShadow);
+	SDL_FreeSurface(skyFixe);
 	ground = SDL_CreateRGBSurface(0, 630, 336, 32, rmask, gmask, bmask, amask);
 	brickShadow = SDL_CreateRGBSurface(0, 630, 336, 32, rmask, gmask, bmask, amask);
 	skyFixe = SDL_CreateRGBSurface(0, 630, 336, 32, rmask, gmask, bmask, amask);

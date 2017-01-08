@@ -38,10 +38,6 @@ enum playerKey {
 	keyPadY = 32768
 };
 
-enum playerMove {
-	none = -1, down = 0, up = 1, left = 2, right = 3
-};
-
 enum playerSprite {
 	bomberman = 0, cossak = 1, barbar = 2, chan = 3, kid = 4, pretty = 5, punk = 6, mexican = 7
 };
@@ -58,8 +54,8 @@ enum louisTypeEnum {
 	blueLouis = 0, yellowLouis = 1, pinkLouis = 2, greenLouis = 3, brownLouis = 4
 };
 
-Player::Player(unsigned short * in_keystate, bool isACpuPlayer, int indexSprite, float posX, float posY, int playerNumber, int tab[sizeX * sizeY], int tabBonus[sizeX * sizeY],
-		Grid * gridParam, float * tabPlayerCoord, int nbPlayerConfig, int indexPlayerForGame) {
+Player::Player(unsigned short * in_keystate, bool isACpuPlayer, int indexSprite, float posX, float posY, int playerNumber, int tab[sizeX * sizeY], int tabBonus[sizeX * sizeY], Grid * gridParam,
+		float * tabPlayerCoord, int nbPlayerConfig, int indexPlayerForGame, int color) {
 	srand (time(NULL));grid = gridParam;
 	this->indexPlayerForGame = indexPlayerForGame;
 	this->posX = posX;
@@ -72,6 +68,8 @@ Player::Player(unsigned short * in_keystate, bool isACpuPlayer, int indexSprite,
 	this->in_keystate = in_keystate;
 	this->tabPlayerCoord = tabPlayerCoord;
 	this->nbPlayerConfig = nbPlayerConfig;
+	this->color = color;
+	this->louisType = blueLouis;
 
 	tabPlayerCoord[playerNumber * 2] = posX;
 	tabPlayerCoord[playerNumber * 2 + 1 ] = posY;
@@ -143,10 +141,9 @@ Player::Player(unsigned short * in_keystate, bool isACpuPlayer, int indexSprite,
 	destTextureRect.w = sprite_sizeW;
 	destTextureRect.h = sprite_sizeH;
 
-	playerSpriteWalk = new SDL_Surface * [12];
+
 	playerSpriteWalkBomb= new SDL_Surface * [12];
 	playerSpriteThrowBomb= new SDL_Surface * [8];
-	playerSpriteOnLouis= new SDL_Surface * [4];
 	playerSpriteVictory= new SDL_Surface * [4];
 	playerSpriteAngry= new SDL_Surface * [4];
 	playerSpriteBurn= new SDL_Surface * [7];
@@ -154,17 +151,7 @@ Player::Player(unsigned short * in_keystate, bool isACpuPlayer, int indexSprite,
 	louisSprite = new SDL_Surface * [12];
 	louisSpriteBurn = new SDL_Surface * [4];
 
-	//playerSpriteWalk
-	for(i = 0; i < 3; i++) {
-		for(j = 0; j < 4; j++) {
-			srcTextureRect.x = i * sprite_sizeW;
-			srcTextureRect.y = j * sprite_sizeH;
-			srcTextureRect.w = sprite_sizeW;
-			srcTextureRect.h = sprite_sizeH;
-			playerSpriteWalk[i + (j * 3)] = SDL_CreateRGBSurface(0, sprite_sizeW, sprite_sizeH, 32, rmask, gmask, bmask, amask);
-			SDL_BlitSurface(tempSurface, &srcTextureRect, playerSpriteWalk[i + (j * 3)], &destTextureRect);
-		}
-	}
+	
 
 	//playerSpriteWalkBomb
 	for(i = 0; i < 3; i++) {
@@ -190,16 +177,7 @@ Player::Player(unsigned short * in_keystate, bool isACpuPlayer, int indexSprite,
 		}
 	}
 
-	//playerSpriteOnLouis
-	for(j = 0; j < 4; j++) {
-		srcTextureRect.x = 8 * sprite_sizeW;
-		srcTextureRect.y = j * sprite_sizeH;
-		srcTextureRect.w = sprite_sizeW;
-		srcTextureRect.h = sprite_sizeH;
-		playerSpriteOnLouis[j] = SDL_CreateRGBSurface(0, sprite_sizeW, sprite_sizeH, 32, rmask, gmask, bmask, amask);
-		SDL_BlitSurface(tempSurface, &srcTextureRect, playerSpriteOnLouis[j], &destTextureRect);
-	}
-
+	
 	//playerSpriteVictory
 	for(i = 0; i < 3; i++) {
 		srcTextureRect.x = i * sprite_sizeW;
@@ -258,45 +236,40 @@ Player::Player(unsigned short * in_keystate, bool isACpuPlayer, int indexSprite,
 }
 
 Player::~Player() {
+	
 	for (int i = 0; i < 12; i++) {
-		SDL_FreeSurface (playerSpriteWalk[i]);
-	}
-	for (int i = 0; i < 12; i++) {
-		SDL_FreeSurface (playerSpriteWalkBomb[i]);
+		SDL_FreeSurface(playerSpriteWalkBomb[i]);
 	}
 	for (int i = 0; i < 8; i++) {
-		SDL_FreeSurface (playerSpriteThrowBomb[i]);
+		SDL_FreeSurface(playerSpriteThrowBomb[i]);
+	}
+	
+	for (int i = 0; i < 4; i++) {
+		SDL_FreeSurface(playerSpriteVictory[i]);
 	}
 	for (int i = 0; i < 4; i++) {
-		SDL_FreeSurface (playerSpriteOnLouis[i]);
-	}
-	for (int i = 0; i < 4; i++) {
-		SDL_FreeSurface (playerSpriteVictory[i]);
-	}
-	for (int i = 0; i < 4; i++) {
-		SDL_FreeSurface (playerSpriteAngry[i]);
+		SDL_FreeSurface(playerSpriteAngry[i]);
 	}
 	for (int i = 0; i < 7; i++) {
-		SDL_FreeSurface (playerSpriteBurn[i]);
+		SDL_FreeSurface(playerSpriteBurn[i]);
 	}
 	for (int i = 0; i < 12; i++) {
-		SDL_FreeSurface (louisSprite[i]);
+		SDL_FreeSurface(louisSprite[i]);
 	}
 	for (int i = 0; i < 4; i++) {
-		SDL_FreeSurface (louisSpriteBurn[i]);
+		SDL_FreeSurface(louisSpriteBurn[i]);
 	}
 
-	free (playerSpriteWalk);
-	free (playerSpriteWalkBomb);
-	free (playerSpriteThrowBomb);
-	free (playerSpriteOnLouis);
-	free (playerSpriteVictory);
-	free (playerSpriteAngry);
-	free (playerSpriteBurn);
-	free (louisSprite);
-	free (louisSpriteBurn);
 
-	free (in_keystate);
+	free(playerSpriteWalkBomb);
+	free(playerSpriteThrowBomb);
+	free(playerSpriteVictory);
+	free(playerSpriteAngry);
+	free(playerSpriteBurn);
+	free(louisSprite);
+	free(louisSpriteBurn);
+
+	free(in_keystate);
 	tab = NULL;
 	tabBonus = NULL;
 	tabPlayerCoord = NULL;
@@ -345,7 +318,7 @@ void Player::drawNormal(SDL_Surface * surfaceToDraw, bool animate) {
 			offsetSpriteAnimation = 2;
 			break;
 	}
-	SDL_BlitSurface(playerSpriteWalk[(previousDirection * 3) + offsetSpriteAnimation], &srcTextureRect, surfaceToDraw, &destTextureRect);
+	SDL_BlitSurface(Sprite::Instance().playerDrawNormal(characterSpriteIndex, color, previousDirection, offsetSpriteAnimation), &srcTextureRect, surfaceToDraw, &destTextureRect);
 }
 
 void Player::drawOnLouis(SDL_Surface * surfaceToDraw, bool animate) {
@@ -394,15 +367,15 @@ void Player::drawOnLouis(SDL_Surface * surfaceToDraw, bool animate) {
 	}
 	louisMergebuffer = SDL_CreateRGBSurface(0, sprite_sizeW, sprite_sizeH, 32, rmask, gmask, bmask, amask);
 	if (previousDirection == down) {
-		SDL_BlitSurface(playerSpriteOnLouis[previousDirection], &srcTextureRect, louisMergebuffer, &srcTextureRect);
-		SDL_BlitSurface(louisSprite[(previousDirection * 3) + offsetSpriteAnimation], &srcTextureRect, louisMergebuffer, &srcTextureRect);
+		SDL_BlitSurface(Sprite::Instance().drawOnLouis(characterSpriteIndex, color, previousDirection), &srcTextureRect, louisMergebuffer, &srcTextureRect);
+		SDL_BlitSurface(Sprite::Instance().drawLouis(louisType, previousDirection, offsetSpriteAnimation), &srcTextureRect, louisMergebuffer, &srcTextureRect);
 		SDL_BlitSurface(louisMergebuffer, &srcTextureRect, surfaceToDraw, &destTextureRect);
 	} else {
-		SDL_BlitSurface(louisSprite[(previousDirection * 3) + offsetSpriteAnimation], &srcTextureRect, louisMergebuffer, &srcTextureRect);
-		SDL_BlitSurface(playerSpriteOnLouis[previousDirection], &srcTextureRect, louisMergebuffer, &srcTextureRect);
+		SDL_BlitSurface(Sprite::Instance().drawLouis(louisType, previousDirection, offsetSpriteAnimation), &srcTextureRect, louisMergebuffer, &srcTextureRect);
+		SDL_BlitSurface(Sprite::Instance().drawOnLouis(characterSpriteIndex, color, previousDirection), &srcTextureRect, louisMergebuffer, &srcTextureRect);
 		SDL_BlitSurface(louisMergebuffer, &srcTextureRect, surfaceToDraw, &destTextureRect);
 	}
-	SDL_FreeSurface (louisMergebuffer);
+	SDL_FreeSurface(louisMergebuffer);
 }
 
 void Player::drawWithBombe(SDL_Surface * surfaceToDraw, bool animate) {
@@ -571,7 +544,7 @@ void Player::drawVictory(SDL_Surface * surfaceToDraw, bool animate) {
 			offsetSpriteAnimation = 2;
 			break;
 	}
-	SDL_BlitSurface(playerSpriteVictory[offsetSpriteAnimation], &srcTextureRect, surfaceToDraw, &destTextureRect);
+	SDL_BlitSurface(Sprite::Instance().drawVictory(characterSpriteIndex, color, offsetSpriteAnimation), &srcTextureRect, surfaceToDraw, &destTextureRect);
 }
 
 void Player::drawCrying(SDL_Surface * surfaceToDraw, bool animate) {
@@ -632,9 +605,9 @@ void Player::doSomething(SDL_Surface * surfaceToDraw) {
 			posX = tabPlayerCoord[playerNumber * 2];
 			posY = tabPlayerCoord[playerNumber * 2 + 1];
 
-			if(roundX + roundY * sizeX<sizeX*sizeY){
+			if (roundX + roundY * sizeX < sizeX * sizeY) {
 				if (tabBonus[roundX + roundY * sizeX] != noBonus && tab[roundX + roundY * sizeX] < brickElement) {
-					foundABonus (tabBonus[roundX + roundY * sizeX]);
+					foundABonus(tabBonus[roundX + roundY * sizeX]);
 				}
 			}
 
@@ -1021,6 +994,7 @@ void Player::foundABonus(int bonusIndex) {
 			ghostModePower = true;
 			break;
 		case eggBonus:
+			louisType = rand() % nbTypeLouis;
 			playerState = onLouis;
 			Sound::Instance().playLouisSound();
 			break;

@@ -1,6 +1,5 @@
 #include "SuddenDeathAnimation.h"
 
-
 #define nbTickAnimation 1
 
 SuddenDeathAnimation::SuddenDeathAnimation(int posX, int posY, int levelIndex, int tab[sizeX * sizeY], Grid * grid) {

@@ -79,7 +79,7 @@ Game::Game() {
  * 
  */
 Game::Game(int levelIndex, int playerInformationParam[16][2], int gameOption[4], SDL_Surface * vout_buf, unsigned short * in_keystate, int nbPlayerConfig) {
-	this->nbPlayerConfig = nbPlayerConfig;
+	srand (time(NULL));this->nbPlayerConfig = nbPlayerConfig;
 	this->vout_buf = vout_buf;
 	this->in_keystate = in_keystate;
 	this->levelIndex = levelIndex;
@@ -88,7 +88,7 @@ Game::Game(int levelIndex, int playerInformationParam[16][2], int gameOption[4],
 	nbPlayerInGame = 0;
 
 	// Load Font
-	fragileBombersFont = TTF_OpenFont("./resources/font/fragile_bombers.ttf", 36); //this opens a font style and sets a size
+	fragileBombersFont = TTF_OpenFont("./resources/font/fragile_bombers.ttf", 36);//this opens a font style and sets a size
 
 	// declarativ color mask, used for create a RGB surface
 	amask = 0xff000000;
@@ -98,7 +98,7 @@ Game::Game(int levelIndex, int playerInformationParam[16][2], int gameOption[4],
 	// create overlay for pause / exit game
 	overlay = SDL_CreateRGBSurface(0, 630, 336, 32, rmask, gmask, bmask, amask);
 	SDL_FillRect(overlay, NULL, SDL_MapRGBA(overlay->format, 0, 0, 0, 120));
-	SDL_Color green = { 0, 255, 0 };
+	SDL_Color green = {0, 255, 0};
 	SDL_Surface* surfaceMessage = TTF_RenderText_Solid(fragileBombersFont, "PAUSE", green);
 	copySurfaceToBackRenderer(surfaceMessage, overlay, ((640 / 2) - (surfaceMessage->w / 2)), 114);
 	SDL_FreeSurface(surfaceMessage);
@@ -110,7 +110,6 @@ Game::Game(int levelIndex, int playerInformationParam[16][2], int gameOption[4],
 	SDL_FreeSurface(surfaceMessage);
 	TTF_CloseFont (fragileBombersFont);
 
-	
 	// init variable or surface
 	screenBuffer = SDL_CreateRGBSurface(0, 630, 336, 32, rmask, gmask, bmask, amask);
 	playerBombeExplode = SDL_CreateRGBSurface(0, 630, 336, 32, rmask, gmask, bmask, amask);
@@ -155,8 +154,6 @@ Game::Game(int levelIndex, int playerInformationParam[16][2], int gameOption[4],
 	 * LOAD MISC IMAGE : Bombe animation, explosion animation, bonus image, eggs image
 	 */
 
-
-
 	bonusSprite = new SDL_Surface *[14];
 	eggsSprite = new SDL_Surface *[2];
 
@@ -199,8 +196,6 @@ Game::Game(int levelIndex, int playerInformationParam[16][2], int gameOption[4],
 	}
 	SDL_FreeSurface(tempSurface);
 
-	
-
 	/*
 	 * PLAYER INFORMATION
 	 
@@ -224,31 +219,31 @@ Game::Game(int levelIndex, int playerInformationParam[16][2], int gameOption[4],
 	for (int i = 0; i < 16; i++) {
 		switch (playerInformationParam[i][1]) {
 			case 0:
-				textureBuffer = IMG_Load(BombermanSprite);
-				break;
+			textureBuffer = IMG_Load(BombermanSprite);
+			break;
 			case 1:
-				textureBuffer = IMG_Load(BombermanSpriteCossak);
-				break;
+			textureBuffer = IMG_Load(BombermanSpriteCossak);
+			break;
 			case 2:
-				textureBuffer = IMG_Load(BombermanSpriteBarbar);
-				break;
+			textureBuffer = IMG_Load(BombermanSpriteBarbar);
+			break;
 			case 3:
-				textureBuffer = IMG_Load(BombermanSpriteChan);
-				break;
+			textureBuffer = IMG_Load(BombermanSpriteChan);
+			break;
 			case 4:
-				textureBuffer = IMG_Load(BombermanSpriteKid);
-				break;
+			textureBuffer = IMG_Load(BombermanSpriteKid);
+			break;
 			case 5:
-				textureBuffer = IMG_Load(BombermanSpritePretty);
-				break;
+			textureBuffer = IMG_Load(BombermanSpritePretty);
+			break;
 			case 6:
-				textureBuffer = IMG_Load(BombermanSpritePunk);
-				break;
+			textureBuffer = IMG_Load(BombermanSpritePunk);
+			break;
 			case 7:
-				textureBuffer = IMG_Load(BombermanSpriteMexican);
-				break;
+			textureBuffer = IMG_Load(BombermanSpriteMexican);
+			break;
 			default:
-				textureBuffer = IMG_Load(BombermanSprite);
+			textureBuffer = IMG_Load(BombermanSprite);
 		}
 
 		headerPlayerSprite[i] = SDL_CreateRGBSurface(0, 18, 16, 32, rmask, gmask, bmask, amask);
@@ -272,6 +267,11 @@ Game::Game(int levelIndex, int playerInformationParam[16][2], int gameOption[4],
 	Player * player;
 	Brain * brain;
 
+	int color[16];
+	for (int i = 0; i < 16; i++) {
+		color[i] = rand() % nbColorPlayer;
+	}
+
 	for (int i = 0; i < 16; i++) {
 
 		int indexTexture = playerInformationParam[i][1];
@@ -285,36 +285,36 @@ Game::Game(int levelIndex, int playerInformationParam[16][2], int gameOption[4],
 		switch (playerType[i]) {
 			case HUMAN:
 
-				// if a human link the next keystate of libretro, else link a empty value
-				player = new Player(&in_keystate[indexLibretro], false, indexTexture, startX, startY, i, tab, tabBonus, grid, tabPlayerCoord, nbPlayerConfig, indexPlayerForGame);
-				players.push_back(player);
-				player = NULL;
-				indexLibretro++;
-				nbPlayerAlive++;
-				indexPlayerForGame++;
-				break;
+			// if a human link the next keystate of libretro, else link a empty value
+			player = new Player(&in_keystate[indexLibretro], false, indexTexture, startX, startY, i, tab, tabBonus, grid, tabPlayerCoord, nbPlayerConfig, indexPlayerForGame, color[i]);
+			players.push_back(player);
+			player = NULL;
+			indexLibretro++;
+			nbPlayerAlive++;
+			indexPlayerForGame++;
+			break;
 			case CPU:
-				player = new Player(&in_keystate_cpu[index], true, indexTexture, startX, startY, i, tab, tabBonus, grid, tabPlayerCoord, nbPlayerConfig, indexPlayerForGame);
-				players.push_back(player);
-				player = NULL;
+			player = new Player(&in_keystate_cpu[index], true, indexTexture, startX, startY, i, tab, tabBonus, grid, tabPlayerCoord, nbPlayerConfig, indexPlayerForGame, color[i]);
+			players.push_back(player);
+			player = NULL;
 
-				brain = new Brain(&in_keystate_cpu[index], tab, tabPlayerCoord, nbPlayerConfig, i, cpuLevel);
-				brains.push_back(brain);
-				brain = NULL;
+			brain = new Brain(&in_keystate_cpu[index], tab, tabPlayerCoord, nbPlayerConfig, i, cpuLevel);
+			brains.push_back(brain);
+			brain = NULL;
 
-				in_keystate[index] = 0;
-				index++;
-				nbPlayerAlive++;
-				indexPlayerForGame++;
-				break;
+			in_keystate[index] = 0;
+			index++;
+			nbPlayerAlive++;
+			indexPlayerForGame++;
+			break;
 			case OFF:
-				break;
+			break;
 		}
 
 	}
 
 	//load for time display and generate header
-	fragileBombersFont = TTF_OpenFont("./resources/font/fragile_bombers.ttf", 16); //this opens a font style and sets a size
+	fragileBombersFont = TTF_OpenFont("./resources/font/fragile_bombers.ttf", 16);//this opens a font style and sets a size
 
 	suddenDeathCase = false;
 	generateHeader();
@@ -337,36 +337,34 @@ Game::~Game() {
 	burnWalls.clear();
 	brains.clear();
 
-	free (grid);
-	free (tab);
-	free (tabBonus);
-	free (tabPlayerCoord);
+	free(grid);
+	free(tab);
+	free(tabBonus);
+	free(tabPlayerCoord);
 	in_keystate = NULL;
-	free (in_keystate_cpu);
+	free(in_keystate_cpu);
 
 	vout_buf = NULL;
-	SDL_FreeSurface (overlay);
-	SDL_FreeSurface (overlayResult);
-	SDL_FreeSurface (screenBuffer);
-	SDL_FreeSurface (playerBombeExplode);
+	SDL_FreeSurface(overlay);
+	SDL_FreeSurface(overlayResult);
+	SDL_FreeSurface(screenBuffer);
+	SDL_FreeSurface(playerBombeExplode);
 
-	
 	for (int i = 0; i < 12; i++) {
-		SDL_FreeSurface (bonusSprite[i]);
+		SDL_FreeSurface(bonusSprite[i]);
 	}
 	for (int i = 0; i < 2; i++) {
-		SDL_FreeSurface (eggsSprite[i]);
+		SDL_FreeSurface(eggsSprite[i]);
 	}
 	for (int i = 0; i < 16; i++) {
-		SDL_FreeSurface (headerPlayerSprite[i]);
+		SDL_FreeSurface(headerPlayerSprite[i]);
 	}
 
+	free(bonusSprite);
+	free(eggsSprite);
+	free(headerPlayerSprite);
 
-	free (bonusSprite);
-	free (eggsSprite);
-	free (headerPlayerSprite);
-
-	TTF_CloseFont (fragileBombersFont);
+	TTF_CloseFont(fragileBombersFont);
 	TTF_Quit();
 }
 
@@ -617,7 +615,6 @@ void Game::updateTimeDisplay() {
  * 			check if the player request to put a bombe
  */
 void Game::tick() {
-
 	amask = 0xff000000;
 	rmask = 0x00ff0000;
 	gmask = 0x0000ff00;
@@ -668,7 +665,7 @@ void Game::tick() {
 			 *	GAME PART : BOMBE
 			 *
 			 */
-			 
+
 			for (unsigned int i = 0; i < bombes.size(); i++) {
 				bombes[i]->tick(playerBombeExplode);
 				if (bombes[i]->isExplode()) {
@@ -706,10 +703,9 @@ void Game::tick() {
 							break;
 						}
 						posYcalc = posYBombe - j;
-						if(posYcalc < 0){
+						if (posYcalc < 0) {
 							posYcalc = sizeY + posYcalc;
 						}
-						
 
 						//explostion and wall
 						switch (tab[posXBombe + posYcalc * sizeX]) {
@@ -809,9 +805,9 @@ void Game::tick() {
 						if (exitLoop == true) {
 							break;
 						}
-						
+
 						posYcalc = posYBombe + j;
-						if(posYcalc >= sizeY){
+						if (posYcalc >= sizeY) {
 							posYcalc = posYcalc - sizeY;
 						}
 
@@ -1134,14 +1130,20 @@ void Game::tick() {
 				Player * player;
 				Brain * brain;
 
+				int color[16];
 				for (int i = 0; i < 16; i++) {
+					color[i] = rand() % nbColorPlayer;
+				}
+
+				for (int i = 0; i < 16; i++) {
+
 					float startX = startPlayer[i][0];
 					float startY = startPlayer[i][1];
 					switch (playerType[i]) {
 						case HUMAN:
 							// if a human link the next keystate of libretro, else link a empty value
-							player = new Player(&in_keystate[indexLibretro], false, playerIndexTexture[i], startX, startY, i, tab, tabBonus, grid, tabPlayerCoord,
-									nbPlayerConfig, indexPlayerForGame);
+							player = new Player(&in_keystate[indexLibretro], false, playerIndexTexture[i], startX, startY, i, tab, tabBonus, grid, tabPlayerCoord, nbPlayerConfig,
+									indexPlayerForGame, color[i]);
 							players.push_back(player);
 							player = NULL;
 							indexLibretro++;
@@ -1150,7 +1152,7 @@ void Game::tick() {
 							break;
 						case CPU:
 							player = new Player(&in_keystate_cpu[index], true, playerIndexTexture[i], startX, startY, i, tab, tabBonus, grid, tabPlayerCoord, nbPlayerConfig,
-									indexPlayerForGame);
+									indexPlayerForGame, color[i]);
 							players.push_back(player);
 							brain = new Brain(&in_keystate_cpu[index], tab, tabPlayerCoord, nbPlayerConfig, i, cpuLevel);
 							brains.push_back(brain);

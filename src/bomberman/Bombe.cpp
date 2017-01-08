@@ -244,5 +244,5 @@ void Bombe::tick(SDL_Surface * surfaceToDraw) {
 			}
 			break;
 	}
-	SDL_BlitSurface(Sprite::Instance().getBombe(offsetSpriteAnimation,bombeType), NULL, surfaceToDraw, &dstRect);
+	SDL_BlitSurface(Sprite::Instance().getBombe(offsetSpriteAnimation, bombeType), NULL, surfaceToDraw, &dstRect);
 }

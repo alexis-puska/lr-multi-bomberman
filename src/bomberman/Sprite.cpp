@@ -464,7 +464,7 @@ void Sprite::cropLevelSurface(SDL_Surface * surface) {
 		destTextureRect.y = 0;
 		destTextureRect.w = smallSpriteLevelSizeWidth;
 		destTextureRect.h = smallSpriteLevelSizeHeight;
-		
+
 		for (int j = 0; j < nbSmallSpriteLevelY; j++) {
 			for (int i = 0; i < nbSmallSpriteLevelX; i++) {
 				srcTextureRect.x = i * smallSpriteLevelSizeWidth;
@@ -480,11 +480,11 @@ void Sprite::cropLevelSurface(SDL_Surface * surface) {
 		destTextureRect.y = 0;
 		destTextureRect.w = largeSpriteLevelSizeWidth;
 		destTextureRect.h = largeSpriteLevelSizeHeight;
-		
+
 		for (int j = 0; j < nbLargeSpriteLevelY; j++) {
 			for (int i = 0; i < nbLargeSpriteLevelX; i++) {
-				srcTextureRect.x = i * largeSpriteLevelSizeWidth +(smallSpriteLevelSizeWidth * nbSmallSpriteLevelX);
-				srcTextureRect.y = j * largeSpriteLevelSizeHeight+ (smallSpriteLevelSizeHeight * nbSmallSpriteLevelY * level);
+				srcTextureRect.x = i * largeSpriteLevelSizeWidth + (smallSpriteLevelSizeWidth * nbSmallSpriteLevelX);
+				srcTextureRect.y = j * largeSpriteLevelSizeHeight + (smallSpriteLevelSizeHeight * nbSmallSpriteLevelY * level);
 				srcTextureRect.w = largeSpriteLevelSizeWidth;
 				srcTextureRect.h = largeSpriteLevelSizeHeight;
 				levelSprite[index] = SDL_CreateRGBSurface(0, largeSpriteLevelSizeWidth, largeSpriteLevelSizeHeight, 32, rmask, gmask, bmask, amask);
@@ -510,15 +510,16 @@ void Sprite::cropLouisSurface(SDL_Surface * surface) {
 	destTextureRect.w = spriteLouisSizeWidth;
 	destTextureRect.h = spriteLouisSizeHeight;
 	for (int louis = 0; louis < nbTypeLouis; louis++) {
-		
-			for (int j = 0; j < nbSpriteLouisY; j++) {
-		for (int i = 0; i < nbSpriteLouisX; i++) {
+
+		for (int j = 0; j < nbSpriteLouisY; j++) {
+			for (int i = 0; i < nbSpriteLouisX; i++) {
 				srcTextureRect.x = i * spriteLouisSizeWidth;
 				srcTextureRect.y = j * spriteLouisSizeHeight;
 				srcTextureRect.w = spriteLouisSizeWidth;
 				srcTextureRect.h = spriteLouisSizeHeight;
 				louisSprite[index] = SDL_CreateRGBSurface(0, spriteLouisSizeWidth, spriteLouisSizeHeight, 32, rmask, gmask, bmask, amask);
 				SDL_BlitSurface(surface, &srcTextureRect, louisSprite[index], &destTextureRect);
+				applyLouisColor(louisSprite[index],louis);
 				index++;
 			}
 		}
@@ -539,9 +540,9 @@ void Sprite::cropPreviewLevelSurface(SDL_Surface * surface) {
 	destTextureRect.y = 0;
 	destTextureRect.w = levelPreviewSizeWidth;
 	destTextureRect.h = levelPreviewSizeHeight;
-	
-		for (int j = 0; j < nbLevelPreviewY; j++) {
-	for (int i = 0; i < nbLevelPreviewX; i++) {
+
+	for (int j = 0; j < nbLevelPreviewY; j++) {
+		for (int i = 0; i < nbLevelPreviewX; i++) {
 			srcTextureRect.x = i * levelPreviewSizeWidth;
 			srcTextureRect.y = j * levelPreviewSizeHeight;
 			srcTextureRect.w = levelPreviewSizeWidth;
@@ -568,7 +569,7 @@ void Sprite::cropBombeSurface(SDL_Surface * surface) {
 	destTextureRect.w = defaultSpriteSize;
 	destTextureRect.h = defaultSpriteSize;
 	for (int j = 0; j < nbBombeSpriteY; j++) {
-		for (int i = 0; i < nbBombeSpriteX; i++) {	
+		for (int i = 0; i < nbBombeSpriteX; i++) {
 			srcTextureRect.x = (i + 2) * defaultSpriteSize;
 			srcTextureRect.y = j * defaultSpriteSize;
 			srcTextureRect.w = defaultSpriteSize;
@@ -619,7 +620,7 @@ void Sprite::cropFireSurface(SDL_Surface * surface) {
 	destTextureRect.y = 0;
 	destTextureRect.w = smallSpriteFireSizeWidth;
 	destTextureRect.h = smallSpriteFireSizeHeight;
-	
+
 	for (int j = 0; j < nbFireSpriteY; j++) {
 		for (int i = 0; i < nbFireSpriteX; i++) {
 			srcTextureRect.x = i * smallSpriteFireSizeWidth;
@@ -647,9 +648,9 @@ void Sprite::cropTrolleySurface(SDL_Surface * surface) {
 	destTextureRect.y = 0;
 	destTextureRect.w = trolleySpriteSizeWidth;
 	destTextureRect.h = trolleySpriteSizeHeight;
-	
-		for (int j = 0; j < nbTrolleySpriteY; j++) {
-	for (int i = 0; i < nbTrolleySpriteX; i++) {
+
+	for (int j = 0; j < nbTrolleySpriteY; j++) {
+		for (int i = 0; i < nbTrolleySpriteX; i++) {
 			srcTextureRect.x = i * trolleySpriteSizeWidth;
 			srcTextureRect.y = j * trolleySpriteSizeHeight;
 			srcTextureRect.w = trolleySpriteSizeWidth;
@@ -675,9 +676,9 @@ void Sprite::cropSpaceShipSurface(SDL_Surface * surface) {
 	destTextureRect.y = 0;
 	destTextureRect.w = spaceShipSpriteSizeWidth;
 	destTextureRect.h = spaceShipSpriteSizeHeight;
-	
-		for (int j = 0; j < nbSpaceShipSpriteY; j++) {
-	for (int i = 0; i < nbSpaceShipSpriteX; i++) {
+
+	for (int j = 0; j < nbSpaceShipSpriteY; j++) {
+		for (int i = 0; i < nbSpaceShipSpriteX; i++) {
 			srcTextureRect.x = i * spaceShipSpriteSizeWidth;
 			srcTextureRect.y = j * spaceShipSpriteSizeHeight;
 			srcTextureRect.w = spaceShipSpriteSizeWidth;
@@ -691,7 +692,7 @@ void Sprite::cropSpaceShipSurface(SDL_Surface * surface) {
 }
 
 void Sprite::cropPlayerSurface(SDL_Surface* surface, int offset) {
-	int index = 0;
+	int index = offset;
 	Uint32 rmask, gmask, bmask, amask;
 	amask = 0xff000000;
 	rmask = 0x00ff0000;
@@ -703,23 +704,22 @@ void Sprite::cropPlayerSurface(SDL_Surface* surface, int offset) {
 	destTextureRect.y = 0;
 	destTextureRect.w = spritePlayerSizeWidth;
 	destTextureRect.h = spritePlayerSizeHeight;
-	for (int type = 0; type < nbTypePlayer; type++) {
-		for (int color = 0; color < nbColorPlayer; color++) {
-			
-				for (int j = 0; j < nbSpritePlayerY; j++) {
+
+	for (int color = 0; color < nbColorPlayer; color++) {
+		for (int j = 0; j < nbSpritePlayerY; j++) {
 			for (int i = 0; i < nbSpritePlayerX; i++) {
-					srcTextureRect.x = i * spritePlayerSizeWidth;
-					srcTextureRect.y = j * spritePlayerSizeHeight;
-					srcTextureRect.w = spritePlayerSizeWidth;
-					srcTextureRect.h = spritePlayerSizeHeight;
-					playerSprite[index] = SDL_CreateRGBSurface(0, spritePlayerSizeWidth, spritePlayerSizeHeight, 32, rmask, gmask, bmask, amask);
-					SDL_BlitSurface(surface, &srcTextureRect, playerSprite[index], &destTextureRect);
-					applyPlayerColor(playerSprite[index], color);
-					index++;
-				}
+				srcTextureRect.x = i * spritePlayerSizeWidth;
+				srcTextureRect.y = j * spritePlayerSizeHeight;
+				srcTextureRect.w = spritePlayerSizeWidth;
+				srcTextureRect.h = spritePlayerSizeHeight;
+				playerSprite[index] = SDL_CreateRGBSurface(0, spritePlayerSizeWidth, spritePlayerSizeHeight, 32, rmask, gmask, bmask, amask);
+				SDL_BlitSurface(surface, &srcTextureRect, playerSprite[index], &destTextureRect);
+				applyPlayerColor(playerSprite[index], color);
+				index++;
 			}
 		}
 	}
+
 	SDL_FreeSurface(surface);
 }
 
@@ -742,31 +742,76 @@ SDL_Surface* Sprite::players(int type, int color, int mvt, int pos) {
 	return NULL;
 }
 
-SDL_Surface* Sprite::getCursor(int pos){
-	if(pos > 2){
-		return bombeSprite[pos-2];
+SDL_Surface* Sprite::getCursor(int pos) {
+	if (pos > 2) {
+		return bombeSprite[pos - 2];
 	}
 	return bombeSprite[pos];
 }
 
-SDL_Surface* Sprite::getFire(int x, int y){
+SDL_Surface* Sprite::getFire(int x, int y) {
 	return fireSprite[y * nbFireSpriteX + x];
 }
 
-SDL_Surface* Sprite::getBombe(int x, int y){
+SDL_Surface* Sprite::getBombe(int x, int y) {
 	return bombeSprite[y * nbBombeSpriteX + x];
 }
 
-SDL_Surface* Sprite::getLevelPreview(int pos){
+SDL_Surface* Sprite::getLevelPreview(int pos) {
 	return previewLevelSprite[pos];
 }
 
-SDL_Surface* Sprite::getBurnWall(int pos, int levelIndex){
+SDL_Surface* Sprite::getBurnWall(int pos, int levelIndex) {
 	int spriteNumber = ((nbSmallSpriteLevelX * nbSmallSpriteLevelY) + (nbLargeSpriteLevelX * nbLargeSpriteLevelY)) * levelIndex + burnWallStartSprite + pos;
 	return levelSprite[spriteNumber];
 }
 
-SDL_Surface* Sprite::getLevel(int pos, int levelIndex){
+SDL_Surface* Sprite::getLevel(int pos, int levelIndex) {
 	int spriteNumber = ((nbSmallSpriteLevelX * nbSmallSpriteLevelY) + (nbLargeSpriteLevelX * nbLargeSpriteLevelY)) * levelIndex + pos;
 	return levelSprite[spriteNumber];
+}
+/****************
+ *	PLAYER
+ ****************/
+
+int Sprite::calcStartIndexPlayer(int type, int color) {
+	return (nbSpritePlayerX * nbSpritePlayerY * nbColorPlayer) * type + ((nbSpritePlayerX * nbSpritePlayerY) * color);
+}
+
+SDL_Surface* Sprite::playerDrawNormal(int type, int color, int move, int pos) {
+	return playerSprite[calcStartIndexPlayer(type, color) + (nbSpritePlayerX * move) + pos];
+}
+
+SDL_Surface* Sprite::drawOnLouis(int type, int color, int move) {
+	return playerSprite[calcStartIndexPlayer(type, color) + (nbSpritePlayerX * move) + 8];
+}
+
+SDL_Surface* Sprite::drawWithBombe(int type, int color, int move, int pos) {
+
+}
+
+SDL_Surface* Sprite::drawThrowBombe(int type, int color, int move, int pos) {
+
+}
+
+SDL_Surface* Sprite::drawBurning(int type, int color, int move, int pos) {
+
+}
+
+SDL_Surface* Sprite::drawLouisBurning(int type, int color, int move, int pos) {
+
+}
+
+SDL_Surface* Sprite::drawVictory(int type, int color, int pos) {
+	return playerSprite[calcStartIndexPlayer(type, color) + (nbSpritePlayerX * 4) + pos];
+}
+
+SDL_Surface* Sprite::drawCrying(int type, int color, int pos) {
+
+}
+/****************
+ *	LOUIS
+ ****************/
+SDL_Surface* Sprite::drawLouis(int louisType, int move, int pos){
+	return louisSprite[(nbSpriteLouisX * nbSpriteLouisY * louisType) + (move * nbSpriteLouisX) + pos];
 }

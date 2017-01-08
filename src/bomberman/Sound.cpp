@@ -42,17 +42,17 @@ Sound::Sound() {
 Sound::~Sound() {
 	fprintf(stderr, "close sound system\n");
 	Mix_CloseAudio();
-	Mix_FreeMusic (menu);
-	Mix_FreeMusic (battle);
-	Mix_FreeChunk (validSound);
-	Mix_FreeChunk (cancelSound);
-	Mix_FreeChunk (bipSound);
-	Mix_FreeChunk (fireSound);
-	Mix_FreeChunk (louisSound);
-	Mix_FreeChunk (bombeBounceSound);
-	Mix_FreeChunk (playerBurnSound);
-	Mix_FreeChunk (playerKickSound);
-	Mix_FreeChunk (endSound);
+	Mix_FreeMusic(menu);
+	Mix_FreeMusic(battle);
+	Mix_FreeChunk(validSound);
+	Mix_FreeChunk(cancelSound);
+	Mix_FreeChunk(bipSound);
+	Mix_FreeChunk(fireSound);
+	Mix_FreeChunk(louisSound);
+	Mix_FreeChunk(bombeBounceSound);
+	Mix_FreeChunk(playerBurnSound);
+	Mix_FreeChunk(playerKickSound);
+	Mix_FreeChunk(endSound);
 	Mix_CloseAudio();
 }
 

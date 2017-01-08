@@ -12,6 +12,7 @@
 
 #include "Bombe.h"
 #include "Grid.h"
+#include "Sprite.h"
 
 #define sizeX 35
 #define sizeY 21
@@ -21,7 +22,7 @@
 class Player {
 	public:
 		Player(unsigned short * in_keystate, bool isACpuPlayer, int indexSprite, float startPositionX, float startPositionY, int playerNumber, int tab[sizeX * sizeY], int tabBonus[sizeX * sizeY],
-				Grid * gridParam, float * tabPlayerCoord, int nbPlayerConfig, int indexPlayerForGame);
+				Grid * gridParam, float * tabPlayerCoord, int nbPlayerConfig, int indexPlayerForGame, int color);
 		~Player();
 		void doSomething(SDL_Surface * surfaceToDraw);
 
@@ -48,7 +49,7 @@ class Player {
 
 		int getPlayerNumber();
 		void itSuddenDeathTime();
-		int getIndexPlayerForGame(); 
+		int getIndexPlayerForGame();
 
 	private:
 		/*
@@ -97,6 +98,7 @@ class Player {
 		int frameCounter;
 		int offsetSprite;
 		int nbFrameForAnimation;
+		int color;
 		int louisType;
 
 		//pointer to the grid element;
@@ -106,10 +108,9 @@ class Player {
 		Grid * grid;
 
 		//image of differente sprite of player
-		SDL_Surface **playerSpriteWalk;
+
 		SDL_Surface **playerSpriteWalkBomb;
 		SDL_Surface **playerSpriteThrowBomb;
-		SDL_Surface **playerSpriteOnLouis;
 		SDL_Surface **playerSpriteVictory;
 		SDL_Surface **playerSpriteAngry;
 		SDL_Surface **playerSpriteBurn;
