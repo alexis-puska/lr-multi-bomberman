@@ -111,10 +111,8 @@ class Player {
 
 		SDL_Surface **playerSpriteWalkBomb;
 		SDL_Surface **playerSpriteThrowBomb;
-		SDL_Surface **playerSpriteVictory;
 		SDL_Surface **playerSpriteAngry;
 		SDL_Surface **playerSpriteBurn;
-		SDL_Surface **louisSprite;
 		SDL_Surface **louisSpriteBurn;
 		SDL_Surface *louisMergebuffer;
 

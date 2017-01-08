@@ -144,11 +144,10 @@ Player::Player(unsigned short * in_keystate, bool isACpuPlayer, int indexSprite,
 
 	playerSpriteWalkBomb= new SDL_Surface * [12];
 	playerSpriteThrowBomb= new SDL_Surface * [8];
-	playerSpriteVictory= new SDL_Surface * [4];
 	playerSpriteAngry= new SDL_Surface * [4];
 	playerSpriteBurn= new SDL_Surface * [7];
 	louisMergebuffer = new SDL_Surface;
-	louisSprite = new SDL_Surface * [12];
+
 	louisSpriteBurn = new SDL_Surface * [4];
 
 	
@@ -177,17 +176,6 @@ Player::Player(unsigned short * in_keystate, bool isACpuPlayer, int indexSprite,
 		}
 	}
 
-	
-	//playerSpriteVictory
-	for(i = 0; i < 3; i++) {
-		srcTextureRect.x = i * sprite_sizeW;
-		srcTextureRect.y = 4 * sprite_sizeH;
-		srcTextureRect.w = sprite_sizeW;
-		srcTextureRect.h = sprite_sizeH;
-		playerSpriteVictory[i] = SDL_CreateRGBSurface(0, sprite_sizeW, sprite_sizeH, 32, rmask, gmask, bmask, amask);
-		SDL_BlitSurface(tempSurface, &srcTextureRect, playerSpriteVictory[i], &destTextureRect);
-	}
-
 	//playerSpriteAngry
 	for(i = 0; i < 3; i++) {
 		srcTextureRect.x = i * sprite_sizeW;
@@ -212,16 +200,7 @@ Player::Player(unsigned short * in_keystate, bool isACpuPlayer, int indexSprite,
 	//LOUIS PART
 	tempSurface = IMG_Load(BombermanSpriteLouis);
 
-	for(i = 0; i < 3; i++) {
-		for(j = 0; j < 4; j++) {
-			srcTextureRect.x = i * sprite_sizeW;
-			srcTextureRect.y = j * sprite_sizeH;
-			srcTextureRect.w = sprite_sizeW;
-			srcTextureRect.h = sprite_sizeH;
-			louisSprite[i + (j * 3)] = SDL_CreateRGBSurface(0, sprite_sizeW, sprite_sizeH, 32, rmask, gmask, bmask, amask);
-			SDL_BlitSurface(tempSurface, &srcTextureRect, louisSprite[i + (j * 3)], &destTextureRect);
-		}
-	}
+	
 
 	for(i = 0; i < 4; i++) {
 		srcTextureRect.x = i * sprite_sizeW;
@@ -244,18 +223,14 @@ Player::~Player() {
 		SDL_FreeSurface(playerSpriteThrowBomb[i]);
 	}
 	
-	for (int i = 0; i < 4; i++) {
-		SDL_FreeSurface(playerSpriteVictory[i]);
-	}
+	
 	for (int i = 0; i < 4; i++) {
 		SDL_FreeSurface(playerSpriteAngry[i]);
 	}
 	for (int i = 0; i < 7; i++) {
 		SDL_FreeSurface(playerSpriteBurn[i]);
 	}
-	for (int i = 0; i < 12; i++) {
-		SDL_FreeSurface(louisSprite[i]);
-	}
+	
 	for (int i = 0; i < 4; i++) {
 		SDL_FreeSurface(louisSpriteBurn[i]);
 	}
@@ -263,10 +238,8 @@ Player::~Player() {
 
 	free(playerSpriteWalkBomb);
 	free(playerSpriteThrowBomb);
-	free(playerSpriteVictory);
 	free(playerSpriteAngry);
 	free(playerSpriteBurn);
-	free(louisSprite);
 	free(louisSpriteBurn);
 
 	free(in_keystate);
