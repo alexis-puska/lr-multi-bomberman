@@ -1014,7 +1014,7 @@ void Game::tick() {
 				if (nbTickForGame % 4 == 0) {
 					//add animation of falling wall
 					if (tab[suddenDeathX + suddenDeathY * sizeX] < wallElement) {
-						SuddenDeathAnimation * suddenDeathAnimation = new SuddenDeathAnimation(suddenDeathX, suddenDeathY, grid->getWallSprite(), tab, grid);
+						SuddenDeathAnimation * suddenDeathAnimation = new SuddenDeathAnimation(suddenDeathX, suddenDeathY, levelIndex, tab, grid);
 						suddenDeathAnimations.push_back(suddenDeathAnimation);
 						suddenDeathAnimation = NULL;
 					}

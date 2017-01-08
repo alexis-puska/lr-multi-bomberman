@@ -763,5 +763,10 @@ SDL_Surface* Sprite::getLevelPreview(int pos){
 
 SDL_Surface* Sprite::getBurnWall(int pos, int levelIndex){
 	int spriteNumber = ((nbSmallSpriteLevelX * nbSmallSpriteLevelY) + (nbLargeSpriteLevelX * nbLargeSpriteLevelY)) * levelIndex + burnWallStartSprite + pos;
-	return levelSprite[spriteNumber];	
+	return levelSprite[spriteNumber];
+}
+
+SDL_Surface* Sprite::getLevel(int pos, int levelIndex){
+	int spriteNumber = ((nbSmallSpriteLevelX * nbSmallSpriteLevelY) + (nbLargeSpriteLevelX * nbLargeSpriteLevelY)) * levelIndex + pos;
+	return levelSprite[spriteNumber];
 }

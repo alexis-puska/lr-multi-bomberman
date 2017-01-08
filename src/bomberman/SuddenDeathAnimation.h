@@ -11,6 +11,7 @@
 #include <stdio.h>
 #include "Explosion.h"
 #include "Grid.h"
+#include "Sprite.h"
 
 #ifndef __MYCLASS_SUDDEN_DEATH_ANIMATION
 #define __MYCLASS_SUDDEN_DEATH_ANIMATION
@@ -21,12 +22,12 @@
 class SuddenDeathAnimation {
 
 	public:
-		SuddenDeathAnimation(int posX, int posY, SDL_Surface * sprite, int tab[sizeX * sizeY], Grid * grid);
+		SuddenDeathAnimation(int posX, int posY, int levelIndex, int tab[sizeX * sizeY], Grid * grid);
 		~SuddenDeathAnimation();
 		void tick(SDL_Surface * surfaceToDraw);
 		bool canBeDeleted();
 	private:
-		SDL_Surface * sprite;
+		int levelIndex;
 		int * tab;
 		Grid * grid;
 		int posX;
