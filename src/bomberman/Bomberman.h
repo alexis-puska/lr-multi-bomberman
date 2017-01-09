@@ -69,9 +69,6 @@ class Bomberman {
 		//buffer for draw
 		SDL_Surface *screenBuffer;
 
-		//image of differente sprite of player
-		SDL_Surface **menuPlayerSprite;
-
 		//Font for menu and Game
 		TTF_Font* fragileBombersFont;
 

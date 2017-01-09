@@ -54,51 +54,6 @@ Uint32 	rmask, gmask, bmask, amask;
 	gameOption[1] = 0;
 	gameOption[2] = 1;
 	gameOption[3] = 3;
-
-	//init Sprite for menu
-	menuPlayerSprite = new SDL_Surface*[8];
-	for (int i = 0; i < 8; i++) {
-		menuPlayerSprite[i] = SDL_CreateRGBSurface(0, 30, 42, 32, rmask, gmask, bmask, amask);
-	}
-
-	SDL_Rect dstRect;
-	dstRect.x = 0;
-	dstRect.y = 0;
-	dstRect.w = 30;
-	dstRect.h = 42;
-
-	SDL_Surface *textureBuffer = IMG_Load(BombermanSprite);
-	SDL_BlitSurface(textureBuffer, &dstRect, menuPlayerSprite[0], &dstRect);
-	SDL_FreeSurface(textureBuffer);
-
-	textureBuffer = IMG_Load(BombermanSpriteCossak);
-	SDL_BlitSurface(textureBuffer, &dstRect, menuPlayerSprite[1], &dstRect);
-	SDL_FreeSurface(textureBuffer);
-
-	textureBuffer = IMG_Load(BombermanSpriteBarbar);
-	SDL_BlitSurface(textureBuffer, &dstRect, menuPlayerSprite[2], &dstRect);
-	SDL_FreeSurface(textureBuffer);
-
-	textureBuffer = IMG_Load(BombermanSpriteChan);
-	SDL_BlitSurface(textureBuffer, &dstRect, menuPlayerSprite[3], &dstRect);
-	SDL_FreeSurface(textureBuffer);
-
-	textureBuffer = IMG_Load(BombermanSpriteKid);
-	SDL_BlitSurface(textureBuffer, &dstRect, menuPlayerSprite[4], &dstRect);
-	SDL_FreeSurface(textureBuffer);
-
-	textureBuffer = IMG_Load(BombermanSpritePretty);
-	SDL_BlitSurface(textureBuffer, &dstRect, menuPlayerSprite[5], &dstRect);
-	SDL_FreeSurface(textureBuffer);
-
-	textureBuffer = IMG_Load(BombermanSpritePunk);
-	SDL_BlitSurface(textureBuffer, &dstRect, menuPlayerSprite[6], &dstRect);
-	SDL_FreeSurface(textureBuffer);
-
-	textureBuffer = IMG_Load(BombermanSpriteMexican);
-	SDL_BlitSurface(textureBuffer, &dstRect, menuPlayerSprite[7], &dstRect);
-	SDL_FreeSurface(textureBuffer);
-
 }
 
 Bomberman::~Bomberman() {
@@ -419,7 +374,7 @@ void Bomberman::drawPlayerSpriteMenu() {
 
 		//add player sprite
 		for (int i = 0; i < 8; i++) {
-			copySurfaceToBackRenderer(menuPlayerSprite[i], screenBuffer, 54 + (i * 72), 174);
+			copySurfaceToBackRenderer(Sprite::Instance().playerDrawNormal(i, 0, 0, 0), screenBuffer, 54 + (i * 72), 174);
 		}
 
 		for (int i = 0; i < 16; i++) {
