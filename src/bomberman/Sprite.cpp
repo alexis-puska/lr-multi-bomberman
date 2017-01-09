@@ -89,7 +89,7 @@ Sprite& Sprite::Instance() {
  * 
  **********************************************/
 void Sprite::getColorInSurface(SDL_Surface* surface) {
-	std::vector<int> colors;
+	std::vector<unsigned int> colors;
 	bool found = false;
 	//lock the surface for work on it
 	if (SDL_MUSTLOCK(surface)) {
@@ -126,7 +126,7 @@ void Sprite::getColorInSurface(SDL_Surface* surface) {
  * 				COLOR FUNCTION
  * 
  **********************************************/
-SDL_Surface* Sprite::replaceColor(SDL_Surface* surface, int src, int dest) {
+SDL_Surface* Sprite::replaceColor(SDL_Surface* surface, unsigned int src, unsigned int dest) {
 	//lock the surface for work on it
 	if (SDL_MUSTLOCK(surface)) {
 		SDL_LockSurface(surface);

@@ -126,7 +126,7 @@ class Sprite {
 		 * COLOR FUNCTION
 		 */
 		SDL_Surface* applyPlayerColor(SDL_Surface * surface, int color);
-		SDL_Surface* replaceColor(SDL_Surface* surface, int src, int dest);
+		SDL_Surface* replaceColor(SDL_Surface* surface, unsigned int src, unsigned int dest);
 		SDL_Surface* upPlayerGreyColor(SDL_Surface* surface);
 		SDL_Surface* upPlayerRedColor(SDL_Surface* surface);
 		SDL_Surface* upPlayerBlueColor(SDL_Surface* surface);

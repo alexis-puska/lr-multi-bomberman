@@ -3,7 +3,6 @@
 #define gameTick 20
 
 Uint32 rmask, gmask, bmask, amask;
-const static char *misc = "./resources/sprite/other/Misc.png";
 const static char *background = "./resources/image/EmptyBackground.png";
 
 const static char *BombermanSprite = "./resources/sprite/characters/AllBomberman.png";
