@@ -200,7 +200,7 @@ void Grid::burnABrick(int posX, int posY) {
 		dstrect.y = posY * smallSpriteLevelSizeHeight;
 		dstrect.w = 16;
 		dstrect.h = 16;
-		SDL_BlitSurface(Sprite::Instance().getBonus(tabBonus[posX + posY * sizeX], NULL, brickShadow, &dstrect);
+		SDL_BlitSurface(Sprite::Instance().getBonus(tabBonus[posX + posY * sizeX]), NULL, brickShadow, &dstrect);
 	}
 }
 
