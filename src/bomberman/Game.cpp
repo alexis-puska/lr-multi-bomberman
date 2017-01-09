@@ -153,28 +153,8 @@ Game::Game(int levelIndex, int playerInformationParam[16][2], int gameOption[4],
 	/*
 	 * LOAD MISC IMAGE : Bombe animation, explosion animation, bonus image, eggs image
 	 */
-
-	
-	
-
 	headerPlayerSprite = new SDL_Surface *[16];
-
-	SDL_Surface * tempSurface;
-	SDL_Rect srcTextureRect;
-	SDL_Rect destTextureRect;
-	destTextureRect.x = 0;
-	destTextureRect.y = 0;
-	destTextureRect.w = 16;
-	destTextureRect.h = 16;
-
-	int i = 0;
-	int j = 0;
-	
-
 	grid = new Grid(levelIndex, tab, tabBonus);
-
-
-
 	/*
 	 * PLAYER INFORMATION
 	 

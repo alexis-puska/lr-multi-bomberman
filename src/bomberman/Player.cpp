@@ -91,9 +91,6 @@ Player::Player(unsigned short * in_keystate, bool isACpuPlayer, int indexSprite,
 	rmask = 0x00ff0000;
 	gmask = 0x0000ff00;
 	bmask = 0x000000ff;
-	int i;
-	int j;
-
 	louisMergebuffer = new SDL_Surface;
 }
 

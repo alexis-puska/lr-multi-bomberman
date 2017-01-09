@@ -1,16 +1,5 @@
 #include "Bomberman.h"
 
-#include <time.h>
-
-const static char *BombermanSprite = "./resources/sprite/characters/AllBomberman.png";
-const static char *BombermanSpriteCossak = "./resources/sprite/characters/AllBombermanCossak.png";
-const static char *BombermanSpriteBarbar = "./resources/sprite/characters/AllBombermanBarbar.png";
-const static char *BombermanSpriteChan = "./resources/sprite/characters/AllBombermanChan.png";
-const static char *BombermanSpriteKid = "./resources/sprite/characters/AllBombermanKid.png";
-const static char *BombermanSpritePretty = "./resources/sprite/characters/AllBombermanPretty.png";
-const static char *BombermanSpritePunk = "./resources/sprite/characters/AllBombermanPunk.png";
-const static char *BombermanSpriteMexican = "./resources/sprite/characters/AllBombermanMexican.png";
-
 Bomberman::Bomberman(SDL_Surface * vout_bufLibretro) {
 	Sprite::Instance();
 	Sound::Instance();
@@ -22,7 +11,7 @@ Bomberman::Bomberman(SDL_Surface * vout_bufLibretro) {
 	srand (time(NULL));
 
 	//color mask
-Uint32 	rmask, gmask, bmask, amask;
+	Uint32 	rmask, gmask, bmask, amask;
 	rmask = 0x00ff0000;
 	gmask = 0x0000ff00;
 	bmask = 0x000000ff;

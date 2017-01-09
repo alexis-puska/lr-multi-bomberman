@@ -14,6 +14,8 @@
 #endif
 
 #include <stdio.h>
+#include <time.h>
+
 #include "Game.h"
 #include "Cursor.h"
 #include "Sprite.h"
