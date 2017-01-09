@@ -81,6 +81,7 @@ class Sprite {
 		Sprite();
 		~Sprite();
 		SDL_Surface* getCursor(int pos);
+		SDL_Surface* getBonus(int pos);
 		SDL_Surface* getLevelPreview(int pos);
 		SDL_Surface* getFire(int x, int y);
 		SDL_Surface* getBombe(int x, int y);
