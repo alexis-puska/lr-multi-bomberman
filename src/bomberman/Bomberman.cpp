@@ -54,6 +54,7 @@ Uint32 	rmask, gmask, bmask, amask;
 	gameOption[1] = 0;
 	gameOption[2] = 1;
 	gameOption[3] = 3;
+	game = NULL;
 
 	//init Sprite for menu
 	menuPlayerSprite = new SDL_Surface*[8];
