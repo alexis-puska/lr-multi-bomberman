@@ -80,23 +80,23 @@ class Sprite {
 		SDL_Surface* getMenuBackground();
 		Sprite();
 		~Sprite();
-		SDL_Surface* players(int type, int color, int mvt, int pos);
 		SDL_Surface* getCursor(int pos);
 		SDL_Surface* getLevelPreview(int pos);
 		SDL_Surface* getFire(int x, int y);
 		SDL_Surface* getBombe(int x, int y);
 		SDL_Surface* getBurnWall(int pos, int levelIndex);
 		SDL_Surface* getLevel(int pos, int levelIndex);
+		
 		//player
 		SDL_Surface* playerDrawNormal(int type, int color, int move, int pos);
-		SDL_Surface* drawOnLouis(int type, int color, int move);
 		SDL_Surface* drawWithBombe(int type, int color, int move, int pos);
 		SDL_Surface* drawThrowBombe(int type, int color, int move, int pos);
-		SDL_Surface* drawBurning(int type, int color, int move, int pos);
-		SDL_Surface* drawLouisBurning(int type, int color, int move, int pos);
+		SDL_Surface* drawOnLouis(int type, int color, int move);
 		SDL_Surface* drawVictory(int type, int color, int pos);
 		SDL_Surface* drawCrying(int type, int color, int pos);
+		SDL_Surface* drawBurning(int type, int color, int pos);
 		SDL_Surface* drawLouis(int louisType, int move, int pos);
+		SDL_Surface* drawLouisBurning(int type, int color, int pos);
 		
 		
 	private:

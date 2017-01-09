@@ -154,8 +154,8 @@ Game::Game(int levelIndex, int playerInformationParam[16][2], int gameOption[4],
 	 * LOAD MISC IMAGE : Bombe animation, explosion animation, bonus image, eggs image
 	 */
 
-	bonusSprite = new SDL_Surface *[14];
-	eggsSprite = new SDL_Surface *[2];
+	
+	
 
 	headerPlayerSprite = new SDL_Surface *[16];
 
@@ -169,32 +169,11 @@ Game::Game(int levelIndex, int playerInformationParam[16][2], int gameOption[4],
 
 	int i = 0;
 	int j = 0;
-	tempSurface = IMG_Load(misc);
+	
 
-	// bonusSprite
-	for (i = 0; i < 2; i++) {
-		for (j = 0; j < 7; j++) {
-			srcTextureRect.x = i * 16;
-			srcTextureRect.y = j * 16;
-			srcTextureRect.w = 16;
-			srcTextureRect.h = 16;
-			bonusSprite[i + (j * 2)] = SDL_CreateRGBSurface(0, 16, 16, 32, rmask, gmask, bmask, amask);
-			SDL_BlitSurface(tempSurface, &srcTextureRect, bonusSprite[i + (j * 2)], &destTextureRect);
-		}
-	}
+	grid = new Grid(levelIndex, tab, tabBonus);
 
-	grid = new Grid(levelIndex, tab, tabBonus, bonusSprite);
 
-	// eggsSprite
-	for (i = 0; i < 2; i++) {
-		srcTextureRect.x = i * 16;
-		srcTextureRect.y = 4 * 16;
-		srcTextureRect.w = 16;
-		srcTextureRect.h = 16;
-		eggsSprite[i] = SDL_CreateRGBSurface(0, 16, 16, 32, rmask, gmask, bmask, amask);
-		SDL_BlitSurface(tempSurface, &srcTextureRect, eggsSprite[i], &destTextureRect);
-	}
-	SDL_FreeSurface(tempSurface);
 
 	/*
 	 * PLAYER INFORMATION
@@ -350,18 +329,12 @@ Game::~Game() {
 	SDL_FreeSurface(screenBuffer);
 	SDL_FreeSurface(playerBombeExplode);
 
-	for (int i = 0; i < 12; i++) {
-		SDL_FreeSurface(bonusSprite[i]);
-	}
-	for (int i = 0; i < 2; i++) {
-		SDL_FreeSurface(eggsSprite[i]);
-	}
+
+	
 	for (int i = 0; i < 16; i++) {
 		SDL_FreeSurface(headerPlayerSprite[i]);
 	}
-
-	free(bonusSprite);
-	free(eggsSprite);
+	
 	free(headerPlayerSprite);
 
 	TTF_CloseFont(fragileBombersFont);

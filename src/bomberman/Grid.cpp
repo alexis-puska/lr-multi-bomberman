@@ -9,8 +9,8 @@ Grid::Grid() {
 	init();
 }
 
-Grid::Grid(int lvl, int tab[sizeX * sizeY], int tabBonus[sizeX * sizeY], SDL_Surface ** bonusSprite) {
-	this->bonusSprite = bonusSprite;
+Grid::Grid(int lvl, int tab[sizeX * sizeY], int tabBonus[sizeX * sizeY] ) {
+	
 	this->lvl = lvl;
 	this->tab = tab;
 	this->tabBonus = tabBonus;
@@ -24,7 +24,7 @@ Grid::~Grid() {
 	SDL_FreeSurface(skyFixe);
 	tab = NULL;
 	tabBonus = NULL;
-	bonusSprite = NULL;
+	
 }
 
 SDL_Surface * Grid::getGroundLayer() {
@@ -168,10 +168,10 @@ for	(int i = 0; i < sizeX * sizeY; i++) {
 		dstrect.y = floor(ind / sizeX) * smallSpriteLevelSizeHeight;
 		dstrect.w = 16;
 		dstrect.h = 16;
-		SDL_BlitSurface(bonusSprite[0], NULL, brickShadow, &dstrect);
+		SDL_BlitSurface(Sprite::Instance().getBonus(0), NULL, brickShadow, &dstrect);
 	}
 
-	//draw Death bonus for a level
+	//draw bonus for a level
 	for(int y = 1; y < 13; y++) {
 		for(int i = 0; i < bonusByLevel[lvl][y]; i++) {
 			int ind = notEmptyCase[rand() % notEmptyCase.size()];
@@ -179,12 +179,6 @@ for	(int i = 0; i < sizeX * sizeY; i++) {
 				ind = notEmptyCase[rand() % notEmptyCase.size()];
 			}
 			tabBonus[ind] = y;
-//			SDL_Rect dstrect;
-//			dstrect.x = ((ind % sizeX) * smallSpriteLevelSizeWidth) + 1;
-//			dstrect.y = floor(ind / sizeX) * smallSpriteLevelSizeHeight;
-//			dstrect.w = 16;
-//			dstrect.h = 16;
-//			SDL_BlitSurface(bonusSprite[y], NULL, brickShadow, &dstrect);
 		}
 	}
 
@@ -206,7 +200,7 @@ void Grid::burnABrick(int posX, int posY) {
 		dstrect.y = posY * smallSpriteLevelSizeHeight;
 		dstrect.w = 16;
 		dstrect.h = 16;
-		SDL_BlitSurface(bonusSprite[tabBonus[posX + posY * sizeX]], NULL, brickShadow, &dstrect);
+		SDL_BlitSurface(Sprite::Instance().getBonus(tabBonus[posX + posY * sizeX], NULL, brickShadow, &dstrect);
 	}
 }
 
@@ -236,7 +230,7 @@ void Grid::placeNewDeathMalus() {
 	dstrect.y = floor(ind / sizeX) * smallSpriteLevelSizeHeight;
 	dstrect.w = 16;
 	dstrect.h = 16;
-	SDL_BlitSurface(bonusSprite[0], NULL, brickShadow, &dstrect);
+	SDL_BlitSurface(Sprite::Instance().getBonus(0), NULL, brickShadow, &dstrect);
 }
 
 void Grid::placeSuddenDeathWall(int x, int y) {

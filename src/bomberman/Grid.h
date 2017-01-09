@@ -61,7 +61,7 @@ class Grid {
 
 	public:
 		Grid();
-		Grid(int lvl, int tab[sizeX * sizeY], int tabBonus[sizeX * sizeY], SDL_Surface ** bonusSprite);
+		Grid(int lvl, int tab[sizeX * sizeY], int tabBonus[sizeX * sizeY]);
 		~Grid();
 
 		//configure the grid and build it
@@ -89,7 +89,7 @@ class Grid {
 		 Sky texture is on the right block size 162 * 288 px
 		 Each texture size is 54 x 48 px
 		 */
-		SDL_Surface **bonusSprite;
+		
 
 		//Layers to draw the game
 		SDL_Surface *ground;

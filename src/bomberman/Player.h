@@ -108,12 +108,6 @@ class Player {
 		Grid * grid;
 
 		//image of differente sprite of player
-
-		SDL_Surface **playerSpriteWalkBomb;
-		SDL_Surface **playerSpriteThrowBomb;
-		SDL_Surface **playerSpriteAngry;
-		SDL_Surface **playerSpriteBurn;
-		SDL_Surface **louisSpriteBurn;
 		SDL_Surface *louisMergebuffer;
 
 		/*

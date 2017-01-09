@@ -737,11 +737,10 @@ SDL_Surface* Sprite::getMenuBackground() {
 	return menuBackgroundSurface;
 }
 
-SDL_Surface* Sprite::players(int type, int color, int mvt, int pos) {
-//TODO
-	return NULL;
-}
 
+/************************
+ *	CURSOR
+ ************************/
 SDL_Surface* Sprite::getCursor(int pos) {
 	if (pos > 2) {
 		return bombeSprite[pos - 2];
@@ -749,18 +748,37 @@ SDL_Surface* Sprite::getCursor(int pos) {
 	return bombeSprite[pos];
 }
 
+/************************
+ *	BONUS
+ ************************/
+SDL_Surface* Sprite::getBonus(int pos){
+	return bonusSprite[pos];
+}
+
+/************************
+ *	FIRE / FLAMME
+ ************************/
 SDL_Surface* Sprite::getFire(int x, int y) {
 	return fireSprite[y * nbFireSpriteX + x];
 }
 
+/************************
+ *	BOMBE SPRITE
+ ************************/
 SDL_Surface* Sprite::getBombe(int x, int y) {
 	return bombeSprite[y * nbBombeSpriteX + x];
 }
 
+/************************
+ *	LEVEL PREVIEW SPRITE
+ ************************/
 SDL_Surface* Sprite::getLevelPreview(int pos) {
 	return previewLevelSprite[pos];
 }
 
+/************************
+ *	LEVEL SPRITE
+ ************************/
 SDL_Surface* Sprite::getBurnWall(int pos, int levelIndex) {
 	int spriteNumber = ((nbSmallSpriteLevelX * nbSmallSpriteLevelY) + (nbLargeSpriteLevelX * nbLargeSpriteLevelY)) * levelIndex + burnWallStartSprite + pos;
 	return levelSprite[spriteNumber];
@@ -770,10 +788,10 @@ SDL_Surface* Sprite::getLevel(int pos, int levelIndex) {
 	int spriteNumber = ((nbSmallSpriteLevelX * nbSmallSpriteLevelY) + (nbLargeSpriteLevelX * nbLargeSpriteLevelY)) * levelIndex + pos;
 	return levelSprite[spriteNumber];
 }
-/****************
- *	PLAYER
- ****************/
 
+/************************
+ *	PLAYER
+ ************************/
 int Sprite::calcStartIndexPlayer(int type, int color) {
 	return (nbSpritePlayerX * nbSpritePlayerY * nbColorPlayer) * type + ((nbSpritePlayerX * nbSpritePlayerY) * color);
 }
@@ -782,24 +800,16 @@ SDL_Surface* Sprite::playerDrawNormal(int type, int color, int move, int pos) {
 	return playerSprite[calcStartIndexPlayer(type, color) + (nbSpritePlayerX * move) + pos];
 }
 
-SDL_Surface* Sprite::drawOnLouis(int type, int color, int move) {
-	return playerSprite[calcStartIndexPlayer(type, color) + (nbSpritePlayerX * move) + 8];
-}
-
 SDL_Surface* Sprite::drawWithBombe(int type, int color, int move, int pos) {
-
+	return playerSprite[calcStartIndexPlayer(type, color) + (nbSpritePlayerX * move) + 3 + pos];
 }
 
 SDL_Surface* Sprite::drawThrowBombe(int type, int color, int move, int pos) {
-
+	return playerSprite[calcStartIndexPlayer(type, color) + (nbSpritePlayerX * move) + 6 + pos];
 }
 
-SDL_Surface* Sprite::drawBurning(int type, int color, int move, int pos) {
-
-}
-
-SDL_Surface* Sprite::drawLouisBurning(int type, int color, int move, int pos) {
-
+SDL_Surface* Sprite::drawOnLouis(int type, int color, int move) {
+	return playerSprite[calcStartIndexPlayer(type, color) + (nbSpritePlayerX * move) + 8];
 }
 
 SDL_Surface* Sprite::drawVictory(int type, int color, int pos) {
@@ -807,11 +817,20 @@ SDL_Surface* Sprite::drawVictory(int type, int color, int pos) {
 }
 
 SDL_Surface* Sprite::drawCrying(int type, int color, int pos) {
-
+	return playerSprite[calcStartIndexPlayer(type, color) + (nbSpritePlayerX * 5) + pos];
 }
-/****************
+
+SDL_Surface* Sprite::drawBurning(int type, int color, int pos) {
+	return playerSprite[calcStartIndexPlayer(type, color) + (nbSpritePlayerX * 6) + pos];
+}
+
+/************************
  *	LOUIS
- ****************/
+ ************************/
 SDL_Surface* Sprite::drawLouis(int louisType, int move, int pos){
 	return louisSprite[(nbSpriteLouisX * nbSpriteLouisY * louisType) + (move * nbSpriteLouisX) + pos];
+}
+
+SDL_Surface* Sprite::drawLouisBurning(int type, int color, int pos) {
+	return louisSprite[calcStartIndexPlayer(type, color) + (nbSpriteLouisX * 4) + pos];
 }
