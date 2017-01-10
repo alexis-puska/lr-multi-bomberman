@@ -47,7 +47,7 @@ enum playerStateEnum {
 };
 
 enum nbFrameAnimationEnum {
-	animationNormal = 4, animationOnLouis = 4, animationCarryBombe = 4, animationThrowBombe = 2, animationBurning = 6, animationLouisBurning = 7, animationVictory = 4, animationCrying = 4
+	animationNormal = 4, animationOnLouis = 4, animationCarryBombe = 4, animationThrowBombe = 2, animationBurning = 7, animationLouisBurning = 4, animationVictory = 4, animationCrying = 4
 };
 
 enum louisTypeEnum {
@@ -390,7 +390,7 @@ void Player::drawWithBombe(SDL_Surface * surfaceToDraw, bool animate) {
 			offsetSpriteAnimation = 2;
 			break;
 	}
-	SDL_BlitSurface(playerSpriteWalkBomb[(previousDirection * 3) + offsetSpriteAnimation], &srcTextureRect, surfaceToDraw, &destTextureRect);
+	SDL_BlitSurface(Sprite::Instance().drawWithBombe(characterSpriteIndex, color, previousDirection, offsetSpriteAnimation), &srcTextureRect, surfaceToDraw, &destTextureRect);
 }
 
 void Player::drawThrowBombe(SDL_Surface * surfaceToDraw, bool animate) {
@@ -417,7 +417,7 @@ void Player::drawThrowBombe(SDL_Surface * surfaceToDraw, bool animate) {
 	} else {
 		offsetSprite = 0;
 	}
-	SDL_BlitSurface(playerSpriteThrowBomb[(previousDirection * 2) + offsetSprite], &srcTextureRect, surfaceToDraw, &destTextureRect);
+	SDL_BlitSurface(Sprite::Instance().drawThrowBombe(characterSpriteIndex, color, previousDirection, offsetSprite), &srcTextureRect, surfaceToDraw, &destTextureRect);
 }
 
 void Player::drawBurning(SDL_Surface * surfaceToDraw, bool animate) {
@@ -448,7 +448,7 @@ void Player::drawBurning(SDL_Surface * surfaceToDraw, bool animate) {
 	} else {
 		offsetSprite = 0;
 	}
-	SDL_BlitSurface(playerSpriteBurn[offsetSprite], &srcTextureRect, surfaceToDraw, &destTextureRect);
+	SDL_BlitSurface(Sprite::Instance().drawBurning(characterSpriteIndex, color, offsetSprite), &srcTextureRect, surfaceToDraw, &destTextureRect);
 }
 
 void Player::drawLouisBurning(SDL_Surface * surfaceToDraw, bool animate) {
@@ -475,7 +475,7 @@ void Player::drawLouisBurning(SDL_Surface * surfaceToDraw, bool animate) {
 	} else {
 		offsetSprite = 0;
 	}
-	SDL_BlitSurface(playerSpriteBurn[offsetSprite], &srcTextureRect, surfaceToDraw, &destTextureRect);
+	SDL_BlitSurface(Sprite::Instance().drawLouisBurning(louisType, offsetSprite), &srcTextureRect, surfaceToDraw, &destTextureRect);
 }
 
 void Player::drawVictory(SDL_Surface * surfaceToDraw, bool animate) {
@@ -560,7 +560,7 @@ void Player::drawCrying(SDL_Surface * surfaceToDraw, bool animate) {
 			offsetSpriteAnimation = 2;
 			break;
 	}
-	SDL_BlitSurface(playerSpriteAngry[offsetSpriteAnimation], &srcTextureRect, surfaceToDraw, &destTextureRect);
+	SDL_BlitSurface(Sprite::Instance().drawCrying(characterSpriteIndex, color, offsetSpriteAnimation), &srcTextureRect, surfaceToDraw, &destTextureRect);
 }
 
 void Player::doSomething(SDL_Surface * surfaceToDraw) {

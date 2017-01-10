@@ -93,7 +93,7 @@ class Sprite {
 		SDL_Surface* drawWithBombe(int type, int color, int move, int pos);
 		SDL_Surface* drawThrowBombe(int type, int color, int move, int pos);
 		SDL_Surface* drawBurning(int type, int color, int pos);
-		SDL_Surface* drawLouisBurning(int type, int color, int pos);
+		SDL_Surface* drawLouisBurning(int type, int pos);
 		SDL_Surface* drawVictory(int type, int color, int pos);
 		SDL_Surface* drawCrying(int type, int color, int pos);
 		SDL_Surface* drawLouis(int louisType, int move, int pos);
