@@ -80,9 +80,9 @@ class Sprite {
 		SDL_Surface* getMenuBackground();
 		Sprite();
 		~Sprite();
-		SDL_Surface* players(int type, int color, int mvt, int pos);
 		SDL_Surface* getCursor(int pos);
 		SDL_Surface* getLevelPreview(int pos);
+		SDL_Surface* getBonus(int bonusNumber);
 		SDL_Surface* getFire(int x, int y);
 		SDL_Surface* getBombe(int x, int y);
 		SDL_Surface* getBurnWall(int pos, int levelIndex);
@@ -92,8 +92,8 @@ class Sprite {
 		SDL_Surface* drawOnLouis(int type, int color, int move);
 		SDL_Surface* drawWithBombe(int type, int color, int move, int pos);
 		SDL_Surface* drawThrowBombe(int type, int color, int move, int pos);
-		SDL_Surface* drawBurning(int type, int color, int move, int pos);
-		SDL_Surface* drawLouisBurning(int type, int color, int move, int pos);
+		SDL_Surface* drawBurning(int type, int color, int , int pos);
+		SDL_Surface* drawLouisBurning(int type, int color, int pos);
 		SDL_Surface* drawVictory(int type, int color, int pos);
 		SDL_Surface* drawCrying(int type, int color, int pos);
 		SDL_Surface* drawLouis(int louisType, int move, int pos);
@@ -125,7 +125,7 @@ class Sprite {
 		 * COLOR FUNCTION
 		 */
 		SDL_Surface* applyPlayerColor(SDL_Surface * surface, int color);
-		SDL_Surface* replaceColor(SDL_Surface* surface, int src, int dest);
+		SDL_Surface* replaceColor(SDL_Surface* surface, unsigned int src, unsigned int dest);
 		SDL_Surface* upPlayerGreyColor(SDL_Surface* surface);
 		SDL_Surface* upPlayerRedColor(SDL_Surface* surface);
 		SDL_Surface* upPlayerBlueColor(SDL_Surface* surface);

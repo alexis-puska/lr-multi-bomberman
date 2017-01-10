@@ -126,7 +126,7 @@ void Sprite::getColorInSurface(SDL_Surface* surface) {
  * 				COLOR FUNCTION
  * 
  **********************************************/
-SDL_Surface* Sprite::replaceColor(SDL_Surface* surface, int src, int dest) {
+SDL_Surface* Sprite::replaceColor(SDL_Surface* surface, unsigned int src, unsigned int dest) {
 	//lock the surface for work on it
 	if (SDL_MUSTLOCK(surface)) {
 		SDL_LockSurface(surface);
@@ -447,7 +447,6 @@ void Sprite::cropSurface() {
 	cropLouisSurface(IMG_Load(spriteLouisPath));
 	cropTrolleySurface(IMG_Load(spriteTrolleyPath));
 	cropSpaceShipSurface(IMG_Load(spriteSpaceShipPath));
-
 }
 
 void Sprite::cropLevelSurface(SDL_Surface * surface) {
@@ -737,11 +736,6 @@ SDL_Surface* Sprite::getMenuBackground() {
 	return menuBackgroundSurface;
 }
 
-SDL_Surface* Sprite::players(int type, int color, int mvt, int pos) {
-//TODO
-	return NULL;
-}
-
 SDL_Surface* Sprite::getCursor(int pos) {
 	if (pos > 2) {
 		return bombeSprite[pos - 2];
@@ -751,6 +745,10 @@ SDL_Surface* Sprite::getCursor(int pos) {
 
 SDL_Surface* Sprite::getFire(int x, int y) {
 	return fireSprite[y * nbFireSpriteX + x];
+}
+
+SDL_Surface* Sprite::getBonus(int bonusNumber) {
+	return bonusSprite[bonusNumber];
 }
 
 SDL_Surface* Sprite::getBombe(int x, int y) {
@@ -787,19 +785,15 @@ SDL_Surface* Sprite::drawOnLouis(int type, int color, int move) {
 }
 
 SDL_Surface* Sprite::drawWithBombe(int type, int color, int move, int pos) {
-
+		return playerSprite[calcStartIndexPlayer(type, color) + (nbSpritePlayerX * move) + 3 + pos];
 }
 
 SDL_Surface* Sprite::drawThrowBombe(int type, int color, int move, int pos) {
-
+		return playerSprite[calcStartIndexPlayer(type, color) + (nbSpritePlayerX * move) + 6 + pos];
 }
 
-SDL_Surface* Sprite::drawBurning(int type, int color, int move, int pos) {
-
-}
-
-SDL_Surface* Sprite::drawLouisBurning(int type, int color, int move, int pos) {
-
+SDL_Surface* Sprite::drawBurning(int type, int color, int pos) {
+		return playerSprite[calcStartIndexPlayer(type, color) + (nbSpritePlayerX * 6) + pos];
 }
 
 SDL_Surface* Sprite::drawVictory(int type, int color, int pos) {
@@ -807,11 +801,15 @@ SDL_Surface* Sprite::drawVictory(int type, int color, int pos) {
 }
 
 SDL_Surface* Sprite::drawCrying(int type, int color, int pos) {
-
+		return playerSprite[calcStartIndexPlayer(type, color) + (nbSpritePlayerX * 5) + pos];
 }
 /****************
  *	LOUIS
  ****************/
 SDL_Surface* Sprite::drawLouis(int louisType, int move, int pos){
 	return louisSprite[(nbSpriteLouisX * nbSpriteLouisY * louisType) + (move * nbSpriteLouisX) + pos];
+}
+
+SDL_Surface* Sprite::drawLouisBurning(int type, int color, int pos) {
+		return louisSprite[(nbSpriteLouisX * nbSpriteLouisY * louisType) + (4 * nbSpriteLouisX) + pos];
 }
