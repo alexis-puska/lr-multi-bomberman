@@ -9,16 +9,6 @@
 
 #define nbFrameIncAnimation 5
 
-const static char *BombermanSprite = "./resources/sprite/characters/AllBomberman.png";
-const static char *BombermanSpriteCossak = "./resources/sprite/characters/AllBombermanCossak.png";
-const static char *BombermanSpriteBarbar = "./resources/sprite/characters/AllBombermanBarbar.png";
-const static char *BombermanSpriteChan = "./resources/sprite/characters/AllBombermanChan.png";
-const static char *BombermanSpriteKid = "./resources/sprite/characters/AllBombermanKid.png";
-const static char *BombermanSpritePretty = "./resources/sprite/characters/AllBombermanPretty.png";
-const static char *BombermanSpritePunk = "./resources/sprite/characters/AllBombermanPunk.png";
-const static char *BombermanSpriteMexican = "./resources/sprite/characters/AllBombermanMexican.png";
-const static char *BombermanSpriteLouis = "./resources/sprite/characters/AllLouis.png";
-
 enum playerKey {
 	keyPadSelect = 1,
 	keyPadL3 = 2,
@@ -96,152 +86,9 @@ Player::Player(unsigned short * in_keystate, bool isACpuPlayer, int indexSprite,
 	frameCounter = 0;
 	offsetSprite = 0;
 	previousDirection = down;
-	Uint32 rmask, gmask, bmask, amask;
-	amask = 0xff000000;
-	rmask = 0x00ff0000;
-	gmask = 0x0000ff00;
-	bmask = 0x000000ff;
-	int i;
-	int j;
-
-	SDL_Surface * tempSurface;
-	switch(indexSprite) {
-		case bomberman:
-		tempSurface = IMG_Load(BombermanSprite);
-		break;
-		case cossak:
-		tempSurface = IMG_Load(BombermanSpriteCossak);
-		break;
-		case barbar:
-		tempSurface = IMG_Load(BombermanSpriteBarbar);
-		break;
-		case chan:
-		tempSurface = IMG_Load(BombermanSpriteChan);
-		break;
-		case kid:
-		tempSurface = IMG_Load(BombermanSpriteKid);
-		break;
-		case pretty:
-		tempSurface = IMG_Load(BombermanSpritePretty);
-		break;
-		case punk:
-		tempSurface = IMG_Load(BombermanSpritePunk);
-		break;
-		case mexican:
-		tempSurface = IMG_Load(BombermanSpriteMexican);
-		break;
-		default:
-		tempSurface = IMG_Load(BombermanSpriteMexican);
-	}
-
-	SDL_Rect srcTextureRect;
-	SDL_Rect destTextureRect;
-	destTextureRect.x = 0;
-	destTextureRect.y = 0;
-	destTextureRect.w = sprite_sizeW;
-	destTextureRect.h = sprite_sizeH;
-
-
-	playerSpriteWalkBomb= new SDL_Surface * [12];
-	playerSpriteThrowBomb= new SDL_Surface * [8];
-	playerSpriteAngry= new SDL_Surface * [4];
-	playerSpriteBurn= new SDL_Surface * [7];
-	louisMergebuffer = new SDL_Surface;
-
-	louisSpriteBurn = new SDL_Surface * [4];
-
-	
-
-	//playerSpriteWalkBomb
-	for(i = 0; i < 3; i++) {
-		for(j = 0; j < 4; j++) {
-			srcTextureRect.x = (i+3) * sprite_sizeW;
-			srcTextureRect.y = j * sprite_sizeH;
-			srcTextureRect.w = sprite_sizeW;
-			srcTextureRect.h = sprite_sizeH;
-			playerSpriteWalkBomb[i + (j * 3)] = SDL_CreateRGBSurface(0, sprite_sizeW, sprite_sizeH, 32, rmask, gmask, bmask, amask);
-			SDL_BlitSurface(tempSurface, &srcTextureRect, playerSpriteWalkBomb[i + (j * 3)], &destTextureRect);
-		}
-	}
-
-	//playerSpriteThrowBomb
-	for(i = 0; i < 2; i++) {
-		for(j = 0; j < 4; j++) {
-			srcTextureRect.x = (i+6) * sprite_sizeW;
-			srcTextureRect.y = j * sprite_sizeH;
-			srcTextureRect.w = sprite_sizeW;
-			srcTextureRect.h = sprite_sizeH;
-			playerSpriteThrowBomb[i + (j * 2)] = SDL_CreateRGBSurface(0, sprite_sizeW, sprite_sizeH, 32, rmask, gmask, bmask, amask);
-			SDL_BlitSurface(tempSurface, &srcTextureRect, playerSpriteThrowBomb[i + (j * 2)], &destTextureRect);
-		}
-	}
-
-	//playerSpriteAngry
-	for(i = 0; i < 3; i++) {
-		srcTextureRect.x = i * sprite_sizeW;
-		srcTextureRect.y = 5 * sprite_sizeH;
-		srcTextureRect.w = sprite_sizeW;
-		srcTextureRect.h = sprite_sizeH;
-		playerSpriteAngry[i] = SDL_CreateRGBSurface(0, sprite_sizeW, sprite_sizeH, 32, rmask, gmask, bmask, amask);
-		SDL_BlitSurface(tempSurface, &srcTextureRect, playerSpriteAngry[i], &destTextureRect);
-	}
-
-	//playerSpriteBurn
-	for(i = 0; i < 7; i++) {
-		srcTextureRect.x = i * sprite_sizeW;
-		srcTextureRect.y = 6 * sprite_sizeH;
-		srcTextureRect.w = sprite_sizeW;
-		srcTextureRect.h = sprite_sizeH;
-		playerSpriteBurn[i] = SDL_CreateRGBSurface(0, sprite_sizeW, sprite_sizeH, 32, rmask, gmask, bmask, amask);
-		SDL_BlitSurface(tempSurface, &srcTextureRect, playerSpriteBurn[i], &destTextureRect);
-	}
-	SDL_FreeSurface(tempSurface);
-
-	//LOUIS PART
-	tempSurface = IMG_Load(BombermanSpriteLouis);
-
-	
-
-	for(i = 0; i < 4; i++) {
-		srcTextureRect.x = i * sprite_sizeW;
-		srcTextureRect.y = 4 * sprite_sizeH;
-		srcTextureRect.w = sprite_sizeW;
-		srcTextureRect.h = sprite_sizeH;
-		louisSpriteBurn[i] = SDL_CreateRGBSurface(0, sprite_sizeW, sprite_sizeH, 32, rmask, gmask, bmask, amask);
-		SDL_BlitSurface(tempSurface, &srcTextureRect, louisSpriteBurn[i], &destTextureRect);
-	}
-
-	SDL_FreeSurface(tempSurface);
 }
 
 Player::~Player() {
-	
-	for (int i = 0; i < 12; i++) {
-		SDL_FreeSurface(playerSpriteWalkBomb[i]);
-	}
-	for (int i = 0; i < 8; i++) {
-		SDL_FreeSurface(playerSpriteThrowBomb[i]);
-	}
-	
-	
-	for (int i = 0; i < 4; i++) {
-		SDL_FreeSurface(playerSpriteAngry[i]);
-	}
-	for (int i = 0; i < 7; i++) {
-		SDL_FreeSurface(playerSpriteBurn[i]);
-	}
-	
-	for (int i = 0; i < 4; i++) {
-		SDL_FreeSurface(louisSpriteBurn[i]);
-	}
-
-
-	free(playerSpriteWalkBomb);
-	free(playerSpriteThrowBomb);
-	free(playerSpriteAngry);
-	free(playerSpriteBurn);
-	free(louisSpriteBurn);
-
 	free(in_keystate);
 	tab = NULL;
 	tabBonus = NULL;
