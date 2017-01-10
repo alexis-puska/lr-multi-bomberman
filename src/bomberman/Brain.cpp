@@ -50,22 +50,24 @@ void Brain::think() {
 	} else {
 		currentIndex = -1;
 	}
-	switch (this->cpuLevel) {
-		case 1:
-			level1();
-			break;
-		case 2:
-			level1();
-			break;
-		case 3:
-			level1();
-			break;
-		case 4:
-			level1();
-			break;
-		case 5:
-			level1();
-			break;
+	if(currentIndex > 0 && currentIndex <sizeX * sizeY){
+		switch (this->cpuLevel) {
+			case 1:
+				level1();
+				break;
+			case 2:
+				level1();
+				break;
+			case 3:
+				level1();
+				break;
+			case 4:
+				level1();
+				break;
+			case 5:
+				level1();
+				break;
+		}
 	}
 }
 
