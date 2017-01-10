@@ -811,5 +811,5 @@ SDL_Surface* Sprite::drawLouis(int louisType, int move, int pos){
 }
 
 SDL_Surface* Sprite::drawLouisBurning(int type, int color, int pos) {
-		return louisSprite[(nbSpriteLouisX * nbSpriteLouisY * louisType) + (4 * nbSpriteLouisX) + pos];
+		return louisSprite[(nbSpriteLouisX * nbSpriteLouisY * type) + (4 * nbSpriteLouisX) + pos];
 }
