@@ -3,17 +3,14 @@
 #include <time.h>
 
 Bomberman::Bomberman(SDL_Surface * vout_bufLibretro) {
-	//Init TTF feature
-	TTF_Init();
 	Sprite::Instance();
 	Sound::Instance();
 	Sound::Instance().startMenuMusique();
 
-	
 	srand (time(NULL));
 
 	//color mask
-	Uint32 	rmask, gmask, bmask, amask;
+Uint32 	rmask, gmask, bmask, amask;
 	rmask = 0x00ff0000;
 	gmask = 0x0000ff00;
 	bmask = 0x000000ff;
@@ -22,8 +19,6 @@ Bomberman::Bomberman(SDL_Surface * vout_bufLibretro) {
 
 	vout_buf = vout_bufLibretro;
 
-	//Load Font
-	fragileBombersFont = TTF_OpenFont("./resources/font/fragile_bombers.ttf", 16); //this opens a font style and sets a size
 
 	//init all surface
 	screenBuffer = SDL_CreateRGBSurface(0, 640, 360, 32, rmask, gmask, bmask, amask);
@@ -52,8 +47,7 @@ Bomberman::~Bomberman() {
 
 	SDL_FreeSurface(screenBuffer);
 
-	TTF_CloseFont(fragileBombersFont);
-	TTF_Quit();
+
 	if (game) {
 		if (game->isConfigured()) {
 			if (game->isAlive()) {
@@ -208,32 +202,17 @@ void Bomberman::copySurfaceToBackRenderer(SDL_Surface * src, SDL_Surface * dest,
 	SDL_BlitSurface(src, &srcRect, dest, &dstRect);
 }
 
-/*
+/**********************************************************
+ *
  * Select the type of player
  *
- *
- *
- *
- */
+ **********************************************************/
 void Bomberman::drawPlayerTypeMenu() {
-
-
-	//fprintf(stderr, "%d %d\n", refreshBuffer , keychange[0]);
 	if (refreshBuffer || keychange[0]) {
 		SDL_BlitSurface(Sprite::Instance().getMenuBackground(), NULL, screenBuffer, NULL);
-		Sprite::Instance().drawText(screenBuffer,10,10,"TEXT");
-		
 		copySurfaceToBackRenderer(Sprite::Instance().getShadowArea(0), screenBuffer, 33, 150);
 		copySurfaceToBackRenderer(Sprite::Instance().getShadowArea(2), screenBuffer, 33, 183);
-		
-
-		SDL_Color red = { 255, 0, 0 };
-		SDL_Color green = { 0, 255, 0 };
-		SDL_Color blue = { 0, 140, 255 };
-
-		SDL_Surface* surfaceMessage = TTF_RenderText_Solid(fragileBombersFont, "Configuration joueur", green);
-		copySurfaceToBackRenderer(surfaceMessage, screenBuffer, ((640 / 2) - (surfaceMessage->w / 2)), 154);
-		SDL_FreeSurface(surfaceMessage);
+		Sprite::Instance().drawText(screenBuffer, (640 / 2), 154, "Configuration joueur", green, true);
 
 		if (previousPlayerKeystate[0] & keyPadRight && keychange[0]) {
 			cursorPosition += 4;
@@ -280,16 +259,13 @@ void Bomberman::drawPlayerTypeMenu() {
 
 		//player 0 always Human
 		playerType[0][0] = 0;
-
-		SDL_Surface* surfaceMessage1;
-		SDL_Surface* surfaceMessage2;
 		for (int j = 0; j < 4; j++) {
 			for (int i = 0; i < 4; i++) {
 				char playerName[15] = "Joueur ";
 				char playerTypeName[6];
 				sprintf(playerName, "Joueur %2i : ", (j * 4 + i) + 1);
 
-				SDL_Color playerColor = blue;
+				int playerColor = blue;
 				switch (playerType[j * 4 + i][0]) {
 					case HUMAN:
 						sprintf(playerTypeName, "HUMAN");
@@ -304,12 +280,8 @@ void Bomberman::drawPlayerTypeMenu() {
 						playerColor = red;
 						break;
 				}
-				surfaceMessage1 = TTF_RenderText_Solid(fragileBombersFont, playerTypeName, playerColor);
-				surfaceMessage2 = TTF_RenderText_Solid(fragileBombersFont, playerName, green);
-				copySurfaceToBackRenderer(surfaceMessage1, screenBuffer, 123 + (j * 133), 187 + (i * 20));
-				copySurfaceToBackRenderer(surfaceMessage2, screenBuffer, 56 + (j * 133), 187 + (i * 20));
-				SDL_FreeSurface(surfaceMessage1);
-				SDL_FreeSurface(surfaceMessage2);
+				Sprite::Instance().drawText(screenBuffer, 123 + (j * 133), 187 + (i * 20), playerTypeName, playerColor, false);
+				Sprite::Instance().drawText(screenBuffer, 56 + (j * 133), 187 + (i * 20), playerName, green, false);
 			}
 		}
 		refreshBuffer = false;
@@ -320,31 +292,22 @@ void Bomberman::drawPlayerTypeMenu() {
 	copySurfaceToBackRenderer(cursor.getCurrentFrame(), vout_buf, cursorPosX, cursorposY);
 }
 
-/*
+/**********************************************************
+ *
  * Menu for selecting the sprite of a player
  *
- *
- *
- *
- */
+ **********************************************************/
 void Bomberman::drawPlayerSpriteMenu() {
 
 	if (refreshBuffer || anyPlayerkeychange) {
 
-
 		SDL_BlitSurface(Sprite::Instance().getMenuBackground(), NULL, screenBuffer, NULL);
 		copySurfaceToBackRenderer(Sprite::Instance().getShadowArea(0), screenBuffer, 33, 150);
 		copySurfaceToBackRenderer(Sprite::Instance().getShadowArea(2), screenBuffer, 33, 183);
-
-		SDL_Color green = { 0, 255, 0 };
-		SDL_Color blue = { 0, 140, 255 };
-
-		SDL_Surface* surfaceMessage = TTF_RenderText_Solid(fragileBombersFont, "SELECT COSTUME", green);
-		copySurfaceToBackRenderer(surfaceMessage, screenBuffer, ((640 / 2) - (surfaceMessage->w / 2)), 154);
-
+		Sprite::Instance().drawText(screenBuffer, (640 / 2), 154, "SELECT COSTUME", green, true);
 		//add player sprite
 		for (int i = 0; i < 8; i++) {
-			copySurfaceToBackRenderer(Sprite::Instance().playerDrawNormal(i,0,0,0), screenBuffer, 54 + (i * 72), 174);
+			copySurfaceToBackRenderer(Sprite::Instance().playerDrawNormal(i, 0, 0, 0), screenBuffer, 54 + (i * 72), 174);
 		}
 
 		for (int i = 0; i < 16; i++) {
@@ -369,7 +332,7 @@ void Bomberman::drawPlayerSpriteMenu() {
 			if (playerType[i][0] != OFF) {
 				int index = playerType[i][1];
 				char playerName[10];
-				SDL_Color playerColor = blue;
+				int playerColor = blue;
 				switch (playerType[i][0]) {
 					case HUMAN:
 						sprintf(playerName, "HUMAN %i", i + 1);
@@ -382,10 +345,8 @@ void Bomberman::drawPlayerSpriteMenu() {
 					case OFF:
 						break;
 				}
-				SDL_Surface* surfaceMessage = TTF_RenderText_Solid(fragileBombersFont, playerName, playerColor);
-				copySurfaceToBackRenderer(surfaceMessage, screenBuffer, 70 + (playerType[i][1] * 72) - (surfaceMessage->w / 2), 216 + (15 * list[index]));
+				Sprite::Instance().drawText(screenBuffer, 70 + (playerType[i][1] * 72), 216 + (15 * list[index]), playerName, playerColor, true);
 				list[index] = list[index] + 1;
-				SDL_FreeSurface(surfaceMessage);
 			}
 		}
 		refreshBuffer = false;
@@ -393,16 +354,13 @@ void Bomberman::drawPlayerSpriteMenu() {
 	}
 }
 
-/*
+/**********************************************************
+ *
  * Menu for gameStep option
  *
- *
- *
- *
- */
+ **********************************************************/
 void Bomberman::drawGameOptionMenu() {
 	if (refreshBuffer || keychange[0]) {
-
 
 		if (previousPlayerKeystate[0] & keyPadRight && keychange[0]) {
 			Sound::Instance().playBipSound();
@@ -479,54 +437,34 @@ void Bomberman::drawGameOptionMenu() {
 		}
 
 		SDL_BlitSurface(Sprite::Instance().getMenuBackground(), NULL, screenBuffer, NULL);
-		
-		copySurfaceToBackRenderer(Sprite::Instance().getShadowArea(0), screenBuffer, 33, 150);
-		copySurfaceToBackRenderer(Sprite::Instance().getShadowArea(1), screenBuffer, 33, 183);
-		
-
-		SDL_Color red = { 255, 0, 0 };
-		SDL_Color green = { 0, 255, 0 };
-		SDL_Color blue = { 0, 140, 255 };
-
-		SDL_Surface* surfaceMessage = TTF_RenderText_Solid(fragileBombersFont, "GAME OPTION", green);
-		copySurfaceToBackRenderer(surfaceMessage, screenBuffer, ((640 / 2) - (surfaceMessage->w / 2)), 154);
-		SDL_FreeSurface(surfaceMessage);
-
-		surfaceMessage = TTF_RenderText_Solid(fragileBombersFont, "Sudden Death", green);
-		copySurfaceToBackRenderer(surfaceMessage, screenBuffer, 200, 187);
-		SDL_FreeSurface(surfaceMessage);
-		surfaceMessage = TTF_RenderText_Solid(fragileBombersFont, "Bad Bomber", green);
-		copySurfaceToBackRenderer(surfaceMessage, screenBuffer, 200, 207);
-		SDL_FreeSurface(surfaceMessage);
-		surfaceMessage = TTF_RenderText_Solid(fragileBombersFont, "CPU Level", green);
-		copySurfaceToBackRenderer(surfaceMessage, screenBuffer, 200, 227);
-		SDL_FreeSurface(surfaceMessage);
-		surfaceMessage = TTF_RenderText_Solid(fragileBombersFont, "Time", green);
-		copySurfaceToBackRenderer(surfaceMessage, screenBuffer, 200, 247);
-		SDL_FreeSurface(surfaceMessage);
-
-		surfaceMessage = TTF_RenderText_Solid(fragileBombersFont, gameOption[0] == 1 ? "ON" : "OFF", gameOption[0] == 1 ? green : red);
-		copySurfaceToBackRenderer(surfaceMessage, screenBuffer, 400, 187);
-		SDL_FreeSurface(surfaceMessage);
-		surfaceMessage = TTF_RenderText_Solid(fragileBombersFont, gameOption[1] == 1 ? "ON" : "OFF", gameOption[1] == 1 ? green : red);
-		copySurfaceToBackRenderer(surfaceMessage, screenBuffer, 400, 207);
-		SDL_FreeSurface(surfaceMessage);
 
 		char CPULevel[2];
 		sprintf(CPULevel, "%i", gameOption[2]);
-		surfaceMessage = TTF_RenderText_Solid(fragileBombersFont, CPULevel, blue);
-		copySurfaceToBackRenderer(surfaceMessage, screenBuffer, 400, 227);
-		SDL_FreeSurface(surfaceMessage);
-
 		char timeOfLevel[7];
 		if (gameOption[3] != -1) {
 			sprintf(timeOfLevel, "%i", gameOption[3]);
 		} else {
 			sprintf(timeOfLevel, "infini");
 		}
-		surfaceMessage = TTF_RenderText_Solid(fragileBombersFont, timeOfLevel, blue);
-		copySurfaceToBackRenderer(surfaceMessage, screenBuffer, 400, 247);
-		SDL_FreeSurface(surfaceMessage);
+		copySurfaceToBackRenderer(Sprite::Instance().getShadowArea(0), screenBuffer, 33, 150);
+		copySurfaceToBackRenderer(Sprite::Instance().getShadowArea(1), screenBuffer, 33, 183);
+		Sprite::Instance().drawText(screenBuffer, (640/2), 154, "GAME OPTION", green, true);
+		Sprite::Instance().drawText(screenBuffer, 200, 187, "Sudden Death", green, false);
+		Sprite::Instance().drawText(screenBuffer, 200, 207, "Bad Bomber", green, false);
+		Sprite::Instance().drawText(screenBuffer, 200, 227, "CPU Level", green, false);
+		Sprite::Instance().drawText(screenBuffer, 200, 247, "Time", green, false);
+		if (gameOption[0] == 1) {
+			Sprite::Instance().drawText(screenBuffer, 400, 187, "ON", green, false);
+		} else {
+			Sprite::Instance().drawText(screenBuffer, 400, 187, "OFF", red, false);
+		}
+		if (gameOption[1] == 1) {
+			Sprite::Instance().drawText(screenBuffer, 400, 207, "ON", green, false);
+		} else {
+			Sprite::Instance().drawText(screenBuffer, 400, 207, "OFF", red, false);
+		}
+		Sprite::Instance().drawText(screenBuffer, 400, 227, CPULevel, blue, false);
+		Sprite::Instance().drawText(screenBuffer, 400, 247, timeOfLevel, blue, false);
 		refreshBuffer = false;
 	}
 	int cursorPosX = 183;
@@ -535,37 +473,23 @@ void Bomberman::drawGameOptionMenu() {
 	copySurfaceToBackRenderer(cursor.getCurrentFrame(), vout_buf, cursorPosX, cursorposY);
 }
 
-/*
+/**********************************************************
+ *
  * Menu for level selection
  * 
- * 
- * 
- * 
- */
+ **********************************************************/
 void Bomberman::drawLevelSelectionMenu() {
 	if (refreshBuffer || keychange[0]) {
-
 		SDL_BlitSurface(Sprite::Instance().getMenuBackground(), NULL, screenBuffer, NULL);
-		
 		copySurfaceToBackRenderer(Sprite::Instance().getShadowArea(0), screenBuffer, 33, 150);
 		copySurfaceToBackRenderer(Sprite::Instance().getShadowArea(2), screenBuffer, 33, 183);
-
-		//SDL_Color red = {255, 0, 0};
-		SDL_Color green = { 0, 255, 0 };
-		//SDL_Color blue = {0, 140, 255};
-
-		//menuLevelSprite
-
-		SDL_Surface* surfaceMessage = TTF_RenderText_Solid(fragileBombersFont, "SELECT THE LEVEL", green);
-		copySurfaceToBackRenderer(surfaceMessage, screenBuffer, ((640 / 2) - (surfaceMessage->w / 2)), 154);
-
+		Sprite::Instance().drawText(screenBuffer, (640/2), 154, "SELECT THE LEVEL", green, true);
 		if (previousPlayerKeystate[0] & keyPadRight && keychange[0]) {
 			Sound::Instance().playBipSound();
 			cursorPosition++;
 			if (cursorPosition > nbLevel - 1) {
 				cursorPosition = 0;
 			}
-
 		}
 		if (previousPlayerKeystate[0] & keyPadLeft && keychange[0]) {
 			Sound::Instance().playBipSound();
@@ -574,11 +498,8 @@ void Bomberman::drawLevelSelectionMenu() {
 				cursorPosition = nbLevel - 1;
 			}
 		}
-
 		copySurfaceToBackRenderer(Sprite::Instance().getLevelPreview(cursorPosition), screenBuffer, ((640 / 2) - (levelPreviewSizeWidth / 2)), 200);
-
 		refreshBuffer = false;
-		SDL_FreeSurface(surfaceMessage);
 		levelIndex = cursorPosition;
 	}
 	copySurfaceToBackRenderer(screenBuffer, vout_buf, 0, 0);

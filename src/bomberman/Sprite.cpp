@@ -764,9 +764,19 @@ void Sprite::cropPlayerSurface(SDL_Surface* surface, int offset) {
  *		DRAW TEXT FUNCTION
  * 
  ********************************************/
-void Sprite::drawText(SDL_Surface* surfaceToDraw, int x, int y, const char* text){
-	SDL_Color color = {255,255,255};
-	SDL_Surface *text_surface = TTF_RenderText_Solid(font, text, color);
+void Sprite::drawText(SDL_Surface* surfaceToDraw, int x, int y, const char* text, int color, bool alignCenter){
+		SDL_Surface *text_surface;
+	switch(color){
+		case red:
+			text_surface = TTF_RenderText_Solid(font, text, redColor);
+			break;
+		case blue:
+			text_surface = TTF_RenderText_Solid(font, text, blueColor);
+			break;
+		case green:
+			text_surface = TTF_RenderText_Solid(font, text, greenColor);
+			break;
+	}
 	if (text_surface != NULL){
 		SDL_Rect srcRect;
 		srcRect.x = 0;
@@ -774,7 +784,11 @@ void Sprite::drawText(SDL_Surface* surfaceToDraw, int x, int y, const char* text
 		srcRect.w = text_surface->w;
 		srcRect.h = text_surface->h;
 		SDL_Rect dstRect;
-		dstRect.x = x;
+		if(alignCenter){
+			dstRect.x = x - (text_surface->w/2);
+		}else{
+			dstRect.x = x;
+		}
 		dstRect.y = y;
 		dstRect.w = text_surface->w;
 		dstRect.h = text_surface->h;

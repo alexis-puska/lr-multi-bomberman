@@ -109,7 +109,7 @@ class Sprite {
 		SDL_Surface* getHappySprite(int type, int color);
 		SDL_Surface* getCryingSprite(int type, int color);
 		//DRAW TEXT
-		void drawText(SDL_Surface* surfaceToDraw, int x, int y, const char* text);
+		void drawText(SDL_Surface* surfaceToDraw, int x, int y, const char* text, int color, bool alignCenter);
 		
 		
 	private:

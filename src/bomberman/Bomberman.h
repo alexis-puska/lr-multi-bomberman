@@ -1,10 +1,8 @@
 #include <SDL2/SDL.h>
 #ifndef IS_OSX
 #include <SDL2/SDL_image.h>
-#include <SDL2/SDL_ttf.h>
 #else
 #include <SDL2_image/SDL_image.h>
-#include <SDL2_ttf/SDL_ttf.h>
 #endif
 
 #include <stdio.h>
@@ -64,9 +62,6 @@ class Bomberman {
 
 		//buffer for draw
 		SDL_Surface *screenBuffer;
-
-		//Font for menu and Game
-		TTF_Font* fragileBombersFont;
 
 		//currentStep index to know wich menu is display
 		bombermanStepEnum currentStep;
