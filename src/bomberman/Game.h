@@ -18,6 +18,7 @@
 #include "Sound.h"
 #include "BurnWall.h"
 #include "SuddenDeathAnimation.h"
+#include "Sprite.h"
 
 #ifndef __MYCLASS_GAME
 #define __MYCLASS_GAME

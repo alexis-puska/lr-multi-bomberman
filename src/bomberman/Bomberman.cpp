@@ -225,17 +225,10 @@ void Bomberman::drawPlayerTypeMenu() {
 	//fprintf(stderr, "%d %d\n", refreshBuffer , keychange[0]);
 	if (refreshBuffer || keychange[0]) {
 		SDL_BlitSurface(Sprite::Instance().getMenuBackground(), NULL, screenBuffer, NULL);
-		SDL_Surface* menu;
-
-		menu = SDL_CreateRGBSurface(0, 574, 27, 32, rmask, gmask, bmask, amask);
-		SDL_FillRect(menu, NULL, SDL_MapRGBA(menu->format, 0, 0, 0, 120));
-		copySurfaceToBackRenderer(menu, screenBuffer, 33, 150);
-		SDL_FreeSurface(menu);
-
-		menu = SDL_CreateRGBSurface(0, 574, 100, 32, rmask, gmask, bmask, amask);
-		SDL_FillRect(menu, NULL, SDL_MapRGBA(menu->format, 0, 0, 0, 120));
-		copySurfaceToBackRenderer(menu, screenBuffer, 33, 183);
-		SDL_FreeSurface(menu);
+		
+		copySurfaceToBackRenderer(Sprite::Instance().getShadowArea(0), screenBuffer, 33, 150);
+		copySurfaceToBackRenderer(Sprite::Instance().getShadowArea(2), screenBuffer, 33, 183);
+		
 
 		SDL_Color red = { 255, 0, 0 };
 		SDL_Color green = { 0, 255, 0 };
@@ -347,16 +340,8 @@ void Bomberman::drawPlayerSpriteMenu() {
 		amask = 0xff000000;
 
 		SDL_BlitSurface(Sprite::Instance().getMenuBackground(), NULL, screenBuffer, NULL);
-		SDL_Surface* menu;
-		menu = SDL_CreateRGBSurface(0, 574, 27, 32, rmask, gmask, bmask, amask);
-		SDL_FillRect(menu, NULL, SDL_MapRGBA(menu->format, 0, 0, 0, 120));
-		copySurfaceToBackRenderer(menu, screenBuffer, 33, 150);
-		SDL_FreeSurface(menu);
-
-		menu = SDL_CreateRGBSurface(0, 574, 150, 32, rmask, gmask, bmask, amask);
-		SDL_FillRect(menu, NULL, SDL_MapRGBA(menu->format, 0, 0, 0, 120));
-		copySurfaceToBackRenderer(menu, screenBuffer, 33, 183);
-		SDL_FreeSurface(menu);
+		copySurfaceToBackRenderer(Sprite::Instance().getShadowArea(0), screenBuffer, 33, 150);
+		copySurfaceToBackRenderer(Sprite::Instance().getShadowArea(2), screenBuffer, 33, 183);
 
 		SDL_Color green = { 0, 255, 0 };
 		SDL_Color blue = { 0, 140, 255 };
@@ -505,16 +490,10 @@ void Bomberman::drawGameOptionMenu() {
 		}
 
 		SDL_BlitSurface(Sprite::Instance().getMenuBackground(), NULL, screenBuffer, NULL);
-		SDL_Surface* menu;
-		menu = SDL_CreateRGBSurface(0, 574, 27, 32, rmask, gmask, bmask, amask);
-		SDL_FillRect(menu, NULL, SDL_MapRGBA(menu->format, 0, 0, 0, 120));
-		copySurfaceToBackRenderer(menu, screenBuffer, 33, 150);
-		SDL_FreeSurface(menu);
-
-		menu = SDL_CreateRGBSurface(0, 574, 100, 32, rmask, gmask, bmask, amask);
-		SDL_FillRect(menu, NULL, SDL_MapRGBA(menu->format, 0, 0, 0, 120));
-		copySurfaceToBackRenderer(menu, screenBuffer, 33, 183);
-		SDL_FreeSurface(menu);
+		
+		copySurfaceToBackRenderer(Sprite::Instance().getShadowArea(0), screenBuffer, 33, 150);
+		copySurfaceToBackRenderer(Sprite::Instance().getShadowArea(1), screenBuffer, 33, 183);
+		
 
 		SDL_Color red = { 255, 0, 0 };
 		SDL_Color green = { 0, 255, 0 };
@@ -582,15 +561,9 @@ void Bomberman::drawLevelSelectionMenu() {
 		bmask = 0x000000ff;
 		amask = 0xff000000;
 		SDL_BlitSurface(Sprite::Instance().getMenuBackground(), NULL, screenBuffer, NULL);
-		SDL_Surface* menu;
-		menu = SDL_CreateRGBSurface(0, 574, 27, 32, rmask, gmask, bmask, amask);
-		SDL_FillRect(menu, NULL, SDL_MapRGBA(menu->format, 0, 0, 0, 120));
-		copySurfaceToBackRenderer(menu, screenBuffer, 33, 150);
-		SDL_FreeSurface(menu);
-
-		menu = SDL_CreateRGBSurface(0, 574, 150, 32, rmask, gmask, bmask, amask);
-		SDL_FillRect(menu, NULL, SDL_MapRGBA(menu->format, 0, 0, 0, 120));
-		copySurfaceToBackRenderer(menu, screenBuffer, 33, 183);
+		
+		copySurfaceToBackRenderer(Sprite::Instance().getShadowArea(0), screenBuffer, 33, 150);
+		copySurfaceToBackRenderer(Sprite::Instance().getShadowArea(2), screenBuffer, 33, 183);
 
 		//SDL_Color red = {255, 0, 0};
 		SDL_Color green = { 0, 255, 0 };
@@ -620,7 +593,6 @@ void Bomberman::drawLevelSelectionMenu() {
 		copySurfaceToBackRenderer(Sprite::Instance().getLevelPreview(cursorPosition), screenBuffer, ((640 / 2) - (levelPreviewSizeWidth / 2)), 200);
 
 		refreshBuffer = false;
-		SDL_FreeSurface(menu);
 		SDL_FreeSurface(surfaceMessage);
 		levelIndex = cursorPosition;
 	}
