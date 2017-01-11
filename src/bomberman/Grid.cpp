@@ -9,8 +9,7 @@ Grid::Grid() {
 	init();
 }
 
-Grid::Grid(int lvl, int tab[sizeX * sizeY], int tabBonus[sizeX * sizeY], SDL_Surface ** bonusSprite) {
-	this->bonusSprite = bonusSprite;
+Grid::Grid(int lvl, int tab[sizeX * sizeY], int tabBonus[sizeX * sizeY]) {
 	this->lvl = lvl;
 	this->tab = tab;
 	this->tabBonus = tabBonus;
@@ -24,7 +23,6 @@ Grid::~Grid() {
 	SDL_FreeSurface(skyFixe);
 	tab = NULL;
 	tabBonus = NULL;
-	bonusSprite = NULL;
 }
 
 SDL_Surface * Grid::getGroundLayer() {
@@ -166,9 +164,9 @@ for	(int i = 0; i < sizeX * sizeY; i++) {
 		SDL_Rect dstrect;
 		dstrect.x = ((ind % sizeX) * smallSpriteLevelSizeWidth) + 1;
 		dstrect.y = floor(ind / sizeX) * smallSpriteLevelSizeHeight;
-		dstrect.w = 16;
-		dstrect.h = 16;
-		SDL_BlitSurface(bonusSprite[0], NULL, brickShadow, &dstrect);
+		dstrect.w = defaultSpriteSize;
+		dstrect.h = defaultSpriteSize;
+		SDL_BlitSurface(Sprite::Instance().getBonus(0), NULL, brickShadow, &dstrect);
 	}
 
 	//draw Death bonus for a level
@@ -179,12 +177,6 @@ for	(int i = 0; i < sizeX * sizeY; i++) {
 				ind = notEmptyCase[rand() % notEmptyCase.size()];
 			}
 			tabBonus[ind] = y;
-//			SDL_Rect dstrect;
-//			dstrect.x = ((ind % sizeX) * smallSpriteLevelSizeWidth) + 1;
-//			dstrect.y = floor(ind / sizeX) * smallSpriteLevelSizeHeight;
-//			dstrect.w = 16;
-//			dstrect.h = 16;
-//			SDL_BlitSurface(bonusSprite[y], NULL, brickShadow, &dstrect);
 		}
 	}
 
@@ -204,9 +196,9 @@ void Grid::burnABrick(int posX, int posY) {
 		SDL_Rect dstrect;
 		dstrect.x = posX * smallSpriteLevelSizeWidth + 1;
 		dstrect.y = posY * smallSpriteLevelSizeHeight;
-		dstrect.w = 16;
-		dstrect.h = 16;
-		SDL_BlitSurface(bonusSprite[tabBonus[posX + posY * sizeX]], NULL, brickShadow, &dstrect);
+		dstrect.w = defaultSpriteSize;
+		dstrect.h = defaultSpriteSize;
+		SDL_BlitSurface(Sprite::Instance().getBonus(tabBonus[posX + posY * sizeX]), NULL, brickShadow, &dstrect);
 	}
 }
 
@@ -234,17 +226,17 @@ void Grid::placeNewDeathMalus() {
 	SDL_Rect dstrect;
 	dstrect.x = ((ind % sizeX) * smallSpriteLevelSizeWidth) + 1;
 	dstrect.y = floor(ind / sizeX) * smallSpriteLevelSizeHeight;
-	dstrect.w = 16;
-	dstrect.h = 16;
-	SDL_BlitSurface(bonusSprite[0], NULL, brickShadow, &dstrect);
+	dstrect.w = defaultSpriteSize;
+	dstrect.h = defaultSpriteSize;
+	SDL_BlitSurface(Sprite::Instance().getBonus(0), NULL, brickShadow, &dstrect);
 }
 
 void Grid::placeSuddenDeathWall(int x, int y) {
 	SDL_Rect dstrect;
 	dstrect.x = x * smallSpriteLevelSizeWidth;
 	dstrect.y = y * smallSpriteLevelSizeHeight;
-	dstrect.w = 18;
-	dstrect.h = 16;
+	dstrect.w = smallSpriteLevelSizeWidth;
+	dstrect.h = smallSpriteLevelSizeHeight;
 	SDL_BlitSurface(Sprite::Instance().getLevel(suddenDeathWallSpriteIndex, lvl), NULL, brickShadow, &dstrect);
 	tab[x + y * sizeX] = suddenDeathElement;
 }
