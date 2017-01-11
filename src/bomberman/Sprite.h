@@ -78,6 +78,7 @@ class Sprite {
 		static Sprite& Instance();
 		SDL_Surface* getSplashScreen();
 		SDL_Surface* getMenuBackground();
+		SDL_Surface* getBackground();
 		Sprite();
 		~Sprite();
 		SDL_Surface* getShadowArea(int number);
@@ -98,6 +99,8 @@ class Sprite {
 		SDL_Surface* drawVictory(int type, int color, int pos);
 		SDL_Surface* drawCrying(int type, int color, int pos);
 		SDL_Surface* drawLouis(int louisType, int move, int pos);
+		SDL_Surface* getHappySprite(int type, int color);
+		SDL_Surface* getCryingSprite(int type, int color);
 		
 		
 	private:
@@ -147,6 +150,8 @@ class Sprite {
 		SDL_Surface *splashScreenSurface;
 		//background for menu
 		SDL_Surface *menuBackgroundSurface;
+		//background for game
+		SDL_Surface *backgroundSurface;
 		
 		SDL_Surface **shadowAreaSprite;
 		SDL_Surface **playerSprite;

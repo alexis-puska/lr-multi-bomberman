@@ -3,6 +3,7 @@
 
 const static char *splashScreen = "./resources/image/SplashScreen.png";
 const static char *menuBackground = "./resources/image/MenuBackground.png";
+const static char *background = "./resources/image/EmptyBackground.png";
 const static char *spriteBombermanPath = "./resources/sprite/characters/AllBomberman.png";
 const static char *spriteBombermanBarbarPath = "./resources/sprite/characters/AllBombermanBarbar.png";
 const static char *spriteBombermanChanPath = "./resources/sprite/characters/AllBombermanChan.png";
@@ -35,6 +36,7 @@ Sprite::Sprite() {
 	trolleySprite = new SDL_Surface *[nbTrolleySpriteX * nbTrolleySpriteY];
 	splashScreenSurface = IMG_Load(splashScreen);
 	menuBackgroundSurface = IMG_Load(menuBackground);
+	backgroundSurface = IMG_Load(background);
 	cropSurface();
 }
 
@@ -72,6 +74,7 @@ Sprite::~Sprite() {
 	}
 	SDL_FreeSurface(splashScreenSurface);
 	SDL_FreeSurface(menuBackgroundSurface);
+	SDL_FreeSurface(backgroundSurface);
 	free(shadowAreaSprite);
 	free(playerSprite);
 	free(louisSprite);
@@ -759,6 +762,10 @@ SDL_Surface* Sprite::getMenuBackground() {
 	return menuBackgroundSurface;
 }
 
+SDL_Surface* Sprite::getBackground() {
+	return backgroundSurface;
+}
+
 SDL_Surface* Sprite::getCursor(int pos) {
 	if (pos > 2) {
 		return bombeSprite[pos - 2];
@@ -825,6 +832,14 @@ SDL_Surface* Sprite::drawVictory(int type, int color, int pos) {
 
 SDL_Surface* Sprite::drawCrying(int type, int color, int pos) {
 		return playerSprite[calcStartIndexPlayer(type, color) + (nbSpritePlayerX * 5) + pos];
+}
+
+SDL_Surface* getHappySprite(int type, int color) {
+	playerSprite[calcStartIndexPlayer(type, color) + (nbSpritePlayerX * 5) + 3]
+}
+
+SDL_Surface* getCryingSprite(int type, int color) {
+	playerSprite[calcStartIndexPlayer(type, color) + (nbSpritePlayerX * 5) + 4]
 }
 /****************
  *	LOUIS

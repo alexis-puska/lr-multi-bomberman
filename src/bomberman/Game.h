@@ -77,12 +77,6 @@ class Game {
 		SDL_Surface * overlay;
 		SDL_Surface * overlayResult;
 
-		//spite for animation
-		SDL_Surface ** bonusSprite;
-		SDL_Surface ** eggsSprite;
-		//sprite for header
-		SDL_Surface ** headerPlayerSprite;
-
 		//pointer in the libretro buffer
 		SDL_Surface * vout_buf;
 
@@ -92,9 +86,15 @@ class Game {
 		int nbTickForGame;
 		int nbTickForGameParam;
 		bool badBomber;
-		int playerType[16];
-		int playerIndexTexture[16];
-		int playerScore[16];
+		/*
+		0 : type 0 HUMAN / 1 CPU / 2 NONE
+		1 : type sprite
+		2 : color 
+		3 : status dead alive : for draw header
+		4 : score
+		*/
+		int playerInformation[16][5];
+		
 		//functional variable
 		int gameState;
 		int nbPlayerAlive;

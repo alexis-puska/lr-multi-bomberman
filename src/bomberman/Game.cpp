@@ -3,17 +3,6 @@
 #define gameTick 20
 
 Uint32 rmask, gmask, bmask, amask;
-const static char *misc = "./resources/sprite/other/Misc.png";
-const static char *background = "./resources/image/EmptyBackground.png";
-
-const static char *BombermanSprite = "./resources/sprite/characters/AllBomberman.png";
-const static char *BombermanSpriteCossak = "./resources/sprite/characters/AllBombermanCossak.png";
-const static char *BombermanSpriteBarbar = "./resources/sprite/characters/AllBombermanBarbar.png";
-const static char *BombermanSpriteChan = "./resources/sprite/characters/AllBombermanChan.png";
-const static char *BombermanSpriteKid = "./resources/sprite/characters/AllBombermanKid.png";
-const static char *BombermanSpritePretty = "./resources/sprite/characters/AllBombermanPretty.png";
-const static char *BombermanSpritePunk = "./resources/sprite/characters/AllBombermanPunk.png";
-const static char *BombermanSpriteMexican = "./resources/sprite/characters/AllBombermanMexican.png";
 
 /*
  * 
@@ -149,107 +138,8 @@ Game::Game(int levelIndex, int playerInformationParam[16][2], int gameOption[4],
 		nbTickForGame = gameOption[3];
 		nbTickForGameParam = nbTickForGame;
 	}
-
-	/*
-	 * LOAD MISC IMAGE : Bombe animation, explosion animation, bonus image, eggs image
-	 */
-
-	bonusSprite = new SDL_Surface *[14];
-	eggsSprite = new SDL_Surface *[2];
-
-	headerPlayerSprite = new SDL_Surface *[16];
-
-	SDL_Surface * tempSurface;
-	SDL_Rect srcTextureRect;
-	SDL_Rect destTextureRect;
-	destTextureRect.x = 0;
-	destTextureRect.y = 0;
-	destTextureRect.w = 16;
-	destTextureRect.h = 16;
-
-	int i = 0;
-	int j = 0;
-	tempSurface = IMG_Load(misc);
-
-	// bonusSprite
-	for (i = 0; i < 2; i++) {
-		for (j = 0; j < 7; j++) {
-			srcTextureRect.x = i * 16;
-			srcTextureRect.y = j * 16;
-			srcTextureRect.w = 16;
-			srcTextureRect.h = 16;
-			bonusSprite[i + (j * 2)] = SDL_CreateRGBSurface(0, 16, 16, 32, rmask, gmask, bmask, amask);
-			SDL_BlitSurface(tempSurface, &srcTextureRect, bonusSprite[i + (j * 2)], &destTextureRect);
-		}
-	}
-
-	grid = new Grid(levelIndex, tab, tabBonus, bonusSprite);
-
-	// eggsSprite
-	for (i = 0; i < 2; i++) {
-		srcTextureRect.x = i * 16;
-		srcTextureRect.y = 4 * 16;
-		srcTextureRect.w = 16;
-		srcTextureRect.h = 16;
-		eggsSprite[i] = SDL_CreateRGBSurface(0, 16, 16, 32, rmask, gmask, bmask, amask);
-		SDL_BlitSurface(tempSurface, &srcTextureRect, eggsSprite[i], &destTextureRect);
-	}
-	SDL_FreeSurface(tempSurface);
-
-	/*
-	 * PLAYER INFORMATION
-	 
-	 
-	 
-	 LOAD MINIATURE FOR HEADER SCORE
-	 */
-
-	SDL_Surface *textureBuffer;
-	SDL_Rect srcRect;
-	srcRect.x = 90;
-	srcRect.y = 210;
-	srcRect.w = 20;
-	srcRect.h = 20;
-	SDL_Rect dstRect;
-	dstRect.x = 0;
-	dstRect.y = 0;
-	dstRect.w = 20;
-	dstRect.h = 20;
-
-	for (int i = 0; i < 16; i++) {
-		switch (playerInformationParam[i][1]) {
-			case 0:
-			textureBuffer = IMG_Load(BombermanSprite);
-			break;
-			case 1:
-			textureBuffer = IMG_Load(BombermanSpriteCossak);
-			break;
-			case 2:
-			textureBuffer = IMG_Load(BombermanSpriteBarbar);
-			break;
-			case 3:
-			textureBuffer = IMG_Load(BombermanSpriteChan);
-			break;
-			case 4:
-			textureBuffer = IMG_Load(BombermanSpriteKid);
-			break;
-			case 5:
-			textureBuffer = IMG_Load(BombermanSpritePretty);
-			break;
-			case 6:
-			textureBuffer = IMG_Load(BombermanSpritePunk);
-			break;
-			case 7:
-			textureBuffer = IMG_Load(BombermanSpriteMexican);
-			break;
-			default:
-			textureBuffer = IMG_Load(BombermanSprite);
-		}
-
-		headerPlayerSprite[i] = SDL_CreateRGBSurface(0, 18, 16, 32, rmask, gmask, bmask, amask);
-		SDL_BlitSurface(textureBuffer, &srcRect, headerPlayerSprite[i], &dstRect);
-		SDL_FreeSurface(textureBuffer);
-	}
+	grid = new Grid(levelIndex, tab, tabBonus);
+	
 
 	/*
 	 *	LOAD PLAYER ON GRID
@@ -267,26 +157,27 @@ Game::Game(int levelIndex, int playerInformationParam[16][2], int gameOption[4],
 	Player * player;
 	Brain * brain;
 
-	int color[16];
+	//init color
 	for (int i = 0; i < 16; i++) {
-		color[i] = rand() % nbColorPlayer;
+		playerInformation[i][2] = rand() % nbColorPlayer;
 	}
 
 	for (int i = 0; i < 16; i++) {
-
-		int indexTexture = playerInformationParam[i][1];
 		float startX = startPlayer[i][0];
 		float startY = startPlayer[i][1];
 
-		playerType[i] = playerInformationParam[i][0];
-		playerIndexTexture[i] = playerInformationParam[i][1];
-		playerScore[i] = 0;
+		playerInformation[i][0] = playerInformationParam[i][0];
+		playerInformation[i][1] = playerInformationParam[i][1];
+		//alive
+		playerInformation[i][3] = 1;
+		//score null
+		playerInformation[i][4] = 0;
 
-		switch (playerType[i]) {
+		switch (playerInformation[i][0]) {
 			case HUMAN:
 
 			// if a human link the next keystate of libretro, else link a empty value
-			player = new Player(&in_keystate[indexLibretro], false, indexTexture, startX, startY, i, tab, tabBonus, grid, tabPlayerCoord, nbPlayerConfig, indexPlayerForGame, color[i]);
+			player = new Player(&in_keystate[indexLibretro], false, playerInformation[i][1], startX, startY, i, tab, tabBonus, grid, tabPlayerCoord, nbPlayerConfig, indexPlayerForGame, playerInformation[i][2]);
 			players.push_back(player);
 			player = NULL;
 			indexLibretro++;
@@ -294,7 +185,7 @@ Game::Game(int levelIndex, int playerInformationParam[16][2], int gameOption[4],
 			indexPlayerForGame++;
 			break;
 			case CPU:
-			player = new Player(&in_keystate_cpu[index], true, indexTexture, startX, startY, i, tab, tabBonus, grid, tabPlayerCoord, nbPlayerConfig, indexPlayerForGame, color[i]);
+			player = new Player(&in_keystate_cpu[index], true, playerInformation[i][1], startX, startY, i, tab, tabBonus, grid, tabPlayerCoord, nbPlayerConfig, indexPlayerForGame, playerInformation[i][2]);
 			players.push_back(player);
 			player = NULL;
 
@@ -349,20 +240,6 @@ Game::~Game() {
 	SDL_FreeSurface(overlayResult);
 	SDL_FreeSurface(screenBuffer);
 	SDL_FreeSurface(playerBombeExplode);
-
-	for (int i = 0; i < 12; i++) {
-		SDL_FreeSurface(bonusSprite[i]);
-	}
-	for (int i = 0; i < 2; i++) {
-		SDL_FreeSurface(eggsSprite[i]);
-	}
-	for (int i = 0; i < 16; i++) {
-		SDL_FreeSurface(headerPlayerSprite[i]);
-	}
-
-	free(bonusSprite);
-	free(eggsSprite);
-	free(headerPlayerSprite);
 
 	TTF_CloseFont(fragileBombersFont);
 	TTF_Quit();
@@ -498,10 +375,9 @@ void Game::drawResultOfGame() {
  GENERATE HEADER Player Score
  */
 void Game::generateHeader() {
-	//reset the background
-	SDL_Surface * textureBuffer = IMG_Load(background);
-	copySurfaceToBackRenderer(textureBuffer, vout_buf, 0, 0);
-	SDL_FreeSurface(textureBuffer);
+	//reset background
+	copySurfaceToBackRenderer(Sprite::Instance().getBackground(), vout_buf, 0, 0);
+	
 
 	Uint32 rmask, gmask, bmask, amask;
 	rmask = 0x00ff0000;
@@ -512,60 +388,52 @@ void Game::generateHeader() {
 	SDL_Surface* surfaceMessage;
 	SDL_Color red = { 255, 0, 0 };
 
-	SDL_Surface* menu;
-	menu = SDL_CreateRGBSurface(0, 32, 20, 32, rmask, gmask, bmask, amask);
-	SDL_FillRect(menu, NULL, SDL_MapRGBA(menu->format, 0, 0, 0, 120));
-
-	for (int i = 0; i < 8; i++) {
+	int offsetShadow = 2;
+	int offsetHeadPlayer = 4;
+	int offsetScore = 22;
+	
+	for (int i = 0; i < 16; i++) {
+		if(i==8){
+			offsetShadow += 352;
+			offsetHeadPlayer += 352;
+			offsetScore += 352;
+		}
 		//shadow rect
 		SDL_Rect rect;
-		rect.x = i * 36 + 2;
+		rect.x = i * 36 + offsetShadow;
 		rect.y = 2;
 		rect.w = 32;
 		rect.h = 20;
-		SDL_BlitSurface(menu, NULL, vout_buf, &rect);
+		SDL_BlitSurface(Sprite::Instance().getShadowArea(3), NULL, vout_buf, &rect);
 
 		//copy mini head player
-		rect.x = i * 36 + 4;
+		rect.x = i * 36 + offsetHeadPlayer;
 		rect.y = 4;
 		rect.w = 20;
 		rect.h = 20;
-		SDL_BlitSurface(headerPlayerSprite[i], NULL, vout_buf, &rect);
-
-		//wrote number of victory
-		char score[3];
-		sprintf(score, "%i", playerScore[i]);
-		surfaceMessage = TTF_RenderText_Solid(fragileBombersFont, score, red);
-		copySurfaceToBackRenderer(surfaceMessage, vout_buf, i * 36 + 22, 2);
-		SDL_FreeSurface(surfaceMessage);
-
+		
+		if(playerInformation[i][0] != 2){
+			//FOR HUMAN PLAYER OR CPU
+			if(playerInformation[i][3] == 1){
+				SDL_BlitSurface(Sprite::Instance().getHappySprite(playerInformation[i][1], playerInformation[i][2]), NULL, vout_buf, &rect);
+			}else{
+				SDL_BlitSurface(Sprite::Instance().getCryingSprite(playerInformation[i][1], playerInformation[i][2]), NULL, vout_buf, &rect);
+			}
+			//wrote number of victory
+			char score[3];
+			sprintf(score, "%i", playerInformation[i][4]);
+			surfaceMessage = TTF_RenderText_Solid(fragileBombersFont, score, red);
+			copySurfaceToBackRenderer(surfaceMessage, vout_buf, i * 36 + offsetScore, 2);
+			SDL_FreeSurface(surfaceMessage);
+			
+		}else{
+			//NO PLAYER
+			sprintf(score, "XXX");
+			surfaceMessage = TTF_RenderText_Solid(fragileBombersFont, score, red);
+			copySurfaceToBackRenderer(surfaceMessage, vout_buf, i * 36 + offsetHeadPlayer, 2);
+			SDL_FreeSurface(surfaceMessage);
+		}
 	}
-
-	for (int i = 0; i < 8; i++) {
-		SDL_Rect rect;
-		rect.x = i * 36 + 354;
-		rect.y = 2;
-		rect.w = 32;
-		rect.h = 20;
-		SDL_BlitSurface(menu, NULL, vout_buf, &rect);
-
-		//copy mini head player
-		rect.x = i * 36 + 356;
-		rect.y = 4;
-		rect.w = 20;
-		rect.h = 20;
-		SDL_BlitSurface(headerPlayerSprite[i + 8], NULL, vout_buf, &rect);
-
-		//wrote number of victory
-		char score[3];
-		sprintf(score, "%i", playerScore[i + 8]);
-		SDL_Surface* surfaceMessage = TTF_RenderText_Solid(fragileBombersFont, score, red);
-		copySurfaceToBackRenderer(surfaceMessage, vout_buf, i * 36 + 374, 2);
-		SDL_FreeSurface(surfaceMessage);
-
-	}
-
-	SDL_FreeSurface(menu);
 }
 
 /**
@@ -639,7 +507,8 @@ void Game::tick() {
 			if (nbTickForGame == 0) {
 				for (unsigned int i = 0; i < players.size(); i++) {
 					if (players[i]->isAlive()) {
-						playerScore[i]++;
+						//update score
+						playerInformation[players[i]->getIndexPlayerForGame()][4]++;
 						players[i]->winTheGame();
 					}
 				}
@@ -977,7 +846,8 @@ void Game::tick() {
 			if (nbPlayerAlive <= 1) {
 				for (unsigned int i = 0; i < players.size(); i++) {
 					if (players[i]->isAlive()) {
-						playerScore[i]++;
+						//update score
+						playerInformation[players[i]->getIndexPlayerForGame()][4]++;
 						players[i]->winTheGame();
 					}
 				}
@@ -1130,20 +1000,16 @@ void Game::tick() {
 				Player * player;
 				Brain * brain;
 
-				int color[16];
-				for (int i = 0; i < 16; i++) {
-					color[i] = rand() % nbColorPlayer;
-				}
-
+				
 				for (int i = 0; i < 16; i++) {
 
 					float startX = startPlayer[i][0];
 					float startY = startPlayer[i][1];
-					switch (playerType[i]) {
+					switch (playerInformation[i][0]) {
 						case HUMAN:
 							// if a human link the next keystate of libretro, else link a empty value
-							player = new Player(&in_keystate[indexLibretro], false, playerIndexTexture[i], startX, startY, i, tab, tabBonus, grid, tabPlayerCoord, nbPlayerConfig,
-									indexPlayerForGame, color[i]);
+							player = new Player(&in_keystate[indexLibretro], false, playerInformation[i][1], startX, startY, i, tab, tabBonus, grid, tabPlayerCoord, nbPlayerConfig,
+									indexPlayerForGame, playerInformation[i][2]);
 							players.push_back(player);
 							player = NULL;
 							indexLibretro++;
@@ -1151,8 +1017,8 @@ void Game::tick() {
 							indexPlayerForGame++;
 							break;
 						case CPU:
-							player = new Player(&in_keystate_cpu[index], true, playerIndexTexture[i], startX, startY, i, tab, tabBonus, grid, tabPlayerCoord, nbPlayerConfig,
-									indexPlayerForGame, color[i]);
+							player = new Player(&in_keystate_cpu[index], true, playerInformation[i][1], startX, startY, i, tab, tabBonus, grid, tabPlayerCoord, nbPlayerConfig,
+									indexPlayerForGame, playerInformation[i][2]);
 							players.push_back(player);
 							brain = new Brain(&in_keystate_cpu[index], tab, tabPlayerCoord, nbPlayerConfig, i, cpuLevel);
 							brains.push_back(brain);
