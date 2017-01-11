@@ -377,14 +377,6 @@ void Game::drawResultOfGame() {
 void Game::generateHeader() {
 	//reset background
 	copySurfaceToBackRenderer(Sprite::Instance().getBackground(), vout_buf, 0, 0);
-	
-
-	Uint32 rmask, gmask, bmask, amask;
-	rmask = 0x00ff0000;
-	gmask = 0x0000ff00;
-	bmask = 0x000000ff;
-	amask = 0xff000000;
-
 	SDL_Surface* surfaceMessage;
 	SDL_Color red = { 255, 0, 0 };
 
@@ -1007,6 +999,7 @@ void Game::tick() {
 
 					float startX = startPlayer[i][0];
 					float startY = startPlayer[i][1];
+					playerInformation[i][3] = 1;
 					switch (playerInformation[i][0]) {
 						case HUMAN:
 							// if a human link the next keystate of libretro, else link a empty value

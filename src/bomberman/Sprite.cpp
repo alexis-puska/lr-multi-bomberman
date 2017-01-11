@@ -108,7 +108,7 @@ Sprite& Sprite::Instance() {
  * 
  **********************************************/
 void Sprite::getColorInSurface(SDL_Surface* surface) {
-	std::vector<int> colors;
+	std::vector<unsigned int> colors;
 	bool found = false;
 	//lock the surface for work on it
 	if (SDL_MUSTLOCK(surface)) {
