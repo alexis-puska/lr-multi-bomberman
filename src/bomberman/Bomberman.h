@@ -12,7 +12,6 @@
 #include "Sprite.h"
 #include "Sound.h"
 
-
 enum bombermanStepEnum {
 	home = 0,					//spashscreen
 	PlayerTypeMenu, 		//type of Player CPU / HUMAN / OFF
@@ -33,15 +32,12 @@ class Bomberman {
 	public:
 		Bomberman(SDL_Surface * vout_bufLibretro);
 		~Bomberman();
-
 		//function call for every frame
 		void tick(unsigned short in_keystateLibretro[16]);
-
 		//function to copy some surface into an other
 		void copySurfaceToBackRenderer(SDL_Surface * src, SDL_Surface * dest, int x, int y);
 
 	private:
-
 		void drawPlayerTypeMenu();
 		void drawPlayerSpriteMenu();
 		void drawGameOptionMenu();
@@ -71,15 +67,10 @@ class Bomberman {
 		bool anyPlayerkeychange;
 		unsigned short previousPlayerKeystate[16];
 
-		/*
-		 *
+		/******************
 		 * GAME OPTION
-		 *
-		 */
-
-		//Game Grid
+		 ******************/
 		Game *game;
-
 		//table for memorise player type
 		//index 0 : 0 Human, 1 CPU, 2 OFF
 		//index 1 : sprite used for player
@@ -91,8 +82,6 @@ class Bomberman {
 		 * 3 : Time of a party	[-1: infiny  3-6]
 		 */
 		int gameOption[4];
-
 		int levelIndex;
-
 };
 #endif

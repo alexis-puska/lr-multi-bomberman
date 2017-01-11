@@ -23,7 +23,7 @@ const static char *spriteSpaceShipPath = "./resources/sprite/other/spaceShip.png
 const static char *fontPath = "./resources/font/fragile_bombers.ttf";
 const static SDL_Color greenColor = { 0, 255, 0 };
 const static SDL_Color redColor = { 255, 0, 0 };
-const static SDL_Color blueColor = { 0, 140, 255 }; 
+const static SDL_Color blueColor = { 0, 140, 255 };
 
 Sprite Sprite::m_instance = Sprite();
 
@@ -469,19 +469,19 @@ void Sprite::cropSurface() {
 	cropSpaceShipSurface(IMG_Load(spriteSpaceShipPath));
 }
 
-void Sprite::createShadowArea(){
+void Sprite::createShadowArea() {
 	Uint32 rmask, gmask, bmask, amask;
 	amask = 0xff000000;
 	rmask = 0x00ff0000;
 	gmask = 0x0000ff00;
 	bmask = 0x000000ff;
 	//menu shadow surface
-	shadowAreaSprite[0] = SDL_CreateRGBSurface(0, 574,  27, 32, rmask, gmask, bmask, amask);
+	shadowAreaSprite[0] = SDL_CreateRGBSurface(0, 574, 27, 32, rmask, gmask, bmask, amask);
 	shadowAreaSprite[1] = SDL_CreateRGBSurface(0, 574, 100, 32, rmask, gmask, bmask, amask);
 	shadowAreaSprite[2] = SDL_CreateRGBSurface(0, 574, 150, 32, rmask, gmask, bmask, amask);
 	//header of game
-	shadowAreaSprite[3] = SDL_CreateRGBSurface(0,  32,  20, 32, rmask, gmask, bmask, amask);
-	for(int i = 0 ; i < nbShadowAreaSprite;i++){
+	shadowAreaSprite[3] = SDL_CreateRGBSurface(0, 32, 20, 32, rmask, gmask, bmask, amask);
+	for (int i = 0; i < nbShadowAreaSprite; i++) {
 		SDL_FillRect(shadowAreaSprite[i], NULL, SDL_MapRGBA(shadowAreaSprite[i]->format, 0, 0, 0, 120));
 	}
 }
@@ -555,7 +555,7 @@ void Sprite::cropLouisSurface(SDL_Surface * surface) {
 				srcTextureRect.h = spriteLouisSizeHeight;
 				louisSprite[index] = SDL_CreateRGBSurface(0, spriteLouisSizeWidth, spriteLouisSizeHeight, 32, rmask, gmask, bmask, amask);
 				SDL_BlitSurface(surface, &srcTextureRect, louisSprite[index], &destTextureRect);
-				applyLouisColor(louisSprite[index],louis);
+				applyLouisColor(louisSprite[index], louis);
 				index++;
 			}
 		}
@@ -764,37 +764,39 @@ void Sprite::cropPlayerSurface(SDL_Surface* surface, int offset) {
  *		DRAW TEXT FUNCTION
  * 
  ********************************************/
-void Sprite::drawText(SDL_Surface* surfaceToDraw, int x, int y, const char* text, int color, bool alignCenter){
-		SDL_Surface *text_surface;
-	switch(color){
+void Sprite::drawText(SDL_Surface* surfaceToDraw, int x, int y, const char* text, int color, bool alignCenter) {
+	SDL_Surface *text_surface = text_surface = TTF_RenderText_Solid(font, text, getSDL_Color(color));
+	SDL_Rect srcRect;
+	srcRect.x = 0;
+	srcRect.y = 0;
+	srcRect.w = text_surface->w;
+	srcRect.h = text_surface->h;
+	SDL_Rect dstRect;
+	if (alignCenter) {
+		dstRect.x = x - (text_surface->w / 2);
+	} else {
+		dstRect.x = x;
+	}
+	dstRect.y = y;
+	dstRect.w = text_surface->w;
+	dstRect.h = text_surface->h;
+	SDL_BlitSurface(text_surface, &srcRect, surfaceToDraw, &dstRect);
+	SDL_FreeSurface(text_surface);
+}
+
+SDL_Color Sprite::getSDL_Color(int color) {
+	switch (color) {
 		case red:
-			text_surface = TTF_RenderText_Solid(font, text, redColor);
+			return redColor;
 			break;
 		case blue:
-			text_surface = TTF_RenderText_Solid(font, text, blueColor);
+			return blueColor;
 			break;
 		case green:
-			text_surface = TTF_RenderText_Solid(font, text, greenColor);
+			return greenColor;
 			break;
 	}
-	if (text_surface != NULL){
-		SDL_Rect srcRect;
-		srcRect.x = 0;
-		srcRect.y = 0;
-		srcRect.w = text_surface->w;
-		srcRect.h = text_surface->h;
-		SDL_Rect dstRect;
-		if(alignCenter){
-			dstRect.x = x - (text_surface->w/2);
-		}else{
-			dstRect.x = x;
-		}
-		dstRect.y = y;
-		dstRect.w = text_surface->w;
-		dstRect.h = text_surface->h;
-		SDL_BlitSurface(text_surface, &srcRect, surfaceToDraw, &dstRect);
-		SDL_FreeSurface(text_surface);
-	}
+	return greenColor;
 }
 
 /********************************************
@@ -864,15 +866,15 @@ SDL_Surface* Sprite::drawOnLouis(int type, int color, int move) {
 }
 
 SDL_Surface* Sprite::drawWithBombe(int type, int color, int move, int pos) {
-		return playerSprite[calcStartIndexPlayer(type, color) + (nbSpritePlayerX * move) + 3 + pos];
+	return playerSprite[calcStartIndexPlayer(type, color) + (nbSpritePlayerX * move) + 3 + pos];
 }
 
 SDL_Surface* Sprite::drawThrowBombe(int type, int color, int move, int pos) {
-		return playerSprite[calcStartIndexPlayer(type, color) + (nbSpritePlayerX * move) + 6 + pos];
+	return playerSprite[calcStartIndexPlayer(type, color) + (nbSpritePlayerX * move) + 6 + pos];
 }
 
 SDL_Surface* Sprite::drawBurning(int type, int color, int pos) {
-		return playerSprite[calcStartIndexPlayer(type, color) + (nbSpritePlayerX * 6) + pos];
+	return playerSprite[calcStartIndexPlayer(type, color) + (nbSpritePlayerX * 6) + pos];
 }
 
 SDL_Surface* Sprite::drawVictory(int type, int color, int pos) {
@@ -880,7 +882,7 @@ SDL_Surface* Sprite::drawVictory(int type, int color, int pos) {
 }
 
 SDL_Surface* Sprite::drawCrying(int type, int color, int pos) {
-		return playerSprite[calcStartIndexPlayer(type, color) + (nbSpritePlayerX * 5) + pos];
+	return playerSprite[calcStartIndexPlayer(type, color) + (nbSpritePlayerX * 5) + pos];
 }
 
 SDL_Surface* Sprite::getHappySprite(int type, int color) {
@@ -893,16 +895,16 @@ SDL_Surface* Sprite::getCryingSprite(int type, int color) {
 /****************
  *	LOUIS
  ****************/
-SDL_Surface* Sprite::drawLouis(int louisType, int move, int pos){
+SDL_Surface* Sprite::drawLouis(int louisType, int move, int pos) {
 	return louisSprite[(nbSpriteLouisX * nbSpriteLouisY * louisType) + (move * nbSpriteLouisX) + pos];
 }
 
 SDL_Surface* Sprite::drawLouisBurning(int type, int pos) {
-		return louisSprite[(nbSpriteLouisX * nbSpriteLouisY * type) + (4 * nbSpriteLouisX) + pos];
+	return louisSprite[(nbSpriteLouisX * nbSpriteLouisY * type) + (4 * nbSpriteLouisX) + pos];
 }
 /****************
-* menu /header shadow area
-****************/
-SDL_Surface* Sprite::getShadowArea(int number){
+ * menu /header shadow area
+ ****************/
+SDL_Surface* Sprite::getShadowArea(int number) {
 	return shadowAreaSprite[number];
 }

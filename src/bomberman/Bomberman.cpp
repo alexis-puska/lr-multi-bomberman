@@ -6,7 +6,6 @@ Bomberman::Bomberman(SDL_Surface * vout_bufLibretro) {
 	Sprite::Instance();
 	Sound::Instance();
 	Sound::Instance().startMenuMusique();
-
 	srand (time(NULL));
 
 	//color mask
@@ -16,15 +15,11 @@ Uint32 	rmask, gmask, bmask, amask;
 	bmask = 0x000000ff;
 	amask = 0xff000000;
 	refreshBuffer = true;
-
 	vout_buf = vout_bufLibretro;
-
 
 	//init all surface
 	screenBuffer = SDL_CreateRGBSurface(0, 640, 360, 32, rmask, gmask, bmask, amask);
-
 	copySurfaceToBackRenderer(Sprite::Instance().getSplashScreen(), screenBuffer, 0, 0);
-
 	currentStep = home;
 
 	//init default player type
@@ -44,10 +39,7 @@ Uint32 	rmask, gmask, bmask, amask;
 }
 
 Bomberman::~Bomberman() {
-
 	SDL_FreeSurface(screenBuffer);
-
-
 	if (game) {
 		if (game->isConfigured()) {
 			if (game->isAlive()) {

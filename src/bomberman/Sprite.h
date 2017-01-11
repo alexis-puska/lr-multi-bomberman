@@ -96,7 +96,9 @@ class Sprite {
 		SDL_Surface* getBombe(int x, int y);
 		SDL_Surface* getBurnWall(int pos, int levelIndex);
 		SDL_Surface* getLevel(int pos, int levelIndex);
-		//player
+		/*
+		 * DRAW PLAYER FUNCTION
+		 */
 		SDL_Surface* playerDrawNormal(int type, int color, int move, int pos);
 		SDL_Surface* drawOnLouis(int type, int color, int move);
 		SDL_Surface* drawWithBombe(int type, int color, int move, int pos);
@@ -108,9 +110,11 @@ class Sprite {
 		SDL_Surface* drawLouis(int louisType, int move, int pos);
 		SDL_Surface* getHappySprite(int type, int color);
 		SDL_Surface* getCryingSprite(int type, int color);
-		//DRAW TEXT
+		/*
+		 * DRAW TEXT FUNCTION
+		 */
 		void drawText(SDL_Surface* surfaceToDraw, int x, int y, const char* text, int color, bool alignCenter);
-		
+		SDL_Color getSDL_Color(int color);
 		
 	private:
 		Sprite& operator=(const Sprite&);
@@ -129,13 +133,10 @@ class Sprite {
 		void cropSpaceShipSurface(SDL_Surface * surface);
 		int calcStartIndexPlayer(int type, int color);
 
-
 		/*
-		 * INFORMATION FUNCTIN
+		 * INFORMATION FUNCTION
 		 */
 		void getColorInSurface(SDL_Surface* surface);
-		
-		
 		
 		/*
 		 * COLOR FUNCTION
