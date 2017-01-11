@@ -76,9 +76,6 @@ Game::Game(int levelIndex, int playerInformationParam[16][2], int gameOption[4],
 	gameState = gameWait;
 	nbPlayerInGame = 0;
 
-	// Load Font
-	fragileBombersFont = TTF_OpenFont("./resources/font/fragile_bombers.ttf", 36);//this opens a font style and sets a size
-
 	// declarativ color mask, used for create a RGB surface
 	amask = 0xff000000;
 	rmask = 0x00ff0000;
@@ -87,17 +84,10 @@ Game::Game(int levelIndex, int playerInformationParam[16][2], int gameOption[4],
 	// create overlay for pause / exit game
 	overlay = SDL_CreateRGBSurface(0, 630, 336, 32, rmask, gmask, bmask, amask);
 	SDL_FillRect(overlay, NULL, SDL_MapRGBA(overlay->format, 0, 0, 0, 120));
-	SDL_Color green = {0, 255, 0};
-	SDL_Surface* surfaceMessage = TTF_RenderText_Solid(fragileBombersFont, "PAUSE", green);
-	copySurfaceToBackRenderer(surfaceMessage, overlay, ((640 / 2) - (surfaceMessage->w / 2)), 114);
-	SDL_FreeSurface(surfaceMessage);
-	surfaceMessage = TTF_RenderText_Solid(fragileBombersFont, "Press X/B for exit game", green);
-	copySurfaceToBackRenderer(surfaceMessage, overlay, ((640 / 2) - (surfaceMessage->w / 2)), 154);
-	SDL_FreeSurface(surfaceMessage);
-	surfaceMessage = TTF_RenderText_Solid(fragileBombersFont, "Press Select for exit pause", green);
-	copySurfaceToBackRenderer(surfaceMessage, overlay, ((640 / 2) - (surfaceMessage->w / 2)), 194);
-	SDL_FreeSurface(surfaceMessage);
-	TTF_CloseFont (fragileBombersFont);
+
+	Sprite::Instance().drawText(overlay, (640 / 2), 114, "--- PAUSE ---", green, true);
+	Sprite::Instance().drawText(overlay, (640 / 2), 154, "Press X/B for exit game", green, true);
+	Sprite::Instance().drawText(overlay, (640 / 2), 194, "Press Select for exit pause", green, true);
 
 	// init variable or surface
 	screenBuffer = SDL_CreateRGBSurface(0, 630, 336, 32, rmask, gmask, bmask, amask);
@@ -204,9 +194,6 @@ Game::Game(int levelIndex, int playerInformationParam[16][2], int gameOption[4],
 
 	}
 
-	//load for time display and generate header
-	fragileBombersFont = TTF_OpenFont("./resources/font/fragile_bombers.ttf", 16);//this opens a font style and sets a size
-
 	suddenDeathCase = false;
 	generateHeader();
 	updateTimeDisplay();
@@ -241,8 +228,6 @@ Game::~Game() {
 	SDL_FreeSurface(screenBuffer);
 	SDL_FreeSurface(playerBombeExplode);
 
-	TTF_CloseFont(fragileBombersFont);
-	TTF_Quit();
 }
 
 /*
@@ -346,23 +331,17 @@ void Game::mergeScreen(bool mergeResult) {
 
 void Game::drawResultOfGame() {
 	SDL_FillRect(overlayResult, NULL, SDL_MapRGBA(overlayResult->format, 0, 0, 0, 120));
-	SDL_Surface* surfaceMessage;
-	SDL_Color green = { 0, 255, 0 };
-	SDL_Color red = { 255, 0, 0 };
 	char mess[18];
 	int x = 25;
 	int y = 20;
 	for (unsigned int i = 0; i < players.size(); i++) {
 		if (players[i]->isAlive()) {
 			sprintf(mess, "Player %i : ALIVE", i + 1);
-			surfaceMessage = TTF_RenderText_Solid(fragileBombersFont, mess, green);
+			Sprite::Instance().drawText(overlayResult, x, y, mess, green, false);
 		} else {
 			sprintf(mess, "Player %i : DEAD", i + 1);
-			surfaceMessage = TTF_RenderText_Solid(fragileBombersFont, mess, red);
+			Sprite::Instance().drawText(overlayResult, x, y, mess, red, false);
 		}
-
-		copySurfaceToBackRenderer(surfaceMessage, overlayResult, x, y);
-		SDL_FreeSurface(surfaceMessage);
 		y = y + 20;
 		if (y > 170) {
 			y = 20;
@@ -377,8 +356,6 @@ void Game::drawResultOfGame() {
 void Game::generateHeader() {
 	//reset background
 	copySurfaceToBackRenderer(Sprite::Instance().getBackground(), vout_buf, 0, 0);
-	SDL_Surface* surfaceMessage;
-	SDL_Color red = { 255, 0, 0 };
 
 	int offsetShadow = 2;
 	int offsetHeadPlayer = 4;
@@ -410,17 +387,12 @@ void Game::generateHeader() {
 			//wrote number of victory
 			char score[3];
 			sprintf(score, "%i", playerInformation[i][4]);
-			surfaceMessage = TTF_RenderText_Solid(fragileBombersFont, score, red);
-			copySurfaceToBackRenderer(surfaceMessage, vout_buf, i * 36 + offsetScore, 2);
-			SDL_FreeSurface(surfaceMessage);
-			
+			Sprite::Instance().drawText(vout_buf, i * 36 + offsetScore, 2, score, red, false);
 		}else{
 			//NO PLAYER
 			char score[4];
 			sprintf(score, "XXX");
-			surfaceMessage = TTF_RenderText_Solid(fragileBombersFont, score, red);
-			copySurfaceToBackRenderer(surfaceMessage, vout_buf, i * 36 + offsetHeadPlayer, 2);
-			SDL_FreeSurface(surfaceMessage);
+			Sprite::Instance().drawText(vout_buf, i * 36 + offsetScore, 2, score, red, false);
 		}
 	}
 }
@@ -443,12 +415,7 @@ void Game::updateTimeDisplay() {
 	} else {
 		sprintf(time, "INFINI");
 	}
-
-	SDL_Color green = { 0, 255, 0 };
-	SDL_Surface* surfaceMessage = TTF_RenderText_Solid(fragileBombersFont, time, green);
-	copySurfaceToBackRenderer(surfaceMessage, vout_buf, ((640 / 2) - (surfaceMessage->w / 2)), 2);
-
-	SDL_FreeSurface(surfaceMessage);
+	Sprite::Instance().drawText(vout_buf, (640/2), 2, time, green, true);
 }
 
 /*
@@ -1037,7 +1004,6 @@ void Game::tick() {
 
 
 void Game::updateHeaderPlayer(int i, int playerNumber){
-		SDL_Color red = { 255, 0, 0 };
 	int offsetShadow = 2;
 	int offsetHeadPlayer = 4;
 	int offsetScore = 22;
@@ -1066,7 +1032,5 @@ void Game::updateHeaderPlayer(int i, int playerNumber){
 	//wrote number of victory
 	char score[3];
 	sprintf(score, "%i", playerInformation[playerNumber][4]);
-	SDL_Surface * surfaceMessage = TTF_RenderText_Solid(fragileBombersFont, score, red);
-	copySurfaceToBackRenderer(surfaceMessage, vout_buf, playerNumber * 36 + offsetScore, 2);
-	SDL_FreeSurface(surfaceMessage);
+	Sprite::Instance().drawText(vout_buf, playerNumber * 36 + offsetScore, 2, score, red, false);
 }

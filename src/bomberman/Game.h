@@ -1,10 +1,8 @@
 #ifndef IS_OSX
 #include <SDL2/SDL_image.h>
-#include <SDL2/SDL_ttf.h>
 
 #else
 #include <SDL2_image/SDL_image.h>
-#include <SDL2_ttf/SDL_ttf.h>
 #endif
 
 #include <stdio.h>
@@ -68,9 +66,6 @@ class Game {
 		void stopGame();
 		void exitGame();
 	private:
-		//Font for Header and time remaining and pause message
-		TTF_Font* fragileBombersFont;
-
 		//variable
 		SDL_Thread * mainThread;
 		SDL_Surface * screenBuffer;
