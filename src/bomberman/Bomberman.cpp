@@ -1,6 +1,6 @@
-#include <time.h>
-
 #include "Bomberman.h"
+
+#include <time.h>
 
 Bomberman::Bomberman(SDL_Surface * vout_bufLibretro) {
 	Sprite::Instance();

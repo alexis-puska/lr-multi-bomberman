@@ -773,7 +773,7 @@ void Sprite::drawText(SDL_Surface* surfaceToDraw, int x, int y, const char* text
 		dstRect.y = y;
 		dstRect.w = text_surface->w;
 		dstRect.h = text_surface->h;
-		SDL_BlitSurface(text_surface, srcRect, surfaceToDraw, dstRect);
+		SDL_BlitSurface(text_surface, &srcRect, surfaceToDraw, &dstRect);
 		SDL_FreeSurface(text_surface);
 	}
 }
@@ -864,12 +864,12 @@ SDL_Surface* Sprite::drawCrying(int type, int color, int pos) {
 		return playerSprite[calcStartIndexPlayer(type, color) + (nbSpritePlayerX * 5) + pos];
 }
 
-SDL_Surface* getHappySprite(int type, int color) {
-	playerSprite[calcStartIndexPlayer(type, color) + (nbSpritePlayerX * 5) + 3]
+SDL_Surface* Sprite::getHappySprite(int type, int color) {
+	return playerSprite[calcStartIndexPlayer(type, color) + (nbSpritePlayerX * 5) + 3];
 }
 
-SDL_Surface* getCryingSprite(int type, int color) {
-	playerSprite[calcStartIndexPlayer(type, color) + (nbSpritePlayerX * 5) + 4]
+SDL_Surface* Sprite::getCryingSprite(int type, int color) {
+	return playerSprite[calcStartIndexPlayer(type, color) + (nbSpritePlayerX * 5) + 4];
 }
 /****************
  *	LOUIS

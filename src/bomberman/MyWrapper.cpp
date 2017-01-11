@@ -1,4 +1,5 @@
 #include "MyWrapper.h"
+#include "Bomberman.h"
 
 extern "C" {
 Bomberman* newBomberman(SDL_Surface * vout_buf) {

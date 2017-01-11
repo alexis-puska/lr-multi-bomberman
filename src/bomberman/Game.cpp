@@ -394,9 +394,9 @@ void Game::generateHeader() {
 	
 	for (int i = 0; i < 16; i++) {
 		if(i==8){
-			offsetShadow += 352;
-			offsetHeadPlayer += 352;
-			offsetScore += 352;
+			offsetShadow += 64;
+			offsetHeadPlayer += 64;
+			offsetScore += 64;
 		}
 		//shadow rect
 		SDL_Rect rect;
@@ -428,6 +428,7 @@ void Game::generateHeader() {
 			
 		}else{
 			//NO PLAYER
+			char score[4];
 			sprintf(score, "XXX");
 			surfaceMessage = TTF_RenderText_Solid(fragileBombersFont, score, red);
 			copySurfaceToBackRenderer(surfaceMessage, vout_buf, i * 36 + offsetHeadPlayer, 2);
@@ -816,6 +817,12 @@ void Game::tick() {
 				players[i]->doSomething(playerBombeExplode);
 				if (players[i]->isAlive()) {
 					nbPlayerAlive++;
+				}else{
+					if(playerInformation[players[i]->getIndexPlayerForGame()][3] == 0){
+						//A player is detected dead update header ! 
+						playerInformation[players[i]->getIndexPlayerForGame()][3] = 0;
+						generateHeader();
+					}
 				}
 				if (!players[i]->walkOnWall()) {
 					if (players[i]->wantPutBombe()) {
