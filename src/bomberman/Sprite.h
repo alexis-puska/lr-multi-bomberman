@@ -9,6 +9,8 @@
 #ifndef __MYCLASS_SPRITE
 #define __MYCLASS_SPRITE
 
+#define nbShadowAreaSprite		4
+
 #define nbSpritePlayerX			9
 #define nbSpritePlayerY			7
 #define spritePlayerSizeWidth		30
@@ -78,6 +80,7 @@ class Sprite {
 		SDL_Surface* getMenuBackground();
 		Sprite();
 		~Sprite();
+		SDL_Surface* getShadowArea(int number);
 		SDL_Surface* getCursor(int pos);
 		SDL_Surface* getLevelPreview(int pos);
 		SDL_Surface* getBonus(int bonusNumber);
@@ -102,6 +105,7 @@ class Sprite {
 		Sprite(const Sprite&);
 		static Sprite m_instance;
 		void cropSurface();
+		void createShadowArea();
 		void cropPlayerSurface(SDL_Surface*, int offset);
 		void cropPreviewLevelSurface(SDL_Surface * surface);
 		void cropBombeSurface(SDL_Surface * surface);
@@ -143,7 +147,8 @@ class Sprite {
 		SDL_Surface *splashScreenSurface;
 		//background for menu
 		SDL_Surface *menuBackgroundSurface;
-
+		
+		SDL_Surface **shadowAreaSprite;
 		SDL_Surface **playerSprite;
 		SDL_Surface **louisSprite;
 		SDL_Surface **fireSprite;

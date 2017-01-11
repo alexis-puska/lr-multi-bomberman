@@ -23,6 +23,7 @@ Sprite Sprite::m_instance = Sprite();
 
 Sprite::Sprite() {
 	fprintf(stderr, "Init sprite system\n");
+	shadowAreaSprite = new SDL_Surface *[nbShadowAreaSprite];
 	playerSprite = new SDL_Surface *[nbSpritePlayerX * nbSpritePlayerY * nbColorPlayer * nbTypePlayer];
 	louisSprite = new SDL_Surface *[nbSpriteLouisX * nbSpriteLouisY * nbTypeLouis];
 	fireSprite = new SDL_Surface *[nbFireSpriteX * nbFireSpriteY];
@@ -39,6 +40,9 @@ Sprite::Sprite() {
 
 Sprite::~Sprite() {
 	fprintf(stderr, "close sprite system\n");
+	for (int i = 0; i < nbShadowAreaSprite; i++) {
+		SDL_FreeSurface(shadowAreaSprite[i]);
+	}
 	for (int i = 0; i < nbSpritePlayerX * nbSpritePlayerY * nbColorPlayer * nbTypePlayer; i++) {
 		SDL_FreeSurface(playerSprite[i]);
 	}
@@ -68,6 +72,7 @@ Sprite::~Sprite() {
 	}
 	SDL_FreeSurface(splashScreenSurface);
 	SDL_FreeSurface(menuBackgroundSurface);
+	free(shadowAreaSprite);
 	free(playerSprite);
 	free(louisSprite);
 	free(fireSprite);
@@ -429,6 +434,7 @@ SDL_Surface* Sprite::applyLouisColor(SDL_Surface * surface, int color) {
  * 
  ********************************************/
 void Sprite::cropSurface() {
+	createShadowArea();
 	cropPlayerSurface(IMG_Load(spriteBombermanPath), nbSpritePlayerX * nbSpritePlayerY * nbColorPlayer * 0);
 	cropPlayerSurface(IMG_Load(spriteBombermanCossakPath), nbSpritePlayerX * nbSpritePlayerY * nbColorPlayer * 1);
 	cropPlayerSurface(IMG_Load(spriteBombermanBarbarPath), nbSpritePlayerX * nbSpritePlayerY * nbColorPlayer * 2);
@@ -447,6 +453,23 @@ void Sprite::cropSurface() {
 	cropLouisSurface(IMG_Load(spriteLouisPath));
 	cropTrolleySurface(IMG_Load(spriteTrolleyPath));
 	cropSpaceShipSurface(IMG_Load(spriteSpaceShipPath));
+}
+
+void Sprite::createShadowArea(){
+	Uint32 rmask, gmask, bmask, amask;
+	amask = 0xff000000;
+	rmask = 0x00ff0000;
+	gmask = 0x0000ff00;
+	bmask = 0x000000ff;
+	//menu shadow surface
+	shadowAreaSprite[0] = SDL_CreateRGBSurface(0, 574,  27, 32, rmask, gmask, bmask, amask);
+	shadowAreaSprite[1] = SDL_CreateRGBSurface(0, 574, 100, 32, rmask, gmask, bmask, amask);
+	shadowAreaSprite[2] = SDL_CreateRGBSurface(0, 574, 150, 32, rmask, gmask, bmask, amask);
+	//header of game
+	shadowAreaSprite[3] = SDL_CreateRGBSurface(0,  32,  20, 32, rmask, gmask, bmask, amask);
+	for(int i = 0 ; i < nbShadowAreaSprite;i++){
+		SDL_FillRect(shadowAreaSprite[i], NULL, SDL_MapRGBA(shadowAreaSprite[i]->format, 0, 0, 0, 120));
+	}
 }
 
 void Sprite::cropLevelSurface(SDL_Surface * surface) {
@@ -812,4 +835,10 @@ SDL_Surface* Sprite::drawLouis(int louisType, int move, int pos){
 
 SDL_Surface* Sprite::drawLouisBurning(int type, int pos) {
 		return louisSprite[(nbSpriteLouisX * nbSpriteLouisY * type) + (4 * nbSpriteLouisX) + pos];
+}
+/****************
+* menu /header shadow area
+****************/
+SDL_Surface* Sprite::getShadowArea(int number){
+	return shadowAreaSprite[number];
 }
