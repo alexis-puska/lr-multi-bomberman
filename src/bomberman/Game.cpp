@@ -414,11 +414,7 @@ void Game::generateHeader() {
 		
 		if(playerInformation[i][0] != 2){
 			//FOR HUMAN PLAYER OR CPU
-			if(playerInformation[i][3] == 1){
-				SDL_BlitSurface(Sprite::Instance().getHappySprite(playerInformation[i][1], playerInformation[i][2]), NULL, vout_buf, &rect);
-			}else{
-				SDL_BlitSurface(Sprite::Instance().getCryingSprite(playerInformation[i][1], playerInformation[i][2]), NULL, vout_buf, &rect);
-			}
+			SDL_BlitSurface(Sprite::Instance().getHappySprite(playerInformation[i][1], playerInformation[i][2]), NULL, vout_buf, &rect);
 			//wrote number of victory
 			char score[3];
 			sprintf(score, "%i", playerInformation[i][4]);
@@ -820,7 +816,7 @@ void Game::tick() {
 				}else{
 					if(playerInformation[players[i]->getIndexPlayerForGame()][3] ==1){
 						playerInformation[players[i]->getIndexPlayerForGame()][3] = 0;
-						generateHeader();
+						updateHeaderPlayer(players[i]->getIndexPlayerForGame());
 					}
 				}
 				if (!players[i]->walkOnWall()) {
@@ -1045,3 +1041,39 @@ void Game::tick() {
 	}
 }
 
+
+
+void Game::updateHeaderPlayer(int i){
+		SDL_Color red = { 255, 0, 0 };
+	int offsetShadow = 2;
+	int offsetHeadPlayer = 4;
+	int offsetScore = 22;
+	if(i>=8){
+		offsetShadow += 64;
+		offsetHeadPlayer += 64;
+		offsetScore += 64;
+	}
+	//shadow rect
+	SDL_Rect rect;
+	rect.x = i * 36 + offsetShadow;
+	rect.y = 2;
+	rect.w = 32;
+	rect.h = 20;
+	
+	SDL_BlitSurface(Sprite::Instance().getBackground(), &rect, vout_buf, &rect);
+	
+	SDL_BlitSurface(Sprite::Instance().getShadowArea(3), NULL, vout_buf, &rect);
+	//copy mini head player
+	rect.x = i * 36 + offsetHeadPlayer;
+	rect.y = 4;
+	rect.w = 20;
+	rect.h = 20;
+	//FOR HUMAN PLAYER OR CPU
+	SDL_BlitSurface(Sprite::Instance().getCryingSprite(playerInformation[i][1], playerInformation[i][2]), NULL, vout_buf, &rect);
+	//wrote number of victory
+	char score[3];
+	sprintf(score, "%i", playerInformation[i][4]);
+	SDL_Surface * surfaceMessage = TTF_RenderText_Solid(fragileBombersFont, score, red);
+	copySurfaceToBackRenderer(surfaceMessage, vout_buf, i * 36 + offsetScore, 2);
+	SDL_FreeSurface(surfaceMessage);
+}

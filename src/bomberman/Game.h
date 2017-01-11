@@ -144,6 +144,7 @@ class Game {
 		void generateHeader();
 		void updateTimeDisplay();
 		void drawResultOfGame();
+		void updateHeaderPlayer(int idx);
 
 };
 #endif
