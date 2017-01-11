@@ -505,7 +505,7 @@ void Game::tick() {
 				for (unsigned int i = 0; i < players.size(); i++) {
 					if (players[i]->isAlive()) {
 						//update score
-						playerInformation[players[i]->getIndexPlayerForGame()][4]++;
+						playerInformation[players[i]->getPlayerNumber()][4]++;
 						players[i]->winTheGame();
 					}
 				}
@@ -814,9 +814,9 @@ void Game::tick() {
 				if (players[i]->isAlive()) {
 					nbPlayerAlive++;
 				}else{
-					if(playerInformation[players[i]->getIndexPlayerForGame()][3] ==1){
-						playerInformation[players[i]->getIndexPlayerForGame()][3] = 0;
-						updateHeaderPlayer(players[i]->getIndexPlayerForGame());
+					if(playerInformation[players[i]->getPlayerNumber()][3] ==1){
+						playerInformation[players[i]->getPlayerNumber()][3] = 0;
+						updateHeaderPlayer(players[i]->getIndexPlayerForGame(), players[i]->getPlayerNumber());
 					}
 				}
 				if (!players[i]->walkOnWall()) {
@@ -849,7 +849,7 @@ void Game::tick() {
 				for (unsigned int i = 0; i < players.size(); i++) {
 					if (players[i]->isAlive()) {
 						//update score
-						playerInformation[players[i]->getIndexPlayerForGame()][4]++;
+						playerInformation[players[i]->getPlayerNumber()][4]++;
 						players[i]->winTheGame();
 					}
 				}
@@ -1043,19 +1043,19 @@ void Game::tick() {
 
 
 
-void Game::updateHeaderPlayer(int i){
+void Game::updateHeaderPlayer(int i, int playerNumber){
 		SDL_Color red = { 255, 0, 0 };
 	int offsetShadow = 2;
 	int offsetHeadPlayer = 4;
 	int offsetScore = 22;
-	if(i>=8){
+	if(playerNumber>=8){
 		offsetShadow += 64;
 		offsetHeadPlayer += 64;
 		offsetScore += 64;
 	}
 	//shadow rect
 	SDL_Rect rect;
-	rect.x = i * 36 + offsetShadow;
+	rect.x = playerNumber * 36 + offsetShadow;
 	rect.y = 2;
 	rect.w = 32;
 	rect.h = 20;
@@ -1064,16 +1064,16 @@ void Game::updateHeaderPlayer(int i){
 	
 	SDL_BlitSurface(Sprite::Instance().getShadowArea(3), NULL, vout_buf, &rect);
 	//copy mini head player
-	rect.x = i * 36 + offsetHeadPlayer;
+	rect.x = playerNumber * 36 + offsetHeadPlayer;
 	rect.y = 4;
 	rect.w = 20;
 	rect.h = 20;
 	//FOR HUMAN PLAYER OR CPU
-	SDL_BlitSurface(Sprite::Instance().getCryingSprite(playerInformation[i][1], playerInformation[i][2]), NULL, vout_buf, &rect);
+	SDL_BlitSurface(Sprite::Instance().getCryingSprite(playerInformation[playerNumber][1], playerInformation[playerNumber][2]), NULL, vout_buf, &rect);
 	//wrote number of victory
 	char score[3];
-	sprintf(score, "%i", playerInformation[i][4]);
+	sprintf(score, "%i", playerInformation[playerNumber][4]);
 	SDL_Surface * surfaceMessage = TTF_RenderText_Solid(fragileBombersFont, score, red);
-	copySurfaceToBackRenderer(surfaceMessage, vout_buf, i * 36 + offsetScore, 2);
+	copySurfaceToBackRenderer(surfaceMessage, vout_buf, playerNumber * 36 + offsetScore, 2);
 	SDL_FreeSurface(surfaceMessage);
 }
