@@ -818,8 +818,7 @@ void Game::tick() {
 				if (players[i]->isAlive()) {
 					nbPlayerAlive++;
 				}else{
-					if(playerInformation[players[i]->getIndexPlayerForGame()][3] == 0){
-						//A player is detected dead update header ! 
+					if(playerInformation[players[i]->getIndexPlayerForGame()][3] ==1){
 						playerInformation[players[i]->getIndexPlayerForGame()][3] = 0;
 						generateHeader();
 					}
