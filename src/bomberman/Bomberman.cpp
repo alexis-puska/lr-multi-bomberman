@@ -3,17 +3,17 @@
 #include <time.h>
 
 Bomberman::Bomberman(SDL_Surface * vout_bufLibretro) {
+	//Init TTF feature
+	TTF_Init();
 	Sprite::Instance();
 	Sound::Instance();
 	Sound::Instance().startMenuMusique();
 
-	//Init TTF feature
-	TTF_Init();
-
+	
 	srand (time(NULL));
 
 	//color mask
-Uint32 	rmask, gmask, bmask, amask;
+	Uint32 	rmask, gmask, bmask, amask;
 	rmask = 0x00ff0000;
 	gmask = 0x0000ff00;
 	bmask = 0x000000ff;
@@ -216,15 +216,12 @@ void Bomberman::copySurfaceToBackRenderer(SDL_Surface * src, SDL_Surface * dest,
  *
  */
 void Bomberman::drawPlayerTypeMenu() {
-	Uint32 rmask, gmask, bmask, amask;
-	rmask = 0x00ff0000;
-	gmask = 0x0000ff00;
-	bmask = 0x000000ff;
-	amask = 0xff000000;
+
 
 	//fprintf(stderr, "%d %d\n", refreshBuffer , keychange[0]);
 	if (refreshBuffer || keychange[0]) {
 		SDL_BlitSurface(Sprite::Instance().getMenuBackground(), NULL, screenBuffer, NULL);
+		Sprite::Instance().drawText(screenBuffer,10,10,"TEXT");
 		
 		copySurfaceToBackRenderer(Sprite::Instance().getShadowArea(0), screenBuffer, 33, 150);
 		copySurfaceToBackRenderer(Sprite::Instance().getShadowArea(2), screenBuffer, 33, 183);
@@ -333,11 +330,7 @@ void Bomberman::drawPlayerTypeMenu() {
 void Bomberman::drawPlayerSpriteMenu() {
 
 	if (refreshBuffer || anyPlayerkeychange) {
-		Uint32 rmask, gmask, bmask, amask;
-		rmask = 0x00ff0000;
-		gmask = 0x0000ff00;
-		bmask = 0x000000ff;
-		amask = 0xff000000;
+
 
 		SDL_BlitSurface(Sprite::Instance().getMenuBackground(), NULL, screenBuffer, NULL);
 		copySurfaceToBackRenderer(Sprite::Instance().getShadowArea(0), screenBuffer, 33, 150);
@@ -409,11 +402,7 @@ void Bomberman::drawPlayerSpriteMenu() {
  */
 void Bomberman::drawGameOptionMenu() {
 	if (refreshBuffer || keychange[0]) {
-		Uint32 rmask, gmask, bmask, amask;
-		rmask = 0x00ff0000;
-		gmask = 0x0000ff00;
-		bmask = 0x000000ff;
-		amask = 0xff000000;
+
 
 		if (previousPlayerKeystate[0] & keyPadRight && keychange[0]) {
 			Sound::Instance().playBipSound();
@@ -555,11 +544,7 @@ void Bomberman::drawGameOptionMenu() {
  */
 void Bomberman::drawLevelSelectionMenu() {
 	if (refreshBuffer || keychange[0]) {
-		Uint32 rmask, gmask, bmask, amask;
-		rmask = 0x00ff0000;
-		gmask = 0x0000ff00;
-		bmask = 0x000000ff;
-		amask = 0xff000000;
+
 		SDL_BlitSurface(Sprite::Instance().getMenuBackground(), NULL, screenBuffer, NULL);
 		
 		copySurfaceToBackRenderer(Sprite::Instance().getShadowArea(0), screenBuffer, 33, 150);

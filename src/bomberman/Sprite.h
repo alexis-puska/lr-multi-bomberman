@@ -1,6 +1,7 @@
 #ifndef IS_OSX
 #include <SDL2/SDL_image.h>
 #include <SDL2/SDL_ttf.h>
+
 #else
 #include <SDL2_image/SDL_image.h>
 #include <SDL2_ttf/SDL_ttf.h>
@@ -74,6 +75,10 @@ enum playerMove {
 	none = -1, down = 0, up = 1, left = 2, right = 3
 };
 
+enum textColor {
+	red = 0, blue = 1, green = 2
+};
+
 class Sprite {
 
 	public:
@@ -103,6 +108,8 @@ class Sprite {
 		SDL_Surface* drawLouis(int louisType, int move, int pos);
 		SDL_Surface* getHappySprite(int type, int color);
 		SDL_Surface* getCryingSprite(int type, int color);
+		//DRAW TEXT
+		void drawText(SDL_Surface* surfaceToDraw, int x, int y, const char* text);
 		
 		
 	private:
@@ -128,10 +135,7 @@ class Sprite {
 		 */
 		void getColorInSurface(SDL_Surface* surface);
 		
-		/*
-		*	DRAW TEXT
-		*/
-		void drawText(SDL_Surface* surfaceToDraw, int x, int y, const char* text);
+		
 		
 		/*
 		 * COLOR FUNCTION

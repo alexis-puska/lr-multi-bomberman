@@ -20,9 +20,15 @@ const static char *spriteLevelPath = "./resources/sprite/level/AllLevel.png";
 const static char *spriteTrolleyPath = "./resources/sprite/other/trolley.png";
 const static char *spriteSpaceShipPath = "./resources/sprite/other/spaceShip.png";
 
+const static char *fontPath = "./resources/font/fragile_bombers.ttf";
+const static SDL_Color greenColor = { 0, 255, 0 };
+const static SDL_Color redColor = { 255, 0, 0 };
+const static SDL_Color blueColor = { 0, 140, 255 }; 
+
 Sprite Sprite::m_instance = Sprite();
 
 Sprite::Sprite() {
+	TTF_Init();
 	fprintf(stderr, "Init sprite system\n");
 	shadowAreaSprite = new SDL_Surface *[nbShadowAreaSprite];
 	playerSprite = new SDL_Surface *[nbSpritePlayerX * nbSpritePlayerY * nbColorPlayer * nbTypePlayer];
@@ -38,9 +44,8 @@ Sprite::Sprite() {
 	menuBackgroundSurface = IMG_Load(menuBackground);
 	backgroundSurface = IMG_Load(background);
 	cropSurface();
-	
 	fprintf(stderr, "init font text system\n");
-	font = TTF_OpenFont("./resources/font/fragile_bombers.ttf", 36);
+	font = TTF_OpenFont(fontPath, 16);
 }
 
 Sprite::~Sprite() {
@@ -760,7 +765,7 @@ void Sprite::cropPlayerSurface(SDL_Surface* surface, int offset) {
  * 
  ********************************************/
 void Sprite::drawText(SDL_Surface* surfaceToDraw, int x, int y, const char* text){
-	SDL_Color color = {0,255,0};
+	SDL_Color color = {255,255,255};
 	SDL_Surface *text_surface = TTF_RenderText_Solid(font, text, color);
 	if (text_surface != NULL){
 		SDL_Rect srcRect;
