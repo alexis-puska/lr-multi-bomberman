@@ -6,6 +6,7 @@
 #else
 #include <SDL2_image/SDL_image.h>
 #endif
+#include "Bomberman.h"
 
 #ifdef __cplusplus
 extern "C" {

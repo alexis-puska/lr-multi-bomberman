@@ -1,4 +1,3 @@
-#include "Bomberman.h"
 #include "MyWrapper.h"
 
 extern "C" {

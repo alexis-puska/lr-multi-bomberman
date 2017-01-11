@@ -1,6 +1,6 @@
-#include "Bomberman.h"
-
 #include <time.h>
+
+#include "Bomberman.h"
 
 const static char *BombermanSprite = "./resources/sprite/characters/AllBomberman.png";
 const static char *BombermanSpriteCossak = "./resources/sprite/characters/AllBombermanCossak.png";

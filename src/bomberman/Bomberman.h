@@ -1,23 +1,19 @@
 #include <SDL2/SDL.h>
-
 #ifndef IS_OSX
 #include <SDL2/SDL_image.h>
 #include <SDL2/SDL_ttf.h>
-#include <SDL2/SDL_thread.h>
-#include <SDL2/SDL_mixer.h>
-
 #else
 #include <SDL2_image/SDL_image.h>
 #include <SDL2_ttf/SDL_ttf.h>
-#include <SDL2/SDL_thread.h>
-#include <SDL2_mixer/SDL_mixer.h>
 #endif
 
 #include <stdio.h>
+
 #include "Game.h"
 #include "Cursor.h"
 #include "Sprite.h"
 #include "Sound.h"
+
 
 enum bombermanStepEnum {
 	home = 0,					//spashscreen
