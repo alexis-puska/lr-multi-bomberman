@@ -1,7 +1,9 @@
 #ifndef IS_OSX
 #include <SDL2/SDL_image.h>
+#include <SDL2/SDL_ttf.h>
 #else
 #include <SDL2_image/SDL_image.h>
+#include <SDL2_ttf/SDL_ttf.h>
 #endif
 
 #include <stdio.h>
@@ -125,7 +127,12 @@ class Sprite {
 		 * INFORMATION FUNCTIN
 		 */
 		void getColorInSurface(SDL_Surface* surface);
-
+		
+		/*
+		*	DRAW TEXT
+		*/
+		void drawText(SDL_Surface* surfaceToDraw, int x, int y, const char* text);
+		
 		/*
 		 * COLOR FUNCTION
 		 */
@@ -163,5 +170,10 @@ class Sprite {
 		SDL_Surface **levelSprite;
 		SDL_Surface **trolleySprite;
 		SDL_Surface **spaceShipSprite;
+		
+		/*
+		 *	FONT
+		 */
+		 TTF_Font* font;
 };
 #endif

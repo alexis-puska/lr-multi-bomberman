@@ -38,6 +38,9 @@ Sprite::Sprite() {
 	menuBackgroundSurface = IMG_Load(menuBackground);
 	backgroundSurface = IMG_Load(background);
 	cropSurface();
+	
+	fprintf(stderr, "init font text system\n");
+	font = TTF_OpenFont("./resources/font/fragile_bombers.ttf", 36);
 }
 
 Sprite::~Sprite() {
@@ -85,6 +88,9 @@ Sprite::~Sprite() {
 	free(levelSprite);
 	free(trolleySprite);
 	free(spaceShipSprite);
+	fprintf(stderr, "close font text system\n");
+	TTF_CloseFont(font);
+	TTF_Quit();
 }
 
 Sprite& Sprite::Instance() {
@@ -746,6 +752,30 @@ void Sprite::cropPlayerSurface(SDL_Surface* surface, int offset) {
 	}
 
 	SDL_FreeSurface(surface);
+}
+
+/********************************************
+ * 
+ *		DRAW TEXT FUNCTION
+ * 
+ ********************************************/
+void Sprite::drawText(SDL_Surface* surfaceToDraw, int x, int y, const char* text){
+	SDL_Color color = {0,255,0};
+	SDL_Surface *text_surface = TTF_RenderText_Solid(font, text, color);
+	if (text_surface != NULL){
+		SDL_Rect srcRect;
+		srcRect.x = 0;
+		srcRect.y = 0;
+		srcRect.w = text_surface->w;
+		srcRect.h = text_surface->h;
+		SDL_Rect dstRect;
+		dstRect.x = x;
+		dstRect.y = y;
+		dstRect.w = text_surface->w;
+		dstRect.h = text_surface->h;
+		SDL_BlitSurface(text_surface, srcRect, surfaceToDraw, dstRect);
+		SDL_FreeSurface(text_surface);
+	}
 }
 
 /********************************************
