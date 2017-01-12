@@ -765,7 +765,8 @@ void Sprite::cropPlayerSurface(SDL_Surface* surface, int offset) {
  * 
  ********************************************/
 void Sprite::drawText(SDL_Surface* surfaceToDraw, int x, int y, const char* text, int color, bool alignCenter) {
-	SDL_Surface *text_surface = text_surface = TTF_RenderText_Solid(font, text, getSDL_Color(color));
+	SDL_Color colorSelected = getSDL_Color(color);
+	SDL_Surface *text_surface = text_surface = TTF_RenderText_Solid(font, text, colorSelected);
 	SDL_Rect srcRect;
 	srcRect.x = 0;
 	srcRect.y = 0;
