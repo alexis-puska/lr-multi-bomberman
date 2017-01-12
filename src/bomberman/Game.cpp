@@ -379,7 +379,7 @@ void Game::generateHeader() {
 			//wrote number of victory
 			char score[3];
 			sprintf(score, "%i", playerInformation[i][4]);
-			Sprite::Instance().drawText(vout_buf, i * 36 + offsetScore, 2, score, red, false);
+			Sprite::Instance().drawText(vout_buf, i * 36 + offsetScore, 2, score, green, false);
 		}else{
 			//NO PLAYER
 			char score[4];
