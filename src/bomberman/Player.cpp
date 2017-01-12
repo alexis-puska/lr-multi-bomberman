@@ -89,7 +89,7 @@ Player::Player(unsigned short * in_keystate, bool isACpuPlayer, int indexSprite,
 }
 
 Player::~Player() {
-	free(in_keystate);
+	delete in_keystate;
 	tab = NULL;
 	tabBonus = NULL;
 	tabPlayerCoord = NULL;

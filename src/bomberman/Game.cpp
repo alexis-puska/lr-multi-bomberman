@@ -45,15 +45,6 @@ static int metronome(void* data) {
 
 Game::Game() {
 	gameState = gameWait;
-	//declarativ color mask, used for create a RGB surface
-	amask = 0xff000000;
-	rmask = 0x00ff0000;
-	gmask = 0x0000ff00;
-	bmask = 0x000000ff;
-	playerBombeExplode = SDL_CreateRGBSurface(0, 630, 336, 32, rmask, gmask, bmask, amask);
-	screenBuffer = SDL_CreateRGBSurface(0, 630, 336, 32, rmask, gmask, bmask, amask);
-	overlay = SDL_CreateRGBSurface(0, 630, 336, 32, rmask, gmask, bmask, amask);
-	overlayResult = SDL_CreateRGBSurface(0, 250, 200, 32, rmask, gmask, bmask, amask);
 	isThreadAlive = false;
 	configured = false;
 	requestStopGame = false;
@@ -81,6 +72,7 @@ Game::Game(int levelIndex, int playerInformationParam[16][2], int gameOption[4],
 	rmask = 0x00ff0000;
 	gmask = 0x0000ff00;
 	bmask = 0x000000ff;
+
 	// create overlay for pause / exit game
 	overlay = SDL_CreateRGBSurface(0, 630, 336, 32, rmask, gmask, bmask, amask);
 	SDL_FillRect(overlay, NULL, SDL_MapRGBA(overlay->format, 0, 0, 0, 120));
@@ -215,12 +207,12 @@ Game::~Game() {
 	burnWalls.clear();
 	brains.clear();
 
-	free(grid);
-	free(tab);
-	free(tabBonus);
-	free(tabPlayerCoord);
+	delete grid;
+	delete tab;
+	delete tabBonus;
+	delete tabPlayerCoord;
 	in_keystate = NULL;
-	free(in_keystate_cpu);
+	delete in_keystate_cpu;
 
 	vout_buf = NULL;
 	SDL_FreeSurface(overlay);

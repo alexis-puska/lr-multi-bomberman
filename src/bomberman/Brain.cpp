@@ -34,8 +34,8 @@ Brain::Brain(unsigned short * keystate, int tab[sizeX * sizeY], float * tabCord,
 	srand (time(NULL));}
 
 Brain::~Brain() {
-	free(astar);
-	free(bfs);
+	delete astar;
+	delete bfs;
 	keystate = NULL;
 	tab = NULL;
 	tabCord = NULL;

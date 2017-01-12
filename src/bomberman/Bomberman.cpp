@@ -46,7 +46,7 @@ Bomberman::~Bomberman() {
 				game->exitGame();
 			}
 		}
-		free(game);
+		delete game;
 	}
 }
 
@@ -170,7 +170,7 @@ void Bomberman::tick(unsigned short in_keystateLibretro[16]) {
 	} else {
 		if (game->isRequestStopGame()) {
 			game->exitGame();
-			free(game);
+			delete game;
 			game = NULL;
 			cursorPosition = levelIndex;
 			currentStep = levelSelectionMenu;
