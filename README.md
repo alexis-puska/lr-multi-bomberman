@@ -108,7 +108,6 @@ After this step lr-multi-bomberman is installed, compile, and integrated in emul
 - level variante
 - menu to set number of bonus
 - Game type bad bomber
-- Louis burning animation
 - louis type
 - Net (multiplayer over internet)
 - Power(glove)
