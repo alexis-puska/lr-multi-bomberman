@@ -15,6 +15,7 @@
 #include "Brain.h"
 #include "Sound.h"
 #include "BurnWall.h"
+#include "BurnLouis.h"
 #include "SuddenDeathAnimation.h"
 #include "Sprite.h"
 
@@ -122,6 +123,7 @@ class Game {
 		std::vector<BurnWall *> burnWalls;
 		std::vector<SuddenDeathAnimation *> suddenDeathAnimations;
 		std::vector<Brain *> brains;
+		std::vector<BurnLouis *> louisBurns;
 
 		/*
 		 *	GRID PART

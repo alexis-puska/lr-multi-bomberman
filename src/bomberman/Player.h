@@ -10,6 +10,7 @@
 #include "Bombe.h"
 #include "Grid.h"
 #include "Sprite.h"
+#include "BurnLouis.h"
 
 #define sizeX 35
 #define sizeY 21
@@ -27,12 +28,14 @@ class Player {
 		 * Game Function
 		 */
 		Bombe * addBombe();
+		BurnLouis* louisBurnAnimation();
 
 		bool wantPutBombe();
 		bool triggerPowerBombe();
 		bool walkOnWall();
 		bool isAlive();
 		bool hasKickPower();
+		bool isLouisBurn();
 
 		void winTheGame();
 		void ABombeExplode();
@@ -97,6 +100,7 @@ class Player {
 		int nbFrameForAnimation;
 		int color;
 		int louisType;
+		bool louisBurn;
 
 		//pointer to the grid element;
 		int * tab;
@@ -115,7 +119,6 @@ class Player {
 		void drawWithBombe(SDL_Surface * surfaceToDraw, bool animate);
 		void drawThrowBombe(SDL_Surface * surfaceToDraw, bool animate);
 		void drawBurning(SDL_Surface * surfaceToDraw, bool animate);
-		void drawLouisBurning(SDL_Surface * surfaceToDraw, bool animate);
 		void drawVictory(SDL_Surface * surfaceToDraw, bool animate);
 		void drawCrying(SDL_Surface * surfaceToDraw, bool animate);
 

@@ -722,6 +722,21 @@ void Game::tick() {
 					bombes.erase(bombes.begin() + i);
 				}
 			}
+			
+			
+			/*
+			 *
+			 *	GAME PART : BURNIN LOUIS ANIMATION
+			 *
+			 */
+			for (unsigned int i = 0; i < louisBurns.size(); i++) {
+				louisBurns[i]->tick(playerBombeExplode);
+				if (louisBurns[i]->canBeDelete()) {
+					louisBurns.erase(louisBurns.begin() + i);
+				}
+			}
+			
+			
 			/*
 			 *
 			 *	GAME PART : EXPLOSION
@@ -774,6 +789,9 @@ void Game::tick() {
 					if (players[i]->wantPutBombe()) {
 						bombes.push_back(players[i]->addBombe());
 						players[i]->ABombeIsSet();
+					}
+					if (player[i]->isLouisBurn())
+						louisBurns.push_back(players[i]->louisBurnAnimation());
 					}
 				}
 				if (players[i]->triggerPowerBombe()) {

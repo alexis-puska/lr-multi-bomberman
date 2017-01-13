@@ -37,6 +37,7 @@ OBJS += src/bomberman/Player.o
 OBJS += src/bomberman/Bombe.o
 OBJS += src/bomberman/Explosion.o
 OBJS += src/bomberman/BurnWall.o
+OBJS += src/bomberman/BurnLouis.o
 OBJS += src/bomberman/Cursor.o
 OBJS += src/bomberman/SuddenDeathAnimation.o
 OBJS += src/bomberman/Brain.o
