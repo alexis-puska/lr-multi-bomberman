@@ -724,17 +724,7 @@ void Game::tick() {
 			}
 			
 			
-			/*
-			 *
-			 *	GAME PART : BURNIN LOUIS ANIMATION
-			 *
-			 */
-			for (unsigned int i = 0; i < louisBurns.size(); i++) {
-				louisBurns[i]->tick(playerBombeExplode);
-				if (louisBurns[i]->canBeDelete()) {
-					louisBurns.erase(louisBurns.begin() + i);
-				}
-			}
+			
 			
 			
 			/*
@@ -824,6 +814,18 @@ void Game::tick() {
 				}
 				gameState = generateResult;
 			}
+			
+			/*
+			 *
+			 *	GAME PART : BURNIN LOUIS ANIMATION
+			 *
+			 */
+			for (unsigned int i = 0; i < louisBurns.size(); i++) {
+				louisBurns[i]->tick(playerBombeExplode);
+				if (louisBurns[i]->canBeDelete()) {
+					louisBurns.erase(louisBurns.begin() + i);
+				}
+			}
 
 			/*
 			 *
@@ -899,6 +901,7 @@ void Game::tick() {
 					}
 
 				}
+				
 //				purge old animation
 				for (unsigned int i = 0; i < suddenDeathAnimations.size(); i++) {
 					if (suddenDeathAnimations[i]->canBeDeleted()) {

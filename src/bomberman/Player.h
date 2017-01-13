@@ -121,6 +121,7 @@ class Player {
 		void drawBurning(SDL_Surface * surfaceToDraw, bool animate);
 		void drawVictory(SDL_Surface * surfaceToDraw, bool animate);
 		void drawCrying(SDL_Surface * surfaceToDraw, bool animate);
+		void drawVictoryOnLouis(SDL_Surface * surfaceToDraw, bool animate);
 
 		//malus function
 		void getAMalusBonus();

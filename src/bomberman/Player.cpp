@@ -33,11 +33,11 @@ enum playerSprite {
 };
 
 enum playerStateEnum {
-	normal = 0, onLouis = 1, carryBombe = 2, throwBombe = 3, burning = 4, victory = 5, crying = 6, dead = 7
+	normal = 0, onLouis = 1, carryBombe = 2, throwBombe = 3, burning = 4, victory = 5, victoryOnLouis = 6, crying = 7, dead = 8
 };
 
 enum nbFrameAnimationEnum {
-	animationNormal = 4, animationOnLouis = 4, animationCarryBombe = 4, animationThrowBombe = 2, animationBurning = 7, animationVictory = 4, animationCrying = 4
+	animationNormal = 4, animationOnLouis = 4, animationCarryBombe = 4, animationThrowBombe = 2, animationBurning = 7, animationVictory = 4, animationCrying = 4, animationVictoryOnLouis = 3
 };
 
 enum louisTypeEnum {
@@ -340,6 +340,58 @@ void Player::drawVictory(SDL_Surface * surfaceToDraw, bool animate) {
 	SDL_BlitSurface(Sprite::Instance().drawVictory(characterSpriteIndex, color, offsetSpriteAnimation), &srcTextureRect, surfaceToDraw, &destTextureRect);
 }
 
+void Player::drawVictoryOnLouis(SDL_Surface * surfaceToDraw, bool animate) {
+	Uint32 rmask, gmask, bmask, amask;
+	amask = 0xff000000;
+	rmask = 0x00ff0000;
+	gmask = 0x0000ff00;
+	bmask = 0x000000ff;
+	nbFrameForAnimation = animationOnLouis;
+	SDL_Rect srcTextureRect;
+	SDL_Rect destTextureRect;
+	destTextureRect.x = (posX * blockSizeX) - (sprite_sizeW / 2);
+	destTextureRect.y = (posY * blockSizeY) - (sprite_sizeH - 7);
+	destTextureRect.w = sprite_sizeW;
+	destTextureRect.h = sprite_sizeH;
+	srcTextureRect.x = 0;
+	srcTextureRect.y = 0;
+	srcTextureRect.w = sprite_sizeW;
+	srcTextureRect.h = sprite_sizeH;
+	if (animate) {
+		if (frameCounter > nbFrame) {
+			frameCounter = 0;
+			offsetSprite++;
+			if (offsetSprite >= nbFrameForAnimation) {
+				offsetSprite = 0;
+			}
+		}
+		frameCounter++;
+	} else {
+		offsetSprite = 0;
+	}
+	int offsetSpriteAnimation = 0;
+	switch (offsetSprite) {
+		case 0:
+			offsetSpriteAnimation = 1;
+			break;
+		case 1:
+			offsetSpriteAnimation = 0;
+			break;
+		case 2:
+			offsetSpriteAnimation = 1;
+			break;
+		case 3:
+			offsetSpriteAnimation = 2;
+			break;
+	}
+	louisMergebuffer = SDL_CreateRGBSurface(0, sprite_sizeW, sprite_sizeH, 32, rmask, gmask, bmask, amask);
+		SDL_BlitSurface(Sprite::Instance().drawPlayerVictoryOnLouis(characterSpriteIndex, color), &srcTextureRect, louisMergebuffer, &srcTextureRect);
+		SDL_BlitSurface(Sprite::Instance().drawVictoryOnLouis(louisType, offsetSpriteAnimation), &srcTextureRect, louisMergebuffer, &srcTextureRect);
+		SDL_BlitSurface(louisMergebuffer, &srcTextureRect, surfaceToDraw, &destTextureRect);
+	SDL_FreeSurface(louisMergebuffer);
+}
+
+
 void Player::drawCrying(SDL_Surface * surfaceToDraw, bool animate) {
 	nbFrameForAnimation = animationCrying;
 	SDL_Rect srcTextureRect;
@@ -630,6 +682,9 @@ void Player::doSomething(SDL_Surface * surfaceToDraw) {
 		case victory:
 			drawVictory(surfaceToDraw, true);
 			break;
+		case victoryOnLouis:
+			drawVictoryOnLouis(surfaceToDraw, true);
+			break;
 		case crying:
 			drawCrying(surfaceToDraw, animate);
 			break;
@@ -657,7 +712,7 @@ void Player::doSomething(SDL_Surface * surfaceToDraw) {
 }
 
 BurnLouis* Player::louisBurnAnimation(){
-	return new BurnLouis((int) floor(posX), (int) floor(posY));
+	return new BurnLouis(posX, posY);
 }
 
 bool Player::isLouisBurn(){
@@ -746,7 +801,11 @@ bool Player::isAlive() {
 }
 
 void Player::winTheGame() {
-	playerState = victory;
+	if(playerState == onLouis){
+		playerState = victoryOnLouis;
+	}else{
+		playerState = victory;
+	}
 }
 
 void Player::foundABonus(int bonusIndex) {

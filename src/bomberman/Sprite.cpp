@@ -882,6 +882,10 @@ SDL_Surface* Sprite::drawVictory(int type, int color, int pos) {
 	return playerSprite[calcStartIndexPlayer(type, color) + (nbSpritePlayerX * 4) + pos];
 }
 
+SDL_Surface* Sprite::drawPlayerVictoryOnLouis(int type, int color) {
+	return playerSprite[calcStartIndexPlayer(type, color) + (nbSpritePlayerX * 4) + 4];
+}
+
 SDL_Surface* Sprite::drawCrying(int type, int color, int pos) {
 	return playerSprite[calcStartIndexPlayer(type, color) + (nbSpritePlayerX * 5) + pos];
 }
@@ -902,6 +906,10 @@ SDL_Surface* Sprite::drawLouis(int louisType, int move, int pos) {
 
 SDL_Surface* Sprite::drawLouisBurning(int type, int pos) {
 	return louisSprite[(nbSpriteLouisX * nbSpriteLouisY * type) + (4 * nbSpriteLouisX) + pos];
+}
+
+SDL_Surface* Sprite::drawVictoryOnLouis(int type, int pos) {
+	return louisSprite[(nbSpriteLouisX * nbSpriteLouisY * type) + (4 * nbSpriteLouisX) + 4 + pos];
 }
 /****************
  * menu /header shadow area

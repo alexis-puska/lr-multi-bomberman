@@ -106,8 +106,10 @@ class Sprite {
 		SDL_Surface* drawBurning(int type, int color, int pos);
 		SDL_Surface* drawLouisBurning(int type, int pos);
 		SDL_Surface* drawVictory(int type, int color, int pos);
+		SDL_Surface* drawPlayerVictoryOnLouis(int type, int color);
 		SDL_Surface* drawCrying(int type, int color, int pos);
 		SDL_Surface* drawLouis(int louisType, int move, int pos);
+		SDL_Surface* drawVictoryOnLouis(int type, int pos);
 		SDL_Surface* getHappySprite(int type, int color);
 		SDL_Surface* getCryingSprite(int type, int color);
 		/*

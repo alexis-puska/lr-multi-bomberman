@@ -2,7 +2,7 @@
 
 #define nbFrame 4
 
-BurnLouis::BurnLouis(int posX, int posY) {
+BurnLouis::BurnLouis(float posX, float posY) {
 	this->posX = posX;
 	this->posY = posY;
 	frameCounter = 0;

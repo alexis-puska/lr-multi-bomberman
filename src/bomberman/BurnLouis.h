@@ -17,14 +17,14 @@
 class BurnLouis {
 
 	public:
-		BurnLouis(int posX, int posY);
+		BurnLouis(float posX, float posY);
 		~BurnLouis();
 		void tick(SDL_Surface * surfaceToDraw);
 		bool canBeDelete();
 
 	private:
-		int posX;
-		int posY;
+		float posX;
+		float posY;
 		bool deleteAnimation;
 
 		//for animation
