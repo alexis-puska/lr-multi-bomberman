@@ -101,16 +101,19 @@ After this step lr-multi-bomberman is installed, compile, and integrated in emul
 ===============================
 
 **Next step :**
-- Artificial interlligence (current work)
-- refactoring of code (change size of map for future pirate map, change the level structure definition for variante / bonus per level / teleporter)
-- Teleporter
-- other level design (pirates, ring)
-- level variante
-- menu to set number of bonus
-- Game type bad bomber
-- louis type
-- Net (multiplayer over internet)
-- Power(glove)
+
+|description								|wait|in progress|done|
+|-------------------------------------------|:--:|:---------:|:--:|
+|Artificial interlligence 					|X   |           |    |
+|refactoring of code						|    |X          |    |
+|Teleporter									|X   |           |    |
+|other level design (pirates, ring)			|X   |           |    |
+|level variante								|X   |X          |    |
+|menu to set number of bonus				|X   |           |    |
+|Game type bad bomber						|X   |           |    |
+|Louis type									|    |           |X   |
+|Net (multiplayer over internet)			|X   |           |    |
+|Power(glove)								|X   |           |    |
 
 
 convoyeur (3 * 8)
