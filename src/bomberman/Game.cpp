@@ -790,7 +790,7 @@ void Game::tick() {
 						bombes.push_back(players[i]->addBombe());
 						players[i]->ABombeIsSet();
 					}
-					if (player[i]->isLouisBurn())
+					if (players[i]->isLouisBurn()){
 						louisBurns.push_back(players[i]->louisBurnAnimation());
 					}
 				}

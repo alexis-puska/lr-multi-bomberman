@@ -33,5 +33,5 @@ void BurnLouis::tick(SDL_Surface * surfaceToDraw) {
 		}
 	}
 	frameCounter++;
-	SDL_BlitSurface(Sprite::Instance().drawLouisBurning(0, offsetSprite, levelIndex), NULL, surfaceToDraw, &destTextureRect);
+	SDL_BlitSurface(Sprite::Instance().drawLouisBurning(0, offsetSprite), NULL, surfaceToDraw, &destTextureRect);
 }
