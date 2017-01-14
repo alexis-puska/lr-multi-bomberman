@@ -356,15 +356,15 @@ struct Variante{
 
 typedef Variante Variante;
 
-struct Level{
+struct LevelStruct{
 	char nom[20];
 	int a;
 	Variante var[4];	
 };
 
-typedef Level Level;
+typedef LevelStruct LevelStruct;
 
-const Level test[10]=
+const LevelStruct test[10]=
 {
 	{
 		"Blockbuster",1,

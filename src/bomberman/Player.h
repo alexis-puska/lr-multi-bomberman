@@ -9,8 +9,8 @@
 
 #include "Bombe.h"
 #include "Grid.h"
-#include "Sprite.h"
-#include "BurnLouis.h"
+#include "utils/Sprite.h"
+#include "animation/BurnLouis.h"
 
 #define sizeX 35
 #define sizeY 21

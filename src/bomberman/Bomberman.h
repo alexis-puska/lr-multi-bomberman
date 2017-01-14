@@ -8,9 +8,10 @@
 #include <stdio.h>
 
 #include "Game.h"
-#include "Cursor.h"
-#include "Sprite.h"
-#include "Sound.h"
+#include "animation/Cursor.h"
+#include "utils/Sprite.h"
+#include "utils/Sound.h"
+#include "utils/LevelService.h"
 
 enum bombermanStepEnum {
 	home = 0,					//spashscreen

@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <cstdlib>
-#include "Grid.h"
+#include "../Grid.h"
 
 #ifndef __MYCLASS_AStarCell
 #define __MYCLASS_AStarCell

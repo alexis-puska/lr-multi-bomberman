@@ -6,9 +6,9 @@
 
 #include <stdio.h>
 
-#include "Explosion.h"
+#include "animation/Explosion.h"
 #include "Grid.h"
-#include "Sound.h"
+#include "utils/Sound.h"
 
 #ifndef __MYCLASS_BOMBE
 #define __MYCLASS_BOMBE

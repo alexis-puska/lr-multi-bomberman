@@ -27,23 +27,24 @@ endif
 
 #OBJECT TO COMPILE
 OBJS += src/libretro/libretro.o
-OBJS += src/bomberman/Sprite.o
-OBJS += src/bomberman/Sound.o
 OBJS += src/bomberman/Bomberman.o
 OBJS += src/bomberman/MyWrapper.o
 OBJS += src/bomberman/Grid.o
 OBJS += src/bomberman/Game.o
 OBJS += src/bomberman/Player.o
 OBJS += src/bomberman/Bombe.o
-OBJS += src/bomberman/Explosion.o
-OBJS += src/bomberman/BurnWall.o
-OBJS += src/bomberman/BurnLouis.o
-OBJS += src/bomberman/Cursor.o
-OBJS += src/bomberman/SuddenDeathAnimation.o
-OBJS += src/bomberman/Brain.o
-OBJS += src/bomberman/AStarCell.o
-OBJS += src/bomberman/AStar.o
-OBJS += src/bomberman/BFS.o
+OBJS += src/bomberman/animation/Explosion.o
+OBJS += src/bomberman/animation/BurnWall.o
+OBJS += src/bomberman/animation/BurnLouis.o
+OBJS += src/bomberman/animation/Cursor.o
+OBJS += src/bomberman/animation/SuddenDeathAnimation.o
+OBJS += src/bomberman/ia/Brain.o
+OBJS += src/bomberman/ia/AStarCell.o
+OBJS += src/bomberman/ia/AStar.o
+OBJS += src/bomberman/ia/BFS.o
+OBJS += src/bomberman/utils/Sprite.o
+OBJS += src/bomberman/utils/Sound.o
+OBJS += src/bomberman/utils/LevelService.o
 
 
 #COMPILATION

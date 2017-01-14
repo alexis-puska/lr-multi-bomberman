@@ -6,7 +6,7 @@
 
 #include <stdio.h>
 
-#include "Sprite.h"
+#include "../utils/Sprite.h"
 
 #ifndef __MYCLASS_BURNLOUIS
 #define __MYCLASS_BURNLOUIS

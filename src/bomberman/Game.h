@@ -12,12 +12,12 @@
 #include <algorithm>
 
 #include "Player.h"
-#include "Brain.h"
-#include "Sound.h"
-#include "BurnWall.h"
-#include "BurnLouis.h"
-#include "SuddenDeathAnimation.h"
-#include "Sprite.h"
+#include "ia/Brain.h"
+#include "utils/Sound.h"
+#include "animation/BurnWall.h"
+#include "animation/BurnLouis.h"
+#include "animation/SuddenDeathAnimation.h"
+#include "utils/Sprite.h"
 
 #ifndef __MYCLASS_GAME
 #define __MYCLASS_GAME

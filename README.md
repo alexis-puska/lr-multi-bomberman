@@ -108,7 +108,7 @@ After this step lr-multi-bomberman is installed, compile, and integrated in emul
 |refactoring of code						|    |X          |    |
 |Teleporter									|X   |           |    |
 |other level design (pirates, ring)			|X   |           |    |
-|level variante								|X   |X          |    |
+|level variante								|    |X          |    |
 |menu to set number of bonus				|X   |           |    |
 |Game type bad bomber						|X   |           |    |
 |Louis type									|    |           |X   |

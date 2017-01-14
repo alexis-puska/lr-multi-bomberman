@@ -6,7 +6,7 @@
 #include <SDL2/SDL_thread.h>
 #endif
 #include <stdio.h>
-#include "Sprite.h"
+#include "../utils/Sprite.h"
 
 #ifndef __MYCLASS_CURSOR
 #define __MYCLASS_CURSOR

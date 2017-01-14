@@ -5,7 +5,7 @@
 #include <SDL2_image/SDL_image.h>
 #endif
 #include <vector>
-#include "Sprite.h"
+#include "utils/Sprite.h"
 
 #ifndef __MYCLASS_GRID
 #define __MYCLASS_GRID
@@ -13,7 +13,7 @@
 #define sizeX 35
 #define sizeY 21
 
-#include "../include/level.h"
+#include "../include/levelHeader.h"
 
 enum gridElementEnum {
 	emptyElement = 0, explosionElement = 1, brickElement = 2, bombeElement = 3, wallElement = 4, suddenDeathElement = 5,
