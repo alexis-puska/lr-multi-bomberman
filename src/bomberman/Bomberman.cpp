@@ -158,7 +158,7 @@ void Bomberman::tick(unsigned short in_keystateLibretro[16]) {
 				drawGameOptionMenu();
 				break;
 			case levelSelectionMenu:
-				cursor.stopAnimation();
+				cursor.startAnimation();
 				drawLevelSelectionMenu();
 				break;
 			case gameStep:
@@ -491,15 +491,34 @@ void Bomberman::drawLevelSelectionMenu() {
 				cursorPosition = nbLevel - 1;
 			}
 		}
-		copySurfaceToBackRenderer(Sprite::Instance().getLevelPreview(cursorPosition), screenBuffer, ((640 / 2) - (levelPreviewSizeWidth / 2)), 200);
+		copySurfaceToBackRenderer(Sprite::Instance().getLevelPreview(cursorPosition), screenBuffer, 50, 200);
 		Level * level = LevelService::Instance().getLevel(cursorPosition);
-		Sprite::Instance().drawText(screenBuffer, (640/2), 184, level->getName(), green, true);
-		level = NULL;
 
+		char num[3];
+		sprintf(num, "%i", level->getVariantes(0)->getNumber());
+		Sprite::Instance().drawText(screenBuffer, 224, 184, "Name : ", green, false);
+		Sprite::Instance().drawText(screenBuffer, 224, 204, "Variante : ", green, false);
+		Sprite::Instance().drawText(screenBuffer, 224, 224, "Description : ", green, false);
+		Sprite::Instance().drawText(screenBuffer, 224, 264, "Bonus : ", green, false);
+		Sprite::Instance().drawText(screenBuffer, 327, 184, level->getName(), green, false);
+		Sprite::Instance().drawText(screenBuffer, 327, 204, num, green, false);
+		Sprite::Instance().drawText(screenBuffer, 327, 224, level->getVariantes(0)->getDescriptionLine1(), green, false);
+		Sprite::Instance().drawText(screenBuffer, 327, 244, level->getVariantes(0)->getDescriptionLine2(), green, false);
+		Sprite::Instance().drawText(screenBuffer, 327, 264, "default", green, false);
+		for(int i=0 ; i<13 ; i++){
+			sprintf(num, "%i", level->getVariantes(0)->getBonus(i));
+			copySurfaceToBackRenderer(Sprite::Instance().getBonus(i), screenBuffer, 224 + i * 30, 288);
+			Sprite::Instance().drawText(screenBuffer, 232 + i * 30, 302, num, green, true);
+		}
+		level = NULL;
 		refreshBuffer = false;
 		levelIndex = cursorPosition;
 	}
+	int cursorPosX = 200;
+	int cursorposY = 186;
+
 	copySurfaceToBackRenderer(screenBuffer, vout_buf, 0, 0);
+	copySurfaceToBackRenderer(cursor.getCurrentFrame(), vout_buf, cursorPosX, cursorposY);
 }
 
 void Bomberman::keyPressed() {

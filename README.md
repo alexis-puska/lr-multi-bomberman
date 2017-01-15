@@ -104,14 +104,14 @@ After this step lr-multi-bomberman is installed, compile, and integrated in emul
 
 |description								|wait|in progress|done|
 |-------------------------------------------|:--:|:---------:|:--:|
-|Artificial interlligence 					|X   |           |    |
-|refactoring of code						|    |X          |    |
-|Teleporter									|X   |           |    |
-|other level design (pirates, ring)			|X   |           |    |
-|level variante								|    |X          |    |
-|menu to set number of bonus				|X   |           |    |
-|Game type bad bomber						|X   |           |    |
 |Louis type									|    |           |X   |
+|refactoring of code						|    |X          |    |
+|level variante								|    |X          |    |
+|menu to set number of bonus				|    |X          |    |
+|other level design (pirates, ring)			|X   |           |    |
+|Artificial interlligence 					|X   |           |    |
+|Teleporter									|X   |           |    |
+|Game type bad bomber						|X   |           |    |
 |Net (multiplayer over internet)			|X   |           |    |
 |Power(glove)								|X   |           |    |
 
