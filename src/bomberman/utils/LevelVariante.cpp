@@ -19,7 +19,7 @@ LevelVariante::LevelVariante(int number, const char * description, bool fillWith
 	
 	int idxStart = 0;
 	for(int i=0; i<735; i++){
-		if(this->definition[i]=='S'){
+		if(this->definition[i]=='S' || this->definition[i]=='T'){
 			start[idxStart]=i;
 			reserved[i]=true;
 			reserved[i-1]=true;

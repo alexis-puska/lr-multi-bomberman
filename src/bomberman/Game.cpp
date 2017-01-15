@@ -981,8 +981,12 @@ void Game::tick() {
 				
 				for (int i = 0; i < 16; i++) {
 
-					float startX = startPlayer[i][0];
-					float startY = startPlayer[i][1];
+					
+					int startCase = LevelService::Instance().getLevel(levelIndex)->getVariantes(0)->getStart(i);
+					
+					
+					float startX = (startCase%35)+0.5;
+					float startY = (startCase/35)+0.5;
 					playerInformation[i][3] = 1;
 					switch (playerInformation[i][0]) {
 						case HUMAN:

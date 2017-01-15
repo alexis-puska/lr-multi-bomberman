@@ -9,14 +9,13 @@
 #include <time.h>
 #include <vector>
 #include "utils/Sprite.h"
+#include "utils/LevelService.h"
 
 #ifndef __MYCLASS_GRID
 #define __MYCLASS_GRID
 
 #define sizeX 35
 #define sizeY 21
-
-#include "../include/levelHeader.h"
 
 enum gridElementEnum {
 	emptyElement = 0, explosionElement = 1, brickElement = 2, bombeElement = 3, wallElement = 4, suddenDeathElement = 5,

@@ -86,14 +86,14 @@ for	(int i = 0; i < sizeX * sizeY; i++) {
 			if( j == 0 || j == (sizeY-1) || i == 0 || i == (sizeX-1)|| (j%2 == 0 && i%2 == 0)) {
 				//murs
 				tab[i+(j*sizeX)] = wallElement;
-				if(level[lvl][j][i] == 18 || level[lvl][j][i] == 19 || level[lvl][j][i] == 20) {
+				if(LevelService::Instance().getLevel(lvl)->getVariantes(0)->getDefinition(j*sizeX+i) == 18 || LevelService::Instance().getLevel(lvl)->getVariantes(0)->getDefinition(j*sizeX+i) == 19 || LevelService::Instance().getLevel(lvl)->getVariantes(0)->getDefinition(j*sizeX+i) == 20) {
 					tab[i+(j*sizeX)] = emptyElement;
 					emptyCase.push_back(i+(j*sizeX));
 				}
 			} else {
 				/* generate secret number between 1 and 3: */
-				if((rand() % 7 + 1)>=2) {
-					if(reservedSpot[j][i] == 0) {
+				if((rand() % 9 + 1)>=2) {
+					if(LevelService::Instance().getLevel(lvl)->getVariantes(0)->isReserved(j*sizeX+i) == 0) {
 						tab[i+(j*sizeX)] = brickElement;
 						notEmptyCase.push_back(i+(j*sizeX));
 					}
@@ -123,7 +123,10 @@ for	(int i = 0; i < sizeX * sizeY; i++) {
 			dstrect.y = j * smallSpriteLevelSizeHeight;
 			dstrect.w = smallSpriteLevelSizeWidth;
 			dstrect.h = smallSpriteLevelSizeHeight;
-			int textureIndex = level[lvl][j][i];
+			int textureIndex = LevelService::Instance().getLevel(lvl)->getVariantes(0)->getDefinition(j*sizeX+i);
+			if(textureIndex == 'S' || textureIndex == 'T'){
+				textureIndex -= 65;	
+			}
 			SDL_BlitSurface(Sprite::Instance().getLevel(18, lvl), &srcrect, ground, &dstrect);
 			if(textureIndex < 40) {
 				SDL_BlitSurface(Sprite::Instance().getLevel(textureIndex, lvl), &srcrect, ground, &dstrect);
@@ -135,7 +138,7 @@ for	(int i = 0; i < sizeX * sizeY; i++) {
 				SDL_BlitSurface(Sprite::Instance().getLevel(skyStartSpriteIndex, lvl), &skyRect, skyFixe, &dstrect);
 			}
 			if(tab[i+(j*sizeX)] == brickElement) {
-				if(reservedSpot[j][i] == 0) {
+				if(LevelService::Instance().getLevel(lvl)->getVariantes(0)->isReserved(j*sizeX+i) == 0) {
 					if(textureIndex == 40) {
 						dstrect.x = i * smallSpriteLevelSizeWidth;
 						dstrect.y = j * smallSpriteLevelSizeHeight;
@@ -150,11 +153,13 @@ for	(int i = 0; i < sizeX * sizeY; i++) {
 			}
 		}
 	}
+	
+	
 
 	//draw Death bonus for a level
-	for(int i = 0; i < bonusByLevel[lvl][0]; i++) {
+	for(int i = 0; i < LevelService::Instance().getLevel(lvl)->getVariantes(0)->getBonus(0); i++) {
 		int ind = emptyCase[rand() % emptyCase.size() + 1];
-		while(reservedSpot[(int)ind / sizeX][(ind % sizeX)] != 0) {
+		while(LevelService::Instance().getLevel(lvl)->getVariantes(0)->isReserved(ind) != 0) {
 			ind = emptyCase[rand() % emptyCase.size() + 1];
 		}
 		tabBonus[ind] = deathBonus;
@@ -168,7 +173,7 @@ for	(int i = 0; i < sizeX * sizeY; i++) {
 
 	//draw Death bonus for a level
 	for(int y = 1; y < 13; y++) {
-		for(int i = 0; i < bonusByLevel[lvl][y]; i++) {
+		for(int i = 0; i < LevelService::Instance().getLevel(lvl)->getVariantes(0)->getBonus(y); i++) {
 			int ind = notEmptyCase[rand() % notEmptyCase.size()];
 			while(tabBonus[ind] != noBonus) {
 				ind = notEmptyCase[rand() % notEmptyCase.size()];
