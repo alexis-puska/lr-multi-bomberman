@@ -19,7 +19,6 @@ class Level {
 		void addVariante(LevelVariante * variante);
 		int getVariantesSize();
 		LevelVariante * getVariantes(int i);
-
 		char * getName();
 	private:
 		int numero;

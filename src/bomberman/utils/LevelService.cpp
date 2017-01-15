@@ -26,45 +26,41 @@ void LevelService::initLevel(){
 	createLevel6();
 	createLevel7();
 	createLevel8();
-	fprintf(stderr,"\n\n\n\n");
-
-	for(unsigned int i = 0; i < levels.size(); i++){
-		fprintf(stderr,"******************************  level : %i - %s  ******************************\n", i, levels[i]->getName());
-		fprintf(stderr,"*** Variante n° : %d ***\n", levels[i]->getVariantesSize());
-		if(levels[i]->getVariantesSize() > 0){
-			for(int j = 0;j<levels[i]->getVariantesSize();j++){
-				for(int k = 0;k<21;k++){
-					for(int l = 0;l<35;l++){
-						fprintf(stderr," %2i,", levels[i]->getVariantes(j)->getDefinition(k*35+l));
-					}
-					fprintf(stderr,"\n");
-				}
-				fprintf(stderr,"reserved spot : \n");
-				for(int k = 0;k<21;k++){
-					for(int l = 0;l<35;l++){
-						fprintf(stderr," %2i,", levels[i]->getVariantes(j)->isReserved(k*35+l));
-					}
-					fprintf(stderr,"\n");
-				}
-				
-				fprintf(stderr,"\nbonus : ");
-				for(int k = 0;k<13;k++){
-					fprintf(stderr,"%2i,", levels[i]->getVariantes(j)->getBonus(k));
-				}
-				
-				
-				fprintf(stderr,"\nstart point : ");
-				for(int k = 0;k<16;k++){
-					int idx = levels[i]->getVariantes(j)->getStart(k);
-					fprintf(stderr,"%i:%i,  ", idx%35, idx/35);
-				}
-				
-				fprintf(stderr,"\ndescription : %s", levels[i]->getVariantes(j)->getDescription());
-				fprintf(stderr,"\nis filled with bricks : %i", levels[i]->getVariantes(j)->isFillWithBricks());
-				fprintf(stderr,"\n\n\n\n");
-			}
-		}
-	}
+//	fprintf(stderr,"\n\n\n\n");
+//	for(unsigned int i = 0; i < levels.size(); i++){
+//		fprintf(stderr,"******************************  level : %i - %s  ******************************\n", i, levels[i]->getName());
+//		fprintf(stderr,"*** Variante n° : %d ***\n", levels[i]->getVariantesSize());
+//		if(levels[i]->getVariantesSize() > 0){
+//			for(int j = 0;j<levels[i]->getVariantesSize();j++){
+//				for(int k = 0;k<21;k++){
+//					for(int l = 0;l<35;l++){
+//						fprintf(stderr," %2i,", levels[i]->getVariantes(j)->getDefinition(k*35+l));
+//					}
+//					fprintf(stderr,"\n");
+//				}
+//				fprintf(stderr,"reserved spot : \n");
+//				for(int k = 0;k<21;k++){
+//					for(int l = 0;l<35;l++){
+//						fprintf(stderr," %2i,", levels[i]->getVariantes(j)->isReserved(k*35+l));
+//					}
+//					fprintf(stderr,"\n");
+//				}
+//				
+//				fprintf(stderr,"\nbonus : ");
+//				for(int k = 0;k<13;k++){
+//					fprintf(stderr,"%2i,", levels[i]->getVariantes(j)->getBonus(k));
+//				}
+//				fprintf(stderr,"\nstart point : ");
+//				for(int k = 0;k<16;k++){
+//					int idx = levels[i]->getVariantes(j)->getStart(k);
+//					fprintf(stderr,"%i:%i,  ", idx%35, idx/35);
+//				}
+//				fprintf(stderr,"\ndescription : %s", levels[i]->getVariantes(j)->getDescription());
+//				fprintf(stderr,"\nis filled with bricks : %i", levels[i]->getVariantes(j)->isFillWithBricks());
+//				fprintf(stderr,"\n\n\n\n");
+//			}
+//		}
+//	}
 }
 
 

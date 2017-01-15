@@ -1,8 +1,5 @@
 #include "Grid.h"
-#include <stdio.h>
-#include <stdlib.h>
-#include <time.h>
-#include <vector>
+
 
 Grid::Grid() {
 	lvl = 0;

@@ -145,8 +145,12 @@ Game::Game(int levelIndex, int playerInformationParam[16][2], int gameOption[4],
 	}
 
 	for (int i = 0; i < 16; i++) {
-		float startX = startPlayer[i][0];
-		float startY = startPlayer[i][1];
+		
+		int startCase = LevelService::Instance().getLevel(levelIndex)->getVariantes(0)->getStart(i);
+		
+		
+		float startX = (startCase%35)+0.5;
+		float startY = (startCase/35)+0.5;
 
 		playerInformation[i][0] = playerInformationParam[i][0];
 		playerInformation[i][1] = playerInformationParam[i][1];

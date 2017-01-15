@@ -14,6 +14,7 @@
 #include "Player.h"
 #include "ia/Brain.h"
 #include "utils/Sound.h"
+#include "utils/LevelService.h"
 #include "animation/BurnWall.h"
 #include "animation/BurnLouis.h"
 #include "animation/SuddenDeathAnimation.h"

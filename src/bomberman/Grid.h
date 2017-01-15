@@ -4,6 +4,9 @@
 #else
 #include <SDL2_image/SDL_image.h>
 #endif
+#include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
 #include <vector>
 #include "utils/Sprite.h"
 
