@@ -1,5 +1,72 @@
 #include "LevelService.h"
 
+/*
+0 -> libre
+1 -> mur
+2 -> brick
+
+0  - Top Left      -> 1
+1  - Top Right     -> 1
+2  - Top 1         -> 1
+3  - Top 2         -> 1
+4  - Top 3         -> 1
+
+5  - Bottom Left   -> 1
+6  - Bottom Right  -> 1
+7  - Bottom 1      -> 1
+8  - Bottom 2      -> 1
+9  - Bottom 3      -> 1
+
+10 - Left 1        -> 1
+11 - Left 2        -> 1
+12 - Left 3        -> 1
+13 - Right 1       -> 1
+14 - Right 2       -> 1
+
+15 - Right 3       -> 1
+16 - Wall 1        -> 1
+17 - Wall 2 (inv)  -> 1
+18 - Ground        -> 1
+19 - Ground Sh1    -> 1
+
+20 - Ground Sh2    -> 1
+21 - Bricks        -> 2
+22 - Blow 1        -> 2
+23 - Blow 2        -> 2
+24 - Blow 3        -> 2
+
+25 - Blow 4        -> 2
+26 - Blow 5        -> 2
+27 - Blow 6        -> 2
+28 - Ext Ground 1  -> 0
+29 - Ext Ground 2  -> 0
+
+31 - Ext Ground 3  -> 0
+31 - Ext Ground 4  -> 0
+32 - Ext Ground 5  -> 0
+33 - Ext Ground 6  -> 0
+34 - Ext Ground 7  -> 0
+35 - Ext Ground 8  -> 0
+
+36 - Ext Ground 9  -> 0
+37 - Ext Ground 10 -> 0
+ 
+deathBonus		= 0,
+rollerBonus		= 1,
+fireBonus		= 2,
+fireMaxBonus	= 3,
+bombeBonus		= 4,
+radioBombeBonus	= 5,
+kickBonus		= 6,
+gloveBonus		= 7,
+bubbleBonus		= 8,
+powerBombeBonus	= 9,
+getaBonus		= 10,
+ghostBonus		= 11,
+eggsBonus		= 12,
+*/
+
+
 LevelService LevelService::m_instance = LevelService();
 
 LevelService::LevelService() {
