@@ -19,11 +19,15 @@ class LevelVariante {
 		bool isFillWithBricks();
 		int getNumber();
 		char * getDescription();
+		bool isReserved(int idx);
+		int getStart(int idx);
 	private:
 		int number;
 		char description[256];
 		bool fillWithBrick;
 		int definition[735];
+		bool reserved[735];
+		int start[16];
 		int bonus[13];
 };
 #endif
