@@ -4,6 +4,7 @@
 
 Bomberman::Bomberman(SDL_Surface * vout_bufLibretro) {
 	Sprite::Instance();
+	LevelService::Instance();
 	Sound::Instance();
 	Sound::Instance().startMenuMusique();
 	srand (time(NULL));
