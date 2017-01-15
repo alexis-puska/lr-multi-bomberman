@@ -492,6 +492,10 @@ void Bomberman::drawLevelSelectionMenu() {
 			}
 		}
 		copySurfaceToBackRenderer(Sprite::Instance().getLevelPreview(cursorPosition), screenBuffer, ((640 / 2) - (levelPreviewSizeWidth / 2)), 200);
+		Level * level = LevelService::Instance().getLevel(cursorPosition);
+		Sprite::Instance().drawText(screenBuffer, (640/2), 184, level->getName(), green, true);
+		level = NULL;
+
 		refreshBuffer = false;
 		levelIndex = cursorPosition;
 	}

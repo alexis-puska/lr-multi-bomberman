@@ -17,14 +17,16 @@ class LevelService {
 		static LevelService& Instance();
 		LevelService();
 		~LevelService();
-		void initLevel();
+
+		Level * getLevel(int n);
+		int getNumberOfLevels();
 
 	private:
 		LevelService& operator=(const LevelService&);
 		LevelService(const LevelService&);
 		static LevelService m_instance;
 		std::vector<Level *> levels;
-
+		void initLevel();
 		void createLevel0();
 		void createLevel1();
 		void createLevel2();
