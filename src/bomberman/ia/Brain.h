@@ -2,6 +2,7 @@
 #include <time.h>
 #include "AStar.h"
 #include "BFS.h"
+#include "../Player.h"
 
 #ifndef __MYCLASS_BRAIN
 #define __MYCLASS_BRAIN
@@ -35,7 +36,7 @@ enum brain1step {
 class Brain {
 
 	public:
-		Brain(unsigned short * keystate, int tab[sizeX * sizeY], float * tabCord, int nbPlayer, int playerNumber, int cpuLevel);
+		Brain(unsigned short * keystate, int tab[sizeX * sizeY], float * tabCord, int nbPlayer, int playerNumber, int cpuLevel, Player * player);
 		~Brain();
 		void think();
 
@@ -56,6 +57,7 @@ class Brain {
 		int prevDir;
 		int cpuLevel;
 		int idxOwnBombe;
+		Player * player;
 
 		int brainStep;
 

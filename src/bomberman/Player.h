@@ -51,6 +51,10 @@ class Player {
 		void itSuddenDeathTime();
 		int getIndexPlayerForGame();
 
+		int getBombeType();
+
+		void brainPressButton();
+
 	private:
 		/*
 		 * VAR

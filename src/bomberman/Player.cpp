@@ -954,3 +954,11 @@ void Player::releaseKick() {
 void Player::itSuddenDeathTime() {
 	inSuddenDeathTime = true;
 }
+
+int Player::getBombeType(){
+	return bombeType;
+}
+
+void Player::brainPressButton(){
+	triggerBombe = true;
+}

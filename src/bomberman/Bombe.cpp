@@ -61,8 +61,10 @@ bool Bombe::isPowerBombe() {
 }
 
 void Bombe::explodeNow() {
-	tab[(int) floor(posX) + (int) floor(posY) * sizeX] = emptyElement;
-	nbTickExplode = 0;
+	if(bombeType == radioBombeType){
+		tab[(int) floor(posX) + (int) floor(posY) * sizeX] = emptyElement;
+		nbTickExplode = 0;
+	}
 }
 
 void Bombe::explode() {

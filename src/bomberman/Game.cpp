@@ -175,7 +175,7 @@ Game::Game(int levelIndex, int playerInformationParam[16][2], int gameOption[4],
 			players.push_back(player);
 			player = NULL;
 
-			brain = new Brain(&in_keystate_cpu[index], tab, tabPlayerCoord, nbPlayerConfig, i, cpuLevel);
+			brain = new Brain(&in_keystate_cpu[index], tab, tabPlayerCoord, nbPlayerConfig, i, cpuLevel, players[indexPlayerForGame]);
 			brains.push_back(brain);
 			brain = NULL;
 
@@ -205,11 +205,11 @@ Game::Game(int levelIndex, int playerInformationParam[16][2], int gameOption[4],
 
 Game::~Game() {
 	exitGame();
+	brains.clear();
 	players.clear();
 	bombes.clear();
 	explosions.clear();
 	burnWalls.clear();
-	brains.clear();
 
 	delete grid;
 	delete tab;
@@ -961,12 +961,12 @@ void Game::tick() {
 				generateHeader();
 				nbTickForGame = nbTickForGameParam;
 				suddenDeathCase = false;
+				brains.clear();
 				players.clear();
 				bombes.clear();
 				explosions.clear();
 				burnWalls.clear();
 				suddenDeathAnimations.clear();
-				brains.clear();
 				grid->resetSurface();
 				grid->generateGrid();
 
@@ -1003,7 +1003,7 @@ void Game::tick() {
 							player = new Player(&in_keystate_cpu[index], true, playerInformation[i][1], startX, startY, i, tab, tabBonus, grid, tabPlayerCoord, nbPlayerConfig,
 									indexPlayerForGame, playerInformation[i][2]);
 							players.push_back(player);
-							brain = new Brain(&in_keystate_cpu[index], tab, tabPlayerCoord, nbPlayerConfig, i, cpuLevel);
+							brain = new Brain(&in_keystate_cpu[index], tab, tabPlayerCoord, nbPlayerConfig, i, cpuLevel, players[indexPlayerForGame]);
 							brains.push_back(brain);
 							brain = NULL;
 

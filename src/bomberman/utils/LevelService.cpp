@@ -179,7 +179,7 @@ void LevelService::createLevel0(){
 	int bonusV2[13]= {  3, 12, 18,  0, 18,  0, 12,  0,  0,  0,  0,  0, 15};
 
 	Level * level = new Level(0, "Blockbuster");
-	level->addVariante(new LevelVariante(0, "Niveau Classique", "Niveau Classique", true, desc, bonus));
+	level->addVariante(new LevelVariante(0, "level without bricks", "all player in the center", true, desc, bonus));
 	level->addVariante(new LevelVariante(1, "Niveau sans bricks", "Niveau sans bricks", false, descV2, bonusV2));
 	levels.push_back(level);
 }
@@ -346,7 +346,7 @@ void LevelService::createLevel6(){
 					 10, 18, 16, 18, 16, 18, 16, 18, 16, 18, 16, 18, 16, 18, 16, 18, 16, 18, 16, 18, 16, 18, 16, 18, 16, 18, 16, 18, 16, 18, 16, 18, 16, 18, 13,
 					 10,'S', 20, 18, 20, 18, 20, 18, 20, 18, 20,'S', 20, 18, 20, 18, 20, 18, 20, 18, 20, 18, 20,'S', 20, 18, 20, 18, 20, 18, 20, 18, 20,'S', 13,
 					  5,  7,  7,  7,  7,  7,  7,  7,  7,  7,  7,  7,  7,  7,  7,  7,  7,  7,  7,  7,  7,  7,  7,  7,  7,  7,  7,  7,  7,  7,  7,  7,  7,  7,  6};
-	int bonus[13]= {  3,  6, 18,  0, 18,  3,  9,  0,  6,  0,  0,  0, 15};
+	int bonus[13]= {  3,  6, 18,  0, 18,  6,  9,  0,  6,  0,  0,  0, 15};
 	Level * level = new Level(1, "Sandman");
 	level->addVariante(new LevelVariante(1, "Niveau Classique", "Niveau Classique", true, desc, bonus));
 	levels.push_back(level);

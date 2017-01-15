@@ -1,6 +1,7 @@
 #include "Brain.h"
 
-Brain::Brain(unsigned short * keystate, int tab[sizeX * sizeY], float * tabCord, int nbPlayer, int playerNumber, int cpuLevel) {
+Brain::Brain(unsigned short * keystate, int tab[sizeX * sizeY], float * tabCord, int nbPlayer, int playerNumber, int cpuLevel, Player * player) {
+	this->player = player;
 	this->keystate = keystate;
 	this->tab = tab;
 	this->tabCord = tabCord;
@@ -39,6 +40,7 @@ Brain::~Brain() {
 	keystate = NULL;
 	tab = NULL;
 	tabCord = NULL;
+	player = NULL;
 }
 
 void Brain::think() {
@@ -132,6 +134,9 @@ void Brain::level1() {
 			}
 			break;
 		case lvl1WaitBombeExplode:
+			if(player->getBombeType() == radioBombeType){
+				player->brainPressButton();
+			}
 			if (tab[idxOwnBombe] == 0) {
 				brainStep = lvl1FindNearWall;
 			}
