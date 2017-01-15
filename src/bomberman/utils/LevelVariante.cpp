@@ -1,8 +1,9 @@
 #include "LevelVariante.h"
 
-LevelVariante::LevelVariante(int number, const char * description, bool fillWithBrick, int definition[735], int bonus[13]){
+LevelVariante::LevelVariante(int number, const char * descriptionLine1, const char * descriptionLine2, bool fillWithBrick, int definition[735], int bonus[13]){
 	this->number = number;
-	strcpy(this->description, description);
+	strcpy(this->descriptionLine1, descriptionLine1);
+	strcpy(this->descriptionLine2, descriptionLine2);
 	this->fillWithBrick = fillWithBrick;
 	for(int i=0; i<735; i++){
 		this->definition[i] = definition[i];
@@ -54,8 +55,12 @@ int LevelVariante::getNumber(){
 	return number;
 }
 
-char * LevelVariante::getDescription(){
-	return description;
+char * LevelVariante::getDescriptionLine1(){
+	return descriptionLine1;
+}
+
+char * LevelVariante::getDescriptionLine2(){
+	return descriptionLine2;
 }
 
 bool LevelVariante::isReserved(int idx){
