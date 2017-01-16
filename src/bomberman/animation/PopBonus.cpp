@@ -3,7 +3,6 @@
 #define nbFrame 4
 
 PopBonus::PopBonus(int posX, int posY) {
-	this->indexPopBonus = index;
 	this->posX = posX;
 	this->posY = posY;
 	frameCounter = 0;

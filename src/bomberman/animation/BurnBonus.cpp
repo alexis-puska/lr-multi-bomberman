@@ -19,11 +19,11 @@ bool BurnBonus::canBeDelete() {
 }
 
 void BurnBonus::tick(SDL_Surface * surfaceToDraw) {
-	SDL_Rect dstRect;
-	dstRect.x = posX * 18;
-	dstRect.y = posY * 16;
-	dstRect.w = 18;
-	dstRect.h = 16;
+	SDL_Rect dstRect;	
+	dstRect.x = posX * smallSpriteLevelSizeWidth - ((burnBonusSpritewidth - smallSpriteLevelSizeWidth)/2);
+	dstRect.y = posY * smallSpriteLevelSizeHeight - (burnBonusSpriteHeight - smallSpriteLevelSizeHeight);
+	dstRect.w = burnBonusSpritewidth;
+	dstRect.h = burnBonusSpriteHeight;
 	if (frameCounter > nbFrame) {
 		frameCounter = 0;
 		offsetSprite++;

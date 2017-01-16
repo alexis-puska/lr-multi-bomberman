@@ -43,7 +43,7 @@
 
 #define nbPopBonusSpriteX			4
 #define nbPopBonusSpriteY			1
-#define popBonusSpritewidth			18
+#define popBonusSpriteWidth			18
 #define popBonusSpriteHeight		16
 
 #define nbBurnBonusSpriteX			8

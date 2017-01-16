@@ -619,7 +619,7 @@ void Game::tick() {
 							// if we don't have burn a wall, we can have a bonus in the case of table. we remove it !
 							if (tabBonus[(posXBombe + j) + posYBombe * sizeX] != -1) {
 								grid->burnBonus((posXBombe + j), posYBombe);
-								BurnBonusList.push_back(new BurnBonus(posXBombe+1, posYBombe));
+								BurnBonusList.push_back(new BurnBonus(posXBombe + j, posYBombe));
 							}
 						}
 					}
@@ -672,9 +672,9 @@ void Game::tick() {
 						}
 						if (!aWallHasBurn) {
 							// if we don't have burn a wall, we can have a bonus in the case of table. we remove it !
-							if (tabBonus[posXBombe + posYBombe * sizeX] != -1) {
-								grid->burnBonus(posXBombe, posYBombe);
-								BurnBonusList.push_back(new BurnBonus(posXBombe, posYBombe));
+							if (tabBonus[posXBombe + posYcalc * sizeX] != -1) {
+								grid->burnBonus(posXBombe, posYcalc);
+								BurnBonusList.push_back(new BurnBonus(posXBombe, posYcalc));
 							}
 						}
 
@@ -704,6 +704,7 @@ void Game::tick() {
 								if (!isAPowerBombe) {
 									exitLoop = true;
 								}
+								aWallHasBurn = true;
 								break;
 							case bombeElement:
 								for (unsigned int k = 0; k < bombes.size(); k++) {
@@ -712,7 +713,6 @@ void Game::tick() {
 										if (!isAPowerBombe) {
 											exitLoop = true;
 										}
-										aWallHasBurn = true;
 										break;
 									}
 								}
@@ -725,7 +725,7 @@ void Game::tick() {
 							// if we don't have burn a wall, we can have a bonus in the case of table. we remove it !
 							if (tabBonus[(posXBombe - j) + posYBombe * sizeX] != -1) {
 								grid->burnBonus((posXBombe - j), posYBombe);
-								BurnBonusList.push_back(new BurnBonus((posXBombe - j), posYBombe));
+								BurnBonusList.push_back(new BurnBonus(posXBombe - j, posYBombe));
 							}
 						}
 					}
