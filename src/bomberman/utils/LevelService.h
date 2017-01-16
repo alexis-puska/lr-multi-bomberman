@@ -20,12 +20,15 @@ class LevelService {
 
 		Level * getLevel(int n);
 		int getNumberOfLevels();
+		void setCustomBonusValue(int bonus, int value);
+		int getCustomBonusValue(int bonus);
 
 	private:
 		LevelService& operator=(const LevelService&);
 		LevelService(const LevelService&);
 		static LevelService m_instance;
 		std::vector<Level *> levels;
+		int customBonus[13];
 		void initLevel();
 		void createLevel0();
 		void createLevel1();

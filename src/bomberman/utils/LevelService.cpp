@@ -408,10 +408,6 @@ void LevelService::createLevel8(){
 	levels.push_back(level);
 }
 
-
-
-
-
 Level * LevelService::getLevel(int n){
 	return levels[n];
 }
@@ -420,3 +416,10 @@ int LevelService::getNumberOfLevels(){
 	return levels.size();
 }
 
+void setCustomBonusValue(int bonus, int value){
+	customBonus[bonus] = value;
+}
+
+int getCustomBonusValue(int bonus){
+	return customBonus[bonus];
+}
