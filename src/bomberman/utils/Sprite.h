@@ -41,6 +41,16 @@
 #define nbBonusSpriteX			2
 #define nbBonusSpriteY			7
 
+#define nbPopBonusSpriteX			4
+#define nbPopBonusSpriteY			1
+#define popBonusSpritewidth			18
+#define popBonusSpriteHeight		16
+
+#define nbBurnBonusSpriteX			8
+#define nbBurnBonusSpriteY			1
+#define burnBonusSpritewidth		30
+#define burnBonusSpriteHeight		42
+
 #define levelPreviewSizeWidth		128
 #define levelPreviewSizeHeight	110
 #define nbLevelPreviewX			3
@@ -96,6 +106,8 @@ class Sprite {
 		SDL_Surface* getBombe(int x, int y);
 		SDL_Surface* getBurnWall(int pos, int levelIndex);
 		SDL_Surface* getLevel(int pos, int levelIndex);
+		SDL_Surface* getBurnBonus(int pos);
+		SDL_Surface* getPopBonus(int pos);
 		/*
 		 * DRAW PLAYER FUNCTION
 		 */

@@ -210,6 +210,8 @@ Game::~Game() {
 	bombes.clear();
 	explosions.clear();
 	burnWalls.clear();
+	PopBonusList.clear();
+	BurnBonusList.clear();
 
 	delete grid;
 	delete tab;
@@ -516,6 +518,7 @@ void Game::tick() {
 					explosions.push_back(new Explosion(posXBombe, posYBombe, 0, tab, tabBonus));
 					if (tabBonus[posXBombe + posYBombe * sizeX] != -1) {
 						grid->burnBonus(posXBombe, posYBombe);
+						BurnBonusList.push_back(new BurnBonus(posXBombe, posYBombe));
 					}
 
 					//UP
@@ -566,6 +569,7 @@ void Game::tick() {
 							// if we don't have burn a wall, we can have a bonus in the case of table. we remove it !
 							if (tabBonus[posXBombe + posYcalc * sizeX] != -1) {
 								grid->burnBonus(posXBombe, posYcalc);
+								BurnBonusList.push_back(new BurnBonus(posXBombe, posYcalc));
 							}
 						}
 					}
@@ -615,6 +619,7 @@ void Game::tick() {
 							// if we don't have burn a wall, we can have a bonus in the case of table. we remove it !
 							if (tabBonus[(posXBombe + j) + posYBombe * sizeX] != -1) {
 								grid->burnBonus((posXBombe + j), posYBombe);
+								BurnBonusList.push_back(new BurnBonus(posXBombe+1, posYBombe));
 							}
 						}
 					}
@@ -669,6 +674,7 @@ void Game::tick() {
 							// if we don't have burn a wall, we can have a bonus in the case of table. we remove it !
 							if (tabBonus[posXBombe + posYBombe * sizeX] != -1) {
 								grid->burnBonus(posXBombe, posYBombe);
+								BurnBonusList.push_back(new BurnBonus(posXBombe, posYBombe));
 							}
 						}
 
@@ -719,6 +725,7 @@ void Game::tick() {
 							// if we don't have burn a wall, we can have a bonus in the case of table. we remove it !
 							if (tabBonus[(posXBombe - j) + posYBombe * sizeX] != -1) {
 								grid->burnBonus((posXBombe - j), posYBombe);
+								BurnBonusList.push_back(new BurnBonus((posXBombe - j), posYBombe));
 							}
 						}
 					}
@@ -752,6 +759,30 @@ void Game::tick() {
 				burnWalls[i]->tick(playerBombeExplode);
 				if (burnWalls[i]->canBeDelete()) {
 					burnWalls.erase(burnWalls.begin() + i);
+				}
+			}
+			
+			/*
+			 *
+			 *	GAME PART : BURN BONUS
+			 *
+			 */
+			for (unsigned int i = 0; i < BurnBonusList.size(); i++) {
+				BurnBonusList[i]->tick(playerBombeExplode);
+				if (BurnBonusList[i]->canBeDelete()) {
+					BurnBonusList.erase(BurnBonusList.begin() + i);
+				}
+			}
+			
+			/*
+			 *
+			 *	GAME PART : POP BONUS
+			 *
+			 */
+			for (unsigned int i = 0; i < PopBonusList.size(); i++) {
+				PopBonusList[i]->tick(playerBombeExplode);
+				if (PopBonusList[i]->canBeDelete()) {
+					PopBonusList.erase(PopBonusList.begin() + i);
 				}
 			}
 

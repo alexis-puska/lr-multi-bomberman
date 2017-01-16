@@ -35,7 +35,7 @@ Sprite::Sprite() {
 	louisSprite = new SDL_Surface *[nbSpriteLouisX * nbSpriteLouisY * nbTypeLouis];
 	fireSprite = new SDL_Surface *[nbFireSpriteX * nbFireSpriteY];
 	bombeSprite = new SDL_Surface *[nbBombeSpriteX * nbBombeSpriteY];
-	bonusSprite = new SDL_Surface *[nbBonusSpriteX * nbBonusSpriteY];
+	bonusSprite = new SDL_Surface *[nbBonusSpriteX * nbBonusSpriteX + nbPopBonusSpriteX * nbPopBonusSpriteY + nbBurnBonusSpriteX * nbBurnBonusSpriteY];
 	previewLevelSprite = new SDL_Surface *[nbLevel];
 	levelSprite = new SDL_Surface *[nbLevel * nbSmallSpriteLevelX * nbSmallSpriteLevelY + nbLevel * nbLargeSpriteLevelX * nbLargeSpriteLevelY];
 	spaceShipSprite = new SDL_Surface *[nbSpaceShipSpriteX * nbSpaceShipSpriteY];
@@ -65,7 +65,7 @@ Sprite::~Sprite() {
 	for (int i = 0; i < nbBombeSpriteX * nbBombeSpriteY; i++) {
 		SDL_FreeSurface(bombeSprite[i]);
 	}
-	for (int i = 0; i < nbBonusSpriteX * nbBonusSpriteX; i++) {
+	for (int i = 0; i < nbBonusSpriteX * nbBonusSpriteX + nbPopBonusSpriteX * nbPopBonusSpriteY + nbBurnBonusSpriteX * nbBurnBonusSpriteY; i++) {
 		SDL_FreeSurface(bonusSprite[i]);
 	}
 	for (int i = 0; i < nbLevel; i++) {
@@ -641,6 +641,28 @@ void Sprite::cropBonusSurface(SDL_Surface * surface) {
 			index++;
 		}
 	}
+	for (int j = 0; j < nbBurnBonusSpriteY; j++) {
+		for (int i = 0; i < nbBurnBonusSpriteX; i++) {
+			srcTextureRect.x = i * burnBonusSpritewidth + (defaultSpriteSize * nbBonusSpriteX) + ( nbBombeSpriteX * defaultSpriteSize);
+			srcTextureRect.y = j * burnBonusSpriteHeight;
+			srcTextureRect.w = burnBonusSpritewidth;
+			srcTextureRect.h = burnBonusSpriteHeight;
+			bonusSprite[index] = SDL_CreateRGBSurface(0, burnBonusSpritewidth, burnBonusSpriteHeight, 32, rmask, gmask, bmask, amask);
+			SDL_BlitSurface(surface, &srcTextureRect, bonusSprite[index], &destTextureRect);
+			index++;
+		}
+	}
+	for (int j = 0; j < nbPopBonusSpriteY; j++) {
+		for (int i = 0; i < nbPopBonusSpriteX; i++) {
+			srcTextureRect.x = i * popBonusSpritewidth + (defaultSpriteSize * nbBonusSpriteX) + ( nbBombeSpriteX * defaultSpriteSize);
+			srcTextureRect.y = j * popBonusSpriteheight + (burnBonusSpriteHeight * nbBurnBonusSpriteY) ;
+			srcTextureRect.w = popBonusSpritewidth;
+			srcTextureRect.h = popBonusSpriteheight;
+			bonusSprite[index] = SDL_CreateRGBSurface(0, popBonusSpritewidth, popBonusSpriteheight, 32, rmask, gmask, bmask, amask);
+			SDL_BlitSurface(surface, &srcTextureRect, bonusSprite[index], &destTextureRect);
+			index++;
+		}
+	}
 }
 
 void Sprite::cropFireSurface(SDL_Surface * surface) {
@@ -831,6 +853,14 @@ SDL_Surface* Sprite::getFire(int x, int y) {
 
 SDL_Surface* Sprite::getBonus(int bonusNumber) {
 	return bonusSprite[bonusNumber];
+}
+
+SDL_Surface* getBurnBonus(int pos){
+	return bonusSprite[ (nbBonusSpriteX * nbBonusSpriteY) + bonusNumber];
+}
+
+SDL_Surface* getPopBonus(int pos){
+	return bonusSprite[ (nbBonusSpriteX * nbBonusSpriteY) + (nbBurnBonusSpriteX * nbBurnBonusSpriteY) + bonusNumber];
 }
 
 SDL_Surface* Sprite::getBombe(int x, int y) {

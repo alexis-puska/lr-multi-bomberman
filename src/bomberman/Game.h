@@ -18,6 +18,8 @@
 #include "animation/BurnWall.h"
 #include "animation/BurnLouis.h"
 #include "animation/SuddenDeathAnimation.h"
+#include "animation/PopBonus.h"
+#include "animation/BurnBonus.h"
 #include "utils/Sprite.h"
 
 #ifndef __MYCLASS_GAME
@@ -125,6 +127,8 @@ class Game {
 		std::vector<SuddenDeathAnimation *> suddenDeathAnimations;
 		std::vector<Brain *> brains;
 		std::vector<BurnLouis *> louisBurns;
+		std::vector<PopBonus *> PopBonusList;
+		std::vector<BurnBonus *> BurnBonusList;
 
 		/*
 		 *	GRID PART
