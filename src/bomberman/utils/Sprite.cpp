@@ -24,6 +24,7 @@ const static char *fontPath = "./resources/font/fragile_bombers.ttf";
 const static SDL_Color greenColor = { 0, 255, 0 };
 const static SDL_Color redColor = { 255, 0, 0 };
 const static SDL_Color blueColor = { 0, 140, 255 };
+const static SDL_Color goldColor = { 255, 255, 0 };
 
 Sprite Sprite::m_instance = Sprite();
 
@@ -817,6 +818,9 @@ SDL_Color Sprite::getSDL_Color(int color) {
 			break;
 		case green:
 			return greenColor;
+			break;
+		case gold:
+			return goldColor;
 			break;
 	}
 	return greenColor;

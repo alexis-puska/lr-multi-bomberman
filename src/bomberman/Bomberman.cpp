@@ -205,7 +205,8 @@ void Bomberman::drawPlayerTypeMenu() {
 		SDL_BlitSurface(Sprite::Instance().getMenuBackground(), NULL, screenBuffer, NULL);
 		copySurfaceToBackRenderer(Sprite::Instance().getShadowArea(0), screenBuffer, 33, 150);
 		copySurfaceToBackRenderer(Sprite::Instance().getShadowArea(2), screenBuffer, 33, 183);
-		Sprite::Instance().drawText(screenBuffer, (640 / 2), 154, "Configuration joueur", green, true);
+		Sprite::Instance().drawText(screenBuffer, (640 / 2), 154, "CONFIGURATION JOUEUR", green, true);
+		Sprite::Instance().drawText(screenBuffer, (640 / 2), 335, "- - move cursor with arrow and change with A / B - -", gold, true);
 
 		if (previousPlayerKeystate[0] & keyPadRight && keychange[0]) {
 			cursorPosition += 4;
@@ -298,6 +299,7 @@ void Bomberman::drawPlayerSpriteMenu() {
 		copySurfaceToBackRenderer(Sprite::Instance().getShadowArea(0), screenBuffer, 33, 150);
 		copySurfaceToBackRenderer(Sprite::Instance().getShadowArea(2), screenBuffer, 33, 183);
 		Sprite::Instance().drawText(screenBuffer, (640 / 2), 154, "SELECT COSTUME", green, true);
+		Sprite::Instance().drawText(screenBuffer, (640 / 2), 335, "- - change with Left / Right - -", gold, true);
 		//add player sprite
 		for (int i = 0; i < 8; i++) {
 			copySurfaceToBackRenderer(Sprite::Instance().playerDrawNormal(i, 0, 0, 0), screenBuffer, 54 + (i * 72), 174);
@@ -355,7 +357,7 @@ void Bomberman::drawPlayerSpriteMenu() {
 void Bomberman::drawGameOptionMenu() {
 	if (refreshBuffer || keychange[0]) {
 
-		if (previousPlayerKeystate[0] & keyPadRight && keychange[0]) {
+		if (previousPlayerKeystate[0] & keyPadA && keychange[0]) {
 			Sound::Instance().playBipSound();
 			switch (cursorPosition) {
 				case suddenDeathOption:
@@ -384,7 +386,7 @@ void Bomberman::drawGameOptionMenu() {
 					break;
 			}
 		}
-		if (previousPlayerKeystate[0] & keyPadLeft && keychange[0]) {
+		if (previousPlayerKeystate[0] & keyPadB && keychange[0]) {
 			Sound::Instance().playBipSound();
 			switch (cursorPosition) {
 				case suddenDeathOption:
@@ -442,6 +444,7 @@ void Bomberman::drawGameOptionMenu() {
 		copySurfaceToBackRenderer(Sprite::Instance().getShadowArea(0), screenBuffer, 33, 150);
 		copySurfaceToBackRenderer(Sprite::Instance().getShadowArea(1), screenBuffer, 33, 183);
 		Sprite::Instance().drawText(screenBuffer, (640/2), 154, "GAME OPTION", green, true);
+		Sprite::Instance().drawText(screenBuffer, (640 / 2), 335, "- - move cursor with arrow and change with A / B - -", gold, true);
 		Sprite::Instance().drawText(screenBuffer, 200, 187, "Sudden Death", green, false);
 		Sprite::Instance().drawText(screenBuffer, 200, 207, "Bad Bomber", green, false);
 		Sprite::Instance().drawText(screenBuffer, 200, 227, "CPU Level", green, false);
@@ -477,14 +480,15 @@ void Bomberman::drawLevelSelectionMenu() {
 		copySurfaceToBackRenderer(Sprite::Instance().getShadowArea(0), screenBuffer, 33, 150);
 		copySurfaceToBackRenderer(Sprite::Instance().getShadowArea(2), screenBuffer, 33, 183);
 		Sprite::Instance().drawText(screenBuffer, (640/2), 154, "SELECT THE LEVEL", green, true);
-		if (previousPlayerKeystate[0] & keyPadRight && keychange[0]) {
+		Sprite::Instance().drawText(screenBuffer, (640 / 2), 335, "- - move cursor with arrow and change with A / B - -", gold, true);
+		if (previousPlayerKeystate[0] & keyPadA && keychange[0]) {
 			Sound::Instance().playBipSound();
 			cursorPosition++;
 			if (cursorPosition > nbLevel - 1) {
 				cursorPosition = 0;
 			}
 		}
-		if (previousPlayerKeystate[0] & keyPadLeft && keychange[0]) {
+		if (previousPlayerKeystate[0] & keyPadB && keychange[0]) {
 			Sound::Instance().playBipSound();
 			cursorPosition--;
 			if (cursorPosition < 0) {

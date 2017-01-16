@@ -1,10 +1,12 @@
 #include "LevelVariante.h"
 
-LevelVariante::LevelVariante(int number, const char * descriptionLine1, const char * descriptionLine2, bool fillWithBrick, int definition[735], int bonus[13]){
+LevelVariante::LevelVariante(int number, const char * descriptionLine1, const char * descriptionLine2, bool fillWithBrick, int definition[735], int bonus[13], int fireStrenght, int nbBombe){
 	this->number = number;
 	strcpy(this->descriptionLine1, descriptionLine1);
 	strcpy(this->descriptionLine2, descriptionLine2);
 	this->fillWithBrick = fillWithBrick;
+	this->fireStrenght = fireStrenght;
+	this->nbBombe = nbBombe;
 	for(int i=0; i<735; i++){
 		this->definition[i] = definition[i];
 		reserved[i]=false;

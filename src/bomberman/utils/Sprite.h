@@ -86,7 +86,7 @@ enum playerMove {
 };
 
 enum textColor {
-	red = 0, blue = 1, green = 2
+	red = 0, blue = 1, green = 2, gold = 3
 };
 
 class Sprite {

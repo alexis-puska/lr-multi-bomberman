@@ -11,7 +11,7 @@
 
 class LevelVariante {
 	public:
-		LevelVariante(int number, const char * descriptionLine1, const char * descriptionLine2, bool fillWithBrick, int definition[735], int bonus[13]);
+		LevelVariante(int number, const char * descriptionLine1, const char * descriptionLine2, bool fillWithBrick, int definition[735], int bonus[13], int fireStrenght, int nbBombe);
 		~LevelVariante();
 
 		char getDefinition(int index);
@@ -31,5 +31,7 @@ class LevelVariante {
 		bool reserved[735];
 		int start[16];
 		int bonus[13];
+		int fireStrenght;
+		int nbBombe;
 };
 #endif
