@@ -5,6 +5,7 @@
 Bomberman::Bomberman(SDL_Surface * vout_bufLibretro) {
 	Sprite::Instance();
 	LevelService::Instance();
+	GameConfig::Instance();
 	Sound::Instance();
 	Sound::Instance().startMenuMusique();
 	srand (time(NULL));
@@ -170,10 +171,11 @@ void Bomberman::tick(unsigned short in_keystateLibretro[16]) {
 		}
 	} else {
 		if (game->isRequestStopGame()) {
+				previousPlayerKeystate[0] = in_keystate[0];
+			
 			game->exitGame();
 			delete game;
 			game = NULL;
-			keychange[0] = false;
 			cursorPosition = levelIndex;
 			currentStep = levelSelectionMenu;
 			Sound::Instance().stopMusique();

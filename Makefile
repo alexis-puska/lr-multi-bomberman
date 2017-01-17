@@ -49,6 +49,7 @@ OBJS += src/bomberman/utils/Sound.o
 OBJS += src/bomberman/utils/LevelService.o
 OBJS += src/bomberman/utils/Level.o
 OBJS += src/bomberman/utils/LevelVariante.o
+OBJS += src/bomberman/utils/GameConfig.o
 
 
 #COMPILATION

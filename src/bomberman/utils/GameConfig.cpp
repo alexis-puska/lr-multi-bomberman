@@ -18,7 +18,7 @@ GameConfig::GameConfig() {
 	timeOfGame = timeOfGameDefault;
 	
 	nbplayerInGame = 0;
-	for(int i = 0 ; i < nbBonus ; i++){
+	for(int i = 0 ; i < nbTypeBonus ; i++){
 		bonus[i] = 0;
 	}
 	for(int i = 0 ; i < nbPlayer ; i++){
@@ -36,15 +36,15 @@ GameConfig::~GameConfig() {
 	
 void GameConfig::incLevel(){
 	level++;
-	if(n > LevelService::getNumberOfLevels()){
+	if(level > LevelService::Instance().getNumberOfLevels()){
 		level = 0;
 	}
 }
 
 void GameConfig::decLevel(){
 	level--;
-	if(n < 0){
-		level = LevelService::getNumberOfLevels();
+	if(level < 0){
+		level = LevelService::Instance().getNumberOfLevels();
 	}
 }
 	
@@ -52,17 +52,17 @@ int GameConfig::getLevel(){
 	return level;
 }
 	
-void GameConfig::incVariante(int n){
+void GameConfig::incVariante(){
 	variante++;
-	if( variante > LevelService::getLevel()->getVariantesSize()){
+	if( variante > LevelService::Instance().getLevel(level)->getVariantesSize()){
 		variante = 0;
 	}
 }
 
-void GameConfig::decVariante(int n){
+void GameConfig::decVariante(){
 	variante--;
 	if(variante < 0){
-		variante = LevelService::getLevel()->getVariantesSize();
+		variante = LevelService::Instance().getLevel(level)->getVariantesSize();
 	}
 }
 	
@@ -70,18 +70,22 @@ int GameConfig::getVariante(){
 	return variante;
 }
 
-void GameConfig::setBombe(int n){
-	if(n > nbBombeMax){
-		bombe = nbBombeMin;
-	}else if(n < nbBombeMin){
-		bombe = nbBombeMax;
-	}else{
-		bombe = n;
+void GameConfig::incBombe(){
+	nbBombe++;
+	if(nbBombe > nbBombeMax){
+		nbBombe = nbBombeMin;
+	}
+}
+
+void GameConfig::decBombe(){
+	nbBombe--;
+	if(nbBombe < nbBombeMin){
+		nbBombe = nbBombeMax;
 	}
 }
 
 int GameConfig::getBombe(){
-	return bombe;
+	return nbBombe;
 }
 
 void GameConfig::setStrengthBombe(int n){
@@ -99,7 +103,7 @@ int GameConfig::getStrenghtBombe(){
 }
 
 void GameConfig::incBonus(int idx){
-	if(sumTotalBonus() + 1) > nbMaxBonusTotal){
+	if((sumTotalBonus() + 1) > nbMaxBonusTotal){
 		return;
 	}
 	bonus[idx]++;
@@ -109,7 +113,7 @@ void GameConfig::incBonus(int idx){
 }
 
 void GameConfig::inc5Bonus(int idx){
-	if(sumTotalBonus() + 5) > nbMaxBonusTotal){
+	if((sumTotalBonus() + 5) > nbMaxBonusTotal){
 		return;
 	}
 	bonus[idx] = bonus[idx] + 5;
@@ -170,10 +174,9 @@ bool GameConfig::isSuddentDeathMode(){
 
 void GameConfig::switchBadBomberMode(){
 	if(badBomberMode){
-			badBomberMode = false;
-		}else{
-			badBomberMode = true;
-		}
+		badBomberMode = false;
+	}else{
+		badBomberMode = true;
 	}
 }
 

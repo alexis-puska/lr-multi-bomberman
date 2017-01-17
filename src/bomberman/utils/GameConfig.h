@@ -3,8 +3,8 @@
 #include <sys/time.h>
 #include <vector>
 #include <algorithm>
-#include "utils/Sprite.h"
-#include "utils/LevelService.h"
+#include "Sprite.h"
+#include "LevelService.h"
 
 #define nbBombeMax	 			6
 #define nbBombeMin	 			1
@@ -32,11 +32,16 @@ class GameConfig {
 		static GameConfig& Instance();
 		void resetConfigEndGame();
 		
-		void setLevel(int n);
+		void incLevel();
+		void inc5Level();
+		void decLevel();
+		void dec5Level();
 		int getLevel();
-		void setVariante(int n);
+		void incVariante();
+		void decVariante();
 		int getVariante();
-		void setBombe(int n)
+		void incBombe();
+		void decBombe();
 		int getBombe();
 		void setStrengthBombe(int n);
 		int getStrenghtBombe();
@@ -54,7 +59,8 @@ class GameConfig {
 		bool isBadBomberMode();
 		void setIALevel(int n);
 		int getIALevel();
-		void setTimeOfGame(int n);
+		void incTimeOfGame();
+		void decTimeOfGame();
 		int getTimeOfGame();
 		void setNbPlayerInGame(int n);
 		int getNbPlayerInGame();

@@ -12,6 +12,7 @@
 #include "utils/Sprite.h"
 #include "utils/Sound.h"
 #include "utils/LevelService.h"
+#include "utils/GameConfig.h"
 
 enum bombermanStepEnum {
 	home = 0,					//spashscreen
