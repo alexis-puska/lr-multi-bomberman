@@ -557,7 +557,7 @@ void Bomberman::drawLevelSelectionMenu() {
 		copySurfaceToBackRenderer(Sprite::Instance().getLevelPreview(GameConfig::Instance().getLevel()), screenBuffer, 50, 200);
 		Level * level = LevelService::Instance().getLevel(GameConfig::Instance().getLevel());
 		char num[3];
-		sprintf(num, "%i", level->getVariantes(0)->getNumber());
+		sprintf(num, "%i", level->getVariantes(GameConfig::Instance().getVariante())->getNumber());
 		char numBombe[3];
 		sprintf(numBombe, "%i", GameConfig::Instance().getBombe());
 		char strenght[3];
@@ -572,8 +572,8 @@ void Bomberman::drawLevelSelectionMenu() {
 		Sprite::Instance().drawText(screenBuffer, 550, 184, numBombe, blue, false);
 		Sprite::Instance().drawText(screenBuffer, 327, 202, num, blue, false);
 		Sprite::Instance().drawText(screenBuffer, 550, 202, strenght, blue, false);
-		Sprite::Instance().drawText(screenBuffer, 327, 220, level->getVariantes(0)->getDescriptionLine1(), green, false);
-		Sprite::Instance().drawText(screenBuffer, 327, 238, level->getVariantes(0)->getDescriptionLine2(), green, false);
+		Sprite::Instance().drawText(screenBuffer, 327, 220, level->getVariantes(GameConfig::Instance().getVariante())->getDescriptionLine1(), green, false);
+		Sprite::Instance().drawText(screenBuffer, 327, 238, level->getVariantes(GameConfig::Instance().getVariante())->getDescriptionLine2(), green, false);
 		if(GameConfig::Instance().isCustomBonus()){
 			Sprite::Instance().drawText(screenBuffer, 327, 256, "Custom", blue, false);
 		}else{
