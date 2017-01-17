@@ -7,6 +7,7 @@ GameConfig& GameConfig::Instance() {
 }
 
 GameConfig::GameConfig() {
+	srand (time(NULL));
 	level = 0;
 	variante = 0;
 	nbBombe = nbBombedefault;
@@ -22,11 +23,13 @@ GameConfig::GameConfig() {
 		bonus[i] = 0;
 	}
 	for(int i = 0 ; i < nbPlayer ; i++){
-		playerType[i] = 0;
+		playerType[i] = 1;
 		playerColor[i] = 0;
 		playerSpriteType[i] = 0;
 	}
+	playerType[0] = 0;
 	resetPlayerScore();
+	copyLevelBonus();
 }
 
 GameConfig::~GameConfig() {
@@ -36,16 +39,18 @@ GameConfig::~GameConfig() {
 	
 void GameConfig::incLevel(){
 	level++;
-	if(level > LevelService::Instance().getNumberOfLevels()){
+	if(level > LevelService::Instance().getNumberOfLevels() - 1){
 		level = 0;
 	}
+	copyLevelBonus();
 }
 
 void GameConfig::decLevel(){
 	level--;
 	if(level < 0){
-		level = LevelService::Instance().getNumberOfLevels();
+		level = LevelService::Instance().getNumberOfLevels() - 1;
 	}
+	copyLevelBonus();
 }
 	
 int GameConfig::getLevel(){
@@ -54,7 +59,7 @@ int GameConfig::getLevel(){
 	
 void GameConfig::incVariante(){
 	variante++;
-	if( variante > LevelService::Instance().getLevel(level)->getVariantesSize()){
+	if( variante > LevelService::Instance().getLevel(level)->getVariantesSize() - 1){
 		variante = 0;
 	}
 }
@@ -62,7 +67,7 @@ void GameConfig::incVariante(){
 void GameConfig::decVariante(){
 	variante--;
 	if(variante < 0){
-		variante = LevelService::Instance().getLevel(level)->getVariantesSize();
+		variante = LevelService::Instance().getLevel(level)->getVariantesSize() - 1;
 	}
 }
 	
@@ -88,13 +93,17 @@ int GameConfig::getBombe(){
 	return nbBombe;
 }
 
-void GameConfig::setStrengthBombe(int n){
-	if(n > bombeStrenghtMax){
+void GameConfig::incStrengthBombe(){
+	strengthBombe++;
+	if(strengthBombe > bombeStrenghtMax){
 		strengthBombe = bombeStrenghtMin;
-	}else if(n < bombeStrenghtMin){
+	}
+}
+
+void GameConfig::decStrengthBombe(){
+	strengthBombe--;
+	if(strengthBombe < bombeStrenghtMin){
 		strengthBombe = bombeStrenghtMax;
-	}else{
-		strengthBombe = n;
 	}
 }
 
@@ -103,6 +112,7 @@ int GameConfig::getStrenghtBombe(){
 }
 
 void GameConfig::incBonus(int idx){
+	customBonus = true;
 	if((sumTotalBonus() + 1) > nbMaxBonusTotal){
 		return;
 	}
@@ -113,6 +123,7 @@ void GameConfig::incBonus(int idx){
 }
 
 void GameConfig::inc5Bonus(int idx){
+	customBonus = true;
 	if((sumTotalBonus() + 5) > nbMaxBonusTotal){
 		return;
 	}
@@ -123,6 +134,7 @@ void GameConfig::inc5Bonus(int idx){
 }
 
 void GameConfig::decBonus(int idx){
+	customBonus = true;
 	bonus[idx]--;
 	if(bonus[idx] < 0 ){
 		bonus[idx] = 0;
@@ -130,6 +142,7 @@ void GameConfig::decBonus(int idx){
 }
 
 void GameConfig::dec5Bonus(int idx){
+	customBonus = true;
 	bonus[idx] = bonus[idx] - 5;
 	if(bonus[idx] < 0 ){
 		bonus[idx] = 0;
@@ -151,6 +164,7 @@ int GameConfig::sumTotalBonus(){
 void GameConfig::switchCustomBonus(){
 	if(customBonus){
 		customBonus = false;
+		copyLevelBonus();
 	}else{
 		customBonus = true;
 	}
@@ -184,13 +198,18 @@ bool GameConfig::isBadBomberMode(){
 	return badBomberMode;
 }
 
-void GameConfig::setIALevel(int n){
-	if(n > bombeStrenghtMax){
-		IALevel = bombeStrenghtMin;
-	}else if(n < bombeStrenghtMin){
-		IALevel = bombeStrenghtMax;
-	}else{
-		IALevel = n;
+
+void GameConfig::incIALevel(){
+	IALevel++;
+	if(IALevel > nbMaxIALevel){
+		IALevel = 1;
+	}
+}
+
+void GameConfig::decIALevel(){
+	IALevel--;
+	if(IALevel < 1){
+		IALevel = nbMaxIALevel;
 	}
 }
 
@@ -199,19 +218,23 @@ int GameConfig::getIALevel(){
 }
 
 void GameConfig::incTimeOfGame(){
+	if(timeOfGame == timeOfGameInf){
+		timeOfGame = timeOfGameMin;
+		return;
+	}
 	timeOfGame++;
 	if(timeOfGame > timeOfGameMax){
 		timeOfGame = timeOfGameInf;
-	}else if(timeOfGame == (timeOfGameInf+1)){
-		timeOfGame = timeOfGameMin;
 	}
 }
 void GameConfig::decTimeOfGame(){
+	if(timeOfGame == timeOfGameInf){
+		timeOfGame = timeOfGameMax;
+		return;
+	}
 	timeOfGame--;
 	if(timeOfGame < timeOfGameMin){
 		timeOfGame = timeOfGameInf;
-	}else if(timeOfGame == (timeOfGameInf-1)){
-		timeOfGame = timeOfGameMax;
 	}
 }
 
@@ -224,7 +247,31 @@ void GameConfig::setNbPlayerInGame(int n){
 }
 
 int GameConfig::getNbPlayerInGame(){
+	int nbplayerInGame = 0;
+	for (int i = 0; i < 16; i++) {
+		if (playerType[i] < 2) {
+			nbplayerInGame++;
+		}
+	}
 	return nbplayerInGame;
+}
+
+void GameConfig::incPlayerType(int idx){
+	if(idx!=0){
+		playerType[idx]++;
+		if(playerType[idx] > 2){
+			playerType[idx] = 0;
+		}
+	}
+}
+
+void GameConfig::decPlayerType(int idx){
+	if(idx!=0){
+		playerType[idx]--;
+		if(playerType[idx] < 0){
+			playerType[idx] = 2;
+		}
+	}
 }
 
 void GameConfig::setPlayerType(int idx, int val){
@@ -243,11 +290,33 @@ int GameConfig::getPlayerColor(int idx){
 	return playerColor[idx];
 }
 
+void GameConfig::generatePlayerSpriteTypeforCPU(){
+	for (int i = 0; i < 16; i++) {
+		if (playerType[i] == 1) {
+			playerSpriteType[i] = (rand() % 7);
+		}
+	}
+}
+
+void GameConfig::incPlayerSpriteType(int idx){
+	playerSpriteType[idx]++;
+	if(playerSpriteType[idx] > nbTypePlayer){
+		playerSpriteType[idx] = 0;
+	}
+}
+
+void GameConfig::decPlayerSpriteType(int idx){
+	playerSpriteType[idx]--;
+	if(playerSpriteType[idx] < 0){
+		playerSpriteType[idx] = nbTypePlayer;
+	}
+}
+
 void GameConfig::setPlayerSpriteType(int idx, int val){
 	playerSpriteType[idx] = val;
 }
 
-int GameConfig::setPlayerSpriteType(int idx){
+int GameConfig::getPlayerSpriteType(int idx){
 	return playerSpriteType[idx];
 }
 
@@ -276,5 +345,11 @@ int GameConfig::setPlayerStatus(int idx){
 void GameConfig::resetPlayerStatus(){
 	for(int i = 0 ; i < nbPlayer ; i++){
 		playerStatus[i] = 0;
+	}
+}
+
+void GameConfig::copyLevelBonus(){
+	for(int i = 0 ; i < nbTypeBonus ; i++){
+		bonus[i] = LevelService::Instance().getLevel(level)->getVariantes(variante)->getBonus(i);
 	}
 }

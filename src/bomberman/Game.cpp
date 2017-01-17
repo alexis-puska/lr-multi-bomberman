@@ -58,11 +58,11 @@ Game::Game() {
  * constructor
  * 
  */
-Game::Game(int levelIndex, int playerInformationParam[16][2], int gameOption[4], SDL_Surface * vout_buf, unsigned short * in_keystate, int nbPlayerConfig) {
-	srand (time(NULL));this->nbPlayerConfig = nbPlayerConfig;
+Game::Game(SDL_Surface * vout_buf, unsigned short * in_keystate) {
+	srand (time(NULL));this->nbPlayerConfig = GameConfig::Instance().getNbPlayerInGame();
 	this->vout_buf = vout_buf;
 	this->in_keystate = in_keystate;
-	this->levelIndex = levelIndex;
+	this->levelIndex = GameConfig::Instance().getLevel();
 
 	gameState = gameWait;
 	nbPlayerInGame = 0;
@@ -100,24 +100,17 @@ Game::Game(int levelIndex, int playerInformationParam[16][2], int gameOption[4],
 		tabPlayerCoord[i] = -1.0;
 	}
 
-	if (gameOption[0] == 1) {
-		suddenDeath = true;
-	} else {
-		suddenDeath = false;
-	}
 
-	if (gameOption[1] == 1) {
-		badBomber = true;
-	} else {
-		badBomber = false;
-	}
+	suddenDeath = GameConfig::Instance().isSuddentDeathMode();
+	badBomber = GameConfig::Instance().isBadBomberMode();
 
-	cpuLevel = gameOption[2];
-	if (gameOption[3] != -1) {
-		nbTickForGame = gameOption[3] * 50 * 60;
+
+	cpuLevel = GameConfig::Instance().getIALevel();
+	if (GameConfig::Instance().getTimeOfGame() != -1) {
+		nbTickForGame = GameConfig::Instance().getTimeOfGame() * 50 * 60;
 		nbTickForGameParam = nbTickForGame;
 	} else {
-		nbTickForGame = gameOption[3];
+		nbTickForGame = GameConfig::Instance().getTimeOfGame();
 		nbTickForGameParam = nbTickForGame;
 	}
 	grid = new Grid(levelIndex, tab, tabBonus);
@@ -152,8 +145,8 @@ Game::Game(int levelIndex, int playerInformationParam[16][2], int gameOption[4],
 		float startX = (startCase%35)+0.5;
 		float startY = (startCase/35)+0.5;
 
-		playerInformation[i][0] = playerInformationParam[i][0];
-		playerInformation[i][1] = playerInformationParam[i][1];
+		playerInformation[i][0] = GameConfig::Instance().getPlayerType(i);
+		playerInformation[i][1] = GameConfig::Instance().getPlayerSpriteType(i);
 		//alive
 		playerInformation[i][3] = 1;
 		//score null

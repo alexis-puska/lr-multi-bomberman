@@ -8,7 +8,7 @@ Bomberman::Bomberman(SDL_Surface * vout_bufLibretro) {
 	GameConfig::Instance();
 	Sound::Instance();
 	Sound::Instance().startMenuMusique();
-	srand (time(NULL));
+
 
 	//color mask
 Uint32 	rmask, gmask, bmask, amask;
@@ -24,19 +24,7 @@ Uint32 	rmask, gmask, bmask, amask;
 	copySurfaceToBackRenderer(Sprite::Instance().getSplashScreen(), screenBuffer, 0, 0);
 	currentStep = home;
 
-	//init default player type
-	for (int i = 0; i < 16; i++) {
-		playerType[i][0] = 1;
-		playerType[i][1] = (rand() % 7);
-	}
-	playerType[0][0] = 0;
-	playerType[0][1] = 0;
 
-	//init GameOption
-	gameOption[0] = 0;
-	gameOption[1] = 0;
-	gameOption[2] = 1;
-	gameOption[3] = 3;
 	game = NULL;
 }
 
@@ -62,7 +50,7 @@ void Bomberman::tick(unsigned short in_keystateLibretro[16]) {
 	if (currentStep != gameStep) {
 		keyPressed();
 
-		int nbPlayerConfig = 0;
+
 		//spash screen and start pressed !
 		if (previousPlayerKeystate[0] & keyPadStart && keychange[0]) {
 			refreshBuffer = true;
@@ -73,11 +61,7 @@ void Bomberman::tick(unsigned short in_keystateLibretro[16]) {
 					currentStep = PlayerTypeMenu;
 					break;
 				case PlayerTypeMenu:
-					for (int i = 0; i < 16; i++) {
-						if (playerType[i][0] == 1) {
-							playerType[i][1] = (rand() % 7);
-						}
-					}
+					GameConfig::Instance().generatePlayerSpriteTypeforCPU();
 					cursorPosition = 0;
 					currentStep = PlayerSpriteMenu;
 					break;
@@ -91,13 +75,8 @@ void Bomberman::tick(unsigned short in_keystateLibretro[16]) {
 					break;
 				case levelSelectionMenu:
 					cursorPosition = 0;
-					nbPlayerConfig = 0;
-					for (int i = 0; i < 16; i++) {
-						if (playerType[i][0] <= 1) {
-							nbPlayerConfig++;
-						}
-					}
-					game = new Game(levelIndex, playerType, gameOption, vout_buf, in_keystate, nbPlayerConfig);
+
+					game = new Game(vout_buf, in_keystate);
 					currentStep = gameStep;
 
 					Sound::Instance().stopMusique();
@@ -132,7 +111,7 @@ void Bomberman::tick(unsigned short in_keystateLibretro[16]) {
 					currentStep = gameOptionMenu;
 					break;
 				case gameStep:
-					cursorPosition = levelIndex;
+					cursorPosition = GameConfig::Instance().getLevel();
 					currentStep = levelSelectionMenu;
 					break;
 			}
@@ -171,12 +150,11 @@ void Bomberman::tick(unsigned short in_keystateLibretro[16]) {
 		}
 	} else {
 		if (game->isRequestStopGame()) {
-				previousPlayerKeystate[0] = in_keystate[0];
-			
+			previousPlayerKeystate[0] = in_keystate[0];
 			game->exitGame();
 			delete game;
 			game = NULL;
-			cursorPosition = levelIndex;
+			cursorPosition = GameConfig::Instance().getLevel();
 			currentStep = levelSelectionMenu;
 			Sound::Instance().stopMusique();
 			Sound::Instance().startMenuMusique();
@@ -240,22 +218,16 @@ void Bomberman::drawPlayerTypeMenu() {
 			}
 		}
 		if (previousPlayerKeystate[0] & keyPadA && keychange[0]) {
-			playerType[cursorPosition][0]++;
 			Sound::Instance().playBipSound();
-			if (playerType[cursorPosition][0] > 2) {
-				playerType[cursorPosition][0] = 0;
-			}
+			GameConfig::Instance().incPlayerType(cursorPosition);
 		}
 		if (previousPlayerKeystate[0] & keyPadB && keychange[0]) {
-			playerType[cursorPosition][0]--;
 			Sound::Instance().playBipSound();
-			if (playerType[cursorPosition][0] < 0) {
-				playerType[cursorPosition][0] = 2;
-			}
+			GameConfig::Instance().decPlayerType(cursorPosition);
 		}
 
 		//player 0 always Human
-		playerType[0][0] = 0;
+
 		for (int j = 0; j < 4; j++) {
 			for (int i = 0; i < 4; i++) {
 				char playerName[15] = "Joueur ";
@@ -263,7 +235,7 @@ void Bomberman::drawPlayerTypeMenu() {
 				sprintf(playerName, "Joueur %2i : ", (j * 4 + i) + 1);
 
 				int playerColor = blue;
-				switch (playerType[j * 4 + i][0]) {
+				switch (GameConfig::Instance().getPlayerType(j * 4 + i)) {
 					case HUMAN:
 						sprintf(playerTypeName, "HUMAN");
 						playerColor = blue;
@@ -310,28 +282,22 @@ void Bomberman::drawPlayerSpriteMenu() {
 
 		for (int i = 0; i < 16; i++) {
 			if (previousPlayerKeystate[i] & keyPadRight && keychange[i]) {
-				playerType[i][1] = playerType[i][1] + 1;
+				GameConfig::Instance().incPlayerSpriteType(i);
 				Sound::Instance().playBipSound();
-				if (playerType[i][1] > 7) {
-					playerType[i][1] = 0;
-				}
 			}
 			if (previousPlayerKeystate[i] & keyPadLeft && keychange[i]) {
-				playerType[i][1] = playerType[i][1] - 1;
+				GameConfig::Instance().decPlayerSpriteType(i);
 				Sound::Instance().playBipSound();
-				if (playerType[i][1] < 0) {
-					playerType[i][1] = 7;
-				}
 			}
 		}
 
 		int list[8] = { 0, 0, 0, 0, 0, 0, 0, 0 };
 		for (int i = 0; i < 16; i++) {
-			if (playerType[i][0] != OFF) {
-				int index = playerType[i][1];
+			if (GameConfig::Instance().getPlayerType(i) != OFF) {
+				int index = GameConfig::Instance().getPlayerSpriteType(i);
 				char playerName[10];
 				int playerColor = blue;
-				switch (playerType[i][0]) {
+				switch (GameConfig::Instance().getPlayerType(i)) {
 					case HUMAN:
 						sprintf(playerName, "HUMAN %i", i + 1);
 						playerColor = blue;
@@ -343,7 +309,7 @@ void Bomberman::drawPlayerSpriteMenu() {
 					case OFF:
 						break;
 				}
-				Sprite::Instance().drawText(screenBuffer, 70 + (playerType[i][1] * 72), 216 + (15 * list[index]), playerName, playerColor, true);
+				Sprite::Instance().drawText(screenBuffer, 70 + (GameConfig::Instance().getPlayerSpriteType(i) * 72), 216 + (15 * list[index]), playerName, playerColor, true);
 				list[index] = list[index] + 1;
 			}
 		}
@@ -364,28 +330,16 @@ void Bomberman::drawGameOptionMenu() {
 			Sound::Instance().playBipSound();
 			switch (cursorPosition) {
 				case suddenDeathOption:
+					GameConfig::Instance().switchSuddenDeathMode();
+					break;
 				case badBomberOption:
-					if (gameOption[cursorPosition] == 0) {
-						gameOption[cursorPosition] = 1;
-					} else {
-						gameOption[cursorPosition] = 0;
-					}
+					GameConfig::Instance().switchBadBomberMode();
 					break;
 				case cpuLevelOption:
-					gameOption[cursorPosition] = gameOption[cursorPosition] + 1;
-					if (gameOption[cursorPosition] < 1) {
-						gameOption[cursorPosition] = 5;
-					} else if (gameOption[cursorPosition] > 5) {
-						gameOption[cursorPosition] = 1;
-					}
+					GameConfig::Instance().incIALevel();
 					break;
 				case timeLevelOption:
-					gameOption[cursorPosition] = gameOption[cursorPosition] + 1;
-					if (gameOption[cursorPosition] > 6) {
-						gameOption[cursorPosition] = -1;
-					} else if (gameOption[cursorPosition] == 0) {
-						gameOption[cursorPosition] = 2;
-					}
+					GameConfig::Instance().incTimeOfGame();
 					break;
 			}
 		}
@@ -393,28 +347,16 @@ void Bomberman::drawGameOptionMenu() {
 			Sound::Instance().playBipSound();
 			switch (cursorPosition) {
 				case suddenDeathOption:
+					GameConfig::Instance().switchSuddenDeathMode();
+					break;
 				case badBomberOption:
-					if (gameOption[cursorPosition] == 0) {
-						gameOption[cursorPosition] = 1;
-					} else {
-						gameOption[cursorPosition] = 0;
-					}
+					GameConfig::Instance().switchBadBomberMode();
 					break;
 				case cpuLevelOption:
-					gameOption[cursorPosition] = gameOption[cursorPosition] - 1;
-					if (gameOption[cursorPosition] < 1) {
-						gameOption[cursorPosition] = 5;
-					} else if (gameOption[cursorPosition] > 5) {
-						gameOption[cursorPosition] = 1;
-					}
+					GameConfig::Instance().decIALevel();
 					break;
 				case timeLevelOption:
-					gameOption[cursorPosition] = gameOption[cursorPosition] - 1;
-					if (gameOption[cursorPosition] == 1) {
-						gameOption[cursorPosition] = -1;
-					} else if (gameOption[cursorPosition] == -2) {
-						gameOption[cursorPosition] = 6;
-					}
+					GameConfig::Instance().decTimeOfGame();
 					break;
 
 			}
@@ -437,10 +379,10 @@ void Bomberman::drawGameOptionMenu() {
 		SDL_BlitSurface(Sprite::Instance().getMenuBackground(), NULL, screenBuffer, NULL);
 
 		char CPULevel[2];
-		sprintf(CPULevel, "%i", gameOption[2]);
+		sprintf(CPULevel, "%i", GameConfig::Instance().getIALevel());
 		char timeOfLevel[7];
-		if (gameOption[3] != -1) {
-			sprintf(timeOfLevel, "%i", gameOption[3]);
+		if (GameConfig::Instance().getTimeOfGame() != -1) {
+			sprintf(timeOfLevel, "%i", GameConfig::Instance().getTimeOfGame());
 		} else {
 			sprintf(timeOfLevel, "infini");
 		}
@@ -452,12 +394,12 @@ void Bomberman::drawGameOptionMenu() {
 		Sprite::Instance().drawText(screenBuffer, 200, 207, "Bad Bomber", green, false);
 		Sprite::Instance().drawText(screenBuffer, 200, 227, "CPU Level", green, false);
 		Sprite::Instance().drawText(screenBuffer, 200, 247, "Time", green, false);
-		if (gameOption[0] == 1) {
+		if (GameConfig::Instance().isSuddentDeathMode()) {
 			Sprite::Instance().drawText(screenBuffer, 400, 187, "ON", green, false);
 		} else {
 			Sprite::Instance().drawText(screenBuffer, 400, 187, "OFF", red, false);
 		}
-		if (gameOption[1] == 1) {
+		if (GameConfig::Instance().isBadBomberMode()) {
 			Sprite::Instance().drawText(screenBuffer, 400, 207, "ON", green, false);
 		} else {
 			Sprite::Instance().drawText(screenBuffer, 400, 207, "OFF", red, false);
@@ -484,46 +426,210 @@ void Bomberman::drawLevelSelectionMenu() {
 		copySurfaceToBackRenderer(Sprite::Instance().getShadowArea(2), screenBuffer, 33, 183);
 		Sprite::Instance().drawText(screenBuffer, (640/2), 154, "SELECT THE LEVEL", green, true);
 		Sprite::Instance().drawText(screenBuffer, (640 / 2), 335, "- - move cursor with arrow and change with A / B - -", gold, true);
-		if (previousPlayerKeystate[0] & keyPadA && keychange[0]) {
+
+		if (previousPlayerKeystate[0] & keyPadDown && keychange[0]) {
 			Sound::Instance().playBipSound();
 			cursorPosition++;
-			if (cursorPosition > nbLevel - 1) {
+			if(cursorPosition > 17){
 				cursorPosition = 0;
+			}
+		}
+		if (previousPlayerKeystate[0] & keyPadUp && keychange[0]) {
+			Sound::Instance().playBipSound();
+			cursorPosition--;
+			if(cursorPosition < 0){
+				cursorPosition = 17;
+			}
+		}
+		if (previousPlayerKeystate[0] & keyPadA && keychange[0]) {
+			Sound::Instance().playBipSound();
+			switch(cursorPosition){
+				case 0:
+					GameConfig::Instance().incLevel();
+					break;
+				case 1:
+					GameConfig::Instance().incBombe();
+					break;
+				case 2:
+					GameConfig::Instance().incVariante();
+					break;
+				case 3:
+					GameConfig::Instance().incStrengthBombe();
+					break;
+				case 4:
+					GameConfig::Instance().switchCustomBonus();
+					break;
+				case 5:
+				case 6:
+				case 7:
+				case 8:
+				case 9:
+				case 10:
+				case 11:
+				case 12:
+				case 13:
+				case 14:
+				case 15:
+				case 16:
+				case 17:
+					GameConfig::Instance().incBonus((cursorPosition - 5));
+					break;
 			}
 		}
 		if (previousPlayerKeystate[0] & keyPadB && keychange[0]) {
 			Sound::Instance().playBipSound();
-			cursorPosition--;
-			if (cursorPosition < 0) {
-				cursorPosition = nbLevel - 1;
+			switch(cursorPosition){
+				case 0:
+					GameConfig::Instance().decLevel();
+					break;
+				case 1:
+					GameConfig::Instance().decBombe();
+					break;
+				case 2:
+					GameConfig::Instance().decVariante();
+					break;
+				case 3:
+					GameConfig::Instance().decStrengthBombe();
+					break;
+				case 4:
+					GameConfig::Instance().switchCustomBonus();
+					break;
+				case 5:
+				case 6:
+				case 7:
+				case 8:
+				case 9:
+				case 10:
+				case 11:
+				case 12:
+				case 13:
+				case 14:
+				case 15:
+				case 16:
+				case 17:
+					GameConfig::Instance().decBonus((cursorPosition - 5));
+					break;
 			}
 		}
-		copySurfaceToBackRenderer(Sprite::Instance().getLevelPreview(cursorPosition), screenBuffer, 50, 200);
-		Level * level = LevelService::Instance().getLevel(cursorPosition);
 
+		if (previousPlayerKeystate[0] & keyPadX && keychange[0]) {
+			Sound::Instance().playBipSound();
+			switch(cursorPosition){
+				case 5:
+				case 6:
+				case 7:
+				case 8:
+				case 9:
+				case 10:
+				case 11:
+				case 12:
+				case 13:
+				case 14:
+				case 15:
+				case 16:
+				case 17:
+					GameConfig::Instance().inc5Bonus((cursorPosition - 5));
+					break;
+			}
+		}
+		if (previousPlayerKeystate[0] & keyPadY && keychange[0]) {
+			Sound::Instance().playBipSound();
+			switch(cursorPosition){
+				case 5:
+				case 6:
+				case 7:
+				case 8:
+				case 9:
+				case 10:
+				case 11:
+				case 12:
+				case 13:
+				case 14:
+				case 15:
+				case 16:
+				case 17:
+					GameConfig::Instance().dec5Bonus((cursorPosition - 5));
+					break;
+			}
+		}
+
+		//display information
+		copySurfaceToBackRenderer(Sprite::Instance().getLevelPreview(GameConfig::Instance().getLevel()), screenBuffer, 50, 200);
+		Level * level = LevelService::Instance().getLevel(GameConfig::Instance().getLevel());
 		char num[3];
 		sprintf(num, "%i", level->getVariantes(0)->getNumber());
+		char numBombe[3];
+		sprintf(numBombe, "%i", GameConfig::Instance().getBombe());
+		char strenght[3];
+		sprintf(strenght, "%i", GameConfig::Instance().getStrenghtBombe());
 		Sprite::Instance().drawText(screenBuffer, 224, 184, "Name : ", green, false);
-		Sprite::Instance().drawText(screenBuffer, 224, 204, "Variante : ", green, false);
-		Sprite::Instance().drawText(screenBuffer, 224, 224, "Description : ", green, false);
-		Sprite::Instance().drawText(screenBuffer, 224, 264, "Bonus : ", green, false);
-		Sprite::Instance().drawText(screenBuffer, 327, 184, level->getName(), green, false);
-		Sprite::Instance().drawText(screenBuffer, 327, 204, num, green, false);
-		Sprite::Instance().drawText(screenBuffer, 327, 224, level->getVariantes(0)->getDescriptionLine1(), green, false);
-		Sprite::Instance().drawText(screenBuffer, 327, 244, level->getVariantes(0)->getDescriptionLine2(), green, false);
-		Sprite::Instance().drawText(screenBuffer, 327, 264, "default", green, false);
+		Sprite::Instance().drawText(screenBuffer, 474, 184, "Bombe : ", green, false);
+		Sprite::Instance().drawText(screenBuffer, 224, 202, "Variante : ", green, false);
+		Sprite::Instance().drawText(screenBuffer, 474, 202, "Strenght : ", green, false);
+		Sprite::Instance().drawText(screenBuffer, 224, 220, "Description : ", green, false);
+		Sprite::Instance().drawText(screenBuffer, 224, 256, "Bonus : ", green, false);
+		Sprite::Instance().drawText(screenBuffer, 327, 184, level->getName(), blue, false);
+		Sprite::Instance().drawText(screenBuffer, 550, 184, numBombe, blue, false);
+		Sprite::Instance().drawText(screenBuffer, 327, 202, num, blue, false);
+		Sprite::Instance().drawText(screenBuffer, 550, 202, strenght, blue, false);
+		Sprite::Instance().drawText(screenBuffer, 327, 220, level->getVariantes(0)->getDescriptionLine1(), green, false);
+		Sprite::Instance().drawText(screenBuffer, 327, 238, level->getVariantes(0)->getDescriptionLine2(), green, false);
+		if(GameConfig::Instance().isCustomBonus()){
+			Sprite::Instance().drawText(screenBuffer, 327, 256, "Custom", blue, false);
+		}else{
+			Sprite::Instance().drawText(screenBuffer, 327, 256, "Default", blue, false);
+		}
 		for(int i=0 ; i<13 ; i++){
-			sprintf(num, "%i", level->getVariantes(0)->getBonus(i));
-			copySurfaceToBackRenderer(Sprite::Instance().getBonus(i), screenBuffer, 224 + i * 30, 288);
-			Sprite::Instance().drawText(screenBuffer, 232 + i * 30, 302, num, green, true);
+			sprintf(num, "%i", GameConfig::Instance().getBonus(i));
+			copySurfaceToBackRenderer(Sprite::Instance().getBonus(i), screenBuffer, 224 + i * 30, 292);
+			Sprite::Instance().drawText(screenBuffer, 232 + i * 30, 306, num, green, true);
 		}
 		level = NULL;
 		refreshBuffer = false;
-		levelIndex = cursorPosition;
-	}
-	int cursorPosX = 200;
-	int cursorposY = 186;
 
+	}
+	int cursorPosX = 0;
+	int cursorposY = 0;
+
+	switch(cursorPosition){
+		case 0:
+			cursorPosX = 200;
+			cursorposY = 184;
+			break;
+		case 1:
+			cursorPosX = 450;
+			cursorposY = 184;
+			break;
+		case 2:
+			cursorPosX = 200;
+			cursorposY = 202;
+			break;
+		case 3:
+			cursorPosX = 450;
+			cursorposY = 202;
+			break;
+		case 4:
+			cursorPosX = 200;
+			cursorposY = 256;
+			break;
+		case 5:
+		case 6:
+		case 7:
+		case 8:
+		case 9:
+		case 10:
+		case 11:
+		case 12:
+		case 13:
+		case 14:
+		case 15:
+		case 16:
+		case 17:
+		case 18:
+			cursorPosX = 224 + ((cursorPosition - 5) * 30);
+			cursorposY = 274;
+			break;
+	}
 	copySurfaceToBackRenderer(screenBuffer, vout_buf, 0, 0);
 	copySurfaceToBackRenderer(cursor.getCurrentFrame(), vout_buf, cursorPosX, cursorposY);
 }
@@ -532,7 +638,7 @@ void Bomberman::keyPressed() {
 	int index = 0;
 	anyPlayerkeychange = false;
 	for (int i = 0; i < 16; i++) {
-		if (playerType[i][0] == 0) {
+		if (GameConfig::Instance().getPlayerType(i) == 0) {
 			if (previousPlayerKeystate[i] != in_keystate[index]) {
 				keychange[i] = true;
 				anyPlayerkeychange = true;

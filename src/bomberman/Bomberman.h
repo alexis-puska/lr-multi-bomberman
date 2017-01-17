@@ -73,17 +73,5 @@ class Bomberman {
 		 * GAME OPTION
 		 ******************/
 		Game *game;
-		//table for memorise player type
-		//index 0 : 0 Human, 1 CPU, 2 OFF
-		//index 1 : sprite used for player
-		int playerType[16][2];
-		/*
-		 * 0 : SuddenDeath		0 off, 1 on
-		 * 1 : Bad Bomber		0 off, 1 on
-		 * 2 : CPU Level			[0-3]
-		 * 3 : Time of a party	[-1: infiny  3-6]
-		 */
-		int gameOption[4];
-		int levelIndex;
 };
 #endif

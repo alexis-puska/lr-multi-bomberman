@@ -13,6 +13,7 @@
 #define bombeStrenghtMin		1
 #define bombeStrenghtDefault	2
 #define nbPlayer				16
+#define nbMaxIALevel				5
 #define nbTypeBonus				13
 #define nbMaxBonusTotal			150
 #define nbMaxBonusCat			50
@@ -24,6 +25,10 @@
 #ifndef __MYCLASS_GAMECONFIG
 #define __MYCLASS_GAMECONFIG
 
+enum playerTypeEnum {
+	HUMAN = 0, CPU = 1, OFF = 2
+};
+
 class GameConfig {
 
 	public:
@@ -33,74 +38,77 @@ class GameConfig {
 		void resetConfigEndGame();
 		
 		void incLevel();
-		void inc5Level();
 		void decLevel();
-		void dec5Level();
-		int getLevel();
 		void incVariante();
 		void decVariante();
-		int getVariante();
 		void incBombe();
 		void decBombe();
-		int getBombe();
-		void setStrengthBombe(int n);
-		int getStrenghtBombe();
+		void incStrengthBombe();
+		void decStrengthBombe();
 		void incBonus(int idx);
 		void inc5Bonus(int idx);
 		void decBonus(int idx);
 		void dec5Bonus(int idx);
-		int sumTotalBonus();
-		int getBonus(int idx);
 		void switchCustomBonus();
-		bool isCustomBonus();
 		void switchSuddenDeathMode();
-		bool isSuddentDeathMode();
 		void switchBadBomberMode();
-		bool isBadBomberMode();
-		void setIALevel(int n);
-		int getIALevel();
+		void incIALevel();
+		void decIALevel();
 		void incTimeOfGame();
 		void decTimeOfGame();
-		int getTimeOfGame();
 		void setNbPlayerInGame(int n);
-		int getNbPlayerInGame();
+		void incPlayerSpriteType(int idx);
+		void decPlayerSpriteType(int idx);
+		void incPlayerType(int idx);
+		void decPlayerType(int idx);
 		void setPlayerType(int idx, int val);
-		int getPlayerType(int idx);
 		void setPlayerColor(int idx, int val);
-		int getPlayerColor(int idx);
 		void setPlayerSpriteType(int idx, int val);
-		int setPlayerSpriteType(int idx);
 		void setPlayerScore(int idx, int val);
-		int getPlayerScore(int idx);
 		void resetPlayerScore();
 		void getPlayerStatus(int idx, int val);
-		int setPlayerStatus(int idx);
 		void resetPlayerStatus();
+		void generatePlayerSpriteTypeforCPU();
+
+		int getLevel();
+		int getVariante();
+		int getBombe();
+		int getStrenghtBombe();
+		int sumTotalBonus();
+		int getBonus(int idx);
+		bool isCustomBonus();
+		bool isSuddentDeathMode();
+		bool isBadBomberMode();
+		int getIALevel();
+		int getTimeOfGame();
+		int getNbPlayerInGame();
+		int getPlayerType(int idx);
+		int getPlayerColor(int idx);
+		int getPlayerSpriteType(int idx);
+		int getPlayerScore(int idx);
+		int setPlayerStatus(int idx);
 		
 	private:
 		GameConfig& operator=(const GameConfig&);
 		GameConfig(const GameConfig&);
 		static GameConfig m_instance;
-	
+		void copyLevelBonus();
+		
 		int level;
 		int variante;
 		int nbBombe;
 		int strengthBombe;
 		int bonus[nbTypeBonus];
-		
 		bool customBonus;
 		bool suddenDeathMode;
 		bool badBomberMode;
 		int IALevel;
 		int timeOfGame;
-		
 		int nbplayerInGame;
 		int playerType[nbPlayer];
 		int playerColor[nbPlayer];
 		int playerSpriteType[nbPlayer];
 		int playerScore[nbPlayer];
 		int playerStatus[nbPlayer];
-		
-		
 };
 #endif

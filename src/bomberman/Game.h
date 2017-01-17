@@ -21,6 +21,7 @@
 #include "animation/PopBonus.h"
 #include "animation/BurnBonus.h"
 #include "utils/Sprite.h"
+#include "utils/GameConfig.h"
 
 #ifndef __MYCLASS_GAME
 #define __MYCLASS_GAME
@@ -48,9 +49,7 @@ enum gameStateEnum {
 	gameStart = 0, gamePause = 1, gameWait = 2, gameEnd = 3, generateResult = 4,
 };
 
-enum playerTypeEnum {
-	HUMAN = 0, CPU = 1, OFF = 2
-};
+
 
 enum suddenDeathDirection {
 	suddenDeathRight = 0, suddenDeathDown = 1, suddenDeathLeft = 2, suddenDeathUp = 3,
@@ -60,7 +59,7 @@ class Game {
 
 	public:
 		Game();
-		Game(int levelIndex, int playerInformationParam[16][2], int gameOption[4], SDL_Surface * vout_buf, unsigned short * in_keystate, int nbPlayerConfig);
+		Game(SDL_Surface * vout_buf, unsigned short * in_keystate);
 		~Game();
 		bool isAlive();
 		bool isConfigured();
