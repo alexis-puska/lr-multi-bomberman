@@ -415,11 +415,3 @@ Level * LevelService::getLevel(int n){
 int LevelService::getNumberOfLevels(){
 	return levels.size();
 }
-
-void LevelService::setCustomBonusValue(int bonus, int value){
-	customBonus[bonus] = value;
-}
-
-int LevelService::getCustomBonusValue(int bonus){
-	return customBonus[bonus];
-}

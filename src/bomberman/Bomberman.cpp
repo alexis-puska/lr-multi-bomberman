@@ -173,6 +173,7 @@ void Bomberman::tick(unsigned short in_keystateLibretro[16]) {
 			game->exitGame();
 			delete game;
 			game = NULL;
+			keychange[0] = false;
 			cursorPosition = levelIndex;
 			currentStep = levelSelectionMenu;
 			Sound::Instance().stopMusique();

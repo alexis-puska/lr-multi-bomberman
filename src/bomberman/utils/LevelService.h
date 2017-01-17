@@ -28,7 +28,6 @@ class LevelService {
 		LevelService(const LevelService&);
 		static LevelService m_instance;
 		std::vector<Level *> levels;
-		int customBonus[13];
 		void initLevel();
 		void createLevel0();
 		void createLevel1();
