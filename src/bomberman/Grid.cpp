@@ -146,7 +146,13 @@ for	(int i = 0; i < sizeX * sizeY; i++) {
 	}
 	
 	
-
+	int nbDeathBonus = 0;
+	if(GameConfig::Instance().isCustomBonus(){
+		nbDeathBonus = GameConfig::Instance().getBonus(0);
+	}else{
+		nbDeathBonus = LevelService::Instance().getLevel(lvl)->getVariantes(0)->getBonus(0)
+	}
+	
 	//draw Death bonus for a level
 	for(int i = 0; i < LevelService::Instance().getLevel(lvl)->getVariantes(0)->getBonus(0); i++) {
 		int ind = emptyCase[rand() % emptyCase.size() + 1];
@@ -164,7 +170,14 @@ for	(int i = 0; i < sizeX * sizeY; i++) {
 
 	//draw Death bonus for a level
 	for(int y = 1; y < 13; y++) {
-		for(int i = 0; i < LevelService::Instance().getLevel(lvl)->getVariantes(0)->getBonus(y); i++) {
+		int nbBonusType = 0;
+		if(GameConfig::Instance().isCustomBonus(){
+			nbBonusType = GameConfig::Instance().getBonus(0);
+		}else{
+			nbBonusType = LevelService::Instance().getLevel(lvl)->getVariantes(0)->getBonus(0)
+		}
+	
+		for(int i = 0; i < nbBonusType; i++) {
 			int ind = notEmptyCase[rand() % notEmptyCase.size()];
 			while(tabBonus[ind] != noBonus) {
 				ind = notEmptyCase[rand() % notEmptyCase.size()];
