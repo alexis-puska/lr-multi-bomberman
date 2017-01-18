@@ -150,7 +150,7 @@ for	(int i = 0; i < sizeX * sizeY; i++) {
 	if(GameConfig::Instance().isCustomBonus(){
 		nbDeathBonus = GameConfig::Instance().getBonus(0);
 	}else{
-		nbDeathBonus = LevelService::Instance().getLevel(lvl)->getVariantes(0)->getBonus(0)
+		nbDeathBonus = LevelService::Instance().getLevel(lvl)->getVariantes(0)->getBonus(0);
 	}
 	
 	//draw Death bonus for a level
@@ -172,9 +172,9 @@ for	(int i = 0; i < sizeX * sizeY; i++) {
 	for(int y = 1; y < 13; y++) {
 		int nbBonusType = 0;
 		if(GameConfig::Instance().isCustomBonus(){
-			nbBonusType = GameConfig::Instance().getBonus(0);
+			nbBonusType = GameConfig::Instance().getBonus(y);
 		}else{
-			nbBonusType = LevelService::Instance().getLevel(lvl)->getVariantes(0)->getBonus(0)
+			nbBonusType = LevelService::Instance().getLevel(lvl)->getVariantes(0)->getBonus(y);
 		}
 	
 		for(int i = 0; i < nbBonusType; i++) {
