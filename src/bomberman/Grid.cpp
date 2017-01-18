@@ -171,7 +171,7 @@ for	(int i = 0; i < sizeX * sizeY; i++) {
 	//draw Death bonus for a level
 	for(int y = 1; y < 13; y++) {
 		int nbBonusType = 0;
-		if(GameConfig::Instance().isCustomBonus(){
+		if(GameConfig::Instance().isCustomBonus()){
 			nbBonusType = GameConfig::Instance().getBonus(y);
 		}else{
 			nbBonusType = LevelService::Instance().getLevel(lvl)->getVariantes(0)->getBonus(y);
