@@ -861,7 +861,7 @@ void Game::tick() {
 			 *
 			 */
 			if (!suddenDeathCase) {
-				if (suddenDeath && (nbTickForGame == (4 * (sizeX - 2) * (sizeY - 2)) + (34 * 1))) {
+				if (GameConfig::Instance().isSuddentDeathMode() && (nbTickForGame == (4 * (sizeX - 2) * (sizeY - 2)) + (34 * 1))) {
 					fprintf(stderr, "init sudden death");
 					suddenDeathCase = true;
 					for (unsigned int i = 0; i < players.size(); i++) {
