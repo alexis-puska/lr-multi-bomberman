@@ -3,6 +3,7 @@
 #include "AStar.h"
 #include "BFS.h"
 #include "../Player.h"
+#include "../utils/GameConfig.h"
 
 #ifndef __MYCLASS_BRAIN
 #define __MYCLASS_BRAIN
@@ -36,7 +37,7 @@ enum brain1step {
 class Brain {
 
 	public:
-		Brain(unsigned short * keystate, int tab[sizeX * sizeY], float * tabCord, int nbPlayer, int playerNumber, int cpuLevel, Player * player);
+		Brain(unsigned short * keystate, int tab[sizeX * sizeY], float * tabCord, int playerNumber, Player * player);
 		~Brain();
 		void think();
 
@@ -48,14 +49,12 @@ class Brain {
 		//tab contains the players coordinate
 		float * tabCord;
 		//nb player of the game (CPU or human)
-		int nbPlayer;
 		int playerNumber;
 		AStar * astar;
 		BFS * bfs;
 		int targetPlayer;
 		int currentIndex;
 		int prevDir;
-		int cpuLevel;
 		int idxOwnBombe;
 		Player * player;
 

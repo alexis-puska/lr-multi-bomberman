@@ -72,3 +72,11 @@ bool LevelVariante::isReserved(int idx){
 int LevelVariante::getStart(int idx){
 	return start[idx];	
 }
+
+int LevelVariante::getNbBombe(){
+	return nbBombe;
+}
+
+int LevelVariante::getFireStrenght(){
+	return fireStrenght;
+}

@@ -17,7 +17,7 @@
 class SuddenDeathAnimation {
 
 	public:
-		SuddenDeathAnimation(int posX, int posY, int levelIndex, int tab[sizeX * sizeY], Grid * grid);
+		SuddenDeathAnimation(int posX, int posY, int tab[sizeX * sizeY], Grid * grid);
 		~SuddenDeathAnimation();
 		void tick(SDL_Surface * surfaceToDraw);
 		bool canBeDeleted();

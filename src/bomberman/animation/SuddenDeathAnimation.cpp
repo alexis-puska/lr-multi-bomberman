@@ -2,12 +2,12 @@
 
 #define nbTickAnimation 1
 
-SuddenDeathAnimation::SuddenDeathAnimation(int posX, int posY, int levelIndex, int tab[sizeX * sizeY], Grid * grid) {
+SuddenDeathAnimation::SuddenDeathAnimation(int posX, int posY, int tab[sizeX * sizeY], Grid * grid) {
 	this->posX = posX;
 	this->posY = posY;
 	this->tab = tab;
 	this->grid = grid;
-	this->levelIndex = levelIndex;
+	this->levelIndex = GameConfig::Instance().getLevel();
 	offset = 340;
 	frameCounter = 0;
 	canDelete = false;

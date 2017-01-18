@@ -80,19 +80,9 @@ class Game {
 		SDL_Surface * vout_buf;
 
 		//Game option variable
-		int levelIndex;
-		int cpuLevel;
 		int nbTickForGame;
 		int nbTickForGameParam;
 		bool badBomber;
-		/*
-		0 : type 0 HUMAN / 1 CPU / 2 NONE
-		1 : type sprite
-		2 : color 
-		3 : status dead alive : for draw header
-		4 : score
-		*/
-		int playerInformation[16][5];
 		
 		//functional variable
 		int gameState;
@@ -105,6 +95,7 @@ class Game {
 
 		//SUDDENT DEATH
 		bool suddenDeath;
+		int levelIndex;
 		bool suddenDeathCase;
 		int suddenDeathMinX;
 		int suddenDeathMaxX;

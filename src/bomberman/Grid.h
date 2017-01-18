@@ -10,6 +10,7 @@
 #include <vector>
 #include "utils/Sprite.h"
 #include "utils/LevelService.h"
+#include "utils/GameConfig.h"
 
 #ifndef __MYCLASS_GRID
 #define __MYCLASS_GRID
@@ -63,7 +64,7 @@ class Grid {
 
 	public:
 		Grid();
-		Grid(int lvl, int tab[sizeX * sizeY], int tabBonus[sizeX * sizeY]);
+		Grid(int tab[sizeX * sizeY], int tabBonus[sizeX * sizeY]);
 		~Grid();
 
 		//configure the grid and build it

@@ -180,7 +180,7 @@ void LevelService::createLevel0(){
 
 	Level * level = new Level(0, "Blockbuster");
 	level->addVariante(new LevelVariante(0, "level without bricks", "all player in the center", true, desc, bonus, 2, 2));
-	level->addVariante(new LevelVariante(1, "Niveau sans bricks", "Niveau sans bricks", false, descV2, bonusV2, 2, 2));
+	level->addVariante(new LevelVariante(1, "Niveau sans bricks", "Niveau sans bricks", false, descV2, bonusV2, 6, 6));
 	levels.push_back(level);
 }
 

@@ -22,6 +22,8 @@ class LevelVariante {
 		char * getDescriptionLine2();
 		bool isReserved(int idx);
 		int getStart(int idx);
+		int getNbBombe();
+		int getFireStrenght();
 	private:
 		int number;
 		char descriptionLine1[32];

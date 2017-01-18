@@ -18,7 +18,7 @@
 class BurnWall {
 
 	public:
-		BurnWall(int posX, int posY, int index, int levelIndex, int tab[sizeX * sizeY], int tabBonus[sizeX * sizeY]);
+		BurnWall(int posX, int posY, int index, int tab[sizeX * sizeY], int tabBonus[sizeX * sizeY]);
 		~BurnWall();
 		void tick(SDL_Surface * surfaceToDraw);
 		bool canBeDelete();

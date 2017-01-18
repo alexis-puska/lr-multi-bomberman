@@ -1,21 +1,19 @@
 #include "Brain.h"
 
-Brain::Brain(unsigned short * keystate, int tab[sizeX * sizeY], float * tabCord, int nbPlayer, int playerNumber, int cpuLevel, Player * player) {
+Brain::Brain(unsigned short * keystate, int tab[sizeX * sizeY], float * tabCord, int playerNumber, Player * player) {
 	this->player = player;
 	this->keystate = keystate;
 	this->tab = tab;
 	this->tabCord = tabCord;
-	this->nbPlayer = nbPlayer;
 	this->playerNumber = playerNumber;
 	this->targetPlayer = -1;
-	this->cpuLevel = cpuLevel;
 	this->idxOwnBombe = -1;
 
 	this->objectifIndex = 0;
 	astar = new AStar(tab);
 	bfs = new BFS(tab);
 	prevDir = none;
-	switch (this->cpuLevel) {
+	switch (GameConfig::Instance().getIALevel()) {
 		case 1:
 			brainStep = lvl1CheckCanDropBomb;
 			break;
@@ -53,7 +51,7 @@ void Brain::think() {
 		currentIndex = -1;
 	}
 	if(currentIndex >= 0 && currentIndex <sizeX * sizeY){
-		switch (this->cpuLevel) {
+		switch (GameConfig::Instance().getIALevel()) {
 			case 1:
 				level1();
 				break;

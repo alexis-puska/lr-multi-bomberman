@@ -2,13 +2,13 @@
 
 #define nbFrame 4
 
-BurnWall::BurnWall(int posX, int posY, int index, int levelIndex, int tab[sizeX * sizeY], int tabBonus[sizeX * sizeY]) {
+BurnWall::BurnWall(int posX, int posY, int index, int tab[sizeX * sizeY], int tabBonus[sizeX * sizeY]) {
 	this->indexBurnWall = index;
 	this->posX = posX;
 	this->posY = posY;
 	this->tab = tab;
 	this->tabBonus = tabBonus;
-	this->levelIndex = levelIndex;
+	this->levelIndex = GameConfig::Instance().getLevel();
 	frameCounter = 0;
 	offsetSprite = 0;
 	nbFrameForAnimation = 6;

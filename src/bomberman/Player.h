@@ -19,8 +19,8 @@
 #define __MYCLASS_PLAYER
 class Player {
 	public:
-		Player(unsigned short * in_keystate, bool isACpuPlayer, int indexSprite, float startPositionX, float startPositionY, int playerNumber, int tab[sizeX * sizeY], int tabBonus[sizeX * sizeY],
-				Grid * gridParam, float * tabPlayerCoord, int nbPlayerConfig, int indexPlayerForGame, int color);
+		Player(unsigned short * in_keystate, bool isACpuPlayer, float startPositionX, float startPositionY, int playerNumber, int tab[sizeX * sizeY], int tabBonus[sizeX * sizeY],
+				Grid * gridParam, float * tabPlayerCoord, int nbPlayerConfig, int indexPlayerForGame);
 		~Player();
 		void doSomething(SDL_Surface * surfaceToDraw);
 

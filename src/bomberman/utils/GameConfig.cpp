@@ -10,9 +10,8 @@ GameConfig::GameConfig() {
 	srand (time(NULL));
 	level = 0;
 	variante = 0;
-	nbBombe = nbBombedefault;
-	strengthBombe = bombeStrenghtDefault;
-	
+	nbBombe = LevelService::Instance().getLevel(level)->getVariantes(variante)->getNbBombe();
+	strengthBombe = LevelService::Instance().getLevel(level)->getVariantes(variante)->getFireStrenght();
 	suddenDeathMode = false;
 	badBomberMode = false;
 	IALevel = 1;
@@ -42,6 +41,11 @@ void GameConfig::incLevel(){
 	if(level > LevelService::Instance().getNumberOfLevels() - 1){
 		level = 0;
 	}
+	if(variante > LevelService::Instance().getLevel(level)->getVariantesSize()-1){
+		variante = LevelService::Instance().getLevel(level)->getVariantesSize()-1;
+	}
+	nbBombe = LevelService::Instance().getLevel(level)->getVariantes(variante)->getNbBombe();
+	strengthBombe = LevelService::Instance().getLevel(level)->getVariantes(variante)->getFireStrenght();
 	copyLevelBonus();
 }
 
@@ -50,6 +54,11 @@ void GameConfig::decLevel(){
 	if(level < 0){
 		level = LevelService::Instance().getNumberOfLevels() - 1;
 	}
+	if(variante > LevelService::Instance().getLevel(level)->getVariantesSize()-1){
+		variante = LevelService::Instance().getLevel(level)->getVariantesSize()-1;
+	}
+	nbBombe = LevelService::Instance().getLevel(level)->getVariantes(variante)->getNbBombe();
+	strengthBombe = LevelService::Instance().getLevel(level)->getVariantes(variante)->getFireStrenght();
 	copyLevelBonus();
 }
 	
@@ -62,6 +71,9 @@ void GameConfig::incVariante(){
 	if( variante > LevelService::Instance().getLevel(level)->getVariantesSize() - 1){
 		variante = 0;
 	}
+	nbBombe = LevelService::Instance().getLevel(level)->getVariantes(variante)->getNbBombe();
+	strengthBombe = LevelService::Instance().getLevel(level)->getVariantes(variante)->getFireStrenght();
+	copyLevelBonus();
 }
 
 void GameConfig::decVariante(){
@@ -69,6 +81,9 @@ void GameConfig::decVariante(){
 	if(variante < 0){
 		variante = LevelService::Instance().getLevel(level)->getVariantesSize() - 1;
 	}
+	nbBombe = LevelService::Instance().getLevel(level)->getVariantes(variante)->getNbBombe();
+	strengthBombe = LevelService::Instance().getLevel(level)->getVariantes(variante)->getFireStrenght();
+	copyLevelBonus();
 }
 	
 int GameConfig::getVariante(){
@@ -293,8 +308,13 @@ int GameConfig::getPlayerColor(int idx){
 void GameConfig::generatePlayerSpriteTypeforCPU(){
 	for (int i = 0; i < 16; i++) {
 		if (playerType[i] == 1) {
-			playerSpriteType[i] = (rand() % 7);
+			playerSpriteType[i] = (rand() % nbTypePlayer);
 		}
+	}
+}
+void GameConfig::generateColorPlayer(){
+	for (int i = 0; i < 16; i++) {
+		playerColor[i] = (rand() % nbColorPlayer);
 	}
 }
 
@@ -320,8 +340,8 @@ int GameConfig::getPlayerSpriteType(int idx){
 	return playerSpriteType[idx];
 }
 
-void GameConfig::setPlayerScore(int idx, int val){
-	playerScore[idx] = val;
+void GameConfig::incPlayerScore(int idx){
+	playerScore[idx]++;
 }
 
 int GameConfig::getPlayerScore(int idx){
@@ -334,11 +354,15 @@ void GameConfig::resetPlayerScore(){
 	}
 }
 
-void GameConfig::getPlayerStatus(int idx, int val){
-	playerStatus[idx] = val;
+void GameConfig::setPlayerDead(int idx){
+	playerStatus[idx] = false;
 }
 
-int GameConfig::setPlayerStatus(int idx){
+void GameConfig::setPlayerAlive(int idx){
+	playerStatus[idx] = true;
+}
+
+int GameConfig::isPlayerAlive(int idx){
 	return playerStatus[idx];
 }
 
@@ -351,5 +375,11 @@ void GameConfig::resetPlayerStatus(){
 void GameConfig::copyLevelBonus(){
 	for(int i = 0 ; i < nbTypeBonus ; i++){
 		bonus[i] = LevelService::Instance().getLevel(level)->getVariantes(variante)->getBonus(i);
+	}
+}
+
+void GameConfig::printPlayerConfiguration(){
+	for (int i = 0; i < 16; i++) {
+		fprintf(stderr, "%i %2it %2ic %2is %2isc %2ist\n", i, playerType[i], playerColor[i], playerSpriteType[i], playerScore[i], playerStatus[i]);
 	}
 }

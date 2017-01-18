@@ -75,10 +75,8 @@ void Bomberman::tick(unsigned short in_keystateLibretro[16]) {
 					break;
 				case levelSelectionMenu:
 					cursorPosition = 0;
-
 					game = new Game(vout_buf, in_keystate);
 					currentStep = gameStep;
-
 					Sound::Instance().stopMusique();
 					Sound::Instance().startBattleMusique();
 					//TODO

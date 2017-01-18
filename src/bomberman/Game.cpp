@@ -48,9 +48,6 @@ Game::Game() {
 	isThreadAlive = false;
 	configured = false;
 	requestStopGame = false;
-	tab = new int[sizeX * sizeY];
-	tabBonus = new int[sizeX * sizeY];
-	tabPlayerCoord = new float[16 * 2];
 }
 
 /*
@@ -62,7 +59,8 @@ Game::Game(SDL_Surface * vout_buf, unsigned short * in_keystate) {
 	srand (time(NULL));this->nbPlayerConfig = GameConfig::Instance().getNbPlayerInGame();
 	this->vout_buf = vout_buf;
 	this->in_keystate = in_keystate;
-	this->levelIndex = GameConfig::Instance().getLevel();
+
+	levelIndex = GameConfig::Instance().getLevel();
 
 	gameState = gameWait;
 	nbPlayerInGame = 0;
@@ -105,7 +103,7 @@ Game::Game(SDL_Surface * vout_buf, unsigned short * in_keystate) {
 	badBomber = GameConfig::Instance().isBadBomberMode();
 
 
-	cpuLevel = GameConfig::Instance().getIALevel();
+
 	if (GameConfig::Instance().getTimeOfGame() != -1) {
 		nbTickForGame = GameConfig::Instance().getTimeOfGame() * 50 * 60;
 		nbTickForGameParam = nbTickForGame;
@@ -113,7 +111,7 @@ Game::Game(SDL_Surface * vout_buf, unsigned short * in_keystate) {
 		nbTickForGame = GameConfig::Instance().getTimeOfGame();
 		nbTickForGameParam = nbTickForGame;
 	}
-	grid = new Grid(levelIndex, tab, tabBonus);
+	grid = new Grid(tab, tabBonus);
 	
 
 	/*
@@ -132,31 +130,26 @@ Game::Game(SDL_Surface * vout_buf, unsigned short * in_keystate) {
 	Player * player;
 	Brain * brain;
 
-	//init color
-	for (int i = 0; i < 16; i++) {
-		playerInformation[i][2] = rand() % nbColorPlayer;
-	}
+
+	GameConfig::Instance().generateColorPlayer();
+	GameConfig::Instance().resetPlayerScore();
 
 	for (int i = 0; i < 16; i++) {
-		
 		int startCase = LevelService::Instance().getLevel(levelIndex)->getVariantes(0)->getStart(i);
-		
 		
 		float startX = (startCase%35)+0.5;
 		float startY = (startCase/35)+0.5;
 
-		playerInformation[i][0] = GameConfig::Instance().getPlayerType(i);
-		playerInformation[i][1] = GameConfig::Instance().getPlayerSpriteType(i);
-		//alive
-		playerInformation[i][3] = 1;
-		//score null
-		playerInformation[i][4] = 0;
 
-		switch (playerInformation[i][0]) {
+		//alive
+		GameConfig::Instance().setPlayerAlive(i);
+
+
+		switch (GameConfig::Instance().getPlayerType(i)) {
 			case HUMAN:
 
 			// if a human link the next keystate of libretro, else link a empty value
-			player = new Player(&in_keystate[indexLibretro], false, playerInformation[i][1], startX, startY, i, tab, tabBonus, grid, tabPlayerCoord, nbPlayerConfig, indexPlayerForGame, playerInformation[i][2]);
+			player = new Player(&in_keystate[indexLibretro], false, startX, startY, i, tab, tabBonus, grid, tabPlayerCoord, nbPlayerConfig, indexPlayerForGame);
 			players.push_back(player);
 			player = NULL;
 			indexLibretro++;
@@ -164,11 +157,11 @@ Game::Game(SDL_Surface * vout_buf, unsigned short * in_keystate) {
 			indexPlayerForGame++;
 			break;
 			case CPU:
-			player = new Player(&in_keystate_cpu[index], true, playerInformation[i][1], startX, startY, i, tab, tabBonus, grid, tabPlayerCoord, nbPlayerConfig, indexPlayerForGame, playerInformation[i][2]);
+			player = new Player(&in_keystate_cpu[index], true, startX, startY, i, tab, tabBonus, grid, tabPlayerCoord, nbPlayerConfig, indexPlayerForGame);
 			players.push_back(player);
 			player = NULL;
 
-			brain = new Brain(&in_keystate_cpu[index], tab, tabPlayerCoord, nbPlayerConfig, i, cpuLevel, players[indexPlayerForGame]);
+			brain = new Brain(&in_keystate_cpu[index], tab, tabPlayerCoord, i, players[indexPlayerForGame]);
 			brains.push_back(brain);
 			brain = NULL;
 
@@ -372,12 +365,12 @@ void Game::generateHeader() {
 		rect.w = 20;
 		rect.h = 20;
 		
-		if(playerInformation[i][0] != 2){
+		if(GameConfig::Instance().getPlayerType(i) != 2){
 			//FOR HUMAN PLAYER OR CPU
-			SDL_BlitSurface(Sprite::Instance().getHappySprite(playerInformation[i][1], playerInformation[i][2]), NULL, vout_buf, &rect);
+			SDL_BlitSurface(Sprite::Instance().getHappySprite(GameConfig::Instance().getPlayerSpriteType(i), GameConfig::Instance().getPlayerColor(i)), NULL, vout_buf, &rect);
 			//wrote number of victory
 			char score[3];
-			sprintf(score, "%i", playerInformation[i][4]);
+			sprintf(score, "%i", GameConfig::Instance().getPlayerScore(i));
 			Sprite::Instance().drawText(vout_buf, i * 36 + offsetScore, 2, score, green, false);
 		}else{
 			//NO PLAYER
@@ -455,7 +448,7 @@ void Game::tick() {
 				for (unsigned int i = 0; i < players.size(); i++) {
 					if (players[i]->isAlive()) {
 						//update score
-						playerInformation[players[i]->getPlayerNumber()][4]++;
+						GameConfig::Instance().incPlayerScore(players[i]->getPlayerNumber());;
 						players[i]->winTheGame();
 					}
 				}
@@ -536,7 +529,7 @@ void Game::tick() {
 								explosions.push_back(new Explosion(posXBombe, posYcalc, ind, tab, tabBonus));
 								break;
 							case brickElement:
-								burnWalls.push_back(new BurnWall(posXBombe, posYcalc, ind, levelIndex, tab, tabBonus));
+								burnWalls.push_back(new BurnWall(posXBombe, posYcalc, ind, tab, tabBonus));
 								grid->burnABrick(posXBombe, posYcalc);
 								if (!isAPowerBombe) {
 									exitLoop = true;
@@ -586,7 +579,7 @@ void Game::tick() {
 								explosions.push_back(new Explosion((posXBombe + j), posYBombe, ind, tab, tabBonus));
 								break;
 							case brickElement:
-								burnWalls.push_back(new BurnWall((posXBombe + j), posYBombe, ind, levelIndex, tab, tabBonus));
+								burnWalls.push_back(new BurnWall((posXBombe + j), posYBombe, ind, tab, tabBonus));
 								grid->burnABrick((posXBombe + j), posYBombe);
 								if (!isAPowerBombe) {
 									exitLoop = true;
@@ -641,7 +634,7 @@ void Game::tick() {
 								explosions.push_back(new Explosion(posXBombe, posYcalc, ind, tab, tabBonus));
 								break;
 							case brickElement:
-								burnWalls.push_back(new BurnWall(posXBombe, posYcalc, ind, levelIndex, tab, tabBonus));
+								burnWalls.push_back(new BurnWall(posXBombe, posYcalc, ind, tab, tabBonus));
 								grid->burnABrick(posXBombe, posYcalc);
 								if (!isAPowerBombe) {
 									exitLoop = true;
@@ -692,7 +685,7 @@ void Game::tick() {
 								explosions.push_back(new Explosion((posXBombe - j), posYBombe, ind, tab, tabBonus));
 								break;
 							case brickElement:
-								burnWalls.push_back(new BurnWall((posXBombe - j), posYBombe, ind, levelIndex, tab, tabBonus));
+								burnWalls.push_back(new BurnWall((posXBombe - j), posYBombe, ind, tab, tabBonus));
 								grid->burnABrick((posXBombe - j), posYBombe);
 								if (!isAPowerBombe) {
 									exitLoop = true;
@@ -798,8 +791,9 @@ void Game::tick() {
 				if (players[i]->isAlive()) {
 					nbPlayerAlive++;
 				}else{
-					if(playerInformation[players[i]->getPlayerNumber()][3] ==1){
-						playerInformation[players[i]->getPlayerNumber()][3] = 0;
+					if(GameConfig::Instance().isPlayerAlive(players[i]->getPlayerNumber())){
+						GameConfig::Instance().setPlayerDead(players[i]->getPlayerNumber());
+
 						updateHeaderPlayer(players[i]->getIndexPlayerForGame(), players[i]->getPlayerNumber());
 					}
 				}
@@ -836,7 +830,7 @@ void Game::tick() {
 				for (unsigned int i = 0; i < players.size(); i++) {
 					if (players[i]->isAlive()) {
 						//update score
-						playerInformation[players[i]->getPlayerNumber()][4]++;
+						GameConfig::Instance().incPlayerScore(players[i]->getPlayerNumber());
 						players[i]->winTheGame();
 					}
 				}
@@ -880,7 +874,7 @@ void Game::tick() {
 				if (nbTickForGame % 4 == 0) {
 					//add animation of falling wall
 					if (tab[suddenDeathX + suddenDeathY * sizeX] < wallElement) {
-						SuddenDeathAnimation * suddenDeathAnimation = new SuddenDeathAnimation(suddenDeathX, suddenDeathY, levelIndex, tab, grid);
+						SuddenDeathAnimation * suddenDeathAnimation = new SuddenDeathAnimation(suddenDeathX, suddenDeathY, tab, grid);
 						suddenDeathAnimations.push_back(suddenDeathAnimation);
 						suddenDeathAnimation = NULL;
 					}
@@ -1011,12 +1005,12 @@ void Game::tick() {
 					
 					float startX = (startCase%35)+0.5;
 					float startY = (startCase/35)+0.5;
-					playerInformation[i][3] = 1;
-					switch (playerInformation[i][0]) {
+					GameConfig::Instance().setPlayerAlive(i);
+					switch (GameConfig::Instance().getPlayerType(i)) {
 						case HUMAN:
 							// if a human link the next keystate of libretro, else link a empty value
-							player = new Player(&in_keystate[indexLibretro], false, playerInformation[i][1], startX, startY, i, tab, tabBonus, grid, tabPlayerCoord, nbPlayerConfig,
-									indexPlayerForGame, playerInformation[i][2]);
+							player = new Player(&in_keystate[indexLibretro], false, startX, startY, i, tab, tabBonus, grid, tabPlayerCoord, nbPlayerConfig,
+									indexPlayerForGame);
 							players.push_back(player);
 							player = NULL;
 							indexLibretro++;
@@ -1024,10 +1018,10 @@ void Game::tick() {
 							indexPlayerForGame++;
 							break;
 						case CPU:
-							player = new Player(&in_keystate_cpu[index], true, playerInformation[i][1], startX, startY, i, tab, tabBonus, grid, tabPlayerCoord, nbPlayerConfig,
-									indexPlayerForGame, playerInformation[i][2]);
+							player = new Player(&in_keystate_cpu[index], true, startX, startY, i, tab, tabBonus, grid, tabPlayerCoord, nbPlayerConfig,
+									indexPlayerForGame);
 							players.push_back(player);
-							brain = new Brain(&in_keystate_cpu[index], tab, tabPlayerCoord, nbPlayerConfig, i, cpuLevel, players[indexPlayerForGame]);
+							brain = new Brain(&in_keystate_cpu[index], tab, tabPlayerCoord, i, players[indexPlayerForGame]);
 							brains.push_back(brain);
 							brain = NULL;
 
@@ -1073,9 +1067,9 @@ void Game::updateHeaderPlayer(int i, int playerNumber){
 	rect.w = 20;
 	rect.h = 20;
 	//FOR HUMAN PLAYER OR CPU
-	SDL_BlitSurface(Sprite::Instance().getCryingSprite(playerInformation[playerNumber][1], playerInformation[playerNumber][2]), NULL, vout_buf, &rect);
+	SDL_BlitSurface(Sprite::Instance().getCryingSprite(GameConfig::Instance().getPlayerSpriteType(i), GameConfig::Instance().getPlayerColor(i)), NULL, vout_buf, &rect);
 	//wrote number of victory
 	char score[3];
-	sprintf(score, "%i", playerInformation[playerNumber][4]);
+	sprintf(score, "%i", GameConfig::Instance().getPlayerScore(playerNumber));
 	Sprite::Instance().drawText(vout_buf, playerNumber * 36 + offsetScore, 2, score, red, false);
 }

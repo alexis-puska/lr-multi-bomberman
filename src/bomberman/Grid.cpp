@@ -6,8 +6,8 @@ Grid::Grid() {
 	init();
 }
 
-Grid::Grid(int lvl, int tab[sizeX * sizeY], int tabBonus[sizeX * sizeY]) {
-	this->lvl = lvl;
+Grid::Grid(int tab[sizeX * sizeY], int tabBonus[sizeX * sizeY]) {
+	lvl = GameConfig::Instance().getLevel();
 	this->tab = tab;
 	this->tabBonus = tabBonus;
 	init();
@@ -36,15 +36,6 @@ SDL_Surface * Grid::getBricksLayer() {
 
 SDL_Surface * Grid::getWallSprite() {
 	return Sprite::Instance().getLevel(wallSpriteIndex, lvl);
-}
-
-void Grid::configure(int levelNumber) {
-
-	lvl = levelNumber;
-	tab = new int[sizeX * sizeY];
-	tabBonus = new int[sizeX * sizeY];
-	init();
-	generateGrid();
 }
 
 void Grid::init() {

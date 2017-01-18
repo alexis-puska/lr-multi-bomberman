@@ -44,8 +44,8 @@ enum louisTypeEnum {
 	blueLouis = 0, yellowLouis = 1, pinkLouis = 2, greenLouis = 3, brownLouis = 4
 };
 
-Player::Player(unsigned short * in_keystate, bool isACpuPlayer, int indexSprite, float posX, float posY, int playerNumber, int tab[sizeX * sizeY], int tabBonus[sizeX * sizeY], Grid * gridParam,
-		float * tabPlayerCoord, int nbPlayerConfig, int indexPlayerForGame, int color) {
+Player::Player(unsigned short * in_keystate, bool isACpuPlayer, float posX, float posY, int playerNumber, int tab[sizeX * sizeY], int tabBonus[sizeX * sizeY], Grid * gridParam,
+		float * tabPlayerCoord, int nbPlayerConfig, int indexPlayerForGame) {
 	srand (time(NULL));grid = gridParam;
 	this->indexPlayerForGame = indexPlayerForGame;
 	this->posX = posX;
@@ -54,19 +54,22 @@ Player::Player(unsigned short * in_keystate, bool isACpuPlayer, int indexSprite,
 	this->cpu = isACpuPlayer;
 	this->tab = tab;
 	this->tabBonus = tabBonus;
-	this->characterSpriteIndex = indexSprite;
+	this->characterSpriteIndex = GameConfig::Instance().getPlayerSpriteType(playerNumber);
 	this->in_keystate = in_keystate;
 	this->tabPlayerCoord = tabPlayerCoord;
 	this->nbPlayerConfig = nbPlayerConfig;
-	this->color = color;
+	this->color = GameConfig::Instance().getPlayerColor(playerNumber);;
 	this->louisType = blueLouis;
+
+
+	//fprintf(stderr, "%i %2it %2ic %2is %2isc %2ist\n", playerNumber, GameConfig::Instance().getPlayerColor(), );
 
 	tabPlayerCoord[playerNumber * 2] = posX;
 	tabPlayerCoord[playerNumber * 2 + 1 ] = posY;
 	playerState = normal;
 	invincibleTime = 0;
-	NbBombeMax = 2;
-	NBBombeRemaining = 2;
+	NbBombeMax = GameConfig::Instance().getBombe();
+	NBBombeRemaining = GameConfig::Instance().getBombe();
 	bombeType = normalBombeType;
 	putABombe = false;
 	ghostModePower = false;
@@ -76,7 +79,7 @@ Player::Player(unsigned short * in_keystate, bool isACpuPlayer, int indexSprite,
 	kickIndex = -1;
 	kickDirection = -1;
 
-	flameStrengh = 2;
+	flameStrengh = GameConfig::Instance().getStrenghtBombe();
 	playerSpeed = 0.1;
 	nbTickMalus = -1;
 	playerMalus = noMalus;
