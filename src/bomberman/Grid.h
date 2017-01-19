@@ -76,6 +76,7 @@ class Grid {
 		void burnBonus(int posX, int posY);
 		void placeNewDeathMalus();
 		void placeSuddenDeathWall(int x, int y);
+		int playerDeadNeedBonus(int bonusIndex);
 
 		//get Image to render in retroarch
 		SDL_Surface * getGroundLayer();
@@ -98,6 +99,7 @@ class Grid {
 
 		//level index to load the texture and level template
 		int lvl;
+		int var;
 
 		void init();
 

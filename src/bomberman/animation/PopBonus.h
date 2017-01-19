@@ -19,6 +19,7 @@ class PopBonus {
 
 	public:
 		PopBonus(int posX, int posY);
+		PopBonus(int index);
 		~PopBonus();
 		void tick(SDL_Surface * surfaceToDraw);
 		bool canBeDelete();

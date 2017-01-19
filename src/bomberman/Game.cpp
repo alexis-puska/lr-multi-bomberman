@@ -61,6 +61,7 @@ Game::Game(SDL_Surface * vout_buf, unsigned short * in_keystate) {
 	this->in_keystate = in_keystate;
 
 	levelIndex = GameConfig::Instance().getLevel();
+	variante = GameConfig::Instance().getVariante();
 
 	gameState = gameWait;
 	nbPlayerInGame = 0;
@@ -135,7 +136,7 @@ Game::Game(SDL_Surface * vout_buf, unsigned short * in_keystate) {
 	GameConfig::Instance().resetPlayerScore();
 
 	for (int i = 0; i < 16; i++) {
-		int startCase = LevelService::Instance().getLevel(levelIndex)->getVariantes(0)->getStart(i);
+		int startCase = LevelService::Instance().getLevel(levelIndex)->getVariantes(variante)->getStart(i);
 		
 		float startX = (startCase%35)+0.5;
 		float startY = (startCase/35)+0.5;
@@ -794,6 +795,21 @@ void Game::tick() {
 					if(GameConfig::Instance().isPlayerAlive(players[i]->getPlayerNumber())){
 						GameConfig::Instance().setPlayerDead(players[i]->getPlayerNumber());
 
+						if(!LevelService::Instance().getLevel(levelIndex)->getVariantes(variante)->isFillWithBricks()){
+							for(int y = 1; y < 13; y++) {
+								int nbBonusType = 0;
+								if(GameConfig::Instance().isCustomBonus()){
+									nbBonusType = GameConfig::Instance().getBonus(y);
+								}else{
+									nbBonusType = LevelService::Instance().getLevel(levelIndex)->getVariantes(variante)->getBonus(y);
+								}
+
+								for(int i = 0; i < nbBonusType; i++) {
+									PopBonusList.push_back(new PopBonus(grid->playerDeadNeedBonus(y)));
+								}
+							}
+						}
+
 						updateHeaderPlayer(players[i]->getIndexPlayerForGame(), players[i]->getPlayerNumber());
 					}
 				}
@@ -1000,7 +1016,7 @@ void Game::tick() {
 				for (int i = 0; i < 16; i++) {
 
 					
-					int startCase = LevelService::Instance().getLevel(levelIndex)->getVariantes(0)->getStart(i);
+					int startCase = LevelService::Instance().getLevel(levelIndex)->getVariantes(variante)->getStart(i);
 					
 					
 					float startX = (startCase%35)+0.5;

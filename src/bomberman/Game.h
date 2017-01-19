@@ -96,6 +96,7 @@ class Game {
 		//SUDDENT DEATH
 		bool suddenDeath;
 		int levelIndex;
+		int variante;
 		bool suddenDeathCase;
 		int suddenDeathMinX;
 		int suddenDeathMaxX;

@@ -3,11 +3,13 @@
 
 Grid::Grid() {
 	lvl = 0;
+	var = 0;
 	init();
 }
 
 Grid::Grid(int tab[sizeX * sizeY], int tabBonus[sizeX * sizeY]) {
 	lvl = GameConfig::Instance().getLevel();
+	var = GameConfig::Instance().getVariante();
 	this->tab = tab;
 	this->tabBonus = tabBonus;
 	init();
@@ -77,18 +79,23 @@ for	(int i = 0; i < sizeX * sizeY; i++) {
 			if( j == 0 || j == (sizeY-1) || i == 0 || i == (sizeX-1)|| (j%2 == 0 && i%2 == 0)) {
 				//murs
 				tab[i+(j*sizeX)] = wallElement;
-				if(LevelService::Instance().getLevel(lvl)->getVariantes(0)->getDefinition(j*sizeX+i) == 18 || LevelService::Instance().getLevel(lvl)->getVariantes(0)->getDefinition(j*sizeX+i) == 19 || LevelService::Instance().getLevel(lvl)->getVariantes(0)->getDefinition(j*sizeX+i) == 20) {
+				if(LevelService::Instance().getLevel(lvl)->getVariantes(var)->getDefinition(j*sizeX+i) == 18 || LevelService::Instance().getLevel(lvl)->getVariantes(var)->getDefinition(j*sizeX+i) == 19 || LevelService::Instance().getLevel(lvl)->getVariantes(var)->getDefinition(j*sizeX+i) == 20) {
 					tab[i+(j*sizeX)] = emptyElement;
 					emptyCase.push_back(i+(j*sizeX));
 				}
 			} else {
 				/* generate secret number between 1 and 3: */
-				if((rand() % 9 + 1)>=2) {
-					if(LevelService::Instance().getLevel(lvl)->getVariantes(0)->isReserved(j*sizeX+i) == 0) {
-						tab[i+(j*sizeX)] = brickElement;
-						notEmptyCase.push_back(i+(j*sizeX));
+				if(LevelService::Instance().getLevel(lvl)->getVariantes(var)->isFillWithBricks()){
+					if((rand() % 9 + 1)>=2) {
+						if(LevelService::Instance().getLevel(lvl)->getVariantes(var)->isReserved(j*sizeX+i) == 0) {
+							tab[i+(j*sizeX)] = brickElement;
+							notEmptyCase.push_back(i+(j*sizeX));
+						}
+					} else {
+						tab[i+(j*sizeX)] = emptyElement;
+						emptyCase.push_back(i+(j*sizeX));
 					}
-				} else {
+				}else{
 					tab[i+(j*sizeX)] = emptyElement;
 					emptyCase.push_back(i+(j*sizeX));
 				}
@@ -114,7 +121,7 @@ for	(int i = 0; i < sizeX * sizeY; i++) {
 			dstrect.y = j * smallSpriteLevelSizeHeight;
 			dstrect.w = smallSpriteLevelSizeWidth;
 			dstrect.h = smallSpriteLevelSizeHeight;
-			int textureIndex = LevelService::Instance().getLevel(lvl)->getVariantes(0)->getDefinition(j*sizeX+i);
+			int textureIndex = LevelService::Instance().getLevel(lvl)->getVariantes(var)->getDefinition(j*sizeX+i);
 			if(textureIndex == 'S' || textureIndex == 'T'){
 				textureIndex -= 65;	
 			}
@@ -129,7 +136,7 @@ for	(int i = 0; i < sizeX * sizeY; i++) {
 				SDL_BlitSurface(Sprite::Instance().getLevel(skyStartSpriteIndex, lvl), &skyRect, skyFixe, &dstrect);
 			}
 			if(tab[i+(j*sizeX)] == brickElement) {
-				if(LevelService::Instance().getLevel(lvl)->getVariantes(0)->isReserved(j*sizeX+i) == 0) {
+				if(LevelService::Instance().getLevel(lvl)->getVariantes(var)->isReserved(j*sizeX+i) == 0) {
 					if(textureIndex == 40) {
 						dstrect.x = i * smallSpriteLevelSizeWidth;
 						dstrect.y = j * smallSpriteLevelSizeHeight;
@@ -150,13 +157,13 @@ for	(int i = 0; i < sizeX * sizeY; i++) {
 	if(GameConfig::Instance().isCustomBonus()){
 		nbDeathBonus = GameConfig::Instance().getBonus(0);
 	}else{
-		nbDeathBonus = LevelService::Instance().getLevel(lvl)->getVariantes(0)->getBonus(0);
+		nbDeathBonus = LevelService::Instance().getLevel(lvl)->getVariantes(var)->getBonus(0);
 	}
 	
 	//draw Death bonus for a level
 	for(int i = 0; i < nbDeathBonus; i++) {
 		int ind = emptyCase[rand() % emptyCase.size() + 1];
-		while(LevelService::Instance().getLevel(lvl)->getVariantes(0)->isReserved(ind) != 0) {
+		while(LevelService::Instance().getLevel(lvl)->getVariantes(var)->isReserved(ind) != 0) {
 			ind = emptyCase[rand() % emptyCase.size() + 1];
 		}
 		tabBonus[ind] = deathBonus;
@@ -168,21 +175,23 @@ for	(int i = 0; i < sizeX * sizeY; i++) {
 		SDL_BlitSurface(Sprite::Instance().getBonus(0), NULL, brickShadow, &dstrect);
 	}
 
-	//draw Death bonus for a level
-	for(int y = 1; y < 13; y++) {
-		int nbBonusType = 0;
-		if(GameConfig::Instance().isCustomBonus()){
-			nbBonusType = GameConfig::Instance().getBonus(y);
-		}else{
-			nbBonusType = LevelService::Instance().getLevel(lvl)->getVariantes(0)->getBonus(y);
-		}
-	
-		for(int i = 0; i < nbBonusType; i++) {
-			int ind = notEmptyCase[rand() % notEmptyCase.size()];
-			while(tabBonus[ind] != noBonus) {
-				ind = notEmptyCase[rand() % notEmptyCase.size()];
+	if(LevelService::Instance().getLevel(lvl)->getVariantes(var)->isFillWithBricks()){
+		//draw Death bonus for a level
+		for(int y = 1; y < 13; y++) {
+			int nbBonusType = 0;
+			if(GameConfig::Instance().isCustomBonus()){
+				nbBonusType = GameConfig::Instance().getBonus(y);
+			}else{
+				nbBonusType = LevelService::Instance().getLevel(lvl)->getVariantes(var)->getBonus(y);
 			}
-			tabBonus[ind] = y;
+
+			for(int i = 0; i < nbBonusType; i++) {
+				int ind = notEmptyCase[rand() % notEmptyCase.size()];
+				while(tabBonus[ind] != noBonus) {
+					ind = notEmptyCase[rand() % notEmptyCase.size()];
+				}
+				tabBonus[ind] = y;
+			}
 		}
 	}
 
@@ -245,4 +254,19 @@ void Grid::placeSuddenDeathWall(int x, int y) {
 	dstrect.h = smallSpriteLevelSizeHeight;
 	SDL_BlitSurface(Sprite::Instance().getLevel(suddenDeathWallSpriteIndex, lvl), NULL, brickShadow, &dstrect);
 	tab[x + y * sizeX] = suddenDeathElement;
+}
+
+int Grid::playerDeadNeedBonus(int bonusIndex){
+	int ind = emptyCase[rand() % emptyCase.size()];
+	while(tabBonus[ind] != noBonus) {
+		ind = emptyCase[rand() % emptyCase.size()];
+	}
+	tabBonus[ind] = bonusIndex;
+	SDL_Rect dstrect;
+	dstrect.x = ((ind % sizeX) * smallSpriteLevelSizeWidth) + 1;
+	dstrect.y = floor(ind / sizeX) * smallSpriteLevelSizeHeight;
+	dstrect.w = defaultSpriteSize;
+	dstrect.h = defaultSpriteSize;
+	SDL_BlitSurface(Sprite::Instance().getBonus(tabBonus[ind]), NULL, brickShadow, &dstrect);
+	return ind;
 }

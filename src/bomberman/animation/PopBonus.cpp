@@ -7,7 +7,16 @@ PopBonus::PopBonus(int posX, int posY) {
 	this->posY = posY;
 	frameCounter = 0;
 	offsetSprite = 0;
-	nbFrameForAnimation = 6;
+	nbFrameForAnimation = 4;
+	deleteAnimation = false;
+}
+
+PopBonus::PopBonus(int index) {
+	this->posX = index % sizeX;
+	this->posY = floor(index / sizeX);
+	frameCounter = 0;
+	offsetSprite = 0;
+	nbFrameForAnimation = 4;
 	deleteAnimation = false;
 }
 
