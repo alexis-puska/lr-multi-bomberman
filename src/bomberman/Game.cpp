@@ -1001,8 +1001,13 @@ void Game::tick() {
 				explosions.clear();
 				burnWalls.clear();
 				suddenDeathAnimations.clear();
+				louisBurns.clear();
+				PopBonusList.clear();
+				BurnBonusList.clear();
 				grid->resetSurface();
 				grid->generateGrid();
+
+
 
 				int indexLibretro = 0;
 				int index = 0;
