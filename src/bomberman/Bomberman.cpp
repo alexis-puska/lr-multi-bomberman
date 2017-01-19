@@ -425,7 +425,41 @@ void Bomberman::drawLevelSelectionMenu() {
 		Sprite::Instance().drawText(screenBuffer, (640/2), 154, "SELECT THE LEVEL", green, true);
 		Sprite::Instance().drawText(screenBuffer, (640 / 2), 335, "- - move cursor with arrow and change with A / B - -", gold, true);
 
+
 		if (previousPlayerKeystate[0] & keyPadDown && keychange[0]) {
+			Sound::Instance().playBipSound();
+			switch(cursorPosition){
+				case 0:
+				case 1:
+				case 2:
+					cursorPosition+=2;
+					break;
+				case 3:
+				case 4:
+					cursorPosition++;
+					break;
+				case 5:
+				case 6:
+				case 7:
+				case 8:
+				case 9:
+				case 10:
+				case 11:
+				case 12:
+				case 13:
+				case 14:
+				case 15:
+				case 16:
+				case 17:
+					cursorPosition = 0;
+					break;
+			}
+			if(cursorPosition > 17){
+				cursorPosition = 0;
+			}
+		}
+
+		if (previousPlayerKeystate[0] & keyPadRight && keychange[0]) {
 			Sound::Instance().playBipSound();
 			cursorPosition++;
 			if(cursorPosition > 17){
@@ -434,11 +468,44 @@ void Bomberman::drawLevelSelectionMenu() {
 		}
 		if (previousPlayerKeystate[0] & keyPadUp && keychange[0]) {
 			Sound::Instance().playBipSound();
+			switch(cursorPosition){
+				case 0:
+				case 1:
+					cursorPosition = 5;
+					break;
+				case 2:
+				case 3:
+				case 4:
+					cursorPosition-=2;
+					break;
+				case 5:
+					cursorPosition--;
+					break;
+				case 6:
+				case 7:
+				case 8:
+				case 9:
+				case 10:
+				case 11:
+				case 12:
+				case 13:
+				case 14:
+				case 15:
+				case 16:
+				case 17:
+					cursorPosition = 4;
+					break;
+			}
+		}
+		if (previousPlayerKeystate[0] & keyPadLeft && keychange[0]) {
+			Sound::Instance().playBipSound();
 			cursorPosition--;
 			if(cursorPosition < 0){
 				cursorPosition = 17;
 			}
 		}
+
+
 		if (previousPlayerKeystate[0] & keyPadA && keychange[0]) {
 			Sound::Instance().playBipSound();
 			switch(cursorPosition){
