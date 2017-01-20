@@ -107,7 +107,7 @@ After this step lr-multi-bomberman is installed, compile, and integrated in emul
 |Louis type									|    |           |X   |
 |level variante								|    |           |X   |
 |menu to set number of bonus				|    |           |X   |
-|refactoring of code						|    |X          |    |
+|refactoring of code						|    |           |X   |
 |Teleporter									|X   |           |    |
 |Trolley									|X   |           |    |
 |Artificial interlligence 					|X   |           |    |
