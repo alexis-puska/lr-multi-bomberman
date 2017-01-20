@@ -19,7 +19,7 @@
 class Bombe {
 
 	public:
-		Bombe(int strenght, float posX, float posY, int bombeType, int player, int nbTickExplode, int tab[sizeX * sizeY], float * tabPlayerCoord);
+		Bombe(int strenght, float posX, float posY, int bombeType, int player, int nbTickExplode, int tab[sizeX * sizeY]);
 		~Bombe();
 		bool isExplode();
 		bool isPowerBombe();
@@ -37,7 +37,6 @@ class Bombe {
 
 	private:
 		int * tab;
-		float * tabPlayerCoord;
 
 		float posX;
 		float posY;

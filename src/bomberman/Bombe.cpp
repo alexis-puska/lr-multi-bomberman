@@ -3,14 +3,13 @@
 #define nbFrame 6
 #define bombeMoveSpeed 0.2
 
-Bombe::Bombe(int strenght, float posX, float posY, int bombeType, int player, int nbTickExplode, int tab[sizeX * sizeY], float * tabPlayerCoord) {
+Bombe::Bombe(int strenght, float posX, float posY, int bombeType, int player, int nbTickExplode, int tab[sizeX * sizeY]) {
 	this->strenght = strenght;
 	this->posX = posX;
 	this->posY = posY;
 	this->player = player;
 	this->nbTickExplode = nbTickExplode;
 	this->bombeType = bombeType;
-	this->tabPlayerCoord = tabPlayerCoord;
 	this->tab = tab;
 	direction = -1;
 	frameCounter = 0;
@@ -20,7 +19,6 @@ Bombe::Bombe(int strenght, float posX, float posY, int bombeType, int player, in
 
 Bombe::~Bombe() {
 	tab = NULL;
-	tabPlayerCoord = NULL;
 }
 
 bool Bombe::isExplode() {
@@ -123,7 +121,7 @@ void Bombe::tick(SDL_Surface * surfaceToDraw) {
 				case kickOnRight:
 					if (posX - roundX == 0.5) {
 						for (int i = 0; i < 16; i++) {
-							if ((int) floor(tabPlayerCoord[2 * i]) == roundX + 1 && (int) floor(tabPlayerCoord[2 * i + 1]) == roundY) {
+							if ((int) floor(GameConfig::Instance().getPlayerPosX(i)) == roundX + 1 && (int) floor(GameConfig::Instance().getPlayerPosY(i)) == roundY) {
 								nextCaseIsPlayer = true;
 							}
 						}
@@ -144,7 +142,7 @@ void Bombe::tick(SDL_Surface * surfaceToDraw) {
 				case kickOnLeft:
 					if (posX - roundX == 0.5) {
 						for (int i = 0; i < 16; i++) {
-							if ((int) floor(tabPlayerCoord[2 * i]) == roundX - 1 && (int) floor(tabPlayerCoord[2 * i + 1]) == roundY) {
+							if ((int) floor(GameConfig::Instance().getPlayerPosX(i)) == roundX - 1 && (int) floor(GameConfig::Instance().getPlayerPosY(i)) == roundY) {
 								nextCaseIsPlayer = true;
 							}
 						}
@@ -165,7 +163,7 @@ void Bombe::tick(SDL_Surface * surfaceToDraw) {
 				case kickOnUp:
 					if (posY - roundY == 0.5) {
 						for (int i = 0; i < 16; i++) {
-							if ((int) floor(tabPlayerCoord[2 * i]) == roundX && (int) floor(tabPlayerCoord[2 * i + 1]) == roundY - 1) {
+							if ((int) floor(GameConfig::Instance().getPlayerPosX(i)) == roundX && (int) floor(GameConfig::Instance().getPlayerPosY(i)) == roundY - 1) {
 								nextCaseIsPlayer = true;
 							}
 						}
@@ -186,7 +184,7 @@ void Bombe::tick(SDL_Surface * surfaceToDraw) {
 				case kickOnDown:
 					if (posY - roundY == 0.5) {
 						for (int i = 0; i < 16; i++) {
-							if ((int) floor(tabPlayerCoord[2 * i]) == roundX && (int) floor(tabPlayerCoord[2 * i + 1]) == roundY + 1) {
+							if ((int) floor(GameConfig::Instance().getPlayerPosX(i)) == roundX && (int) floor(GameConfig::Instance().getPlayerPosY(i)) == roundY + 1) {
 								nextCaseIsPlayer = true;
 							}
 						}

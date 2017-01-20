@@ -88,7 +88,6 @@ class Game {
 		int gameState;
 		int nbPlayerAlive;
 		int nbPlayerInGame;
-		int nbPlayerConfig;
 		bool isThreadAlive;
 		bool requestStopGame;
 		bool configured;
@@ -129,7 +128,6 @@ class Game {
 		//table of free/occuped part of the grid
 		int * tab;
 		int * tabBonus;
-		float * tabPlayerCoord;
 
 		//function
 		void copySurfaceToBackRenderer(SDL_Surface * src, SDL_Surface * dest, int x, int y);

@@ -56,7 +56,8 @@ Game::Game() {
  * 
  */
 Game::Game(SDL_Surface * vout_buf, unsigned short * in_keystate) {
-	srand (time(NULL));this->nbPlayerConfig = GameConfig::Instance().getNbPlayerInGame();
+	srand (time(NULL));
+
 	this->vout_buf = vout_buf;
 	this->in_keystate = in_keystate;
 
@@ -90,15 +91,11 @@ Game::Game(SDL_Surface * vout_buf, unsigned short * in_keystate) {
 	requestStopGame = false;
 	tab = new int[sizeX * sizeY];
 	tabBonus = new int[sizeX * sizeY];
-	tabPlayerCoord = new float[16 * 2];
 	for (int i = 0; i < sizeX * sizeY; i++) {
 		tab[i] = emptyElement;
 		tabBonus[i] = -1;
 	}
-	for (int i = 0; i < 16 * 2; i++) {
-		tabPlayerCoord[i] = -1.0;
-	}
-
+	GameConfig::Instance().resetPlayerCord();
 
 	suddenDeath = GameConfig::Instance().isSuddentDeathMode();
 	badBomber = GameConfig::Instance().isBadBomberMode();
@@ -150,7 +147,7 @@ Game::Game(SDL_Surface * vout_buf, unsigned short * in_keystate) {
 			case HUMAN:
 
 			// if a human link the next keystate of libretro, else link a empty value
-			player = new Player(&in_keystate[indexLibretro], false, startX, startY, i, tab, tabBonus, grid, tabPlayerCoord, nbPlayerConfig, indexPlayerForGame);
+			player = new Player(&in_keystate[indexLibretro], startX, startY, i, tab, tabBonus, grid, indexPlayerForGame);
 			players.push_back(player);
 			player = NULL;
 			indexLibretro++;
@@ -158,11 +155,11 @@ Game::Game(SDL_Surface * vout_buf, unsigned short * in_keystate) {
 			indexPlayerForGame++;
 			break;
 			case CPU:
-			player = new Player(&in_keystate_cpu[index], true, startX, startY, i, tab, tabBonus, grid, tabPlayerCoord, nbPlayerConfig, indexPlayerForGame);
+			player = new Player(&in_keystate_cpu[index], startX, startY, i, tab, tabBonus, grid, indexPlayerForGame);
 			players.push_back(player);
 			player = NULL;
 
-			brain = new Brain(&in_keystate_cpu[index], tab, tabPlayerCoord, i, players[indexPlayerForGame]);
+			brain = new Brain(&in_keystate_cpu[index], tab, i, players[indexPlayerForGame]);
 			brains.push_back(brain);
 			brain = NULL;
 
@@ -203,7 +200,6 @@ Game::~Game() {
 	delete grid;
 	delete tab;
 	delete tabBonus;
-	delete tabPlayerCoord;
 	in_keystate = NULL;
 	delete in_keystate_cpu;
 
@@ -987,9 +983,7 @@ void Game::tick() {
 
 			//restart game
 			if (in_keystate[0] & keyPadStart) {
-				for (int i = 0; i < 16 * 2; i++) {
-					tabPlayerCoord[i] = -1.0;
-				}
+				GameConfig::Instance().resetPlayerCord();
 
 				gameState = gameWait;
 				generateHeader();
@@ -1030,7 +1024,7 @@ void Game::tick() {
 					switch (GameConfig::Instance().getPlayerType(i)) {
 						case HUMAN:
 							// if a human link the next keystate of libretro, else link a empty value
-							player = new Player(&in_keystate[indexLibretro], false, startX, startY, i, tab, tabBonus, grid, tabPlayerCoord, nbPlayerConfig,
+							player = new Player(&in_keystate[indexLibretro], startX, startY, i, tab, tabBonus, grid,
 									indexPlayerForGame);
 							players.push_back(player);
 							player = NULL;
@@ -1039,10 +1033,10 @@ void Game::tick() {
 							indexPlayerForGame++;
 							break;
 						case CPU:
-							player = new Player(&in_keystate_cpu[index], true, startX, startY, i, tab, tabBonus, grid, tabPlayerCoord, nbPlayerConfig,
+							player = new Player(&in_keystate_cpu[index], startX, startY, i, tab, tabBonus, grid,
 									indexPlayerForGame);
 							players.push_back(player);
-							brain = new Brain(&in_keystate_cpu[index], tab, tabPlayerCoord, i, players[indexPlayerForGame]);
+							brain = new Brain(&in_keystate_cpu[index], tab, i, players[indexPlayerForGame]);
 							brains.push_back(brain);
 							brain = NULL;
 

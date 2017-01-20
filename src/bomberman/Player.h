@@ -19,8 +19,8 @@
 #define __MYCLASS_PLAYER
 class Player {
 	public:
-		Player(unsigned short * in_keystate, bool isACpuPlayer, float startPositionX, float startPositionY, int playerNumber, int tab[sizeX * sizeY], int tabBonus[sizeX * sizeY],
-				Grid * gridParam, float * tabPlayerCoord, int nbPlayerConfig, int indexPlayerForGame);
+		Player(unsigned short * in_keystate, float startPositionX, float startPositionY, int playerNumber, int tab[sizeX * sizeY], int tabBonus[sizeX * sizeY],
+				Grid * gridParam, int indexPlayerForGame);
 		~Player();
 		void doSomething(SDL_Surface * surfaceToDraw);
 
@@ -59,9 +59,7 @@ class Player {
 		/*
 		 * VAR
 		 */
-
 		//Object variable
-		bool cpu;
 		int playerNumber;
 		int indexPlayerForGame;
 		int nbPlayerConfig;
@@ -109,7 +107,6 @@ class Player {
 		//pointer to the grid element;
 		int * tab;
 		int * tabBonus;
-		float * tabPlayerCoord;
 		Grid * grid;
 
 		//image of differente sprite of player

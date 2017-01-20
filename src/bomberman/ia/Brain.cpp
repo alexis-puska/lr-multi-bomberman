@@ -1,10 +1,9 @@
 #include "Brain.h"
 
-Brain::Brain(unsigned short * keystate, int tab[sizeX * sizeY], float * tabCord, int playerNumber, Player * player) {
+Brain::Brain(unsigned short * keystate, int tab[sizeX * sizeY], int playerNumber, Player * player) {
 	this->player = player;
 	this->keystate = keystate;
 	this->tab = tab;
-	this->tabCord = tabCord;
 	this->playerNumber = playerNumber;
 	this->targetPlayer = -1;
 	this->idxOwnBombe = -1;
@@ -37,7 +36,6 @@ Brain::~Brain() {
 	delete bfs;
 	keystate = NULL;
 	tab = NULL;
-	tabCord = NULL;
 	player = NULL;
 }
 
@@ -45,12 +43,12 @@ void Brain::think() {
 
 	*keystate = (short) 0;
 
-	if (tabCord[playerNumber * 2] != -1) {
-		currentIndex = int(floor(tabCord[playerNumber * 2]) + floor(tabCord[playerNumber * 2 + 1]) * sizeX);
+	if (GameConfig::Instance().getPlayerPosX(playerNumber) != -1) {
+		currentIndex = GameConfig::Instance().getPlayerIndex(playerNumber);
 	} else {
 		currentIndex = -1;
 	}
-	if(currentIndex >= 0 && currentIndex <sizeX * sizeY){
+	if (currentIndex >= 0 && currentIndex < sizeX * sizeY) {
 		switch (GameConfig::Instance().getIALevel()) {
 			case 1:
 				level1();
@@ -132,7 +130,7 @@ void Brain::level1() {
 			}
 			break;
 		case lvl1WaitBombeExplode:
-			if(player->getBombeType() == radioBombeType){
+			if (player->getBombeType() == radioBombeType) {
 				player->brainPressButton();
 			}
 			if (tab[idxOwnBombe] == 0) {
@@ -199,7 +197,7 @@ void Brain::level5() {
 
 int Brain::walkToObjectif(int objectif) {
 
-	astar->init(objectif % sizeX, floor(objectif / sizeX), tabCord[this->playerNumber * 2], tabCord[this->playerNumber * 2 + 1], 2);
+	astar->init(objectif % sizeX, floor(objectif / sizeX), GameConfig::Instance().getPlayerPosX(this->playerNumber), GameConfig::Instance().getPlayerPosY(this->playerNumber), 2);
 	astar->solve();
 	if (astar->isSolved()) {
 		AStarCell current = astar->getEnd();
@@ -225,25 +223,25 @@ int Brain::walkToObjectif(int objectif) {
 			switch (prevDir) {
 				case right:
 					*keystate += (short) brainKeyRight;
-					if (tabCord[this->playerNumber * 2] - floor(tabCord[this->playerNumber * 2]) > 0.4) {
+					if (GameConfig::Instance().getPlayerPosX(this->playerNumber) - floor(GameConfig::Instance().getPlayerPosX(this->playerNumber)) > 0.4) {
 						prevDir = none;
 					}
 					break;
 				case left:
 					*keystate += (short) brainKeyLeft;
-					if (tabCord[this->playerNumber * 2] - floor(tabCord[this->playerNumber * 2]) < 0.6) {
+					if (GameConfig::Instance().getPlayerPosX(this->playerNumber) - floor(GameConfig::Instance().getPlayerPosX(this->playerNumber)) < 0.6) {
 						prevDir = none;
 					}
 					break;
 				case up:
 					*keystate += (short) brainKeyUp;
-					if (tabCord[this->playerNumber * 2 + 1] - floor(tabCord[this->playerNumber * 2 + 1]) < 0.6) {
+					if (GameConfig::Instance().getPlayerPosY(this->playerNumber) - floor(GameConfig::Instance().getPlayerPosY(this->playerNumber)) < 0.6) {
 						prevDir = none;
 					}
 					break;
 				case down:
 					*keystate += (short) brainKeyDown;
-					if (tabCord[this->playerNumber * 2 + 1] - floor(tabCord[this->playerNumber * 2 + 1]) > 0.4) {
+					if (GameConfig::Instance().getPlayerPosY(this->playerNumber) - floor(GameConfig::Instance().getPlayerPosY(this->playerNumber)) > 0.4) {
 						prevDir = none;
 					}
 					break;
@@ -273,9 +271,9 @@ int Brain::findNearPlayer() {
 	float res = 0.0;
 	int target = -1;
 	for (int i = 0; i < 16; i++) {
-		if (playerNumber != i && tabCord[i * 2] != -1) {
+		if (playerNumber != i && GameConfig::Instance().getPlayerPosX(i) != -1) {
 
-			res = calcDistance(tabCord[playerNumber * 2], tabCord[playerNumber * 2 + 1], tabCord[i * 2], tabCord[i * 2 + 1]);
+			res = calcDistance(GameConfig::Instance().getPlayerPosX(playerNumber), GameConfig::Instance().getPlayerPosY(playerNumber), GameConfig::Instance().getPlayerPosX(i), GameConfig::Instance().getPlayerPosY(i));
 			if (minDistance == -1.0 || res < minDistance) {
 				minDistance = res;
 				target = i;

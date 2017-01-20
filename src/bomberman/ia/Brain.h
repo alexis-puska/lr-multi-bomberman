@@ -37,7 +37,7 @@ enum brain1step {
 class Brain {
 
 	public:
-		Brain(unsigned short * keystate, int tab[sizeX * sizeY], float * tabCord, int playerNumber, Player * player);
+		Brain(unsigned short * keystate, int tab[sizeX * sizeY], int playerNumber, Player * player);
 		~Brain();
 		void think();
 
@@ -46,8 +46,6 @@ class Brain {
 		unsigned short * keystate;
 		//tab representing the map of the game
 		int * tab;
-		//tab contains the players coordinate
-		float * tabCord;
 		//nb player of the game (CPU or human)
 		int playerNumber;
 		AStar * astar;

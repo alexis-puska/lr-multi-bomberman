@@ -383,3 +383,35 @@ void GameConfig::printPlayerConfiguration(){
 		fprintf(stderr, "%i %2it %2ic %2is %2isc %2ist\n", i, playerType[i], playerColor[i], playerSpriteType[i], playerScore[i], playerStatus[i]);
 	}
 }
+
+void GameConfig::updatePlayerPosition(int player, float x, float y){
+	playerCord[player][0] = x;
+	playerCord[player][1] = y;
+}
+
+void GameConfig::updatePlayerPosY(int player, float y){
+	playerCord[player][1] = y;
+}
+
+void GameConfig::updatePlayerPosX(int player, float x){
+	playerCord[player][0] = x;
+}
+
+float GameConfig::getPlayerPosX(int player){
+	return playerCord[player][0];
+}
+
+float GameConfig::getPlayerPosY(int player){
+	return playerCord[player][1];
+}
+
+int GameConfig::getPlayerIndex(int player){
+	return int(floor(playerCord[player][0]) + floor(playerCord[player][1]) * sizeX);
+}
+
+void GameConfig::resetPlayerCord(){
+	for(int i=0; i < nbPlayer ; i++){
+		playerCord[i][0] = -1;
+		playerCord[i][1] = -1;
+	}
+}

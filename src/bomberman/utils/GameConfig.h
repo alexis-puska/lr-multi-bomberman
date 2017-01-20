@@ -22,6 +22,9 @@
 #define timeOfGameDefault		3
 #define timeOfGameInf			-1
 
+#define sizeX 35
+#define sizeY 21
+
 #ifndef __MYCLASS_GAMECONFIG
 #define __MYCLASS_GAMECONFIG
 
@@ -89,6 +92,14 @@ class GameConfig {
 		void resetPlayerStatus();
 		void printPlayerConfiguration();
 		
+		void updatePlayerPosition(int player, float x, float y);
+		void updatePlayerPosX(int player, float y);
+		void updatePlayerPosY(int player, float y);
+		float getPlayerPosX(int player);
+		float getPlayerPosY(int player);
+		int getPlayerIndex(int player);
+		void resetPlayerCord();
+
 
 	private:
 		GameConfig& operator=(const GameConfig&);
@@ -112,5 +123,6 @@ class GameConfig {
 		int playerSpriteType[nbPlayer];
 		int playerScore[nbPlayer];
 		int playerStatus[nbPlayer];
+		float playerCord[nbPlayer][2];
 };
 #endif

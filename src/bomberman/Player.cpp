@@ -44,28 +44,26 @@ enum louisTypeEnum {
 	blueLouis = 0, yellowLouis = 1, pinkLouis = 2, greenLouis = 3, brownLouis = 4
 };
 
-Player::Player(unsigned short * in_keystate, bool isACpuPlayer, float posX, float posY, int playerNumber, int tab[sizeX * sizeY], int tabBonus[sizeX * sizeY], Grid * gridParam,
-		float * tabPlayerCoord, int nbPlayerConfig, int indexPlayerForGame) {
+Player::Player(unsigned short * in_keystate, float posX, float posY, int playerNumber, int tab[sizeX * sizeY], int tabBonus[sizeX * sizeY], Grid * gridParam,
+		int indexPlayerForGame) {
 	srand (time(NULL));grid = gridParam;
 	this->indexPlayerForGame = indexPlayerForGame;
 	this->posX = posX;
 	this->posY = posY;
 	this->playerNumber = playerNumber;
-	this->cpu = isACpuPlayer;
 	this->tab = tab;
 	this->tabBonus = tabBonus;
 	this->characterSpriteIndex = GameConfig::Instance().getPlayerSpriteType(playerNumber);
 	this->in_keystate = in_keystate;
-	this->tabPlayerCoord = tabPlayerCoord;
-	this->nbPlayerConfig = nbPlayerConfig;
+	this->nbPlayerConfig = GameConfig::Instance().getNbPlayerInGame();;
 	this->color = GameConfig::Instance().getPlayerColor(playerNumber);;
 	this->louisType = blueLouis;
 
 
 	//fprintf(stderr, "%i %2it %2ic %2is %2isc %2ist\n", playerNumber, GameConfig::Instance().getPlayerColor(), );
+	GameConfig::Instance().updatePlayerPosition(playerNumber, posX, posY);
 
-	tabPlayerCoord[playerNumber * 2] = posX;
-	tabPlayerCoord[playerNumber * 2 + 1 ] = posY;
+
 	playerState = normal;
 	invincibleTime = 0;
 	NbBombeMax = GameConfig::Instance().getBombe();
@@ -95,7 +93,6 @@ Player::~Player() {
 	delete in_keystate;
 	tab = NULL;
 	tabBonus = NULL;
-	tabPlayerCoord = NULL;
 	grid = NULL;
 }
 
@@ -289,8 +286,7 @@ void Player::drawBurning(SDL_Surface * surfaceToDraw, bool animate) {
 			if (offsetSprite >= nbFrameForAnimation) {
 				offsetSprite = 0;
 				playerState = dead;
-				tabPlayerCoord[playerNumber * 2] = -1.0;
-				tabPlayerCoord[playerNumber * 2 + 1] = -1.0;
+				GameConfig::Instance().updatePlayerPosition(playerNumber, -1.0, -1.0);
 				return;
 			}
 		}
@@ -450,9 +446,9 @@ void Player::doSomething(SDL_Surface * surfaceToDraw) {
 			int roundX = floor(posX);
 			int roundY = floor(posY);
 
-			//update coordonate in global memory		
-			posX = tabPlayerCoord[playerNumber * 2];
-			posY = tabPlayerCoord[playerNumber * 2 + 1];
+			//update coordonate in global memory
+			posX = GameConfig::Instance().getPlayerPosX(playerNumber);
+			posY = GameConfig::Instance().getPlayerPosY(playerNumber);
 
 			if (roundX + roundY * sizeX < sizeX * sizeY) {
 				if (tabBonus[roundX + roundY * sizeX] != noBonus && tab[roundX + roundY * sizeX] < brickElement) {
@@ -694,12 +690,11 @@ void Player::doSomething(SDL_Surface * surfaceToDraw) {
 	}
 
 	if (playerState == dead) {
-		tabPlayerCoord[playerNumber * 2] = -1.0;
-		tabPlayerCoord[playerNumber * 2 + 1] = -1.0;
+		GameConfig::Instance().updatePlayerPosition(playerNumber, -1.0, -1.0);
 	} else {
 		//malus treatment
-		tabPlayerCoord[playerNumber * 2] = posX;
-		tabPlayerCoord[playerNumber * 2 + 1] = posY;
+		GameConfig::Instance().updatePlayerPosition(playerNumber, posX, posY);
+
 		if (nbTickMalus > 0) {
 			nbTickMalus--;
 		} else if (nbTickMalus == 0) {
@@ -709,8 +704,8 @@ void Player::doSomething(SDL_Surface * surfaceToDraw) {
 	}
 
 	//correct value for AStar
-	if (floor(tabPlayerCoord[playerNumber * 2 + 1]) > sizeY - 1) {
-		tabPlayerCoord[playerNumber * 2 + 1] = 0;
+	if (floor(GameConfig::Instance().getPlayerPosY(playerNumber)) > sizeY - 1) {
+		GameConfig::Instance().updatePlayerPosY(playerNumber,0);
 	}
 }
 
@@ -746,7 +741,7 @@ Bombe * Player::addBombe() {
 			break;
 	}
 	tab[(int) floor(posX) + ((int) floor(posY) * sizeX)] = bombeElement;
-	return new Bombe(strenght, floor(posX) + 0.5, floor(posY) + 0.5, bombeType, indexPlayerForGame, time, tab, tabPlayerCoord);
+	return new Bombe(strenght, floor(posX) + 0.5, floor(posY) + 0.5, bombeType, indexPlayerForGame, time, tab);
 }
 
 int Player::getPlayerNumber() {
@@ -911,12 +906,12 @@ void Player::getAMalusBonus() {
 			break;
 		case switchPlayerMalus:
 			int playerToSwitch = findIndexPlayer();
-			float toSwitchX = floor(tabPlayerCoord[playerToSwitch * 2]) + 0.5;
-			float toSwitchY = floor(tabPlayerCoord[playerToSwitch * 2 + 1]) + 0.5;
-			tabPlayerCoord[playerToSwitch * 2] = floor(tabPlayerCoord[playerNumber * 2]) + 0.5;
-			tabPlayerCoord[playerToSwitch * 2 + 1] = floor(tabPlayerCoord[playerNumber * 2 + 1]) + 0.5;
-			tabPlayerCoord[playerNumber * 2] = toSwitchX;
-			tabPlayerCoord[playerNumber * 2 + 1] = toSwitchY;
+			float toSwitchX = floor(GameConfig::Instance().getPlayerPosX(playerToSwitch)) + 0.5;
+			float toSwitchY = floor(GameConfig::Instance().getPlayerPosY(playerToSwitch)) + 0.5;
+			GameConfig::Instance().updatePlayerPosX(playerToSwitch,floor(posX) + 0.5);
+			GameConfig::Instance().updatePlayerPosY(playerToSwitch,floor(posY) + 0.5);
+			GameConfig::Instance().updatePlayerPosX(playerNumber,toSwitchX);
+			GameConfig::Instance().updatePlayerPosY(playerNumber,toSwitchY);
 			posX = toSwitchX;
 			posY = toSwitchY;
 			break;
@@ -928,7 +923,7 @@ int Player::findIndexPlayer() {
 	std::vector<int> index;
 	for (int i = 0; i < 16; i++) {
 		if (i != playerNumber) {
-			if (tabPlayerCoord[i * 2] != -1.0) {
+			if (GameConfig::Instance().getPlayerPosX(i) != -1.0) {
 				index.push_back(i);
 			}
 		}
