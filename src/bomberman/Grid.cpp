@@ -69,14 +69,14 @@ void Grid::resetSurface() {
 void Grid::generateGrid() {
 	srand (time(NULL));
 
-for	(int i = 0; i < sizeX * sizeY; i++) {
+	for	(int i = 0; i < sizeX * sizeY; i++) {
 		tab[i] = emptyElement;
 		tabBonus[i] = -1;
 	}
 
 	for(int i=0;i<sizeX;i++) {
 		for(int j=0;j<sizeY;j++) {
-			if( j == 0 || j == (sizeY-1) || i == 0 || i == (sizeX-1)|| (j%2 == 0 && i%2 == 0)) {
+			if( j == 0 || j == (sizeY-1) || i == 0 || i == (sizeX-1)) {
 				//murs
 				tab[i+(j*sizeX)] = wallElement;
 				if(LevelService::Instance().getLevel(lvl)->getVariantes(var)->getDefinition(j*sizeX+i) == 18 || LevelService::Instance().getLevel(lvl)->getVariantes(var)->getDefinition(j*sizeX+i) == 19 || LevelService::Instance().getLevel(lvl)->getVariantes(var)->getDefinition(j*sizeX+i) == 20) {
@@ -86,18 +86,26 @@ for	(int i = 0; i < sizeX * sizeY; i++) {
 			} else {
 				/* generate secret number between 1 and 3: */
 				if(LevelService::Instance().getLevel(lvl)->getVariantes(var)->isFillWithBricks()){
-					if((rand() % 9 + 1)>=2) {
-						if(LevelService::Instance().getLevel(lvl)->getVariantes(var)->isReserved(j*sizeX+i) == 0) {
-							tab[i+(j*sizeX)] = brickElement;
-							notEmptyCase.push_back(i+(j*sizeX));
+					if(LevelService::Instance().getLevel(lvl)->getVariantes(var)->getDefinition(j*sizeX+i) == 16){
+						tab[i+(j*sizeX)] = wallElement;
+					}else{
+						if((rand() % 9 + 1)>=2) {
+							if(LevelService::Instance().getLevel(lvl)->getVariantes(var)->isReserved(j*sizeX+i) == 0) {
+								tab[i+(j*sizeX)] = brickElement;
+								notEmptyCase.push_back(i+(j*sizeX));
+							}
+						} else {
+							tab[i+(j*sizeX)] = emptyElement;
+							emptyCase.push_back(i+(j*sizeX));
 						}
-					} else {
+					}
+				}else{
+					if(LevelService::Instance().getLevel(lvl)->getVariantes(var)->getDefinition(j*sizeX+i) == 16){
+						tab[i+(j*sizeX)] = wallElement;
+					}else{
 						tab[i+(j*sizeX)] = emptyElement;
 						emptyCase.push_back(i+(j*sizeX));
 					}
-				}else{
-					tab[i+(j*sizeX)] = emptyElement;
-					emptyCase.push_back(i+(j*sizeX));
 				}
 			}
 		}

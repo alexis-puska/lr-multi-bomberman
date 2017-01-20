@@ -205,6 +205,12 @@ void Bombe::tick(SDL_Surface * surfaceToDraw) {
 					}
 					break;
 			}
+
+			if (tab[(int) floor(posX) + (int) floor(posY) * sizeX] == explosionElement) {
+				tab[(int) floor(posX) + (int) floor(posY) * sizeX] = emptyElement;
+				explode();
+			}
+
 			tab[(int) floor(posX) + (int) floor(posY) * sizeX] = bombeElement;
 		}
 	}
