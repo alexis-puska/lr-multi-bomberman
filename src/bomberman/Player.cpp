@@ -453,6 +453,8 @@ void Player::doSomething(SDL_Surface * surfaceToDraw) {
 			if (roundX + roundY * sizeX < sizeX * sizeY) {
 				if (tabBonus[roundX + roundY * sizeX] != noBonus && tab[roundX + roundY * sizeX] < brickElement) {
 					foundABonus(tabBonus[roundX + roundY * sizeX]);
+				}else if (tabBonus[roundX + roundY * sizeX] != noBonus && tab[roundX + roundY * sizeX] == bombeElement) {
+					foundABonus(tabBonus[roundX + roundY * sizeX]);
 				}
 			}
 
