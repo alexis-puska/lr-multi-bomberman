@@ -126,18 +126,21 @@ void Grid::generateGrid() {
 				}
 				SDL_BlitSurface(Sprite::Instance().getLevel(textureIndex, lvl), &srcrect, ground, &dstrect);
 				if(LevelService::Instance().getLevel(lvl)->getVariantes(var)->isFillWithBricks()){
-					if((rand() % 9 + 1)>=2) {
-						if(LevelService::Instance().getLevel(lvl)->getVariantes(var)->isReserved(j*sizeX+i) == 0) {
-							tab[i+(j*sizeX)] = brickElement;
-							notEmptyCase.push_back(i+(j*sizeX));
-							dstrect.x = i * smallSpriteLevelSizeWidth;
-							dstrect.y = j * smallSpriteLevelSizeHeight;
-							dstrect.w = smallSpriteLevelSizeWidth;
-							dstrect.h = smallSpriteLevelSizeHeight;
-							SDL_BlitSurface(Sprite::Instance().getLevel(21, lvl), &srcrect, brickShadow, &dstrect);
+					if(j>0 && j<sizeY-1){
+						if((rand() % 9 + 1)>=2) {
+							if(LevelService::Instance().getLevel(lvl)->getVariantes(var)->isReserved(j*sizeX+i) == 0) {
+								tab[i+(j*sizeX)] = brickElement;
+								notEmptyCase.push_back(i+(j*sizeX));
+								dstrect.x = i * smallSpriteLevelSizeWidth;
+								dstrect.y = j * smallSpriteLevelSizeHeight;
+								dstrect.w = smallSpriteLevelSizeWidth;
+								dstrect.h = smallSpriteLevelSizeHeight;
+								SDL_BlitSurface(Sprite::Instance().getLevel(21, lvl), &srcrect, brickShadow, &dstrect);
+							}
+
+						}else{
+							emptyCase.push_back(i+(j*sizeX));
 						}
-					}else{
-						emptyCase.push_back(i+(j*sizeX));
 					}
 				}else{
 					emptyCase.push_back(i+(j*sizeX));
