@@ -109,7 +109,6 @@ void Bomberman::tick(unsigned short in_keystateLibretro[16]) {
 					currentStep = gameOptionMenu;
 					break;
 				case gameStep:
-					cursorPosition = GameConfig::Instance().getLevel();
 					currentStep = levelSelectionMenu;
 					break;
 			}
@@ -152,7 +151,6 @@ void Bomberman::tick(unsigned short in_keystateLibretro[16]) {
 			game->exitGame();
 			delete game;
 			game = NULL;
-			cursorPosition = GameConfig::Instance().getLevel();
 			currentStep = levelSelectionMenu;
 			Sound::Instance().stopMusique();
 			Sound::Instance().startMenuMusique();

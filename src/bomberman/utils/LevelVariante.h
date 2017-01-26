@@ -5,6 +5,7 @@
 #endif
 
 #include <stdio.h>
+#include <map>
 
 #ifndef __MYCLASS_LevelVariante
 #define __MYCLASS_LevelVariante
@@ -24,6 +25,11 @@ class LevelVariante {
 		int getStart(int idx);
 		int getNbBombe();
 		int getFireStrenght();
+		void textureIsAWall(int idx);
+		void textureIsAWall(int startIdx, int stopIdx);
+		void texturedrawInsky(int idx);
+		bool isAWall(int idx);
+		bool isDrawInSky(int idx);
 	private:
 		int number;
 		char descriptionLine1[32];
@@ -35,5 +41,7 @@ class LevelVariante {
 		int bonus[13];
 		int fireStrenght;
 		int nbBombe;
+		std::map<int, int> indexDefSky;
+		std::map<int, int> indexDefWall;
 };
 #endif

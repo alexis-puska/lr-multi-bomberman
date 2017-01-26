@@ -179,8 +179,13 @@ void LevelService::createLevel0(){
 	int bonusV2[13]= {  1, 1, 2,  0, 2,  0, 2,  0,  0,  0,  0,  0, 1};
 
 	Level * level = new Level(0, "Blockbuster");
-	level->addVariante(new LevelVariante(0, "level without bricks", "all player in the center", true, desc, bonus, 2, 2));
-	level->addVariante(new LevelVariante(1, "Niveau sans bricks", "Niveau sans bricks", false, descV2, bonusV2, 6, 6));
+	LevelVariante * variante = new LevelVariante(0, "classic level", "classic level", true, desc, bonus, 2, 2);
+	variante->textureIsAWall(0,17);
+	level->addVariante(variante);
+
+	LevelVariante * variante1 = new LevelVariante(1, "level without bricks", "level without bricks", false, descV2, bonusV2, 6, 6);
+	variante1->textureIsAWall(0,17);
+	level->addVariante(variante1);
 	levels.push_back(level);
 }
 
@@ -208,7 +213,9 @@ void LevelService::createLevel1(){
 					  5,  7,  7,  7,  7,  7,  7,  7,  7,  7,  7,  7,  7,  7,  7,  7,  7,  7,  7,  7,  7,  7,  7,  7,  7,  7,  7,  7,  7,  7,  7,  7,  7,  7,  6};	
 	int bonus[13]= {  3,  6, 15,  0, 18,  3,  9,  6,  6,  0,  0,  0, 15};
 	Level * level = new Level(1, "Merry-Go-Round");
-	level->addVariante(new LevelVariante(1, "Niveau Classique", "Niveau Classique", true, desc, bonus, 2, 2));
+	LevelVariante * variante = new LevelVariante(1, "Niveau Classique", "Niveau Classique", true, desc, bonus, 2, 2);
+	variante->textureIsAWall(0,17);
+	level->addVariante(variante);
 	levels.push_back(level);
 }
 
@@ -248,7 +255,7 @@ void LevelService::createLevel2(){
 						 10,'S', 16, 18, 16, 18, 16, 18, 16, 18, 16, 18, 16, 18, 16, 18, 16, 18, 16, 18, 16, 18, 16, 18, 16, 18, 16, 18, 16, 18, 16, 18, 16,'S', 13,
 						 10, 18, 20, 18, 20, 18, 20, 18, 20, 18, 20, 18, 20, 18, 20, 18, 20, 18, 20, 18, 20, 18, 20, 18, 20, 18, 20, 18, 20, 18, 20, 18, 20, 18, 13,
 						 10, 18, 16, 18, 16, 18, 16, 18, 16, 18,'W','W','W', 18, 16, 18, 16, 18, 16, 18, 16, 18, 16, 18, 16, 18, 16, 18, 16, 18, 16, 18, 16, 18, 13,
-						 10, 18, 20, 18, 20, 18, 20, 18, 20, 18,'W','U','W', 18, 20, 18, 20, 18, 20, 18, 20, 18, 20, 18, 20, 18, 20, 18, 20, 18, 20, 18, 20, 18, 13,
+						 10, 18, 20, 18, 20, 18, 20, 18, 20, 18,'W', 40,'W', 18, 20, 18, 20, 18, 20, 18, 20, 18, 20, 18, 20, 18, 20, 18, 20, 18, 20, 18, 20, 18, 13,
 						 10, 18, 16, 18, 16, 18, 16,'S', 16, 18,'W','W','W', 18, 16, 18, 16, 18, 16, 18, 16, 18, 16, 18, 16, 18, 16,'S', 16, 18, 16, 18, 16, 18, 13,
 						 10, 18, 20, 18, 20, 18, 20, 18, 20, 18, 20, 18, 20, 18, 20, 18, 20,'S', 20, 18, 20, 18, 20, 18, 20, 18, 20, 18, 20, 18, 20, 18, 20, 18, 13,
 						 10, 18, 16, 18, 16, 18, 16, 18, 16, 18, 16, 18, 16, 18, 16, 18, 16, 18, 16, 18, 16, 18, 16, 18, 16, 18, 16, 18, 16, 18, 16, 18, 16, 18, 13,
@@ -256,10 +263,17 @@ void LevelService::createLevel2(){
 						 10, 18, 16, 18, 16, 18, 16, 18, 16, 18, 16, 18, 16, 18, 16, 18, 16, 18, 16, 18, 16, 18, 16, 18, 16, 18, 16, 18, 16, 18, 16, 18, 16, 18, 13,
 						 10,'S', 20, 18, 20, 18, 20, 18, 20, 18, 20,'S', 20, 18, 20, 18, 20, 18, 20, 18, 20, 18, 20,'S', 20, 18, 20, 18, 20, 18, 20, 18, 20,'S', 13,
 						  5,  7,  7,  7,  7,  7,  8, 18,  9,  7,  7,  7,  7,  7,  7,  7,  7,  7,  7,  7,  7,  7,  7,  7,  7,  7,  8, 18,  9,  7,  7,  7,  7,  7,  6};
-	int bonus2[13]= {  3, 12, 18,  0, 18,  0,  6,  0,  0,  0,  0,  0, 15};
+	int bonus2[13]= {  3, 2, 3,  0, 3,  0,  1,  0,  0,  0,  0,  0, 2};
 	Level * level = new Level(1, "Splish-Splash");
-	level->addVariante(new LevelVariante(0, "Niveau Classique", "Niveau Classique", true, desc, bonus, 2, 2));
-	level->addVariante(new LevelVariante(1, "Niveau Classique", "Niveau Classique", false, desc2, bonus2, 2, 2));
+	LevelVariante * variante = new LevelVariante(0, "Niveau Classique", "Niveau Classique", true, desc, bonus, 2, 2);
+	variante->textureIsAWall(0,17);
+	level->addVariante(variante);
+
+	LevelVariante * variante1 = new LevelVariante(1, "Niveau Classique", "Niveau Classique", false, desc2, bonus2, 2, 2);
+	variante1->textureIsAWall(0,17);
+	variante1->textureIsAWall('W');
+	variante1->textureIsAWall(40);
+	level->addVariante(variante1);
 	levels.push_back(level);
 }
 
@@ -287,35 +301,45 @@ void LevelService::createLevel3(){
 					  5,  7,  8,  7,  8,  7,  8,  7,  8,  7,  8,  7,  8,  7,  8,  7,  8,  7,  8,  7,  8,  7,  8,  7,  8,  7,  8,  7,  8,  7,  8,  7,  8,  7,  8};
 	int bonus[13]= {  3, 12, 18,  0, 18,  0,  6,  0,  6,  0,  0,  0, 15};
 	Level * level = new Level(1, "Peekaboo");
-	level->addVariante(new LevelVariante(1, "Niveau Classique", "Niveau Classique", true, desc, bonus, 2, 2));
+	LevelVariante * variante = new LevelVariante(1, "Niveau Classique", "Niveau Classique", true, desc, bonus, 2, 2);
+	variante->textureIsAWall(0,17);
+	level->addVariante(variante);
 	levels.push_back(level);
 }
 
 void LevelService::createLevel4(){
 	int desc[735] = { 0,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  1,
 					 11,'T', 19, 19, 19, 19, 19, 18, 19, 19, 19,'T', 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19,'T', 19, 19, 19, 18, 19, 19, 19, 19, 19,'T', 14,
-					 10, 18, 16, 18, 16, 18, 16, 18,'W', 18,'W', 18, 16, 18, 16, 18,'W', 18,'W', 18, 16, 18, 16, 18,'W', 18,'W', 18, 16, 18, 16, 18, 16, 18, 13,
-					 11, 18, 20, 18, 20, 18, 20, 18, 20, 40, 20, 18, 20, 18, 20, 18, 20, 40, 20, 18, 20, 18, 20, 18, 20, 40, 20, 18, 20, 18, 20, 18, 20, 18, 14,
-					 10, 18, 16, 18, 16, 18, 16, 18,'W', 18,'W', 18, 16, 18, 16, 18,'W', 18,'W', 18, 16, 18, 16, 18,'W', 18,'W', 18, 16, 18, 16, 18, 16, 18, 13,
+					 10, 18, 16, 18, 16, 18, 16, 18, 28, 18, 29, 18, 16, 18, 16, 18, 28, 18, 29, 18, 16, 18, 16, 18, 28, 18, 29, 18, 16, 18, 16, 18, 16, 18, 13,
+					 11, 18, 20, 18, 20, 18, 20, 18, 30, 40, 31, 18, 20, 18, 20, 18, 30, 40, 31, 18, 20, 18, 20, 18, 30, 40, 31, 18, 20, 18, 20, 18, 20, 18, 14,
+					 10, 18, 16, 18, 16, 18, 16, 18, 32, 18, 33, 18, 16, 18, 16, 18, 32, 18, 33, 18, 16, 18, 16, 18, 32, 18, 33, 18, 16, 18, 16, 18, 16, 18, 13,
 					 11, 18, 20, 18, 20, 18, 20, 18, 20, 18, 20, 18, 20, 18, 20, 18, 20, 18, 20, 18, 20, 18, 20, 18, 20, 18, 20, 18, 20, 18, 20, 18, 18, 18, 14,
 					 10, 18, 16, 18, 16, 18, 16,'S', 16, 18, 16, 18, 16, 18, 16, 18, 16,'S', 16, 18, 16, 18, 16, 18, 16, 18, 16,'S', 16, 18, 16, 18, 16, 18, 13,
 					 11, 18, 20, 18, 20, 18, 20, 18, 20, 18, 20, 18, 20, 18, 20, 18, 20, 18, 20, 18, 20, 18, 20, 18, 20, 18, 20, 18, 20, 18, 20, 18, 20, 18, 14,
-					 10, 18, 16, 18, 16, 18, 16, 18, 16, 18, 16, 18, 16, 18, 16, 18, 16, 18, 16, 18,'W', 18,'W', 18, 16, 18, 16, 18, 16, 18, 16, 18, 16, 18, 13,
-					 11, 18, 20, 18, 20, 18, 20, 18, 20, 18, 20, 18, 20, 18, 20, 18, 20, 18, 20, 18, 20, 40, 20, 18, 20, 18, 20, 18, 20, 18, 20, 18, 20, 18, 14,
-					 10,'S', 16, 18, 16, 18, 16, 18, 16, 18, 16, 18,'W', 18,'W', 18, 16, 18, 16, 18,'W', 18,'W', 18, 16, 18, 16, 18, 16, 18, 16, 18, 16,'S', 13,
-					 11, 18, 20, 18, 20, 18, 20, 18, 20, 18, 20, 18, 20, 40, 20, 18, 20, 18, 20, 18, 20, 18, 20, 18, 20, 18, 20, 18, 20, 18, 20, 18, 20, 18, 14,
-					 10, 18, 16, 18, 16, 18, 16, 18, 16, 18, 16, 18,'W', 18,'W', 18, 16, 18, 16, 18, 16, 18, 16, 18, 16, 18, 16, 18, 16, 18, 16, 18, 16, 18, 13,
+					 10, 18, 16, 18, 16, 18, 16, 18, 16, 18, 16, 18, 16, 18, 16, 18, 16, 18, 16, 18, 28, 18, 29, 18, 16, 18, 16, 18, 16, 18, 16, 18, 16, 18, 13,
+					 11, 18, 20, 18, 20, 18, 20, 18, 20, 18, 20, 18, 20, 18, 20, 18, 20, 18, 20, 18, 30, 40, 31, 18, 20, 18, 20, 18, 20, 18, 20, 18, 20, 18, 14,
+					 10,'S', 16, 18, 16, 18, 16, 18, 16, 18, 16, 18, 28, 18, 29, 18, 16, 18, 16, 18, 32, 18, 33, 18, 16, 18, 16, 18, 16, 18, 16, 18, 16,'S', 13,
+					 11, 18, 20, 18, 20, 18, 20, 18, 20, 18, 20, 18, 30, 40, 31, 18, 20, 18, 20, 18, 20, 18, 20, 18, 20, 18, 20, 18, 20, 18, 20, 18, 20, 18, 14,
+					 10, 18, 16, 18, 16, 18, 16, 18, 16, 18, 16, 18, 32, 18, 33, 18, 16, 18, 16, 18, 16, 18, 16, 18, 16, 18, 16, 18, 16, 18, 16, 18, 16, 18, 13,
 					 11, 18, 20, 18, 20, 18, 20, 18, 20, 18, 20, 18, 20, 18, 20, 18, 20, 18, 20, 18, 20, 18, 20, 18, 20, 18, 20, 18, 20, 18, 20, 18, 20, 18, 14,
-					 10, 18, 16, 18,'W', 18,'W','S', 16, 18, 16, 18, 16, 18, 16, 18, 16, 18, 16, 18, 16, 18, 16, 18, 16, 18,'W','S','W', 18, 16, 18, 16, 18, 13,
-					 11, 18, 20, 18, 20, 40, 20, 18, 20, 18, 20, 18, 20, 18, 20, 18, 20,'S', 20, 18, 20, 18, 20, 18, 20, 18, 20, 40, 20, 18, 20, 18, 20, 18, 14,
-					 10, 18, 16, 18,'W', 18,'W', 18, 16, 18, 16, 18, 16, 18, 16, 18,'W', 18,'W', 18, 16, 18, 16, 18, 16, 18,'W', 18,'W', 18, 16, 18, 16, 18, 13,
-					 11, 18, 20, 18, 20, 18, 20, 18, 20, 18, 20, 18, 20, 18, 20, 18, 20, 40, 20, 18, 20, 18, 20, 18, 20, 18, 20, 18, 20, 18, 20, 18, 20, 18, 14,
-					 10, 18, 16, 18, 16, 18, 16, 18, 16, 18, 16, 18, 16, 18, 16, 18,'W', 18,'W', 18, 16, 18, 16, 18, 16, 18, 16, 18, 16, 18, 16, 18, 16, 18, 13,
+					 10, 18, 16, 18, 28, 18, 29,'S', 16, 18, 16, 18, 16, 18, 16, 18, 16, 18, 16, 18, 16, 18, 16, 18, 16, 18, 28,'S', 29, 18, 16, 18, 16, 18, 13,
+					 11, 18, 20, 18, 30, 40, 31, 18, 20, 18, 20, 18, 20, 18, 20, 18, 20,'S', 20, 18, 20, 18, 20, 18, 20, 18, 30, 40, 31, 18, 20, 18, 20, 18, 14,
+					 10, 18, 16, 18, 32, 18, 33, 18, 16, 18, 16, 18, 16, 18, 16, 18, 28, 18, 29, 18, 16, 18, 16, 18, 16, 18, 32, 18, 33, 18, 16, 18, 16, 18, 13,
+					 11, 18, 20, 18, 20, 18, 20, 18, 20, 18, 20, 18, 20, 18, 20, 18, 30, 40, 31, 18, 20, 18, 20, 18, 20, 18, 20, 18, 20, 18, 20, 18, 20, 18, 14,
+					 10, 18, 16, 18, 16, 18, 16, 18, 16, 18, 16, 18, 16, 18, 16, 18, 32, 18, 33, 18, 16, 18, 16, 18, 16, 18, 16, 18, 16, 18, 16, 18, 16, 18, 13,
 					 11,'S', 20, 18, 20, 18, 20, 18, 20, 18, 20,'S', 20, 18, 20, 18, 20, 18, 20, 18, 20, 18, 20,'S', 20, 18, 20, 18, 20, 18, 20, 18, 20,'S', 14,
 					  5,  7,  7,  7,  7,  7,  7,  7,  7,  7,  7,  7,  7,  7,  7,  7,  7,  7,  7,  7,  7,  7,  7,  7,  7,  7,  7,  7,  7,  7,  7,  7,  7,  7,  6};
 	int bonus[13]= {  3,  6, 18,  0, 18,  0,  6,  6,  0,  0,  0,  0, 15};
 	Level * level = new Level(1, "Slip N' Slide");
-	level->addVariante(new LevelVariante(1, "Niveau Classique", "Niveau Classique", true, desc, bonus, 2, 2));
+	LevelVariante * variante = new LevelVariante(1, "Niveau Classique", "Niveau Classique", true, desc, bonus, 2, 2);
+	variante->textureIsAWall(0,17);
+	variante->textureIsAWall(28);
+	variante->textureIsAWall(29);
+	variante->textureIsAWall(32);
+	variante->textureIsAWall(33);
+	variante->textureIsAWall('W');
+	variante->texturedrawInsky(40);
+	level->addVariante(variante);
 	levels.push_back(level);
 }
 
@@ -343,7 +367,9 @@ void LevelService::createLevel5(){
 					  5,  9,  7,  8,  9,  7,  8, 20,  9,  7,  8,  9,  7,  8,  9,  7,  8,  9,  7,  8,  9,  7,  8,  9,  7,  8,  8, 20,  9,  7,  8,  9,  7,  8,  6};
 	int bonus[13]= {  3, 12, 18,  0, 18,  0, 18,  0,  0,  0,  0,  0, 15};
 	Level * level = new Level(1, "Move N' Groove");
-	level->addVariante(new LevelVariante(1, "Niveau Classique", "Niveau Classique", true, desc, bonus, 2, 2));
+	LevelVariante * variante = new LevelVariante(1, "Niveau Classique", "Niveau Classique", true, desc, bonus, 2, 2);
+	variante->textureIsAWall(0,17);
+	level->addVariante(variante);
 	levels.push_back(level);
 }
 
@@ -371,7 +397,9 @@ void LevelService::createLevel6(){
 					  5,  7,  7,  7,  7,  7,  7,  7,  7,  7,  7,  7,  7,  7,  7,  7,  7,  7,  7,  7,  7,  7,  7,  7,  7,  7,  7,  7,  7,  7,  7,  7,  7,  7,  6};
 	int bonus[13]= {  3,  6, 18,  0, 18,  6,  9,  0,  6,  0,  0,  0, 15};
 	Level * level = new Level(1, "Sandman");
-	level->addVariante(new LevelVariante(1, "Niveau Classique", "Niveau Classique", true, desc, bonus, 2, 2));
+	LevelVariante * variante = new LevelVariante(1, "Niveau Classique", "Niveau Classique", true, desc, bonus, 2, 2);
+	variante->textureIsAWall(0,17);
+	level->addVariante(variante);
 	levels.push_back(level);
 }
 
@@ -399,7 +427,9 @@ void LevelService::createLevel7(){
 					  5,  7,  7,  7,  7,  7,  7,  7,  7,  7,  7,  7,  7,  7,  7,  7,  7,  7,  7,  7,  7,  7,  7,  7,  7,  7,  7,  7,  7,  7,  7,  7,  7,  7,  6};
 	int bonus[13]= {  3, 12, 18,  0, 18,  0,  6,  6,  3,  0,  0,  0, 15};
 	Level * level = new Level(1, "Spitfire");
-	level->addVariante(new LevelVariante(1, "Niveau Classique", "Niveau Classique", true, desc, bonus, 2, 2));
+	LevelVariante * variante = new LevelVariante(1, "Niveau Classique", "Niveau Classique", true, desc, bonus, 2, 2);
+	variante->textureIsAWall(0,17);
+	level->addVariante(variante);
 	levels.push_back(level);
 }
 
@@ -427,7 +457,10 @@ void LevelService::createLevel8(){
 					  5,  7,  6,  6,  5,  7,  8, 18,  9,  7,  6,  6,  7,  7,  5,  7,  7,  5,  6,  6,  6,  7,  7,  5,  7,  7,  8, 18,  9,  7,  6,  6,  7,  5,  6};
 	int bonus[13]= {  3,  9,  0,  0, 18,  0,  9,  0,  6,  0,  0,  0, 15};
 	Level * level = new Level(1, "Jungle Boogie");
-	level->addVariante(new LevelVariante(1, "Niveau Classique", "Niveau Classique", true, desc, bonus, 2, 2));
+	LevelVariante * variante = new LevelVariante(1, "Niveau Classique", "Niveau Classique", true, desc, bonus, 2, 2);
+	variante->textureIsAWall(0,17);
+	variante->texturedrawInsky(40);
+	level->addVariante(variante);
 	levels.push_back(level);
 }
 
