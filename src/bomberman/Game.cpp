@@ -15,6 +15,7 @@ static int metronome(void* data) {
 	struct timeval t1, t2;
 
 	long delay;
+	long warningCount = 0l;
 	while (game->isAlive()) {
 		gettimeofday(&t1, NULL);
 		game->tick();
@@ -29,11 +30,12 @@ static int metronome(void* data) {
 
 		if (delay > 0) {
 			if(delay < 5){
-				fprintf(stderr, "%i\n", (int) delay);
+				fprintf(stderr, "%i %li\n", (int) delay, warningCount);
 			}
 			SDL_Delay(delay);
 		} else {
-			fprintf(stderr, "warning\n");
+			warningCount++;
+			fprintf(stderr, "warning %li\n", warningCount);
 		}
 	}
 	return 0;
