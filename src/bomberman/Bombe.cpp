@@ -102,7 +102,7 @@ void Bombe::tick(SDL_Surface * surfaceToDraw) {
 		posY = (float) floor(posY) + 0.5;
 	}
 
-	if (posY == (float) sizeY + 0.5) {
+	if (posY == (float) sizeY-1 + 0.5) {
 		if (bombeType == bubbleBombeType) {
 			direction = kickOnUp;
 		} else {
