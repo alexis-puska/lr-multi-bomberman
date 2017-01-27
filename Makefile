@@ -30,6 +30,9 @@ OBJS += src/libretro/libretro.o
 OBJS += src/bomberman/Bomberman.o
 OBJS += src/bomberman/MyWrapper.o
 OBJS += src/bomberman/Grid.o
+OBJS += src/bomberman/Teleporter.o
+OBJS += src/bomberman/trolley/Trolley.o
+OBJS += src/bomberman/trolley/Rail.o
 OBJS += src/bomberman/Game.o
 OBJS += src/bomberman/Player.o
 OBJS += src/bomberman/Bombe.o
@@ -50,6 +53,7 @@ OBJS += src/bomberman/utils/LevelService.o
 OBJS += src/bomberman/utils/Level.o
 OBJS += src/bomberman/utils/LevelVariante.o
 OBJS += src/bomberman/utils/GameConfig.o
+
 
 
 #COMPILATION
