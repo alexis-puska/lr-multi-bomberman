@@ -70,6 +70,8 @@ Player::Player(unsigned short * in_keystate, float posX, float posY, int playerN
 	NBBombeRemaining = GameConfig::Instance().getBombe();
 	bombeType = normalBombeType;
 	putABombe = false;
+	lineOfBombePower = false;
+	putLineOfBombe = false;
 	ghostModePower = false;
 	triggerBombe = false;
 	kickPower = false;
@@ -652,7 +654,11 @@ void Player::doSomething(SDL_Surface * surfaceToDraw) {
 				}
 			}
 			if (keystate & keyPadX) {
-				//display menu	
+				if (playerMalus != constipationMalus) {
+					if(lineOfBombePower){
+						putLineOfBombe = true;
+					}
+				}
 			}
 			if (keystate & keyPadY) {
 				//display menu	
@@ -742,9 +748,41 @@ Bombe * Player::addBombe() {
 			strenght = 1;
 			break;
 	}
-	tab[(int) floor(posX) + ((int) floor(posY) * sizeX)] = bombeElement;
 	return new Bombe(strenght, floor(posX) + 0.5, floor(posY) + 0.5, bombeType, indexPlayerForGame, time, tab);
 }
+
+
+Bombe * Player::addBombe(int x, int y) {
+	int time = 100;
+	int strenght = flameStrengh;
+	switch (bombeType) {
+		case radioBombeType:
+			time = -1;
+			break;
+		case powerBombeType:
+		case normalBombeType:
+		case bubbleBombeType:
+			break;
+	}
+	switch (playerMalus) {
+		case speedBombeMalus:
+			time = 50;
+			break;
+		case slowBombeMalus:
+			time = 300;
+			break;
+		case miniBombeMalus:
+			strenght = 1;
+			break;
+	}
+
+	if(tab[((int)floor(posX) + x) + ((int)floor(posY) + y)*sizeX ] < brickElement){
+		return new Bombe(strenght, floor(posX) + 0.5 + x, floor(posY) + 0.5 + y, bombeType, indexPlayerForGame, time, tab);
+	}else{
+		return NULL;
+	}
+}
+
 
 int Player::getPlayerNumber() {
 	return playerNumber;
@@ -767,6 +805,7 @@ bool Player::wantPutBombe() {
 		if (NBBombeRemaining > 0 && tab[(int) floor(posX) + ((int) floor(posY) * sizeX)] != bombeElement) {
 			return putABombe;
 		} else {
+			fprintf(stderr,"disabled bombe\n");
 			putABombe = false;
 			return false;
 		}
@@ -774,11 +813,29 @@ bool Player::wantPutBombe() {
 	return false;
 }
 
+bool Player::wantPutLineOfBombe(){
+	if (isAlive()) {
+		if (NBBombeRemaining > 0 && tab[(int) floor(posX) + ((int) floor(posY) * sizeX)] != bombeElement) {
+			return putLineOfBombe;
+		} else {
+			fprintf(stderr,"disabled\n");
+			putLineOfBombe = false;
+			return false;
+		}
+	}
+	return false;
+}
+
+void Player::releaseLineOfBombe(){
+	putLineOfBombe = false;
+}
+
 bool Player::walkOnWall() {
 	if (tab[(int) floor(posX) + (int) floor(posY) * sizeX] < brickElement) {
 		return false;
 	} else {
 		putABombe = false;
+		putLineOfBombe = false;
 		return true;
 	}
 }
@@ -857,6 +914,13 @@ void Player::foundABonus(int bonusIndex) {
 			playerState = onLouis;
 			Sound::Instance().playLouisSound();
 			break;
+		case shieldBonus:
+			invincibleTime = 15 * 50;
+			break;
+		case lineOfBombeBonus:
+			lineOfBombePower = true;
+			break;
+
 	}
 	grid->burnBonus(roundX, roundY);
 }
@@ -961,4 +1025,12 @@ int Player::getBombeType(){
 
 void Player::brainPressButton(){
 	triggerBombe = true;
+}
+
+int Player::getBombeRemaining(){
+	return NBBombeRemaining;
+}
+
+int Player::getPreviousDirection(){
+	return previousDirection;
 }

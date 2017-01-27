@@ -28,9 +28,13 @@ class Player {
 		 * Game Function
 		 */
 		Bombe * addBombe();
+		Bombe * addBombe(int x, int y);
 		BurnLouis* louisBurnAnimation();
 
 		bool wantPutBombe();
+		bool wantPutLineOfBombe();
+		void releaseLineOfBombe();
+		int getBombeRemaining();
 		bool triggerPowerBombe();
 		bool walkOnWall();
 		bool isAlive();
@@ -52,6 +56,7 @@ class Player {
 		int getIndexPlayerForGame();
 
 		int getBombeType();
+		int getPreviousDirection();
 
 		void brainPressButton();
 
@@ -78,12 +83,14 @@ class Player {
 		bool ghostModePower;
 		bool kickPower;
 		bool inSuddenDeathTime;
+		bool lineOfBombePower;
 		int kickIndex;
 		int kickDirection;
 
 		//bombe variable
 		bool triggerBombe;
 		bool putABombe;
+		bool putLineOfBombe;
 		int flameStrengh;
 		int bombeType;
 		int NbBombeMax;

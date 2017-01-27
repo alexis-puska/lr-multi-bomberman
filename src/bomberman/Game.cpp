@@ -792,7 +792,7 @@ void Game::tick() {
 						GameConfig::Instance().setPlayerDead(players[i]->getPlayerNumber());
 
 						if(!LevelService::Instance().getLevel(levelIndex)->getVariantes(variante)->isFillWithBricks()){
-							for(int y = 1; y < 13; y++) {
+							for(int y = 1; y < 15; y++) {
 								int nbBonusType = 0;
 								if(GameConfig::Instance().isCustomBonus()){
 									nbBonusType = GameConfig::Instance().getBonus(y);
@@ -810,7 +810,57 @@ void Game::tick() {
 					}
 				}
 				if (!players[i]->walkOnWall()) {
+					if(players[i]->wantPutLineOfBombe()){
+						fprintf(stderr,"line of bombe\n");
+						players[i]->releaseLineOfBombe();
+						if(players[i]->getPreviousDirection() == up){
+							int n = players[i]->getBombeRemaining();
+							for(int j = 0; j< n; j++){
+								Bombe * bombe = players[i]->addBombe(0,-j);
+								if(bombe == NULL){
+									break;
+								}else{
+									players[i]->ABombeIsSet();
+									bombes.push_back(bombe);
+								}
+							}
+						}else if(players[i]->getPreviousDirection() == right){
+							int n = players[i]->getBombeRemaining();
+							for(int j = 0; j< n; j++){
+								Bombe * bombe = players[i]->addBombe(j,0);
+								if(bombe == NULL){
+									break;
+								}else{
+									players[i]->ABombeIsSet();
+									bombes.push_back(bombe);
+								}
+							}
+						}else if(players[i]->getPreviousDirection() == down){
+							int n = players[i]->getBombeRemaining();
+							for(int j = 0; j< n; j++){
+								Bombe * bombe = players[i]->addBombe(0,j);
+								if(bombe == NULL){
+									break;
+								}else{
+									players[i]->ABombeIsSet();
+									bombes.push_back(bombe);
+								}
+							}
+						}else if(players[i]->getPreviousDirection() == left){
+							int n = players[i]->getBombeRemaining();
+							for(int j = 0; j< n; j++){
+								Bombe * bombe = players[i]->addBombe(-j,0);
+								if(bombe == NULL){
+									break;
+								}else{
+									players[i]->ABombeIsSet();
+									bombes.push_back(bombe);
+								}
+							}
+						}
+					}
 					if (players[i]->wantPutBombe()) {
+						fprintf(stderr,"bombe\n");
 						bombes.push_back(players[i]->addBombe());
 						players[i]->ABombeIsSet();
 					}

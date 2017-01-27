@@ -39,7 +39,7 @@
 #define nbBombeSpriteX			3
 #define nbBombeSpriteY			4
 #define nbBonusSpriteX			2
-#define nbBonusSpriteY			7
+#define nbBonusSpriteY			8
 
 #define nbPopBonusSpriteX			4
 #define nbPopBonusSpriteY			1

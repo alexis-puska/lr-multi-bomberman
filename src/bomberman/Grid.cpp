@@ -192,7 +192,7 @@ void Grid::generateGrid() {
 
 	if(LevelService::Instance().getLevel(lvl)->getVariantes(var)->isFillWithBricks()){
 		//draw Death bonus for a level
-		for(int y = 1; y < 13; y++) {
+		for(int y = 1; y < 15; y++) {
 			int nbBonusType = 0;
 			if(GameConfig::Instance().isCustomBonus()){
 				nbBonusType = GameConfig::Instance().getBonus(y);

@@ -1,6 +1,6 @@
 #include "LevelVariante.h"
 
-LevelVariante::LevelVariante(int number, const char * descriptionLine1, const char * descriptionLine2, bool fillWithBrick, int definition[735], int bonus[13], int fireStrenght, int nbBombe) {
+LevelVariante::LevelVariante(int number, const char * descriptionLine1, const char * descriptionLine2, bool fillWithBrick, int definition[735], int bonus[15], int fireStrenght, int nbBombe) {
 	this->number = number;
 	strcpy(this->descriptionLine1, descriptionLine1);
 	strcpy(this->descriptionLine2, descriptionLine2);
@@ -12,7 +12,7 @@ LevelVariante::LevelVariante(int number, const char * descriptionLine1, const ch
 		reserved[i] = false;
 	}
 
-	for (int i = 0; i < 13; i++) {
+	for (int i = 0; i < 15; i++) {
 		this->bonus[i] = bonus[i];
 	}
 

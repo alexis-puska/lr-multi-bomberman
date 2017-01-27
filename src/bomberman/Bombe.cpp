@@ -15,6 +15,14 @@ Bombe::Bombe(int strenght, float posX, float posY, int bombeType, int player, in
 	frameCounter = 0;
 	offsetSprite = 0;
 	nbFrameForAnimation = 4;
+
+	if (tab[(int) floor(posX) + (int) floor(posY) * sizeX] == explosionElement) {
+		explode();
+		tab[(int) floor(posX) + ((int) floor(posY) * sizeX)] = bombeElement;
+	}else{
+		tab[(int) floor(posX) + ((int) floor(posY) * sizeX)] = bombeElement;
+	}
+
 }
 
 Bombe::~Bombe() {

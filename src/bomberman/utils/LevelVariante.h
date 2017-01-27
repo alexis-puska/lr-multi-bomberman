@@ -7,6 +7,8 @@
 #include <stdio.h>
 #include <map>
 
+#define nbTypeBonus 15
+
 #ifndef __MYCLASS_LevelVariante
 #define __MYCLASS_LevelVariante
 
@@ -38,7 +40,7 @@ class LevelVariante {
 		int definition[735];
 		bool reserved[735];
 		int start[16];
-		int bonus[13];
+		int bonus[nbTypeBonus];
 		int fireStrenght;
 		int nbBombe;
 		std::map<int, int> indexDefSky;

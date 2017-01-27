@@ -449,10 +449,12 @@ void Bomberman::drawLevelSelectionMenu() {
 				case 15:
 				case 16:
 				case 17:
+				case 18:
+				case 19:
 					cursorPosition = 0;
 					break;
 			}
-			if(cursorPosition > 17){
+			if(cursorPosition > 19){
 				cursorPosition = 0;
 			}
 		}
@@ -460,7 +462,7 @@ void Bomberman::drawLevelSelectionMenu() {
 		if (previousPlayerKeystate[0] & keyPadRight && keychange[0]) {
 			Sound::Instance().playBipSound();
 			cursorPosition++;
-			if(cursorPosition > 17){
+			if(cursorPosition > 19){
 				cursorPosition = 0;
 			}
 		}
@@ -491,6 +493,8 @@ void Bomberman::drawLevelSelectionMenu() {
 				case 15:
 				case 16:
 				case 17:
+				case 18:
+				case 19:
 					cursorPosition = 4;
 					break;
 			}
@@ -499,7 +503,7 @@ void Bomberman::drawLevelSelectionMenu() {
 			Sound::Instance().playBipSound();
 			cursorPosition--;
 			if(cursorPosition < 0){
-				cursorPosition = 17;
+				cursorPosition = 19;
 			}
 		}
 
@@ -535,6 +539,8 @@ void Bomberman::drawLevelSelectionMenu() {
 				case 15:
 				case 16:
 				case 17:
+				case 18:
+				case 19:
 					GameConfig::Instance().incBonus((cursorPosition - 5));
 					break;
 			}
@@ -570,6 +576,8 @@ void Bomberman::drawLevelSelectionMenu() {
 				case 15:
 				case 16:
 				case 17:
+				case 18:
+				case 19:
 					GameConfig::Instance().decBonus((cursorPosition - 5));
 					break;
 			}
@@ -591,6 +599,8 @@ void Bomberman::drawLevelSelectionMenu() {
 				case 15:
 				case 16:
 				case 17:
+				case 18:
+				case 19:
 					GameConfig::Instance().inc5Bonus((cursorPosition - 5));
 					break;
 			}
@@ -611,6 +621,8 @@ void Bomberman::drawLevelSelectionMenu() {
 				case 15:
 				case 16:
 				case 17:
+				case 18:
+				case 19:
 					GameConfig::Instance().dec5Bonus((cursorPosition - 5));
 					break;
 			}
@@ -642,10 +654,10 @@ void Bomberman::drawLevelSelectionMenu() {
 		}else{
 			Sprite::Instance().drawText(screenBuffer, 327, 256, "Default", blue, false);
 		}
-		for(int i=0 ; i<13 ; i++){
+		for(int i=0 ; i<nbTypeBonus ; i++){
 			sprintf(num, "%i", GameConfig::Instance().getBonus(i));
-			copySurfaceToBackRenderer(Sprite::Instance().getBonus(i), screenBuffer, 224 + i * 30, 292);
-			Sprite::Instance().drawText(screenBuffer, 232 + i * 30, 306, num, green, true);
+			copySurfaceToBackRenderer(Sprite::Instance().getBonus(i), screenBuffer, 224 + i * 26, 292);
+			Sprite::Instance().drawText(screenBuffer, 232 + i * 26, 306, num, green, true);
 		}
 		level = NULL;
 		refreshBuffer = false;
@@ -689,7 +701,9 @@ void Bomberman::drawLevelSelectionMenu() {
 		case 16:
 		case 17:
 		case 18:
-			cursorPosX = 224 + ((cursorPosition - 5) * 30);
+		case 19:
+		case 20:
+			cursorPosX = 224 + ((cursorPosition - 5) * 26);
 			cursorposY = 274;
 			break;
 	}

@@ -14,7 +14,7 @@
 #define bombeStrenghtDefault	2
 #define nbPlayer				16
 #define nbMaxIALevel				5
-#define nbTypeBonus				13
+#define nbTypeBonus				15
 #define nbMaxBonusTotal			150
 #define nbMaxBonusCat			50
 #define timeOfGameMax			5

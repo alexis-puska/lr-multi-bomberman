@@ -41,6 +41,8 @@ enum bonusEnum {
 	getaBonus = 10,
 	ghostBonus = 11,
 	eggBonus = 12,
+	shieldBonus = 13,
+	lineOfBombeBonus = 14
 };
 
 enum malusEnum {
