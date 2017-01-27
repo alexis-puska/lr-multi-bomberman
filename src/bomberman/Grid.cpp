@@ -401,7 +401,7 @@ void Grid::burnABrick(int posX, int posY) {
 		dstrect.h = defaultSpriteSize;
 		SDL_BlitSurface(Sprite::Instance().getBonus(tabBonus[posX + posY * sizeX]), NULL, brickShadow, &dstrect);
 	}
-	for(int i = 0 ; i < notEmptyCase.size() ; i++){
+	for(unsigned int i = 0 ; i < notEmptyCase.size() ; i++){
 		if(notEmptyCase[i] == (posX+(posY*sizeX))){
 			//fprintf(stderr, "remove %i ", notEmptyCase[i]);
 			notEmptyCase.erase(notEmptyCase.begin() + i);
@@ -448,7 +448,7 @@ void Grid::placeSuddenDeathWall(int x, int y) {
 	dstrect.h = smallSpriteLevelSizeHeight;
 	SDL_BlitSurface(Sprite::Instance().getLevel(suddenDeathWallSpriteIndex, lvl), NULL, brickShadow, &dstrect);
 	tab[x + y * sizeX] = suddenDeathElement;
-	for(int i = 0 ; i < emptyCase.size() ; i++){
+	for(unsigned int i = 0 ; i < emptyCase.size() ; i++){
 		if(emptyCase[i] == (x+(y*sizeX))){
 			//fprintf(stderr, "remove %i ", emptyCase[i]);
 			emptyCase.erase(emptyCase.begin() + i);

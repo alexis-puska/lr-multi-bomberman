@@ -30,7 +30,8 @@ static int metronome(void* data) {
 
 		if (delay > 0) {
 			if(delay < 5){
-				fprintf(stderr, "%i %li\n", (int) delay, warningCount);
+				warningCount++;
+				fprintf(stderr, "%i ms %li\n", (int) delay, warningCount);
 			}
 			SDL_Delay(delay);
 		} else {
