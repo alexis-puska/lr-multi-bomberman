@@ -89,8 +89,6 @@ void Brain::level1() {
 			if (objectifIndex != -1) {
 				brainStep = lvl1WalkToNearWall;
 			} else {
-				fprintf(stderr, "here\n");
-
 				if ((rand() % 7 + 1) >= 1) {
 					while (true) {
 						objectifIndex = rand() % (sizeX * sizeY) + 1;

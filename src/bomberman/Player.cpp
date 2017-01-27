@@ -805,7 +805,6 @@ bool Player::wantPutBombe() {
 		if (NBBombeRemaining > 0 && tab[(int) floor(posX) + ((int) floor(posY) * sizeX)] != bombeElement) {
 			return putABombe;
 		} else {
-			fprintf(stderr,"disabled bombe\n");
 			putABombe = false;
 			return false;
 		}
@@ -818,7 +817,6 @@ bool Player::wantPutLineOfBombe(){
 		if (NBBombeRemaining > 0 && tab[(int) floor(posX) + ((int) floor(posY) * sizeX)] != bombeElement) {
 			return putLineOfBombe;
 		} else {
-			fprintf(stderr,"disabled\n");
 			putLineOfBombe = false;
 			return false;
 		}

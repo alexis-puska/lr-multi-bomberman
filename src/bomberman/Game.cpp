@@ -28,7 +28,9 @@ static int metronome(void* data) {
 		delay = gameTick - milliseconds;
 
 		if (delay > 0) {
-			fprintf(stderr, "%i\n", (int) delay);
+			if(delay < 5){
+				fprintf(stderr, "%i\n", (int) delay);
+			}
 			SDL_Delay(delay);
 		} else {
 			fprintf(stderr, "warning\n");
@@ -811,7 +813,7 @@ void Game::tick() {
 				}
 				if (!players[i]->walkOnWall()) {
 					if(players[i]->wantPutLineOfBombe()){
-						fprintf(stderr,"line of bombe\n");
+
 						players[i]->releaseLineOfBombe();
 						if(players[i]->getPreviousDirection() == up){
 							int n = players[i]->getBombeRemaining();
@@ -860,7 +862,6 @@ void Game::tick() {
 						}
 					}
 					if (players[i]->wantPutBombe()) {
-						fprintf(stderr,"bombe\n");
 						bombes.push_back(players[i]->addBombe());
 						players[i]->ABombeIsSet();
 					}
@@ -918,7 +919,6 @@ void Game::tick() {
 			 */
 			if (!suddenDeathCase) {
 				if (GameConfig::Instance().isSuddentDeathMode() && (nbTickForGame == (4 * (sizeX - 2) * (sizeY - 2)) + (34 * 1))) {
-					fprintf(stderr, "init sudden death");
 					suddenDeathCase = true;
 					for (unsigned int i = 0; i < players.size(); i++) {
 						//notify to players that the suddenDeath

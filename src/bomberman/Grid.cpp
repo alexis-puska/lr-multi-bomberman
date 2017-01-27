@@ -81,7 +81,6 @@ void Grid::generateGrid() {
 	skyRect.w = largeSpriteLevelSizeWidth;
 	skyRect.h = largeSpriteLevelSizeHeight;
 
-	fprintf(stderr, "wall def : \n");
 	for(int j=0;j<sizeY;j++) {
 		for(int i=0;i<sizeX;i++) {
 			tab[i] = emptyElement;
@@ -92,7 +91,6 @@ void Grid::generateGrid() {
 			dstrect.h = smallSpriteLevelSizeHeight;
 			SDL_BlitSurface(Sprite::Instance().getLevel(18, lvl), &srcrect, ground, &dstrect);
 			if(LevelService::Instance().getLevel(lvl)->getVariantes(var)->isAWall(LevelService::Instance().getLevel(lvl)->getVariantes(var)->getDefinition(j*sizeX+i))){
-				fprintf(stderr, "%i is a wall\n", (j*sizeX+i));
 				tab[i+(j*sizeX)] = wallElement;
 
 				int textureIndex = LevelService::Instance().getLevel(lvl)->getVariantes(var)->getDefinition(j*sizeX+i);
@@ -106,7 +104,6 @@ void Grid::generateGrid() {
 					}
 				}
 			}else if(LevelService::Instance().getLevel(lvl)->getVariantes(var)->isDrawInSky(LevelService::Instance().getLevel(lvl)->getVariantes(var)->getDefinition(j*sizeX+i))){
-				fprintf(stderr, "%i is draw in sky\n", (j*sizeX+i));
 				tab[i+(j*sizeX)] = emptyElement;
 				emptyCase.push_back(i);
 				dstrect.x = (i-1) * smallSpriteLevelSizeWidth;
