@@ -41,6 +41,12 @@ Sprite::Sprite() {
 	levelSprite = new SDL_Surface *[nbLevel * nbSmallSpriteLevelX * nbSmallSpriteLevelY + nbLevel * nbLargeSpriteLevelX * nbLargeSpriteLevelY];
 	spaceShipSprite = new SDL_Surface *[nbSpaceShipSpriteX * nbSpaceShipSpriteY];
 	trolleySprite = new SDL_Surface *[nbTrolleySpriteX * nbTrolleySpriteY];
+	mine = new SDL_Surface *[nbSpriteMineX * nbSpriteMineY];
+	teleporter = new SDL_Surface *[nbTeleporterSpriteX * nbTeleporterSpriteY];
+	hole = new SDL_Surface *[nbHoleX * nbHoleY];
+	waterOverlay = new SDL_Surface *[nbWaterOverlayX * nbWaterOverlayY];
+	rail = new SDL_Surface *[nbRailX * nbRailY];
+	button = new SDL_Surface *[nbButtonX * nbButtonY];
 	splashScreenSurface = IMG_Load(splashScreen);
 	menuBackgroundSurface = IMG_Load(menuBackground);
 	backgroundSurface = IMG_Load(background);
@@ -81,6 +87,31 @@ Sprite::~Sprite() {
 	for (int i = 0; i < nbSpaceShipSpriteX * nbSpaceShipSpriteY; i++) {
 		SDL_FreeSurface(spaceShipSprite[i]);
 	}
+
+	for (int i = 0; i < nbSpriteMineX * nbSpriteMineY; i++) {
+		SDL_FreeSurface(mine[i]);
+	}
+
+	for (int i = 0; i < nbTeleporterSpriteX * nbTeleporterSpriteY; i++) {
+		SDL_FreeSurface(teleporter[i]);
+	}
+
+	for (int i = 0; i < nbHoleX * nbHoleY; i++) {
+		SDL_FreeSurface(hole[i]);
+	}
+
+	for (int i = 0; i < nbWaterOverlayX * nbWaterOverlayY; i++) {
+		SDL_FreeSurface(waterOverlay[i]);
+	}
+
+	for (int i = 0; i < nbRailX * nbRailY; i++) {
+		SDL_FreeSurface(rail[i]);
+	}
+
+	for (int i = 0; i < nbButtonX * nbButtonY; i++) {
+		SDL_FreeSurface(button[i]);
+	}
+
 	SDL_FreeSurface(splashScreenSurface);
 	SDL_FreeSurface(menuBackgroundSurface);
 	SDL_FreeSurface(backgroundSurface);
@@ -94,6 +125,12 @@ Sprite::~Sprite() {
 	delete levelSprite;
 	delete trolleySprite;
 	delete spaceShipSprite;
+	delete mine;
+	delete teleporter;
+	delete hole;
+	delete waterOverlay;
+	delete rail;
+	delete button;
 	fprintf(stderr, "close font text system\n");
 	TTF_CloseFont(font);
 	TTF_Quit();
@@ -462,6 +499,13 @@ void Sprite::cropSurface() {
 	SDL_Surface * misc = IMG_Load(spriteMiscPath);
 	cropBombeSurface(misc);
 	cropBonusSurface(misc);
+
+	cropMineSurface(misc);
+	cropTeleporterSurface(misc);
+	cropHoleSurface(misc);
+	cropWaterOverlaySurface(misc);
+	cropRailSurface(misc);
+	cropButtonSurface(misc);
 	SDL_FreeSurface(misc);
 	cropPreviewLevelSurface(IMG_Load(spritePreviewLevelPath));
 	cropLevelSurface(IMG_Load(spriteLevelPath));
@@ -778,9 +822,166 @@ void Sprite::cropPlayerSurface(SDL_Surface* surface, int offset) {
 			}
 		}
 	}
-
 	SDL_FreeSurface(surface);
 }
+
+
+
+
+
+
+
+void Sprite::cropMineSurface(SDL_Surface * surface){
+	int index = 0;
+	Uint32 rmask, gmask, bmask, amask;
+	amask = 0xff000000;
+	rmask = 0x00ff0000;
+	gmask = 0x0000ff00;
+	bmask = 0x000000ff;
+	SDL_Rect srcTextureRect;
+	SDL_Rect destTextureRect;
+	destTextureRect.x = 0;
+	destTextureRect.y = 0;
+	destTextureRect.w = smallSpriteLevelSizeWidth;
+	destTextureRect.h = smallSpriteLevelSizeHeight;
+	for (int j = 0; j < nbSpriteMineY; j++) {
+		for (int i = 0; i < nbSpriteMineX; i++) {
+			srcTextureRect.x = i * smallSpriteLevelSizeWidth + (defaultSpriteSize * nbBonusSpriteX) + ( nbBombeSpriteX * defaultSpriteSize);
+			srcTextureRect.y = j * smallSpriteLevelSizeHeight + (defaultSpriteSize * 4);
+			srcTextureRect.w = smallSpriteLevelSizeWidth;
+			srcTextureRect.h = smallSpriteLevelSizeHeight;
+			mine[index] = SDL_CreateRGBSurface(0, smallSpriteLevelSizeWidth, smallSpriteLevelSizeHeight, 32, rmask, gmask, bmask, amask);
+			SDL_BlitSurface(surface, &srcTextureRect, mine[index], &destTextureRect);
+			index++;
+		}
+	}
+}
+void Sprite::cropTeleporterSurface(SDL_Surface * surface){
+	int index = 0;
+	Uint32 rmask, gmask, bmask, amask;
+	amask = 0xff000000;
+	rmask = 0x00ff0000;
+	gmask = 0x0000ff00;
+	bmask = 0x000000ff;
+	SDL_Rect srcTextureRect;
+	SDL_Rect destTextureRect;
+	destTextureRect.x = 0;
+	destTextureRect.y = 0;
+	destTextureRect.w = smallSpriteLevelSizeWidth;
+	destTextureRect.h = smallSpriteLevelSizeHeight;
+	for (int j = 0; j < nbTeleporterSpriteY; j++) {
+		for (int i = 0; i < nbTeleporterSpriteX; i++) {
+			srcTextureRect.x = i * smallSpriteLevelSizeWidth + (defaultSpriteSize * nbBonusSpriteX) + ( nbBombeSpriteX * defaultSpriteSize);
+			srcTextureRect.y = j * smallSpriteLevelSizeHeight + (defaultSpriteSize * 4);
+			srcTextureRect.w = smallSpriteLevelSizeWidth;
+			srcTextureRect.h = smallSpriteLevelSizeHeight;
+			teleporter[index] = SDL_CreateRGBSurface(0, smallSpriteLevelSizeWidth, smallSpriteLevelSizeHeight, 32, rmask, gmask, bmask, amask);
+			SDL_BlitSurface(surface, &srcTextureRect, teleporter[index], &destTextureRect);
+			index++;
+		}
+	}
+}
+void Sprite::cropHoleSurface(SDL_Surface * surface){
+	int index = 0;
+	Uint32 rmask, gmask, bmask, amask;
+	amask = 0xff000000;
+	rmask = 0x00ff0000;
+	gmask = 0x0000ff00;
+	bmask = 0x000000ff;
+	SDL_Rect srcTextureRect;
+	SDL_Rect destTextureRect;
+	destTextureRect.x = 0;
+	destTextureRect.y = 0;
+	destTextureRect.w = smallSpriteLevelSizeWidth;
+	destTextureRect.h = smallSpriteLevelSizeHeight;
+	for (int j = 0; j < nbHoleY; j++) {
+		for (int i = 0; i < nbHoleX; i++) {
+			srcTextureRect.x = i * smallSpriteLevelSizeWidth + (defaultSpriteSize * nbBonusSpriteX) + ( nbBombeSpriteX * defaultSpriteSize);
+			srcTextureRect.y = j * smallSpriteLevelSizeHeight + (defaultSpriteSize * 4);
+			srcTextureRect.w = smallSpriteLevelSizeWidth;
+			srcTextureRect.h = smallSpriteLevelSizeHeight;
+			hole[index] = SDL_CreateRGBSurface(0, smallSpriteLevelSizeWidth, smallSpriteLevelSizeHeight, 32, rmask, gmask, bmask, amask);
+			SDL_BlitSurface(surface, &srcTextureRect, hole[index], &destTextureRect);
+			index++;
+		}
+	}
+}
+void Sprite::cropWaterOverlaySurface(SDL_Surface * surface){
+	int index = 0;
+	Uint32 rmask, gmask, bmask, amask;
+	amask = 0xff000000;
+	rmask = 0x00ff0000;
+	gmask = 0x0000ff00;
+	bmask = 0x000000ff;
+	SDL_Rect srcTextureRect;
+	SDL_Rect destTextureRect;
+	destTextureRect.x = 0;
+	destTextureRect.y = 0;
+	destTextureRect.w = smallSpriteLevelSizeWidth;
+	destTextureRect.h = smallSpriteLevelSizeHeight;
+	for (int j = 0; j < nbWaterOverlayY; j++) {
+		for (int i = 0; i < nbWaterOverlayX; i++) {
+			srcTextureRect.x = i * smallSpriteLevelSizeWidth + (defaultSpriteSize * nbBonusSpriteX) + ( nbBombeSpriteX * defaultSpriteSize) + (2 * smallSpriteLevelSizeWidth);
+			srcTextureRect.y = j * smallSpriteLevelSizeHeight + (defaultSpriteSize * 4);
+			srcTextureRect.w = smallSpriteLevelSizeWidth;
+			srcTextureRect.h = smallSpriteLevelSizeHeight;
+			waterOverlay[index] = SDL_CreateRGBSurface(0, smallSpriteLevelSizeWidth, smallSpriteLevelSizeHeight, 32, rmask, gmask, bmask, amask);
+			SDL_BlitSurface(surface, &srcTextureRect, waterOverlay[index], &destTextureRect);
+			index++;
+		}
+	}
+}
+void Sprite::cropRailSurface(SDL_Surface * surface){
+	int index = 0;
+	Uint32 rmask, gmask, bmask, amask;
+	amask = 0xff000000;
+	rmask = 0x00ff0000;
+	gmask = 0x0000ff00;
+	bmask = 0x000000ff;
+	SDL_Rect srcTextureRect;
+	SDL_Rect destTextureRect;
+	destTextureRect.x = 0;
+	destTextureRect.y = 0;
+	destTextureRect.w = smallSpriteLevelSizeWidth;
+	destTextureRect.h = smallSpriteLevelSizeHeight;
+	for (int j = 0; j < nbRailY; j++) {
+		for (int i = 0; i < nbRailX; i++) {
+			srcTextureRect.x = i * smallSpriteLevelSizeWidth + (defaultSpriteSize * nbBonusSpriteX) + ( nbBombeSpriteX * defaultSpriteSize);
+			srcTextureRect.y = j * smallSpriteLevelSizeHeight + (defaultSpriteSize * 4);
+			srcTextureRect.w = smallSpriteLevelSizeWidth;
+			srcTextureRect.h = smallSpriteLevelSizeHeight;
+			rail[index] = SDL_CreateRGBSurface(0, smallSpriteLevelSizeWidth, smallSpriteLevelSizeHeight, 32, rmask, gmask, bmask, amask);
+			SDL_BlitSurface(surface, &srcTextureRect, rail[index], &destTextureRect);
+			index++;
+		}
+	}
+}
+void Sprite::cropButtonSurface(SDL_Surface * surface){
+	int index = 0;
+	Uint32 rmask, gmask, bmask, amask;
+	amask = 0xff000000;
+	rmask = 0x00ff0000;
+	gmask = 0x0000ff00;
+	bmask = 0x000000ff;
+	SDL_Rect srcTextureRect;
+	SDL_Rect destTextureRect;
+	destTextureRect.x = 0;
+	destTextureRect.y = 0;
+	destTextureRect.w = smallSpriteLevelSizeWidth;
+	destTextureRect.h = smallSpriteLevelSizeHeight;
+	for (int j = 0; j < nbButtonY; j++) {
+		for (int i = 0; i < nbButtonX; i++) {
+			srcTextureRect.x = i * smallSpriteLevelSizeWidth + (defaultSpriteSize * nbBonusSpriteX) + ( nbBombeSpriteX * defaultSpriteSize) + (6 * smallSpriteLevelSizeWidth);
+			srcTextureRect.y = j * smallSpriteLevelSizeHeight + (defaultSpriteSize * 4);
+			srcTextureRect.w = smallSpriteLevelSizeWidth;
+			srcTextureRect.h = smallSpriteLevelSizeHeight;
+			button[index] = SDL_CreateRGBSurface(0, smallSpriteLevelSizeWidth, smallSpriteLevelSizeHeight, 32, rmask, gmask, bmask, amask);
+			SDL_BlitSurface(surface, &srcTextureRect, button[index], &destTextureRect);
+			index++;
+		}
+	}
+}
+
 
 /********************************************
  * 
@@ -950,4 +1151,25 @@ SDL_Surface* Sprite::drawVictoryOnLouis(int type, int pos) {
  ****************/
 SDL_Surface* Sprite::getShadowArea(int number) {
 	return shadowAreaSprite[number];
+}
+/****************
+ * misc area
+ ****************/
+SDL_Surface* Sprite::getButton(int idx){
+	return button[idx];
+}
+SDL_Surface* Sprite::getMine(int idx){
+	return mine[idx];
+}
+SDL_Surface* Sprite::getWaterOverlay(int idx){
+	return waterOverlay[idx];
+}
+SDL_Surface* Sprite::getTeleporter(int idx){
+	return teleporter[idx];
+}
+SDL_Surface* Sprite::getHole(int idx){
+	return hole[idx];
+}
+SDL_Surface* Sprite::getRail(int idx){
+	return rail[idx];
 }

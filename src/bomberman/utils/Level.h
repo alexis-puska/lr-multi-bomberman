@@ -14,15 +14,17 @@
 
 class Level {
 	public:
-		Level(int numero, const char* name);
+		Level(int numero, const char* name, bool waterOverlayMode);
 		~Level();
 		void addVariante(LevelVariante * variante);
 		int getVariantesSize();
+		bool isWaterOverlayMode();
 		LevelVariante * getVariantes(int i);
 		char * getName();
 	private:
 		int numero;
 		char name[20];
+		bool waterOverlayMode;
 		std::vector <LevelVariante *> variantes;
 };
 #endif

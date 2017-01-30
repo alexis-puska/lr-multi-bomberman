@@ -1,7 +1,8 @@
 #include "Level.h"
 
-Level::Level(int numero, const char* name){
+Level::Level(int numero, const char* name, bool waterOverlayMode){
 	this->numero = numero;
+	this->waterOverlayMode = waterOverlayMode;
 	strcpy(this->name, name);
 }
 
@@ -23,4 +24,8 @@ int Level::getVariantesSize(){
 
 LevelVariante * Level::getVariantes(int i){
 	return variantes[i];
+}
+
+bool Level::isWaterOverlayMode(){
+	return waterOverlayMode;
 }

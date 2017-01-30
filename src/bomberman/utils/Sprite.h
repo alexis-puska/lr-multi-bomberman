@@ -81,6 +81,19 @@
 #define spaceShipSpriteSizeWidth	30
 #define spaceShipSpriteSizeHeight	42
 
+#define nbSpriteMineX			13
+#define nbSpriteMineY			1
+#define nbTeleporterSpriteX		4
+#define nbTeleporterSpriteY		1
+#define nbHoleX				2
+#define nbHoleY				1
+#define nbWaterOverlayX			2
+#define nbWaterOverlayY			1
+#define nbRailX				8
+#define nbRailY				1
+#define nbButtonX				2
+#define nbButtonY				1
+
 enum playerMove {
 	none = -1, down = 0, up = 1, left = 2, right = 3
 };
@@ -108,6 +121,12 @@ class Sprite {
 		SDL_Surface* getLevel(int pos, int levelIndex);
 		SDL_Surface* getBurnBonus(int pos);
 		SDL_Surface* getPopBonus(int pos);
+		SDL_Surface* getButton(int idx);
+		SDL_Surface* getMine(int idx);
+		SDL_Surface* getWaterOverlay(int idx);
+		SDL_Surface* getTeleporter(int idx);
+		SDL_Surface* getHole(int idx);
+		SDL_Surface* getRail(int idx);
 		/*
 		 * DRAW PLAYER FUNCTION
 		 */
@@ -145,7 +164,14 @@ class Sprite {
 		void cropLouisSurface(SDL_Surface * surface);
 		void cropTrolleySurface(SDL_Surface * surface);
 		void cropSpaceShipSurface(SDL_Surface * surface);
+		void cropMineSurface(SDL_Surface * surface);
+		void cropTeleporterSurface(SDL_Surface * surface);
+		void cropHoleSurface(SDL_Surface * surface);
+		void cropWaterOverlaySurface(SDL_Surface * surface);
+		void cropRailSurface(SDL_Surface * surface);
+		void cropButtonSurface(SDL_Surface * surface);
 		int calcStartIndexPlayer(int type, int color);
+
 
 		/*
 		 * INFORMATION FUNCTION
@@ -190,6 +216,13 @@ class Sprite {
 		SDL_Surface **trolleySprite;
 		SDL_Surface **spaceShipSprite;
 		
+		SDL_Surface **mine;
+		SDL_Surface **teleporter;
+		SDL_Surface **hole;
+		SDL_Surface **waterOverlay;
+		SDL_Surface **rail;
+		SDL_Surface **button;
+
 		/*
 		 *	FONT
 		 */
