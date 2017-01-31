@@ -32,8 +32,8 @@ Sprite::Sprite() {
 	TTF_Init();
 	fprintf(stderr, "Init sprite system\n");
 	shadowAreaSprite = new SDL_Surface *[nbShadowAreaSprite];
-	playerSprite = new SDL_Surface *[nbSpritePlayerX * nbSpritePlayerY * nbColorPlayer * nbTypePlayer];
-	louisSprite = new SDL_Surface *[nbSpriteLouisX * nbSpriteLouisY * nbTypeLouis];
+	playerSprite = new SDL_Surface *[nbSpritePlayerX * nbSpritePlayerY * nbColorPlayer * nbTypePlayer * (nbFrameWater + 1)];
+	louisSprite = new SDL_Surface *[nbSpriteLouisX * nbSpriteLouisY * nbTypeLouis * (nbFrameWater + 1)];
 	fireSprite = new SDL_Surface *[nbFireSpriteX * nbFireSpriteY];
 	bombeSprite = new SDL_Surface *[nbBombeSpriteX * nbBombeSpriteY];
 	bonusSprite = new SDL_Surface *[nbBonusSpriteX * nbBonusSpriteY + nbPopBonusSpriteX * nbPopBonusSpriteY + nbBurnBonusSpriteX * nbBurnBonusSpriteY];
@@ -60,10 +60,10 @@ Sprite::~Sprite() {
 	for (int i = 0; i < nbShadowAreaSprite; i++) {
 		SDL_FreeSurface(shadowAreaSprite[i]);
 	}
-	for (int i = 0; i < nbSpritePlayerX * nbSpritePlayerY * nbColorPlayer * nbTypePlayer; i++) {
+	for (int i = 0; i < nbSpritePlayerX * nbSpritePlayerY * nbColorPlayer * nbTypePlayer * (nbFrameWater + 1); i++) {
 		SDL_FreeSurface(playerSprite[i]);
 	}
-	for (int i = 0; i < nbSpriteLouisX * nbSpriteLouisY * nbTypeLouis; i++) {
+	for (int i = 0; i < nbSpriteLouisX * nbSpriteLouisY * nbTypeLouis * (nbFrameWater + 1); i++) {
 		SDL_FreeSurface(louisSprite[i]);
 	}
 	for (int i = 0; i < nbFireSpriteX * nbFireSpriteY; i++) {
@@ -487,19 +487,10 @@ SDL_Surface* Sprite::applyLouisColor(SDL_Surface * surface, int color) {
  ********************************************/
 void Sprite::cropSurface() {
 	createShadowArea();
-	cropPlayerSurface(IMG_Load(spriteBombermanPath), nbSpritePlayerX * nbSpritePlayerY * nbColorPlayer * 0);
-	cropPlayerSurface(IMG_Load(spriteBombermanCossakPath), nbSpritePlayerX * nbSpritePlayerY * nbColorPlayer * 1);
-	cropPlayerSurface(IMG_Load(spriteBombermanBarbarPath), nbSpritePlayerX * nbSpritePlayerY * nbColorPlayer * 2);
-	cropPlayerSurface(IMG_Load(spriteBombermanChanPath), nbSpritePlayerX * nbSpritePlayerY * nbColorPlayer * 3);
-	cropPlayerSurface(IMG_Load(spriteBombermanKidPath), nbSpritePlayerX * nbSpritePlayerY * nbColorPlayer * 4);
-	cropPlayerSurface(IMG_Load(spriteBombermanPrettyPath), nbSpritePlayerX * nbSpritePlayerY * nbColorPlayer * 5);
-	cropPlayerSurface(IMG_Load(spriteBombermanPunkPath), nbSpritePlayerX * nbSpritePlayerY * nbColorPlayer * 6);
-	cropPlayerSurface(IMG_Load(spriteBombermanMexicanPath), nbSpritePlayerX * nbSpritePlayerY * nbColorPlayer * 7);
-	cropFireSurface(IMG_Load(spriteFirePath));
+
 	SDL_Surface * misc = IMG_Load(spriteMiscPath);
 	cropBombeSurface(misc);
 	cropBonusSurface(misc);
-
 	cropMineSurface(misc);
 	cropTeleporterSurface(misc);
 	cropHoleSurface(misc);
@@ -507,9 +498,26 @@ void Sprite::cropSurface() {
 	cropRailSurface(misc);
 	cropButtonSurface(misc);
 	SDL_FreeSurface(misc);
+
+	for (int i = 0; i < (nbFrameWater + 1); i++) {
+		int idx = nbSpritePlayerX * nbSpritePlayerY * nbColorPlayer * nbTypePlayer * i;
+		cropPlayerSurface(IMG_Load(spriteBombermanPath), idx + (nbSpritePlayerX * nbSpritePlayerY * nbColorPlayer * 0), (i - 1));
+		cropPlayerSurface(IMG_Load(spriteBombermanCossakPath), idx + (nbSpritePlayerX * nbSpritePlayerY * nbColorPlayer * 1), (i - 1));
+		cropPlayerSurface(IMG_Load(spriteBombermanBarbarPath), idx + (nbSpritePlayerX * nbSpritePlayerY * nbColorPlayer * 2), (i - 1));
+		cropPlayerSurface(IMG_Load(spriteBombermanChanPath), idx + (nbSpritePlayerX * nbSpritePlayerY * nbColorPlayer * 3), (i - 1));
+		cropPlayerSurface(IMG_Load(spriteBombermanKidPath), idx + (nbSpritePlayerX * nbSpritePlayerY * nbColorPlayer * 4), (i - 1));
+		cropPlayerSurface(IMG_Load(spriteBombermanPrettyPath), idx + (nbSpritePlayerX * nbSpritePlayerY * nbColorPlayer * 5), (i - 1));
+		cropPlayerSurface(IMG_Load(spriteBombermanPunkPath), idx + (nbSpritePlayerX * nbSpritePlayerY * nbColorPlayer * 6), (i - 1));
+		cropPlayerSurface(IMG_Load(spriteBombermanMexicanPath), idx + (nbSpritePlayerX * nbSpritePlayerY * nbColorPlayer * 7), (i - 1));
+	}
+	for (int i = 0; i < (nbFrameWater + 1); i++) {
+		int offset = nbTypeLouis * nbSpriteLouisY * nbSpriteLouisX * i;
+		cropLouisSurface(IMG_Load(spriteLouisPath), offset, (i - 1));
+	}
+
+	cropFireSurface(IMG_Load(spriteFirePath));
 	cropPreviewLevelSurface(IMG_Load(spritePreviewLevelPath));
 	cropLevelSurface(IMG_Load(spriteLevelPath));
-	cropLouisSurface(IMG_Load(spriteLouisPath));
 	cropTrolleySurface(IMG_Load(spriteTrolleyPath));
 	cropSpaceShipSurface(IMG_Load(spriteSpaceShipPath));
 }
@@ -577,8 +585,8 @@ void Sprite::cropLevelSurface(SDL_Surface * surface) {
 	SDL_FreeSurface(surface);
 }
 
-void Sprite::cropLouisSurface(SDL_Surface * surface) {
-	int index = 0;
+void Sprite::cropLouisSurface(SDL_Surface * surface, int offset, int offsetUnderWater) {
+	int index = offset;
 	Uint32 rmask, gmask, bmask, amask;
 	amask = 0xff000000;
 	rmask = 0x00ff0000;
@@ -591,7 +599,6 @@ void Sprite::cropLouisSurface(SDL_Surface * surface) {
 	destTextureRect.w = spriteLouisSizeWidth;
 	destTextureRect.h = spriteLouisSizeHeight;
 	for (int louis = 0; louis < nbTypeLouis; louis++) {
-
 		for (int j = 0; j < nbSpriteLouisY; j++) {
 			for (int i = 0; i < nbSpriteLouisX; i++) {
 				srcTextureRect.x = i * spriteLouisSizeWidth;
@@ -601,6 +608,9 @@ void Sprite::cropLouisSurface(SDL_Surface * surface) {
 				louisSprite[index] = SDL_CreateRGBSurface(0, spriteLouisSizeWidth, spriteLouisSizeHeight, 32, rmask, gmask, bmask, amask);
 				SDL_BlitSurface(surface, &srcTextureRect, louisSprite[index], &destTextureRect);
 				applyLouisColor(louisSprite[index], louis);
+				if (offsetUnderWater >= 0) {
+					applyUnderwaterOverlay(louisSprite[index], offsetUnderWater);
+				}
 				index++;
 			}
 		}
@@ -700,7 +710,7 @@ void Sprite::cropBonusSurface(SDL_Surface * surface) {
 	for (int j = 0; j < nbPopBonusSpriteY; j++) {
 		for (int i = 0; i < nbPopBonusSpriteX; i++) {
 			srcTextureRect.x = i * popBonusSpriteWidth + (defaultSpriteSize * nbBonusSpriteX) + ( nbBombeSpriteX * defaultSpriteSize);
-			srcTextureRect.y = j * popBonusSpriteHeight + (burnBonusSpriteHeight * nbBurnBonusSpriteY) ;
+			srcTextureRect.y = j * popBonusSpriteHeight + (burnBonusSpriteHeight * nbBurnBonusSpriteY);
 			srcTextureRect.w = popBonusSpriteWidth;
 			srcTextureRect.h = popBonusSpriteHeight;
 			bonusSprite[index] = SDL_CreateRGBSurface(0, popBonusSpriteWidth, popBonusSpriteHeight, 32, rmask, gmask, bmask, amask);
@@ -794,7 +804,7 @@ void Sprite::cropSpaceShipSurface(SDL_Surface * surface) {
 	SDL_FreeSurface(surface);
 }
 
-void Sprite::cropPlayerSurface(SDL_Surface* surface, int offset) {
+void Sprite::cropPlayerSurface(SDL_Surface* surface, int offset, int offsetUnderWater) {
 	int index = offset;
 	Uint32 rmask, gmask, bmask, amask;
 	amask = 0xff000000;
@@ -807,7 +817,6 @@ void Sprite::cropPlayerSurface(SDL_Surface* surface, int offset) {
 	destTextureRect.y = 0;
 	destTextureRect.w = spritePlayerSizeWidth;
 	destTextureRect.h = spritePlayerSizeHeight;
-
 	for (int color = 0; color < nbColorPlayer; color++) {
 		for (int j = 0; j < nbSpritePlayerY; j++) {
 			for (int i = 0; i < nbSpritePlayerX; i++) {
@@ -818,6 +827,9 @@ void Sprite::cropPlayerSurface(SDL_Surface* surface, int offset) {
 				playerSprite[index] = SDL_CreateRGBSurface(0, spritePlayerSizeWidth, spritePlayerSizeHeight, 32, rmask, gmask, bmask, amask);
 				SDL_BlitSurface(surface, &srcTextureRect, playerSprite[index], &destTextureRect);
 				applyPlayerColor(playerSprite[index], color);
+				if (offsetUnderWater >= 0) {
+					applyUnderwaterOverlay(playerSprite[index], offsetUnderWater);
+				}
 				index++;
 			}
 		}
@@ -825,13 +837,7 @@ void Sprite::cropPlayerSurface(SDL_Surface* surface, int offset) {
 	SDL_FreeSurface(surface);
 }
 
-
-
-
-
-
-
-void Sprite::cropMineSurface(SDL_Surface * surface){
+void Sprite::cropMineSurface(SDL_Surface * surface) {
 	int index = 0;
 	Uint32 rmask, gmask, bmask, amask;
 	amask = 0xff000000;
@@ -856,7 +862,7 @@ void Sprite::cropMineSurface(SDL_Surface * surface){
 		}
 	}
 }
-void Sprite::cropTeleporterSurface(SDL_Surface * surface){
+void Sprite::cropTeleporterSurface(SDL_Surface * surface) {
 	int index = 0;
 	Uint32 rmask, gmask, bmask, amask;
 	amask = 0xff000000;
@@ -872,7 +878,7 @@ void Sprite::cropTeleporterSurface(SDL_Surface * surface){
 	for (int j = 0; j < nbTeleporterSpriteY; j++) {
 		for (int i = 0; i < nbTeleporterSpriteX; i++) {
 			srcTextureRect.x = i * smallSpriteLevelSizeWidth + (defaultSpriteSize * nbBonusSpriteX) + ( nbBombeSpriteX * defaultSpriteSize);
-			srcTextureRect.y = j * smallSpriteLevelSizeHeight + (defaultSpriteSize * 4);
+			srcTextureRect.y = j * smallSpriteLevelSizeHeight + (defaultSpriteSize * 7);
 			srcTextureRect.w = smallSpriteLevelSizeWidth;
 			srcTextureRect.h = smallSpriteLevelSizeHeight;
 			teleporter[index] = SDL_CreateRGBSurface(0, smallSpriteLevelSizeWidth, smallSpriteLevelSizeHeight, 32, rmask, gmask, bmask, amask);
@@ -881,7 +887,7 @@ void Sprite::cropTeleporterSurface(SDL_Surface * surface){
 		}
 	}
 }
-void Sprite::cropHoleSurface(SDL_Surface * surface){
+void Sprite::cropHoleSurface(SDL_Surface * surface) {
 	int index = 0;
 	Uint32 rmask, gmask, bmask, amask;
 	amask = 0xff000000;
@@ -897,7 +903,7 @@ void Sprite::cropHoleSurface(SDL_Surface * surface){
 	for (int j = 0; j < nbHoleY; j++) {
 		for (int i = 0; i < nbHoleX; i++) {
 			srcTextureRect.x = i * smallSpriteLevelSizeWidth + (defaultSpriteSize * nbBonusSpriteX) + ( nbBombeSpriteX * defaultSpriteSize);
-			srcTextureRect.y = j * smallSpriteLevelSizeHeight + (defaultSpriteSize * 4);
+			srcTextureRect.y = j * smallSpriteLevelSizeHeight + (defaultSpriteSize * 6);
 			srcTextureRect.w = smallSpriteLevelSizeWidth;
 			srcTextureRect.h = smallSpriteLevelSizeHeight;
 			hole[index] = SDL_CreateRGBSurface(0, smallSpriteLevelSizeWidth, smallSpriteLevelSizeHeight, 32, rmask, gmask, bmask, amask);
@@ -906,7 +912,7 @@ void Sprite::cropHoleSurface(SDL_Surface * surface){
 		}
 	}
 }
-void Sprite::cropWaterOverlaySurface(SDL_Surface * surface){
+void Sprite::cropWaterOverlaySurface(SDL_Surface * surface) {
 	int index = 0;
 	Uint32 rmask, gmask, bmask, amask;
 	amask = 0xff000000;
@@ -922,7 +928,7 @@ void Sprite::cropWaterOverlaySurface(SDL_Surface * surface){
 	for (int j = 0; j < nbWaterOverlayY; j++) {
 		for (int i = 0; i < nbWaterOverlayX; i++) {
 			srcTextureRect.x = i * smallSpriteLevelSizeWidth + (defaultSpriteSize * nbBonusSpriteX) + ( nbBombeSpriteX * defaultSpriteSize) + (2 * smallSpriteLevelSizeWidth);
-			srcTextureRect.y = j * smallSpriteLevelSizeHeight + (defaultSpriteSize * 4);
+			srcTextureRect.y = j * smallSpriteLevelSizeHeight + (defaultSpriteSize * 6);
 			srcTextureRect.w = smallSpriteLevelSizeWidth;
 			srcTextureRect.h = smallSpriteLevelSizeHeight;
 			waterOverlay[index] = SDL_CreateRGBSurface(0, smallSpriteLevelSizeWidth, smallSpriteLevelSizeHeight, 32, rmask, gmask, bmask, amask);
@@ -931,7 +937,7 @@ void Sprite::cropWaterOverlaySurface(SDL_Surface * surface){
 		}
 	}
 }
-void Sprite::cropRailSurface(SDL_Surface * surface){
+void Sprite::cropRailSurface(SDL_Surface * surface) {
 	int index = 0;
 	Uint32 rmask, gmask, bmask, amask;
 	amask = 0xff000000;
@@ -947,7 +953,7 @@ void Sprite::cropRailSurface(SDL_Surface * surface){
 	for (int j = 0; j < nbRailY; j++) {
 		for (int i = 0; i < nbRailX; i++) {
 			srcTextureRect.x = i * smallSpriteLevelSizeWidth + (defaultSpriteSize * nbBonusSpriteX) + ( nbBombeSpriteX * defaultSpriteSize);
-			srcTextureRect.y = j * smallSpriteLevelSizeHeight + (defaultSpriteSize * 4);
+			srcTextureRect.y = j * smallSpriteLevelSizeHeight + (defaultSpriteSize * 5);
 			srcTextureRect.w = smallSpriteLevelSizeWidth;
 			srcTextureRect.h = smallSpriteLevelSizeHeight;
 			rail[index] = SDL_CreateRGBSurface(0, smallSpriteLevelSizeWidth, smallSpriteLevelSizeHeight, 32, rmask, gmask, bmask, amask);
@@ -956,7 +962,7 @@ void Sprite::cropRailSurface(SDL_Surface * surface){
 		}
 	}
 }
-void Sprite::cropButtonSurface(SDL_Surface * surface){
+void Sprite::cropButtonSurface(SDL_Surface * surface) {
 	int index = 0;
 	Uint32 rmask, gmask, bmask, amask;
 	amask = 0xff000000;
@@ -972,7 +978,7 @@ void Sprite::cropButtonSurface(SDL_Surface * surface){
 	for (int j = 0; j < nbButtonY; j++) {
 		for (int i = 0; i < nbButtonX; i++) {
 			srcTextureRect.x = i * smallSpriteLevelSizeWidth + (defaultSpriteSize * nbBonusSpriteX) + ( nbBombeSpriteX * defaultSpriteSize) + (6 * smallSpriteLevelSizeWidth);
-			srcTextureRect.y = j * smallSpriteLevelSizeHeight + (defaultSpriteSize * 4);
+			srcTextureRect.y = j * smallSpriteLevelSizeHeight + (defaultSpriteSize * 5);
 			srcTextureRect.w = smallSpriteLevelSizeWidth;
 			srcTextureRect.h = smallSpriteLevelSizeHeight;
 			button[index] = SDL_CreateRGBSurface(0, smallSpriteLevelSizeWidth, smallSpriteLevelSizeHeight, 32, rmask, gmask, bmask, amask);
@@ -981,7 +987,6 @@ void Sprite::cropButtonSurface(SDL_Surface * surface){
 		}
 	}
 }
-
 
 /********************************************
  * 
@@ -1060,12 +1065,12 @@ SDL_Surface* Sprite::getBonus(int bonusNumber) {
 	return bonusSprite[bonusNumber];
 }
 
-SDL_Surface* Sprite::getBurnBonus(int pos){
-	return bonusSprite[ (nbBonusSpriteX * nbBonusSpriteY) + pos];
+SDL_Surface* Sprite::getBurnBonus(int pos) {
+	return bonusSprite[(nbBonusSpriteX * nbBonusSpriteY) + pos];
 }
 
-SDL_Surface* Sprite::getPopBonus(int pos){
-	return bonusSprite[ (nbBonusSpriteX * nbBonusSpriteY) + (nbBurnBonusSpriteX * nbBurnBonusSpriteY) + pos];
+SDL_Surface* Sprite::getPopBonus(int pos) {
+	return bonusSprite[(nbBonusSpriteX * nbBonusSpriteY) + (nbBurnBonusSpriteX * nbBurnBonusSpriteY) + pos];
 }
 
 SDL_Surface* Sprite::getBombe(int x, int y) {
@@ -1089,62 +1094,63 @@ SDL_Surface* Sprite::getLevel(int pos, int levelIndex) {
  *	PLAYER
  ****************/
 
-int Sprite::calcStartIndexPlayer(int type, int color) {
-	return (nbSpritePlayerX * nbSpritePlayerY * nbColorPlayer) * type + ((nbSpritePlayerX * nbSpritePlayerY) * color);
+int Sprite::calcStartIndexPlayer(int type, int color, int offsetUnderWater) {
+	return ((nbSpritePlayerX * nbSpritePlayerY * nbColorPlayer * nbTypePlayer) * offsetUnderWater) + (nbSpritePlayerX * nbSpritePlayerY * nbColorPlayer * type)
+			+ ((nbSpritePlayerX * nbSpritePlayerY) * color);
 }
 
-SDL_Surface* Sprite::playerDrawNormal(int type, int color, int move, int pos) {
-	return playerSprite[calcStartIndexPlayer(type, color) + (nbSpritePlayerX * move) + pos];
+SDL_Surface* Sprite::playerDrawNormal(int type, int color, int move, int pos, int offsetUnderWater) {
+	return playerSprite[calcStartIndexPlayer(type, color, offsetUnderWater) + (nbSpritePlayerX * move) + pos];
 }
 
-SDL_Surface* Sprite::drawOnLouis(int type, int color, int move) {
-	return playerSprite[calcStartIndexPlayer(type, color) + (nbSpritePlayerX * move) + 8];
+SDL_Surface* Sprite::drawOnLouis(int type, int color, int move, int offsetUnderWater) {
+	return playerSprite[calcStartIndexPlayer(type, color, offsetUnderWater) + (nbSpritePlayerX * move) + 8];
 }
 
-SDL_Surface* Sprite::drawWithBombe(int type, int color, int move, int pos) {
-	return playerSprite[calcStartIndexPlayer(type, color) + (nbSpritePlayerX * move) + 3 + pos];
+SDL_Surface* Sprite::drawWithBombe(int type, int color, int move, int pos, int offsetUnderWater) {
+	return playerSprite[calcStartIndexPlayer(type, color, offsetUnderWater) + (nbSpritePlayerX * move) + 3 + pos];
 }
 
-SDL_Surface* Sprite::drawThrowBombe(int type, int color, int move, int pos) {
-	return playerSprite[calcStartIndexPlayer(type, color) + (nbSpritePlayerX * move) + 6 + pos];
+SDL_Surface* Sprite::drawThrowBombe(int type, int color, int move, int pos, int offsetUnderWater) {
+	return playerSprite[calcStartIndexPlayer(type, color, offsetUnderWater) + (nbSpritePlayerX * move) + 6 + pos];
 }
 
-SDL_Surface* Sprite::drawBurning(int type, int color, int pos) {
-	return playerSprite[calcStartIndexPlayer(type, color) + (nbSpritePlayerX * 6) + pos];
+SDL_Surface* Sprite::drawBurning(int type, int color, int pos, int offsetUnderWater) {
+	return playerSprite[calcStartIndexPlayer(type, color, offsetUnderWater) + (nbSpritePlayerX * 6) + pos];
 }
 
-SDL_Surface* Sprite::drawVictory(int type, int color, int pos) {
-	return playerSprite[calcStartIndexPlayer(type, color) + (nbSpritePlayerX * 4) + pos];
+SDL_Surface* Sprite::drawVictory(int type, int color, int pos, int offsetUnderWater) {
+	return playerSprite[calcStartIndexPlayer(type, color, offsetUnderWater) + (nbSpritePlayerX * 4) + pos];
 }
 
-SDL_Surface* Sprite::drawPlayerVictoryOnLouis(int type, int color) {
-	return playerSprite[calcStartIndexPlayer(type, color) + (nbSpritePlayerX * 4) + 4];
+SDL_Surface* Sprite::drawPlayerVictoryOnLouis(int type, int color, int offsetUnderWater) {
+	return playerSprite[calcStartIndexPlayer(type, color, offsetUnderWater) + (nbSpritePlayerX * 4) + 4];
 }
 
-SDL_Surface* Sprite::drawCrying(int type, int color, int pos) {
-	return playerSprite[calcStartIndexPlayer(type, color) + (nbSpritePlayerX * 5) + pos];
+SDL_Surface* Sprite::drawCrying(int type, int color, int pos, int offsetUnderWater) {
+	return playerSprite[calcStartIndexPlayer(type, color, offsetUnderWater) + (nbSpritePlayerX * 5) + pos];
 }
 
-SDL_Surface* Sprite::getHappySprite(int type, int color) {
-	return playerSprite[calcStartIndexPlayer(type, color) + (nbSpritePlayerX * 5) + 3];
+SDL_Surface* Sprite::getHappySprite(int type, int color, int offsetUnderWater) {
+	return playerSprite[calcStartIndexPlayer(type, color, offsetUnderWater) + (nbSpritePlayerX * 5) + 3];
 }
 
-SDL_Surface* Sprite::getCryingSprite(int type, int color) {
-	return playerSprite[calcStartIndexPlayer(type, color) + (nbSpritePlayerX * 5) + 4];
+SDL_Surface* Sprite::getCryingSprite(int type, int color, int offsetUnderWater) {
+	return playerSprite[calcStartIndexPlayer(type, color, offsetUnderWater) + (nbSpritePlayerX * 5) + 4];
 }
 /****************
  *	LOUIS
  ****************/
-SDL_Surface* Sprite::drawLouis(int louisType, int move, int pos) {
-	return louisSprite[(nbSpriteLouisX * nbSpriteLouisY * louisType) + (move * nbSpriteLouisX) + pos];
+SDL_Surface* Sprite::drawLouis(int louisType, int move, int pos, int offsetUnderWater) {
+	return louisSprite[(nbSpriteLouisX * nbSpriteLouisY * nbTypeLouis) * offsetUnderWater + (nbSpriteLouisX * nbSpriteLouisY * louisType) + (move * nbSpriteLouisX) + pos];
 }
 
-SDL_Surface* Sprite::drawLouisBurning(int type, int pos) {
-	return louisSprite[(nbSpriteLouisX * nbSpriteLouisY * type) + (4 * nbSpriteLouisX) + pos];
+SDL_Surface* Sprite::drawLouisBurning(int type, int pos, int offsetUnderWater) {
+	return louisSprite[(nbSpriteLouisX * nbSpriteLouisY * nbTypeLouis) * offsetUnderWater + (nbSpriteLouisX * nbSpriteLouisY * type) + (4 * nbSpriteLouisX) + pos];
 }
 
-SDL_Surface* Sprite::drawVictoryOnLouis(int type, int pos) {
-	return louisSprite[(nbSpriteLouisX * nbSpriteLouisY * type) + (4 * nbSpriteLouisX) + 4 + pos];
+SDL_Surface* Sprite::drawVictoryOnLouis(int type, int pos, int offsetUnderWater) {
+	return louisSprite[(nbSpriteLouisX * nbSpriteLouisY * nbTypeLouis) * offsetUnderWater + (nbSpriteLouisX * nbSpriteLouisY * type) + (4 * nbSpriteLouisX) + 4 + pos];
 }
 /****************
  * menu /header shadow area
@@ -1155,21 +1161,49 @@ SDL_Surface* Sprite::getShadowArea(int number) {
 /****************
  * misc area
  ****************/
-SDL_Surface* Sprite::getButton(int idx){
+SDL_Surface* Sprite::getButton(int idx) {
 	return button[idx];
 }
-SDL_Surface* Sprite::getMine(int idx){
+SDL_Surface* Sprite::getMine(int idx) {
 	return mine[idx];
 }
-SDL_Surface* Sprite::getWaterOverlay(int idx){
+SDL_Surface* Sprite::getWaterOverlay(int idx) {
 	return waterOverlay[idx];
 }
-SDL_Surface* Sprite::getTeleporter(int idx){
+SDL_Surface* Sprite::getTeleporter(int idx) {
 	return teleporter[idx];
 }
-SDL_Surface* Sprite::getHole(int idx){
+SDL_Surface* Sprite::getHole(int idx) {
 	return hole[idx];
 }
-SDL_Surface* Sprite::getRail(int idx){
+SDL_Surface* Sprite::getRail(int idx) {
 	return rail[idx];
+}
+
+void Sprite::applyUnderwaterOverlay(SDL_Surface * surface, int idx) {
+	SDL_Rect destTextureRectTmp;
+	SDL_Rect srcTextureRectTmp;
+	destTextureRectTmp.x = 6;
+	destTextureRectTmp.y = 26;
+	destTextureRectTmp.w = smallSpriteLevelSizeWidth;
+	destTextureRectTmp.h = smallSpriteLevelSizeHeight;
+	srcTextureRectTmp.x = 0;
+	srcTextureRectTmp.y = 0;
+	srcTextureRectTmp.w = smallSpriteLevelSizeWidth;
+	srcTextureRectTmp.h = smallSpriteLevelSizeHeight;
+	SDL_BlitSurface(waterOverlay[idx], &srcTextureRectTmp, surface, &destTextureRectTmp);
+	if (SDL_MUSTLOCK(surface)) {
+		SDL_LockSurface(surface);
+	}
+	Uint32 *pixels = (Uint32 *) surface->pixels;
+	for (int x = 0; x < surface->w; x++) {
+		for (int y = 0; y < surface->h; y++) {
+			if (pixels[y * surface->w + x] == 0x95003346) {
+				pixels[y * surface->w + x] = 0x00000000;
+			}
+		}
+	}
+	if (SDL_MUSTLOCK(surface)) {
+		SDL_UnlockSurface(surface);
+	}
 }

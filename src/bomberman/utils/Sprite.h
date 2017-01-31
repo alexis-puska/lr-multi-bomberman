@@ -14,6 +14,7 @@
 
 #define nbShadowAreaSprite		4
 
+#define nbFrameWater			2
 #define nbSpritePlayerX			9
 #define nbSpritePlayerY			7
 #define spritePlayerSizeWidth		30
@@ -130,19 +131,19 @@ class Sprite {
 		/*
 		 * DRAW PLAYER FUNCTION
 		 */
-		SDL_Surface* playerDrawNormal(int type, int color, int move, int pos);
-		SDL_Surface* drawOnLouis(int type, int color, int move);
-		SDL_Surface* drawWithBombe(int type, int color, int move, int pos);
-		SDL_Surface* drawThrowBombe(int type, int color, int move, int pos);
-		SDL_Surface* drawBurning(int type, int color, int pos);
-		SDL_Surface* drawLouisBurning(int type, int pos);
-		SDL_Surface* drawVictory(int type, int color, int pos);
-		SDL_Surface* drawPlayerVictoryOnLouis(int type, int color);
-		SDL_Surface* drawCrying(int type, int color, int pos);
-		SDL_Surface* drawLouis(int louisType, int move, int pos);
-		SDL_Surface* drawVictoryOnLouis(int type, int pos);
-		SDL_Surface* getHappySprite(int type, int color);
-		SDL_Surface* getCryingSprite(int type, int color);
+		SDL_Surface* playerDrawNormal(int type, int color, int move, int pos, int offsetUnderWater);
+		SDL_Surface* drawOnLouis(int type, int color, int move, int offsetUnderWater);
+		SDL_Surface* drawWithBombe(int type, int color, int move, int pos, int offsetUnderWater);
+		SDL_Surface* drawThrowBombe(int type, int color, int move, int pos, int offsetUnderWater);
+		SDL_Surface* drawBurning(int type, int color, int pos, int offsetUnderWater);
+		SDL_Surface* drawLouisBurning(int type, int pos, int offsetUnderWater);
+		SDL_Surface* drawVictory(int type, int color, int pos, int offsetUnderWater);
+		SDL_Surface* drawPlayerVictoryOnLouis(int type, int color, int offsetUnderWater);
+		SDL_Surface* drawCrying(int type, int color, int pos, int offsetUnderWater);
+		SDL_Surface* drawLouis(int louisType, int move, int pos, int offsetUnderWater);
+		SDL_Surface* drawVictoryOnLouis(int type, int pos, int offsetUnderWater);
+		SDL_Surface* getHappySprite(int type, int color, int offsetUnderWater);
+		SDL_Surface* getCryingSprite(int type, int color, int offsetUnderWater);
 		/*
 		 * DRAW TEXT FUNCTION
 		 */
@@ -155,13 +156,13 @@ class Sprite {
 		static Sprite m_instance;
 		void cropSurface();
 		void createShadowArea();
-		void cropPlayerSurface(SDL_Surface*, int offset);
+		void cropPlayerSurface(SDL_Surface*, int offset, int offsetUnderWater);
 		void cropPreviewLevelSurface(SDL_Surface * surface);
 		void cropBombeSurface(SDL_Surface * surface);
 		void cropFireSurface(SDL_Surface * surface);
 		void cropBonusSurface(SDL_Surface * surface);
 		void cropLevelSurface(SDL_Surface * surface);
-		void cropLouisSurface(SDL_Surface * surface);
+		void cropLouisSurface(SDL_Surface * surface, int offset, int offsetUnderWater);
 		void cropTrolleySurface(SDL_Surface * surface);
 		void cropSpaceShipSurface(SDL_Surface * surface);
 		void cropMineSurface(SDL_Surface * surface);
@@ -170,7 +171,8 @@ class Sprite {
 		void cropWaterOverlaySurface(SDL_Surface * surface);
 		void cropRailSurface(SDL_Surface * surface);
 		void cropButtonSurface(SDL_Surface * surface);
-		int calcStartIndexPlayer(int type, int color);
+		int calcStartIndexPlayer(int type, int color, int offsetUnderWater);
+		void applyUnderwaterOverlay(SDL_Surface * surface, int idx);
 
 
 		/*

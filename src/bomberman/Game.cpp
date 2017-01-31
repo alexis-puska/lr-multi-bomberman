@@ -152,7 +152,7 @@ Game::Game(SDL_Surface * vout_buf, unsigned short * in_keystate) {
 			case HUMAN:
 
 			// if a human link the next keystate of libretro, else link a empty value
-			player = new Player(&in_keystate[indexLibretro], startX, startY, i, tab, tabBonus, grid, indexPlayerForGame);
+			player = new Player(&in_keystate[indexLibretro], startX, startY, i, tab, tabBonus, grid, indexPlayerForGame, LevelService::Instance().getLevel(levelIndex)->isWaterOverlayMode());
 			players.push_back(player);
 			player = NULL;
 			indexLibretro++;
@@ -160,7 +160,7 @@ Game::Game(SDL_Surface * vout_buf, unsigned short * in_keystate) {
 			indexPlayerForGame++;
 			break;
 			case CPU:
-			player = new Player(&in_keystate_cpu[index], startX, startY, i, tab, tabBonus, grid, indexPlayerForGame);
+			player = new Player(&in_keystate_cpu[index], startX, startY, i, tab, tabBonus, grid, indexPlayerForGame, LevelService::Instance().getLevel(levelIndex)->isWaterOverlayMode());
 			players.push_back(player);
 			player = NULL;
 
@@ -366,10 +366,10 @@ void Game::generateHeader() {
 		rect.y = 4;
 		rect.w = 20;
 		rect.h = 20;
-		
+
 		if(GameConfig::Instance().getPlayerType(i) != 2){
 			//FOR HUMAN PLAYER OR CPU
-			SDL_BlitSurface(Sprite::Instance().getHappySprite(GameConfig::Instance().getPlayerSpriteType(i), GameConfig::Instance().getPlayerColor(i)), NULL, vout_buf, &rect);
+			SDL_BlitSurface(Sprite::Instance().getHappySprite(GameConfig::Instance().getPlayerSpriteType(i), GameConfig::Instance().getPlayerColor(i), 0), NULL, vout_buf, &rect);
 			//wrote number of victory
 			char score[3];
 			sprintf(score, "%i", GameConfig::Instance().getPlayerScore(i));
@@ -1078,7 +1078,7 @@ void Game::tick() {
 						case HUMAN:
 							// if a human link the next keystate of libretro, else link a empty value
 							player = new Player(&in_keystate[indexLibretro], startX, startY, i, tab, tabBonus, grid,
-									indexPlayerForGame);
+									indexPlayerForGame, LevelService::Instance().getLevel(levelIndex)->isWaterOverlayMode());
 							players.push_back(player);
 							player = NULL;
 							indexLibretro++;
@@ -1087,7 +1087,7 @@ void Game::tick() {
 							break;
 						case CPU:
 							player = new Player(&in_keystate_cpu[index], startX, startY, i, tab, tabBonus, grid,
-									indexPlayerForGame);
+									indexPlayerForGame, LevelService::Instance().getLevel(levelIndex)->isWaterOverlayMode());
 							players.push_back(player);
 							brain = new Brain(&in_keystate_cpu[index], tab, i, players[indexPlayerForGame]);
 							brains.push_back(brain);
@@ -1135,7 +1135,7 @@ void Game::updateHeaderPlayer(int i, int playerNumber){
 	rect.w = 20;
 	rect.h = 20;
 	//FOR HUMAN PLAYER OR CPU
-	SDL_BlitSurface(Sprite::Instance().getCryingSprite(GameConfig::Instance().getPlayerSpriteType(i), GameConfig::Instance().getPlayerColor(i)), NULL, vout_buf, &rect);
+	SDL_BlitSurface(Sprite::Instance().getCryingSprite(GameConfig::Instance().getPlayerSpriteType(i), GameConfig::Instance().getPlayerColor(i), 0), NULL, vout_buf, &rect);
 	//wrote number of victory
 	char score[3];
 	sprintf(score, "%i", GameConfig::Instance().getPlayerScore(playerNumber));

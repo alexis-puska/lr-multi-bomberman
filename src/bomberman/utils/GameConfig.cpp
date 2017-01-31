@@ -320,7 +320,7 @@ void GameConfig::generateColorPlayer(){
 
 void GameConfig::incPlayerSpriteType(int idx){
 	playerSpriteType[idx]++;
-	if(playerSpriteType[idx] > nbTypePlayer){
+	if(playerSpriteType[idx] > nbTypePlayer-1){
 		playerSpriteType[idx] = 0;
 	}
 }
@@ -328,7 +328,7 @@ void GameConfig::incPlayerSpriteType(int idx){
 void GameConfig::decPlayerSpriteType(int idx){
 	playerSpriteType[idx]--;
 	if(playerSpriteType[idx] < 0){
-		playerSpriteType[idx] = nbTypePlayer;
+		playerSpriteType[idx] = nbTypePlayer-1;
 	}
 }
 

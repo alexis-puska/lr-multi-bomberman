@@ -8,6 +8,7 @@
 #define blockSizeY 16
 
 #define nbFrameIncAnimation 5
+#define nbFrameUnderWater 60
 
 enum playerKey {
 	keyPadSelect = 1,
@@ -45,7 +46,7 @@ enum louisTypeEnum {
 };
 
 Player::Player(unsigned short * in_keystate, float posX, float posY, int playerNumber, int tab[sizeX * sizeY], int tabBonus[sizeX * sizeY], Grid * gridParam,
-		int indexPlayerForGame) {
+		int indexPlayerForGame, bool isUnderWater) {
 	srand (time(NULL));grid = gridParam;
 	this->indexPlayerForGame = indexPlayerForGame;
 	this->posX = posX;
@@ -58,6 +59,13 @@ Player::Player(unsigned short * in_keystate, float posX, float posY, int playerN
 	this->nbPlayerConfig = GameConfig::Instance().getNbPlayerInGame();;
 	this->color = GameConfig::Instance().getPlayerColor(playerNumber);;
 	this->louisType = blueLouis;
+	this->isUnderWater = isUnderWater;
+	if(isUnderWater){
+		offsetUnderWater = 1;
+	}else{
+		offsetUnderWater = 0;
+	}
+	indexUnderWater = 0;
 
 
 	//fprintf(stderr, "%i %2it %2ic %2is %2isc %2ist\n", playerNumber, GameConfig::Instance().getPlayerColor(), );
@@ -101,7 +109,7 @@ Player::~Player() {
 /*
  * DRAWING PART
  */
-void Player::drawNormal(SDL_Surface * surfaceToDraw, bool animate) {
+void Player::drawNormal(SDL_Surface * surfaceToDraw, bool animate, int offsetUnderWater) {
 	nbFrameForAnimation = animationNormal;
 	SDL_Rect srcTextureRect;
 	SDL_Rect destTextureRect;
@@ -140,10 +148,10 @@ void Player::drawNormal(SDL_Surface * surfaceToDraw, bool animate) {
 			offsetSpriteAnimation = 2;
 			break;
 	}
-	SDL_BlitSurface(Sprite::Instance().playerDrawNormal(characterSpriteIndex, color, previousDirection, offsetSpriteAnimation), &srcTextureRect, surfaceToDraw, &destTextureRect);
+	SDL_BlitSurface(Sprite::Instance().playerDrawNormal(characterSpriteIndex, color, previousDirection, offsetSpriteAnimation,  offsetUnderWater), &srcTextureRect, surfaceToDraw, &destTextureRect);
 }
 
-void Player::drawOnLouis(SDL_Surface * surfaceToDraw, bool animate) {
+void Player::drawOnLouis(SDL_Surface * surfaceToDraw, bool animate, int offsetUnderWater) {
 	Uint32 rmask, gmask, bmask, amask;
 	amask = 0xff000000;
 	rmask = 0x00ff0000;
@@ -189,18 +197,18 @@ void Player::drawOnLouis(SDL_Surface * surfaceToDraw, bool animate) {
 	}
 	louisMergebuffer = SDL_CreateRGBSurface(0, sprite_sizeW, sprite_sizeH, 32, rmask, gmask, bmask, amask);
 	if (previousDirection == down) {
-		SDL_BlitSurface(Sprite::Instance().drawOnLouis(characterSpriteIndex, color, previousDirection), &srcTextureRect, louisMergebuffer, &srcTextureRect);
-		SDL_BlitSurface(Sprite::Instance().drawLouis(louisType, previousDirection, offsetSpriteAnimation), &srcTextureRect, louisMergebuffer, &srcTextureRect);
+		SDL_BlitSurface(Sprite::Instance().drawOnLouis(characterSpriteIndex, color, previousDirection, offsetUnderWater), &srcTextureRect, louisMergebuffer, &srcTextureRect);
+		SDL_BlitSurface(Sprite::Instance().drawLouis(louisType, previousDirection, offsetSpriteAnimation, offsetUnderWater), &srcTextureRect, louisMergebuffer, &srcTextureRect);
 		SDL_BlitSurface(louisMergebuffer, &srcTextureRect, surfaceToDraw, &destTextureRect);
 	} else {
-		SDL_BlitSurface(Sprite::Instance().drawLouis(louisType, previousDirection, offsetSpriteAnimation), &srcTextureRect, louisMergebuffer, &srcTextureRect);
-		SDL_BlitSurface(Sprite::Instance().drawOnLouis(characterSpriteIndex, color, previousDirection), &srcTextureRect, louisMergebuffer, &srcTextureRect);
+		SDL_BlitSurface(Sprite::Instance().drawLouis(louisType, previousDirection, offsetSpriteAnimation, offsetUnderWater), &srcTextureRect, louisMergebuffer, &srcTextureRect);
+		SDL_BlitSurface(Sprite::Instance().drawOnLouis(characterSpriteIndex, color, previousDirection, offsetUnderWater), &srcTextureRect, louisMergebuffer, &srcTextureRect);
 		SDL_BlitSurface(louisMergebuffer, &srcTextureRect, surfaceToDraw, &destTextureRect);
 	}
 	SDL_FreeSurface(louisMergebuffer);
 }
 
-void Player::drawWithBombe(SDL_Surface * surfaceToDraw, bool animate) {
+void Player::drawWithBombe(SDL_Surface * surfaceToDraw, bool animate, int offsetUnderWater) {
 	nbFrameForAnimation = animationCarryBombe;
 	SDL_Rect srcTextureRect;
 	SDL_Rect destTextureRect;
@@ -239,10 +247,10 @@ void Player::drawWithBombe(SDL_Surface * surfaceToDraw, bool animate) {
 			offsetSpriteAnimation = 2;
 			break;
 	}
-	SDL_BlitSurface(Sprite::Instance().drawWithBombe(characterSpriteIndex, color, previousDirection, offsetSpriteAnimation), &srcTextureRect, surfaceToDraw, &destTextureRect);
+	SDL_BlitSurface(Sprite::Instance().drawWithBombe(characterSpriteIndex, color, previousDirection, offsetSpriteAnimation,  offsetUnderWater), &srcTextureRect, surfaceToDraw, &destTextureRect);
 }
 
-void Player::drawThrowBombe(SDL_Surface * surfaceToDraw, bool animate) {
+void Player::drawThrowBombe(SDL_Surface * surfaceToDraw, bool animate, int offsetUnderWater) {
 	nbFrameForAnimation = animationThrowBombe;
 	SDL_Rect srcTextureRect;
 	SDL_Rect destTextureRect;
@@ -266,10 +274,10 @@ void Player::drawThrowBombe(SDL_Surface * surfaceToDraw, bool animate) {
 	} else {
 		offsetSprite = 0;
 	}
-	SDL_BlitSurface(Sprite::Instance().drawThrowBombe(characterSpriteIndex, color, previousDirection, offsetSprite), &srcTextureRect, surfaceToDraw, &destTextureRect);
+	SDL_BlitSurface(Sprite::Instance().drawThrowBombe(characterSpriteIndex, color, previousDirection, offsetSprite,  offsetUnderWater), &srcTextureRect, surfaceToDraw, &destTextureRect);
 }
 
-void Player::drawBurning(SDL_Surface * surfaceToDraw, bool animate) {
+void Player::drawBurning(SDL_Surface * surfaceToDraw, bool animate, int offsetUnderWater) {
 	nbFrameForAnimation = animationBurning;
 	SDL_Rect srcTextureRect;
 	SDL_Rect destTextureRect;
@@ -296,10 +304,10 @@ void Player::drawBurning(SDL_Surface * surfaceToDraw, bool animate) {
 	} else {
 		offsetSprite = 0;
 	}
-	SDL_BlitSurface(Sprite::Instance().drawBurning(characterSpriteIndex, color, offsetSprite), &srcTextureRect, surfaceToDraw, &destTextureRect);
+	SDL_BlitSurface(Sprite::Instance().drawBurning(characterSpriteIndex, color, offsetSprite,  offsetUnderWater), &srcTextureRect, surfaceToDraw, &destTextureRect);
 }
 
-void Player::drawVictory(SDL_Surface * surfaceToDraw, bool animate) {
+void Player::drawVictory(SDL_Surface * surfaceToDraw, bool animate, int offsetUnderWater) {
 	nbFrameForAnimation = animationVictory;
 	SDL_Rect srcTextureRect;
 	SDL_Rect destTextureRect;
@@ -338,10 +346,10 @@ void Player::drawVictory(SDL_Surface * surfaceToDraw, bool animate) {
 			offsetSpriteAnimation = 2;
 			break;
 	}
-	SDL_BlitSurface(Sprite::Instance().drawVictory(characterSpriteIndex, color, offsetSpriteAnimation), &srcTextureRect, surfaceToDraw, &destTextureRect);
+	SDL_BlitSurface(Sprite::Instance().drawVictory(characterSpriteIndex, color, offsetSpriteAnimation,  offsetUnderWater), &srcTextureRect, surfaceToDraw, &destTextureRect);
 }
 
-void Player::drawVictoryOnLouis(SDL_Surface * surfaceToDraw, bool animate) {
+void Player::drawVictoryOnLouis(SDL_Surface * surfaceToDraw, bool animate, int offsetUnderWater) {
 	Uint32 rmask, gmask, bmask, amask;
 	amask = 0xff000000;
 	rmask = 0x00ff0000;
@@ -386,14 +394,14 @@ void Player::drawVictoryOnLouis(SDL_Surface * surfaceToDraw, bool animate) {
 			break;
 	}
 	louisMergebuffer = SDL_CreateRGBSurface(0, sprite_sizeW, sprite_sizeH, 32, rmask, gmask, bmask, amask);
-		SDL_BlitSurface(Sprite::Instance().drawPlayerVictoryOnLouis(characterSpriteIndex, color), &srcTextureRect, louisMergebuffer, &srcTextureRect);
-		SDL_BlitSurface(Sprite::Instance().drawVictoryOnLouis(louisType, offsetSpriteAnimation), &srcTextureRect, louisMergebuffer, &srcTextureRect);
+		SDL_BlitSurface(Sprite::Instance().drawPlayerVictoryOnLouis(characterSpriteIndex, color,  offsetUnderWater), &srcTextureRect, louisMergebuffer, &srcTextureRect);
+		SDL_BlitSurface(Sprite::Instance().drawVictoryOnLouis(louisType, offsetSpriteAnimation,  offsetUnderWater), &srcTextureRect, louisMergebuffer, &srcTextureRect);
 		SDL_BlitSurface(louisMergebuffer, &srcTextureRect, surfaceToDraw, &destTextureRect);
 	SDL_FreeSurface(louisMergebuffer);
 }
 
 
-void Player::drawCrying(SDL_Surface * surfaceToDraw, bool animate) {
+void Player::drawCrying(SDL_Surface * surfaceToDraw, bool animate, int offsetUnderWater) {
 	nbFrameForAnimation = animationCrying;
 	SDL_Rect srcTextureRect;
 	SDL_Rect destTextureRect;
@@ -433,7 +441,7 @@ void Player::drawCrying(SDL_Surface * surfaceToDraw, bool animate) {
 			offsetSpriteAnimation = 2;
 			break;
 	}
-	SDL_BlitSurface(Sprite::Instance().drawCrying(characterSpriteIndex, color, offsetSpriteAnimation), &srcTextureRect, surfaceToDraw, &destTextureRect);
+	SDL_BlitSurface(Sprite::Instance().drawCrying(characterSpriteIndex, color, offsetSpriteAnimation, offsetUnderWater), &srcTextureRect, surfaceToDraw, &destTextureRect);
 }
 
 void Player::doSomething(SDL_Surface * surfaceToDraw) {
@@ -670,30 +678,42 @@ void Player::doSomething(SDL_Surface * surfaceToDraw) {
 		}
 
 	}
+
+
+	if(isUnderWater){
+		if(indexUnderWater > nbFrameUnderWater){
+			offsetUnderWater++;
+		}
+		if( offsetUnderWater > nbFrameWater){
+			offsetUnderWater = 1;
+		}
+		indexUnderWater++;
+	}
+
 	switch (playerState) {
 		case normal:
-			drawNormal(surfaceToDraw, animate);
+			drawNormal(surfaceToDraw, animate, offsetUnderWater);
 			break;
 		case onLouis:
-			drawOnLouis(surfaceToDraw, animate);
+			drawOnLouis(surfaceToDraw, animate, offsetUnderWater);
 			break;
 		case carryBombe:
-			drawWithBombe(surfaceToDraw, animate);
+			drawWithBombe(surfaceToDraw, animate, offsetUnderWater);
 			break;
 		case throwBombe:
-			drawThrowBombe(surfaceToDraw, animate);
+			drawThrowBombe(surfaceToDraw, animate, offsetUnderWater);
 			break;
 		case burning:
-			drawBurning(surfaceToDraw, true);
+			drawBurning(surfaceToDraw, true, offsetUnderWater);
 			break;
 		case victory:
-			drawVictory(surfaceToDraw, true);
+			drawVictory(surfaceToDraw, true, offsetUnderWater);
 			break;
 		case victoryOnLouis:
-			drawVictoryOnLouis(surfaceToDraw, true);
+			drawVictoryOnLouis(surfaceToDraw, true, offsetUnderWater);
 			break;
 		case crying:
-			drawCrying(surfaceToDraw, animate);
+			drawCrying(surfaceToDraw, animate, offsetUnderWater);
 			break;
 	}
 

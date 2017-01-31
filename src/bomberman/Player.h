@@ -20,7 +20,7 @@
 class Player {
 	public:
 		Player(unsigned short * in_keystate, float startPositionX, float startPositionY, int playerNumber, int tab[sizeX * sizeY], int tabBonus[sizeX * sizeY],
-				Grid * gridParam, int indexPlayerForGame);
+				Grid * gridParam, int indexPlayerForGame, bool isUnderWater);
 		~Player();
 		void doSomething(SDL_Surface * surfaceToDraw);
 
@@ -80,6 +80,11 @@ class Player {
 		float previousSpeedValue;
 		int previousBombeNumber;
 
+		//underwater
+		bool isUnderWater;
+		int indexUnderWater;
+		int offsetUnderWater;
+
 		bool ghostModePower;
 		bool kickPower;
 		bool inSuddenDeathTime;
@@ -122,14 +127,14 @@ class Player {
 		/*
 		 * FUNCTION For draw player
 		 */
-		void drawNormal(SDL_Surface * surfaceToDraw, bool animate);
-		void drawOnLouis(SDL_Surface * surfaceToDraw, bool animate);
-		void drawWithBombe(SDL_Surface * surfaceToDraw, bool animate);
-		void drawThrowBombe(SDL_Surface * surfaceToDraw, bool animate);
-		void drawBurning(SDL_Surface * surfaceToDraw, bool animate);
-		void drawVictory(SDL_Surface * surfaceToDraw, bool animate);
-		void drawCrying(SDL_Surface * surfaceToDraw, bool animate);
-		void drawVictoryOnLouis(SDL_Surface * surfaceToDraw, bool animate);
+		void drawNormal(SDL_Surface * surfaceToDraw, bool animate, int offsetUnderWater);
+		void drawOnLouis(SDL_Surface * surfaceToDraw, bool animate, int offsetUnderWater);
+		void drawWithBombe(SDL_Surface * surfaceToDraw, bool animate, int offsetUnderWater);
+		void drawThrowBombe(SDL_Surface * surfaceToDraw, bool animate, int offsetUnderWater);
+		void drawBurning(SDL_Surface * surfaceToDraw, bool animate, int offsetUnderWater);
+		void drawVictory(SDL_Surface * surfaceToDraw, bool animate, int offsetUnderWater);
+		void drawCrying(SDL_Surface * surfaceToDraw, bool animate, int offsetUnderWater);
+		void drawVictoryOnLouis(SDL_Surface * surfaceToDraw, bool animate, int offsetUnderWater);
 
 		//malus function
 		void getAMalusBonus();
