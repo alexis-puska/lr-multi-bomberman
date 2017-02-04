@@ -30,6 +30,7 @@ Sprite Sprite::m_instance = Sprite();
 
 Sprite::Sprite() {
 	TTF_Init();
+	printed = false;
 	fprintf(stderr, "Init sprite system\n");
 	shadowAreaSprite = new SDL_Surface *[nbShadowAreaSprite];
 	playerSprite = new SDL_Surface *[nbSpritePlayerX * nbSpritePlayerY * nbColorPlayer * nbTypePlayer * (nbFrameWater + 1)];
@@ -1100,7 +1101,6 @@ int Sprite::calcStartIndexPlayer(int type, int color, int offsetUnderWater) {
 }
 
 SDL_Surface* Sprite::playerDrawNormal(int type, int color, int move, int pos, int offsetUnderWater) {
-	getColorInSurface(playerSprite[calcStartIndexPlayer(type, color, offsetUnderWater) + (nbSpritePlayerX * move) + pos]);
 	return playerSprite[calcStartIndexPlayer(type, color, offsetUnderWater) + (nbSpritePlayerX * move) + pos];
 }
 
@@ -1196,14 +1196,16 @@ void Sprite::applyUnderwaterOverlay(SDL_Surface * surface, int idx) {
 	if (SDL_MUSTLOCK(surface)) {
 		SDL_LockSurface(surface);
 	}
-	//getColorInSurface(surface);
+
+	if(printed==false){
+		printed = true;
+		getColorInSurface(surface);
+	}
+
 	Uint32 *pixels = (Uint32 *) surface->pixels;
 	for (int x = 0; x < surface->w; x++) {
 		for (int y = 0; y < surface->h; y++) {
 			if (pixels[y * surface->w + x] == 0x95003346) {
-				pixels[y * surface->w + x] = 0x00000000;
-			}
-			if (pixels[y * surface->w + x] == 0x93003344) {
 				pixels[y * surface->w + x] = 0x00000000;
 			}
 		}

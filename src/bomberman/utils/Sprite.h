@@ -179,6 +179,7 @@ class Sprite {
 		 * INFORMATION FUNCTION
 		 */
 		void getColorInSurface(SDL_Surface* surface);
+		bool printed;
 		
 		/*
 		 * COLOR FUNCTION
