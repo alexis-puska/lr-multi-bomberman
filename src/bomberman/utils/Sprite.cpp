@@ -1100,6 +1100,7 @@ int Sprite::calcStartIndexPlayer(int type, int color, int offsetUnderWater) {
 }
 
 SDL_Surface* Sprite::playerDrawNormal(int type, int color, int move, int pos, int offsetUnderWater) {
+	getColorInSurface(playerSprite[calcStartIndexPlayer(type, color, offsetUnderWater) + (nbSpritePlayerX * move) + pos]);
 	return playerSprite[calcStartIndexPlayer(type, color, offsetUnderWater) + (nbSpritePlayerX * move) + pos];
 }
 
@@ -1202,7 +1203,7 @@ void Sprite::applyUnderwaterOverlay(SDL_Surface * surface, int idx) {
 			if (pixels[y * surface->w + x] == 0x95003346) {
 				pixels[y * surface->w + x] = 0x00000000;
 			}
-			if (pixels[y * surface->w + x] == 0x96003346) {
+			if (pixels[y * surface->w + x] == 0x93003344) {
 				pixels[y * surface->w + x] = 0x00000000;
 			}
 		}
