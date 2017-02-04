@@ -933,6 +933,9 @@ void Sprite::cropWaterOverlaySurface(SDL_Surface * surface) {
 			srcTextureRect.h = smallSpriteLevelSizeHeight;
 			waterOverlay[index] = SDL_CreateRGBSurface(0, smallSpriteLevelSizeWidth, smallSpriteLevelSizeHeight, 32, rmask, gmask, bmask, amask);
 			SDL_BlitSurface(surface, &srcTextureRect, waterOverlay[index], &destTextureRect);
+			getColorInSurface(waterOverlay[index]);
+
+
 			index++;
 		}
 	}
