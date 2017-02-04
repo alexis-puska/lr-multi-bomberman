@@ -933,9 +933,6 @@ void Sprite::cropWaterOverlaySurface(SDL_Surface * surface) {
 			srcTextureRect.h = smallSpriteLevelSizeHeight;
 			waterOverlay[index] = SDL_CreateRGBSurface(0, smallSpriteLevelSizeWidth, smallSpriteLevelSizeHeight, 32, rmask, gmask, bmask, amask);
 			SDL_BlitSurface(surface, &srcTextureRect, waterOverlay[index], &destTextureRect);
-			getColorInSurface(waterOverlay[index]);
-
-
 			index++;
 		}
 	}
@@ -1198,9 +1195,13 @@ void Sprite::applyUnderwaterOverlay(SDL_Surface * surface, int idx) {
 	if (SDL_MUSTLOCK(surface)) {
 		SDL_LockSurface(surface);
 	}
+	getColorInSurface(surface);
 	Uint32 *pixels = (Uint32 *) surface->pixels;
 	for (int x = 0; x < surface->w; x++) {
 		for (int y = 0; y < surface->h; y++) {
+			if (pixels[y * surface->w + x] == 0x95003346) {
+				pixels[y * surface->w + x] = 0x00000000;
+			}
 			if (pixels[y * surface->w + x] == 0x95003346) {
 				pixels[y * surface->w + x] = 0x00000000;
 			}
