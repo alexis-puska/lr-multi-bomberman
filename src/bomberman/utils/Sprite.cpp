@@ -1195,14 +1195,14 @@ void Sprite::applyUnderwaterOverlay(SDL_Surface * surface, int idx) {
 	if (SDL_MUSTLOCK(surface)) {
 		SDL_LockSurface(surface);
 	}
-	getColorInSurface(surface);
+	//getColorInSurface(surface);
 	Uint32 *pixels = (Uint32 *) surface->pixels;
 	for (int x = 0; x < surface->w; x++) {
 		for (int y = 0; y < surface->h; y++) {
 			if (pixels[y * surface->w + x] == 0x95003346) {
 				pixels[y * surface->w + x] = 0x00000000;
 			}
-			if (pixels[y * surface->w + x] == 0x95003346) {
+			if (pixels[y * surface->w + x] == 0x96003346) {
 				pixels[y * surface->w + x] = 0x00000000;
 			}
 		}
