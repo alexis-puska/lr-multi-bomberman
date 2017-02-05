@@ -7,6 +7,8 @@
 #include <stdio.h>
 #include <map>
 
+#include "../trolley/rail.h"
+
 #define nbTypeBonus 15
 
 #ifndef __MYCLASS_LevelVariante
@@ -32,6 +34,9 @@ class LevelVariante {
 		void texturedrawInsky(int idx);
 		bool isAWall(int idx);
 		bool isDrawInSky(int idx);
+		void addRail(int index);
+		void initRails();
+		std::map<int,Rail *> getRails();
 	private:
 		int number;
 		char descriptionLine1[32];
@@ -45,5 +50,6 @@ class LevelVariante {
 		int nbBombe;
 		std::map<int, int> indexDefSky;
 		std::map<int, int> indexDefWall;
+		std::map<int, Rail *> rails;
 };
 #endif

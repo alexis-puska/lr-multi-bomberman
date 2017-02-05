@@ -108,3 +108,63 @@ bool LevelVariante::isDrawInSky(int idx) {
 	}
 	return false;
 }
+
+void LevelVariante::addRail(int index) {
+	fprintf(stderr, "add index : %i", index);
+	Rail * rail = new Rail(index);
+	rails[index] = rail;
+}
+
+std::map<int, Rail *> LevelVariante::getRails() {
+	return rails;
+}
+
+void LevelVariante::initRails() {
+	int index = 0;
+	if (rails.size() != 0) {
+		fprintf(stderr, "init rails !\n");
+		for (std::map<int, Rail*>::iterator it = rails.begin(); it != rails.end(); ++it) {
+			fprintf(stderr, "rail index : %i\n", it->second->getIndex());
+			it->second->init(rails);
+		}
+		for (std::map<int, Rail*>::iterator it = rails.begin(); it != rails.end(); ++it) {
+			if (it->second->isBumper()) {
+				index = it->second->getIndex();
+				break;
+			}
+		}
+		fprintf(stderr, "%i index found\n", index);
+		Rail * rail = rails.find(index)->second;
+		fprintf(stderr, "rail %i start, next %i", rail->getIndex(), rail->getNext(index));
+		rail = rails.find(rail->getNext(index))->second;
+		while (true) {
+			if (!rail->isBumper()) {
+				rail = rails.find(rail->getNext(index))->second;
+				fprintf(stderr, "rail %i start", rail->getIndex());
+			} else {
+				break;
+			}
+		}
+		rails.find(112)->second->switching();
+
+		for (std::map<int, Rail*>::iterator it = rails.begin(); it != rails.end(); ++it) {
+					if (it->second->isBumper()) {
+						index = it->second->getIndex();
+						break;
+					}
+				}
+				fprintf(stderr, "%i index found\n", index);
+				rail = rails.find(index)->second;
+				fprintf(stderr, "rail %i start, next %i", rail->getIndex(), rail->getNext(index));
+				rail = rails.find(rail->getNext(index))->second;
+				while (true) {
+					if (!rail->isBumper()) {
+						rail = rails.find(rail->getNext(index))->second;
+						fprintf(stderr, "rail %i start", rail->getIndex());
+					} else {
+						break;
+					}
+				}
+	}
+
+}

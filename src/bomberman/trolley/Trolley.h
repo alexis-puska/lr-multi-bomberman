@@ -12,5 +12,8 @@
 class Trolley {
 	public:
 	private:
+		float posX;
+		float posY;
+
 };
 #endif

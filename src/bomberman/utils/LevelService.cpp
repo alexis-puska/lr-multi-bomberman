@@ -206,6 +206,21 @@ void LevelService::createLevel0(){
 	Level * level = new Level(0, "Blockbuster", false);
 	LevelVariante * variante = new LevelVariante(0, "classic level", "classic level", true, desc, bonus, 2, 2);
 	variante->textureIsAWall(0,17);
+
+	variante->addRail(36);
+	variante->addRail(37);
+	variante->addRail(38);
+	variante->addRail(39);
+	variante->addRail(40);
+	variante->addRail(41);
+	variante->addRail(42);
+	variante->addRail(77);
+	variante->addRail(112);
+	variante->addRail(113);
+	variante->addRail(114);
+	variante->addRail(147);
+	variante->addRail(182);
+
 	level->addVariante(variante);
 
 	LevelVariante * variante1 = new LevelVariante(1, "level without bricks", "level without bricks", false, descV2, bonusV2, 6, 6);

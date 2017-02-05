@@ -11,6 +11,7 @@ Level::~Level(){
 }
 
 void Level::addVariante(LevelVariante * variante){
+	variante->initRails();
 	variantes.push_back(variante);
 }
 
