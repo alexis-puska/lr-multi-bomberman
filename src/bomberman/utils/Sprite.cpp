@@ -977,7 +977,7 @@ void Sprite::cropButtonSurface(SDL_Surface * surface) {
 	destTextureRect.h = smallSpriteLevelSizeHeight;
 	for (int j = 0; j < nbButtonY; j++) {
 		for (int i = 0; i < nbButtonX; i++) {
-			srcTextureRect.x = i * smallSpriteLevelSizeWidth + (defaultSpriteSize * nbBonusSpriteX) + ( nbBombeSpriteX * defaultSpriteSize) + (6 * smallSpriteLevelSizeWidth);
+			srcTextureRect.x = i * smallSpriteLevelSizeWidth + (defaultSpriteSize * nbBonusSpriteX) + ( nbBombeSpriteX * defaultSpriteSize) + (8 * smallSpriteLevelSizeWidth);
 			srcTextureRect.y = j * smallSpriteLevelSizeHeight + (defaultSpriteSize * 5);
 			srcTextureRect.w = smallSpriteLevelSizeWidth;
 			srcTextureRect.h = smallSpriteLevelSizeHeight;

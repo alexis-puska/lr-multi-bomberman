@@ -120,6 +120,7 @@ class Game {
 		std::vector<PopBonus *> PopBonusList;
 		std::vector<BurnBonus *> BurnBonusList;
 
+
 		/*
 		 *	GRID PART
 		 */
@@ -136,6 +137,7 @@ class Game {
 		void updateTimeDisplay();
 		void drawResultOfGame();
 		void updateHeaderPlayer(int i, int playerNumber);
+
 
 };
 #endif

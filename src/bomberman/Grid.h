@@ -11,6 +11,8 @@
 #include "utils/Sprite.h"
 #include "utils/LevelService.h"
 #include "utils/GameConfig.h"
+#include "trolley/Rail.h"
+#include "trolley/Button.h"
 
 #ifndef __MYCLASS_GRID
 #define __MYCLASS_GRID
@@ -79,6 +81,7 @@ class Grid {
 		void placeNewDeathMalus();
 		void placeSuddenDeathWall(int x, int y);
 		int playerDeadNeedBonus(int bonusIndex);
+		void buttonDoSomething();
 
 		//get Image to render in retroarch
 		SDL_Surface * getGroundLayer();
@@ -91,6 +94,8 @@ class Grid {
 		SDL_Surface *ground;
 		SDL_Surface *brickShadow;
 		SDL_Surface *skyFixe;
+		std::map<int, Rail *> rails;
+		std::map<int, Button *> buttons;
 
 		//table of free/occuped part of the grid
 		int * tab;
@@ -104,6 +109,11 @@ class Grid {
 		int var;
 
 		void init();
+		void initRails();
+		void initButtons();
+		void redrawRail(int index);
+		void redrawButton(int index);
+
 
 };
 #endif

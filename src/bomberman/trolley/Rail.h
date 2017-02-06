@@ -9,15 +9,18 @@
 #ifndef __MYCLASS_RAIL
 #define __MYCLASS_RAIL
 
+#define sizeX 35
+#define sizeY 21
+
 enum{
-	RailBumperLeft = 0,
-	RailBumperRight = 1,
-	RailLeftToTop = 2,
-	RailLeftToBottom = 3,
-	RailRightToTop = 4,
-	RailRightToBottom = 5,
-	RailVertical = 6,
-	RailHorizontal = 7
+	RailBumperLeft = 6,
+	RailBumperRight = 7,
+	RailLeftToTop = 5,
+	RailLeftToBottom = 2,
+	RailRightToTop = 3,
+	RailRightToBottom = 0,
+	RailVertical = 4,
+	RailHorizontal = 1
 };
 
 class Rail {

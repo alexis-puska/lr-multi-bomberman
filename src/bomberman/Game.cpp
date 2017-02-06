@@ -29,7 +29,7 @@ static int metronome(void* data) {
 		delay = gameTick - milliseconds;
 
 		if (delay > 0) {
-			if(delay < 5){
+			if (delay < 5) {
 				warningCount++;
 				fprintf(stderr, "%i ms %li\n", (int) delay, warningCount);
 			}
@@ -63,7 +63,7 @@ Game::Game() {
 Game::Game(SDL_Surface * vout_buf, unsigned short * in_keystate) {
 	srand (time(NULL));
 
-	this->vout_buf = vout_buf;
+this	->vout_buf = vout_buf;
 	this->in_keystate = in_keystate;
 
 	levelIndex = GameConfig::Instance().getLevel();
@@ -105,8 +105,6 @@ Game::Game(SDL_Surface * vout_buf, unsigned short * in_keystate) {
 	suddenDeath = GameConfig::Instance().isSuddentDeathMode();
 	badBomber = GameConfig::Instance().isBadBomberMode();
 
-
-
 	if (GameConfig::Instance().getTimeOfGame() != -1) {
 		nbTickForGame = GameConfig::Instance().getTimeOfGame() * 50 * 60;
 		nbTickForGameParam = nbTickForGame;
@@ -115,7 +113,6 @@ Game::Game(SDL_Surface * vout_buf, unsigned short * in_keystate) {
 		nbTickForGameParam = nbTickForGame;
 	}
 	grid = new Grid(tab, tabBonus);
-	
 
 	/*
 	 *	LOAD PLAYER ON GRID
@@ -133,20 +130,17 @@ Game::Game(SDL_Surface * vout_buf, unsigned short * in_keystate) {
 	Player * player;
 	Brain * brain;
 
-
 	GameConfig::Instance().generateColorPlayer();
 	GameConfig::Instance().resetPlayerScore();
 
 	for (int i = 0; i < 16; i++) {
 		int startCase = LevelService::Instance().getLevel(levelIndex)->getVariantes(variante)->getStart(i);
-		
+
 		float startX = (startCase%35)+0.5;
 		float startY = (startCase/35)+0.5;
 
-
 		//alive
 		GameConfig::Instance().setPlayerAlive(i);
-
 
 		switch (GameConfig::Instance().getPlayerType(i)) {
 			case HUMAN:
@@ -346,9 +340,9 @@ void Game::generateHeader() {
 	int offsetShadow = 2;
 	int offsetHeadPlayer = 4;
 	int offsetScore = 22;
-	
+
 	for (int i = 0; i < 16; i++) {
-		if(i==8){
+		if (i == 8) {
 			offsetShadow += 64;
 			offsetHeadPlayer += 64;
 			offsetScore += 64;
@@ -367,14 +361,14 @@ void Game::generateHeader() {
 		rect.w = 20;
 		rect.h = 20;
 
-		if(GameConfig::Instance().getPlayerType(i) != 2){
+		if (GameConfig::Instance().getPlayerType(i) != 2) {
 			//FOR HUMAN PLAYER OR CPU
 			SDL_BlitSurface(Sprite::Instance().getHappySprite(GameConfig::Instance().getPlayerSpriteType(i), GameConfig::Instance().getPlayerColor(i), 0), NULL, vout_buf, &rect);
 			//wrote number of victory
 			char score[3];
 			sprintf(score, "%i", GameConfig::Instance().getPlayerScore(i));
 			Sprite::Instance().drawText(vout_buf, i * 36 + offsetScore, 2, score, green, false);
-		}else{
+		} else {
 			//NO PLAYER
 			char score[4];
 			sprintf(score, "XXX");
@@ -401,7 +395,7 @@ void Game::updateTimeDisplay() {
 	} else {
 		sprintf(time, "INFINI");
 	}
-	Sprite::Instance().drawText(vout_buf, (640/2), 2, time, green, true);
+	Sprite::Instance().drawText(vout_buf, (640 / 2), 2, time, green, true);
 }
 
 /*
@@ -450,7 +444,8 @@ void Game::tick() {
 				for (unsigned int i = 0; i < players.size(); i++) {
 					if (players[i]->isAlive()) {
 						//update score
-						GameConfig::Instance().incPlayerScore(players[i]->getPlayerNumber());;
+						GameConfig::Instance().incPlayerScore(players[i]->getPlayerNumber());
+						;
 						players[i]->winTheGame();
 					}
 				}
@@ -470,6 +465,14 @@ void Game::tick() {
 				}
 			}
 			SDL_FillRect(playerBombeExplode, NULL, SDL_MapRGBA(playerBombeExplode->format, 0, 0, 0, 0));
+
+
+			/*
+			 *
+			 * GAME PART : BUTTON
+			 *
+			 */
+			grid->buttonDoSomething();
 
 			/*
 			 *
@@ -721,11 +724,7 @@ void Game::tick() {
 					bombes.erase(bombes.begin() + i);
 				}
 			}
-			
-			
-			
-			
-			
+
 			/*
 			 *
 			 *	GAME PART : EXPLOSION
@@ -749,7 +748,7 @@ void Game::tick() {
 					burnWalls.erase(burnWalls.begin() + i);
 				}
 			}
-			
+
 			/*
 			 *
 			 *	GAME PART : BURN BONUS
@@ -761,7 +760,7 @@ void Game::tick() {
 					BurnBonusList.erase(BurnBonusList.begin() + i);
 				}
 			}
-			
+
 			/*
 			 *
 			 *	GAME PART : POP BONUS
@@ -792,20 +791,20 @@ void Game::tick() {
 				players[i]->doSomething(playerBombeExplode);
 				if (players[i]->isAlive()) {
 					nbPlayerAlive++;
-				}else{
-					if(GameConfig::Instance().isPlayerAlive(players[i]->getPlayerNumber())){
+				} else {
+					if (GameConfig::Instance().isPlayerAlive(players[i]->getPlayerNumber())) {
 						GameConfig::Instance().setPlayerDead(players[i]->getPlayerNumber());
 
-						if(!LevelService::Instance().getLevel(levelIndex)->getVariantes(variante)->isFillWithBricks()){
-							for(int y = 1; y < 15; y++) {
+						if (!LevelService::Instance().getLevel(levelIndex)->getVariantes(variante)->isFillWithBricks()) {
+							for (int y = 1; y < 15; y++) {
 								int nbBonusType = 0;
-								if(GameConfig::Instance().isCustomBonus()){
+								if (GameConfig::Instance().isCustomBonus()) {
 									nbBonusType = GameConfig::Instance().getBonus(y);
-								}else{
+								} else {
 									nbBonusType = LevelService::Instance().getLevel(levelIndex)->getVariantes(variante)->getBonus(y);
 								}
 
-								for(int i = 0; i < nbBonusType; i++) {
+								for (int i = 0; i < nbBonusType; i++) {
 									PopBonusList.push_back(new PopBonus(grid->playerDeadNeedBonus(y)));
 								}
 							}
@@ -815,49 +814,49 @@ void Game::tick() {
 					}
 				}
 				if (!players[i]->walkOnWall()) {
-					if(players[i]->wantPutLineOfBombe()){
+					if (players[i]->wantPutLineOfBombe()) {
 
 						players[i]->releaseLineOfBombe();
-						if(players[i]->getPreviousDirection() == up){
+						if (players[i]->getPreviousDirection() == up) {
 							int n = players[i]->getBombeRemaining();
-							for(int j = 0; j< n; j++){
-								Bombe * bombe = players[i]->addBombe(0,-j);
-								if(bombe == NULL){
+							for (int j = 0; j < n; j++) {
+								Bombe * bombe = players[i]->addBombe(0, -j);
+								if (bombe == NULL) {
 									break;
-								}else{
+								} else {
 									players[i]->ABombeIsSet();
 									bombes.push_back(bombe);
 								}
 							}
-						}else if(players[i]->getPreviousDirection() == right){
+						} else if (players[i]->getPreviousDirection() == right) {
 							int n = players[i]->getBombeRemaining();
-							for(int j = 0; j< n; j++){
-								Bombe * bombe = players[i]->addBombe(j,0);
-								if(bombe == NULL){
+							for (int j = 0; j < n; j++) {
+								Bombe * bombe = players[i]->addBombe(j, 0);
+								if (bombe == NULL) {
 									break;
-								}else{
+								} else {
 									players[i]->ABombeIsSet();
 									bombes.push_back(bombe);
 								}
 							}
-						}else if(players[i]->getPreviousDirection() == down){
+						} else if (players[i]->getPreviousDirection() == down) {
 							int n = players[i]->getBombeRemaining();
-							for(int j = 0; j< n; j++){
-								Bombe * bombe = players[i]->addBombe(0,j);
-								if(bombe == NULL){
+							for (int j = 0; j < n; j++) {
+								Bombe * bombe = players[i]->addBombe(0, j);
+								if (bombe == NULL) {
 									break;
-								}else{
+								} else {
 									players[i]->ABombeIsSet();
 									bombes.push_back(bombe);
 								}
 							}
-						}else if(players[i]->getPreviousDirection() == left){
+						} else if (players[i]->getPreviousDirection() == left) {
 							int n = players[i]->getBombeRemaining();
-							for(int j = 0; j< n; j++){
-								Bombe * bombe = players[i]->addBombe(-j,0);
-								if(bombe == NULL){
+							for (int j = 0; j < n; j++) {
+								Bombe * bombe = players[i]->addBombe(-j, 0);
+								if (bombe == NULL) {
 									break;
-								}else{
+								} else {
 									players[i]->ABombeIsSet();
 									bombes.push_back(bombe);
 								}
@@ -868,7 +867,7 @@ void Game::tick() {
 						bombes.push_back(players[i]->addBombe());
 						players[i]->ABombeIsSet();
 					}
-					if (players[i]->isLouisBurn()){
+					if (players[i]->isLouisBurn()) {
 						louisBurns.push_back(players[i]->louisBurnAnimation());
 					}
 				}
@@ -902,7 +901,7 @@ void Game::tick() {
 				}
 				gameState = generateResult;
 			}
-			
+
 			/*
 			 *
 			 *	GAME PART : BURNIN LOUIS ANIMATION
@@ -988,7 +987,7 @@ void Game::tick() {
 					}
 
 				}
-				
+
 //				purge old animation
 				for (unsigned int i = 0; i < suddenDeathAnimations.size(); i++) {
 					if (suddenDeathAnimations[i]->canBeDeleted()) {
@@ -1054,8 +1053,6 @@ void Game::tick() {
 				grid->resetSurface();
 				grid->generateGrid();
 
-
-
 				int indexLibretro = 0;
 				int index = 0;
 				nbPlayerInGame = 0;
@@ -1064,21 +1061,18 @@ void Game::tick() {
 				Player * player;
 				Brain * brain;
 
-				
 				for (int i = 0; i < 16; i++) {
 
-					
 					int startCase = LevelService::Instance().getLevel(levelIndex)->getVariantes(variante)->getStart(i);
-					
-					
-					float startX = (startCase%35)+0.5;
-					float startY = (startCase/35)+0.5;
+
+					float startX = (startCase % 35) + 0.5;
+					float startY = (startCase / 35) + 0.5;
 					GameConfig::Instance().setPlayerAlive(i);
 					switch (GameConfig::Instance().getPlayerType(i)) {
 						case HUMAN:
 							// if a human link the next keystate of libretro, else link a empty value
-							player = new Player(&in_keystate[indexLibretro], startX, startY, i, tab, tabBonus, grid,
-									indexPlayerForGame, LevelService::Instance().getLevel(levelIndex)->isWaterOverlayMode());
+							player = new Player(&in_keystate[indexLibretro], startX, startY, i, tab, tabBonus, grid, indexPlayerForGame,
+									LevelService::Instance().getLevel(levelIndex)->isWaterOverlayMode());
 							players.push_back(player);
 							player = NULL;
 							indexLibretro++;
@@ -1086,8 +1080,8 @@ void Game::tick() {
 							indexPlayerForGame++;
 							break;
 						case CPU:
-							player = new Player(&in_keystate_cpu[index], startX, startY, i, tab, tabBonus, grid,
-									indexPlayerForGame, LevelService::Instance().getLevel(levelIndex)->isWaterOverlayMode());
+							player = new Player(&in_keystate_cpu[index], startX, startY, i, tab, tabBonus, grid, indexPlayerForGame,
+									LevelService::Instance().getLevel(levelIndex)->isWaterOverlayMode());
 							players.push_back(player);
 							brain = new Brain(&in_keystate_cpu[index], tab, i, players[indexPlayerForGame]);
 							brains.push_back(brain);
@@ -1108,13 +1102,11 @@ void Game::tick() {
 	}
 }
 
-
-
-void Game::updateHeaderPlayer(int i, int playerNumber){
+void Game::updateHeaderPlayer(int i, int playerNumber) {
 	int offsetShadow = 2;
 	int offsetHeadPlayer = 4;
 	int offsetScore = 22;
-	if(playerNumber>=8){
+	if (playerNumber >= 8) {
 		offsetShadow += 64;
 		offsetHeadPlayer += 64;
 		offsetScore += 64;
@@ -1125,9 +1117,9 @@ void Game::updateHeaderPlayer(int i, int playerNumber){
 	rect.y = 2;
 	rect.w = 32;
 	rect.h = 20;
-	
+
 	SDL_BlitSurface(Sprite::Instance().getBackground(), &rect, vout_buf, &rect);
-	
+
 	SDL_BlitSurface(Sprite::Instance().getShadowArea(3), NULL, vout_buf, &rect);
 	//copy mini head player
 	rect.x = playerNumber * 36 + offsetHeadPlayer;
@@ -1141,3 +1133,4 @@ void Game::updateHeaderPlayer(int i, int playerNumber){
 	sprintf(score, "%i", GameConfig::Instance().getPlayerScore(playerNumber));
 	Sprite::Instance().drawText(vout_buf, playerNumber * 36 + offsetScore, 2, score, red, false);
 }
+

@@ -5,9 +5,9 @@
 #endif
 
 #include <stdio.h>
+#include <vector>
 #include <map>
-
-#include "../trolley/rail.h"
+#include "RailSwitch.h"
 
 #define nbTypeBonus 15
 
@@ -34,9 +34,12 @@ class LevelVariante {
 		void texturedrawInsky(int idx);
 		bool isAWall(int idx);
 		bool isDrawInSky(int idx);
+		void addRail(int index, RailSwitch * rail);
 		void addRail(int index);
 		void initRails();
-		std::map<int,Rail *> getRails();
+		std::map<int, RailSwitch *> getRailsIndex();
+		void addButton(int index);
+		std::vector<int> getButtonsIndex();
 	private:
 		int number;
 		char descriptionLine1[32];
@@ -50,6 +53,7 @@ class LevelVariante {
 		int nbBombe;
 		std::map<int, int> indexDefSky;
 		std::map<int, int> indexDefWall;
-		std::map<int, Rail *> rails;
+		std::map<int, RailSwitch* > rails;
+		std::vector<int> buttons;
 };
 #endif

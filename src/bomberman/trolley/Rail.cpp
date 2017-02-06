@@ -29,8 +29,6 @@ Rail::Rail(int index, int prev) {
 }
 
 void Rail::init(std::map<int, Rail*> rails) {
-	fprintf(stderr, "init rail %i\n", this->getIndex());
-
 	initImpl(this->getIndex() - 35, rails);
 	initImpl(this->getIndex() - 1, rails);
 	initImpl(this->getIndex() + 1, rails);
@@ -41,21 +39,18 @@ void Rail::init(std::map<int, Rail*> rails) {
 void Rail::initImpl(int calcIndex, std::map<int, Rail*> rails) {
 	std::map<int, Rail *>::iterator it;
 	it = rails.find(calcIndex);
-
 	if (it != rails.end()) {
 		if (this->prevIndex == -1) {
 			prevIndex = calcIndex;
 		} else if (this->nextIndex == -1) {
 			nextIndex = calcIndex;
-		} else {
+		} else if (this->nextIndexAlt == -1){
 			nextIndexAlt = calcIndex;
 		}
 	}
-	fprintf(stderr, "init calcindex : %i, %i, %i, %i, %i\n", calcIndex, index, prevIndex, nextIndex, nextIndexAlt);
 }
 
 Rail::~Rail() {
-
 }
 
 bool Rail::isBumper() {
@@ -74,37 +69,37 @@ int Rail::getNext(int prev) {
 	if (prev == nextIndex) {
 		return prevIndex;
 	} else {
-		if(nextIndex != -1){
+		if (nextIndex != -1) {
 			return nextIndex;
-		}else{
+		} else {
 			return prevIndex;
 		}
 	}
 }
 
 void Rail::switching() {
-	fprintf(stderr, "switching %i <-> %i", nextIndex, nextIndexAlt);
-	int tmp = nextIndex;
-	nextIndex = nextIndexAlt;
-	nextIndexAlt = tmp;
-	fprintf(stderr, "switching %i <-> %i", nextIndex, nextIndexAlt);
+	if (nextIndexAlt != -1) {
+		int tmp = nextIndex;
+		nextIndex = nextIndexAlt;
+		nextIndexAlt = tmp;
+	}
 }
 
 void Rail::drawHimself(SDL_Surface * surfaceToDraw) {
-
 	SDL_Rect dstRect;
-	dstRect.x = index % 35;
-	dstRect.y = (int) floor(index / 35);
+	dstRect.x = (index % 35) * smallSpriteLevelSizeWidth;
+	dstRect.y = ((int) floor(index / 35)) * smallSpriteLevelSizeHeight;
 	dstRect.w = smallSpriteLevelSizeWidth;
 	dstRect.h = smallSpriteLevelSizeHeight;
+	SDL_FillRect(surfaceToDraw, &dstRect, 0x000000);
 
 	//Bumper
-	if (prevIndex == -1) {
+	if (nextIndex == -1) {
 		if ((index - prevIndex) == -1) {
-			SDL_BlitSurface(Sprite::Instance().getRail(RailBumperRight), NULL, surfaceToDraw, &dstRect);
+			SDL_BlitSurface(Sprite::Instance().getRail(RailBumperLeft), NULL, surfaceToDraw, &dstRect);
 			return;
 		} else {
-			SDL_BlitSurface(Sprite::Instance().getRail(RailBumperLeft), NULL, surfaceToDraw, &dstRect);
+			SDL_BlitSurface(Sprite::Instance().getRail(RailBumperRight), NULL, surfaceToDraw, &dstRect);
 			return;
 		}
 	} else {

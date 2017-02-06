@@ -215,17 +215,50 @@ void LevelService::createLevel0(){
 	variante->addRail(41);
 	variante->addRail(42);
 	variante->addRail(77);
-	variante->addRail(112);
+	variante->addRail(112, new RailSwitch(113, 77, 147));
 	variante->addRail(113);
 	variante->addRail(114);
+	variante->addRail(115);
+	variante->addRail(116);
+	variante->addRail(117);
+	variante->addRail(118);
+	variante->addRail(119);
+	variante->addRail(120);
+	variante->addRail(71);
+	variante->addRail(106);
+	variante->addRail(107);
+	variante->addRail(108);
+	variante->addRail(109);
+	variante->addRail(110);
+	variante->addRail(145);
+	variante->addRail(180);
+	variante->addRail(181);
 	variante->addRail(147);
-	variante->addRail(182);
+	variante->addRail(182, new RailSwitch(217, 181, 147));
+	variante->addRail(217);
+	variante->addRail(252);
+	variante->addRail(251);
+	variante->addButton(73);
 
 	level->addVariante(variante);
 
 	LevelVariante * variante1 = new LevelVariante(1, "level without bricks", "level without bricks", false, descV2, bonusV2, 6, 6);
 	variante1->textureIsAWall(0,17);
 	level->addVariante(variante1);
+
+	variante1->addRail(36);
+	variante1->addRail(37);
+	variante1->addRail(38);
+	variante1->addRail(39);
+	variante1->addRail(40);
+	variante1->addRail(41);
+	variante1->addRail(42);
+	variante1->addRail(77);
+	variante1->addRail(112);
+	variante1->addRail(113);
+	variante1->addRail(114);
+	variante1->addRail(147);
+	variante1->addRail(182);
 
 	LevelVariante * variante2 = new LevelVariante(2, "all in the middle", "all in the middle", true, descV3, bonusV3, 2, 2);
 	variante2->textureIsAWall(0,17);

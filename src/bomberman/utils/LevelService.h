@@ -8,6 +8,7 @@
 #include <vector>
 #include "Level.h"
 #include "LevelVariante.h"
+#include "RailSwitch.h"
 
 #ifndef __MYCLASS_LevelService
 #define __MYCLASS_LevelService
