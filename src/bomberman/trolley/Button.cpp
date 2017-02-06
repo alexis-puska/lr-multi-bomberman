@@ -40,7 +40,6 @@ void Button::drawHimself(SDL_Surface * surfaceToDraw) {
 	dstRect.y = ((int) floor(index / 35)) * smallSpriteLevelSizeHeight;
 	dstRect.w = smallSpriteLevelSizeWidth;
 	dstRect.h = smallSpriteLevelSizeHeight;
-	fprintf(stderr,"draw button");
 	if (pressed) {
 		SDL_BlitSurface(Sprite::Instance().getButton(0), NULL, surfaceToDraw, &dstRect);
 		return;

@@ -109,9 +109,12 @@ After this step lr-multi-bomberman is installed, compile, and integrated in emul
 |menu to set number of bonus				|    |           |X   |
 |refactoring of code						|    |           |X   |
 |player underwater							|    |           |X   |
-|holl in game								|    |X          |    |
+|button										|    |           |X   |
+|rail										|    |           |X   |
+|Trolley									|    |X          |    |
+|Mine										|	 |X			 |	  |
+|Holl in game								|    |X          |    |
 |Teleporter									|    |X          |    |
-|Trolley / rail / button					|    |X          |    |
 |Game type bad bomber						|X   |           |    |
 |Power(glove)								|X   |           |    |
 |Artificial interlligence 					|X   |           |    |
