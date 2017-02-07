@@ -466,7 +466,6 @@ void Game::tick() {
 			}
 			SDL_FillRect(playerBombeExplode, NULL, SDL_MapRGBA(playerBombeExplode->format, 0, 0, 0, 0));
 
-
 			/*
 			 *
 			 * GAME PART : BUTTON

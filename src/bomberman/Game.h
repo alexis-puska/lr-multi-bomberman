@@ -49,8 +49,6 @@ enum gameStateEnum {
 	gameStart = 0, gamePause = 1, gameWait = 2, gameEnd = 3, generateResult = 4,
 };
 
-
-
 enum suddenDeathDirection {
 	suddenDeathRight = 0, suddenDeathDown = 1, suddenDeathLeft = 2, suddenDeathUp = 3,
 };
@@ -83,7 +81,7 @@ class Game {
 		int nbTickForGame;
 		int nbTickForGameParam;
 		bool badBomber;
-		
+
 		//functional variable
 		int gameState;
 		int nbPlayerAlive;
@@ -120,7 +118,6 @@ class Game {
 		std::vector<PopBonus *> PopBonusList;
 		std::vector<BurnBonus *> BurnBonusList;
 
-
 		/*
 		 *	GRID PART
 		 */
@@ -137,7 +134,6 @@ class Game {
 		void updateTimeDisplay();
 		void drawResultOfGame();
 		void updateHeaderPlayer(int i, int playerNumber);
-
 
 };
 #endif

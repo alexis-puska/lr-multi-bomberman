@@ -12,15 +12,8 @@
 #define sizeX 35
 #define sizeY 21
 
-enum{
-	RailBumperLeft = 6,
-	RailBumperRight = 7,
-	RailLeftToTop = 5,
-	RailLeftToBottom = 2,
-	RailRightToTop = 3,
-	RailRightToBottom = 0,
-	RailVertical = 4,
-	RailHorizontal = 1
+enum {
+	RailBumperLeft = 6, RailBumperRight = 7, RailLeftToTop = 5, RailLeftToBottom = 2, RailRightToTop = 3, RailRightToBottom = 0, RailVertical = 4, RailHorizontal = 1
 };
 
 class Rail {
@@ -30,7 +23,7 @@ class Rail {
 		Rail(int index, int prev);
 		Rail(int index);
 		~Rail();
-		void init(std::map<int,Rail*> rails);
+		void init(std::map<int, Rail*> rails);
 		int getIndex();
 		int getNext(int previous);
 		void switching();

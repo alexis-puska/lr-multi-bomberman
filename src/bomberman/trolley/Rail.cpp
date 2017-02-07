@@ -44,7 +44,7 @@ void Rail::initImpl(int calcIndex, std::map<int, Rail*> rails) {
 			prevIndex = calcIndex;
 		} else if (this->nextIndex == -1) {
 			nextIndex = calcIndex;
-		} else if (this->nextIndexAlt == -1){
+		} else if (this->nextIndexAlt == -1) {
 			nextIndexAlt = calcIndex;
 		}
 	}
