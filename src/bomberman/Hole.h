@@ -7,25 +7,20 @@
 #include "utils/Sprite.h"
 #include "utils/GameConfig.h"
 
-#ifndef __MYCLASS_TELEPORTER
-#define __MYCLASS_TELEPORTER
+#ifndef __MYCLASS_HOLE
+#define __MYCLASS_HOLE
 
-#define nbFrameTeleporter		7
-#define nbFrameTeleporterAnimation	5
+#define nb	2
 
-class Teleporter {
+class Hole {
 	public:
-		Teleporter(int index);
-		~Teleporter();
+		Hole(int index);
+		~Hole();
 		bool doSomething();
-		bool isUsed();
-		void teleporte();
 		void drawHimself(SDL_Surface * surfaceToDraw);
 	private:
 		int index;
-
-		int posAnimation;
-
+		int position;
 		bool activate[nbPlayer];
 };
 

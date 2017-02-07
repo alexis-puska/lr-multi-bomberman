@@ -238,7 +238,16 @@ void LevelService::createLevel0(){
 	variante->addRail(217);
 	variante->addRail(252);
 	variante->addRail(251);
+	variante->addRail(250);
+	variante->addRail(249);
+	variante->addRail(248);
+	variante->addRail(247);
+	variante->addRail(246);
+	variante->addRail(281);
+	variante->addRail(316);
+	variante->addRail(317);
 	variante->addButton(73);
+	variante->addButton(75);
 
 	level->addVariante(variante);
 

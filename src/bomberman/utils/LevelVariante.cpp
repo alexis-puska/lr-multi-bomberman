@@ -128,3 +128,33 @@ void LevelVariante::addButton(int index) {
 std::vector<int> LevelVariante::getButtonsIndex() {
 	return buttons;
 }
+
+
+
+
+
+
+void LevelVariante::addMine(int index){
+	mines.push_back(index);
+}
+std::vector<int> LevelVariante::getMinesIndex(){
+	return mines;
+}
+void LevelVariante::addHole(int index){
+	holes.push_back(index);
+}
+std::vector<int> LevelVariante::getHolesIndex(){
+	return holes;
+}
+void LevelVariante::addTeleporter(int index){
+	teleporters.push_back(index);
+}
+std::vector<int> LevelVariante::getTeleportersIndex(){
+	return teleporters;
+}
+void LevelVariante::addTrolley(int index){
+	trolleys.push_back(index);
+}
+std::vector<int> LevelVariante::getTrolleysIndex(){
+	return trolleys;
+}

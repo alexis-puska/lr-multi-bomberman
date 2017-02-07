@@ -40,6 +40,14 @@ class LevelVariante {
 		std::map<int, RailSwitch *> getRailsIndex();
 		void addButton(int index);
 		std::vector<int> getButtonsIndex();
+		void addMine(int index);
+		std::vector<int> getMinesIndex();
+		void addHole(int index);
+		std::vector<int> getHolesIndex();
+		void addTeleporter(int index);
+		std::vector<int> getTeleportersIndex();
+		void addTrolley(int index);
+		std::vector<int> getTrolleysIndex();
 	private:
 		int number;
 		char descriptionLine1[32];
@@ -53,7 +61,13 @@ class LevelVariante {
 		int nbBombe;
 		std::map<int, int> indexDefSky;
 		std::map<int, int> indexDefWall;
-		std::map<int, RailSwitch* > rails;
+
+		std::map<int, RailSwitch*> rails;
 		std::vector<int> buttons;
+		std::vector<int> holes;
+		std::vector<int> mines;
+		std::vector<int> teleporters;
+		std::vector<int> trolleys;
+
 };
 #endif

@@ -13,6 +13,11 @@
 #include "utils/GameConfig.h"
 #include "trolley/Rail.h"
 #include "trolley/Button.h"
+#include "trolley/Trolley.h"
+#include "Teleporter.h"
+#include "Mine.h"
+#include "Hole.h"
+
 
 #ifndef __MYCLASS_GRID
 #define __MYCLASS_GRID
@@ -96,6 +101,10 @@ class Grid {
 		SDL_Surface *skyFixe;
 		std::map<int, Rail *> rails;
 		std::map<int, Button *> buttons;
+		std::map<int, Trolley *> trolleys;
+		std::map<int, Mine *> mines;
+		std::map<int, Hole *> holes;
+		std::map<int, Teleporter *> teleporters;
 
 		//table of free/occuped part of the grid
 		int * tab;
