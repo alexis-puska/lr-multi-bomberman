@@ -62,9 +62,9 @@ Game::Game() {
 Game::Game(SDL_Surface * vout_buf, unsigned short * in_keystate) {
 	srand (time(NULL));
 
-this	->vout_buf = vout_buf;
+	this->vout_buf = vout_buf;
 	this->in_keystate = in_keystate;
-	this->gameInitElement = false;
+
 
 	levelIndex = GameConfig::Instance().getLevel();
 	variante = GameConfig::Instance().getVariante();
@@ -117,9 +117,13 @@ this	->vout_buf = vout_buf;
 	/*
 	 *	LOAD PLAYER ON GRID
 	 */
-
+	this->gameInitElement = false;
 	initRails();
 	initButtons();
+	initHole();
+	initMine();
+	initTrolley();
+	initTeleporter();
 
 	//in_keystate = in_keystateLibretro;
 	in_keystate_cpu = new unsigned short[16];
@@ -198,6 +202,12 @@ Game::~Game() {
 	burnWalls.clear();
 	PopBonusList.clear();
 	BurnBonusList.clear();
+	rails.clear();
+	buttons.clear();
+	trolleys.clear();
+	mines.clear();
+	holes.clear();
+	teleporters.clear();
 
 	delete grid;
 	delete tab;
@@ -1057,7 +1067,6 @@ void Game::tick() {
 			//restart game
 			if (in_keystate[0] & keyPadStart) {
 				GameConfig::Instance().resetPlayerCord();
-
 				gameState = gameWait;
 				generateHeader();
 				nbTickForGame = nbTickForGameParam;
@@ -1071,6 +1080,12 @@ void Game::tick() {
 				louisBurns.clear();
 				PopBonusList.clear();
 				BurnBonusList.clear();
+				rails.clear();
+				buttons.clear();
+				trolleys.clear();
+				mines.clear();
+				holes.clear();
+				teleporters.clear();
 				grid->resetSurface();
 				grid->generateGrid();
 
@@ -1081,6 +1096,14 @@ void Game::tick() {
 
 				Player * player;
 				Brain * brain;
+
+				this->gameInitElement = false;
+				initRails();
+				initButtons();
+				initHole();
+				initMine();
+				initTrolley();
+				initTeleporter();
 
 				for (int i = 0; i < 16; i++) {
 
@@ -1227,16 +1250,48 @@ void Game::initButtons() {
 	}
 }
 
-void Game::initHole(){
-
+void Game::initHole() {
+	std::vector<int> holesIndex = LevelService::Instance().getLevel(levelIndex)->getVariantes(variante)->getHolesIndex();
+	if (holesIndex.size() != 0) {
+		for (int i = 0; i < holesIndex.size(); i++) {
+			int indexHole = holesIndex[i];
+			Hole * hole = new Hole(indexHole);
+			holes[indexHole] = hole;
+		}
+	}
 }
 
-void Game::initMine(){
-
+void Game::initTrolley() {
+	std::vector<int> trolleysIndex = LevelService::Instance().getLevel(levelIndex)->getVariantes(variante)->getTrolleysIndex();
+	if (trolleysIndex.size() != 0) {
+		for (int i = 0; i < trolleysIndex.size(); i++) {
+			int indexTrolley = trolleysIndex[i];
+			Trolley * trolley = new Trolley(indexTrolley);
+			trolleys[indexTrolley] = trolley;
+		}
+	}
 }
 
-void Game::initTeleporter(){
+void Game::initMine() {
+	std::vector<int> minesIndex = LevelService::Instance().getLevel(levelIndex)->getVariantes(variante)->getMinesIndex();
+	if (minesIndex.size() != 0) {
+		for (int i = 0; i < minesIndex.size(); i++) {
+			int indexMine = minesIndex[i];
+			Mine * mine = new Mine(indexMine);
+			mines[indexMine] = mine;
+		}
+	}
+}
 
+void Game::initTeleporter() {
+	std::vector<int> teleportersIndex = LevelService::Instance().getLevel(levelIndex)->getVariantes(variante)->getTeleportersIndex();
+	if (teleportersIndex.size() != 0) {
+		for (int i = 0; i < teleportersIndex.size(); i++) {
+			int indexTeleporter = teleportersIndex[i];
+			Teleporter * teleporter = new Teleporter(indexTeleporter);
+			teleporters[indexTeleporter] = teleporter;
+		}
+	}
 }
 
 void Game::buttonDoSomething() {
@@ -1254,15 +1309,15 @@ void Game::buttonDoSomething() {
 	}
 }
 
-void Game::mineDoSomething(){
+void Game::mineDoSomething() {
 
 }
 
-void Game::holeDoSomething(){
+void Game::holeDoSomething() {
 
 }
 
-void Game::teleporterDoSomething(){
+void Game::teleporterDoSomething() {
 
 }
 
@@ -1270,6 +1325,10 @@ void Game::redrawElement(int x, int y) {
 	int index = x + (sizeX * y);
 	redrawRail(index);
 	redrawButton(index);
+	redrawHole(index);
+	redrawMine(index);
+	redrawTeleporter(index);
+	redrawTrolley(index);
 }
 
 void Game::redrawRail(int index) {
@@ -1290,6 +1349,18 @@ void Game::redrawButton(int index) {
 	if (tabBonus[index] != noBonus) {
 		grid->drawBonus(index);
 	}
+}
+void Game::redrawHole(int index) {
+
+}
+void Game::redrawMine(int index) {
+
+}
+void Game::redrawTeleporter(int index) {
+
+}
+void Game::redrawTrolley(int index) {
+
 }
 
 void Game::InitElementOfGame() {

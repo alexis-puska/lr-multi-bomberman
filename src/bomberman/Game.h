@@ -156,8 +156,13 @@ class Game {
 		void initHole();
 		void initMine();
 		void initTeleporter();
+		void initTrolley();
 		void redrawRail(int index);
 		void redrawButton(int index);
+		void redrawHole(int index);
+		void redrawMine(int index);
+		void redrawTeleporter(int index);
+		void redrawTrolley(int index);
 
 };
 #endif

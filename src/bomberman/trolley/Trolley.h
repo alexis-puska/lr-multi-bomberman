@@ -11,6 +11,8 @@
 
 class Trolley {
 	public:
+		Trolley(int index);
+		~Trolley();
 	private:
 
 
