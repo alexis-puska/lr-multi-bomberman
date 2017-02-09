@@ -86,7 +86,10 @@ class Grid {
 		void placeNewDeathMalus();
 		void placeSuddenDeathWall(int x, int y);
 		int playerDeadNeedBonus(int bonusIndex);
-		void buttonDoSomething();
+		void eraseArea(int posX, int posY);
+		void drawBonus(int posX, int posY);
+		void drawBonus(int index);
+
 
 		//get Image to render in retroarch
 		SDL_Surface * getGroundLayer();
@@ -99,29 +102,24 @@ class Grid {
 		SDL_Surface *ground;
 		SDL_Surface *brickShadow;
 		SDL_Surface *skyFixe;
-		std::map<int, Rail *> rails;
-		std::map<int, Button *> buttons;
-		std::map<int, Trolley *> trolleys;
-		std::map<int, Mine *> mines;
-		std::map<int, Hole *> holes;
-		std::map<int, Teleporter *> teleporters;
+
 
 		//table of free/occuped part of the grid
 		int * tab;
 		int * tabBonus;
 
-		std::vector<int> emptyCase;
-		std::vector<int> notEmptyCase;
+		std::map<int,int> emptyCase;
+		std::map<int,int> notEmptyCase;
 
 		//level index to load the texture and level template
 		int lvl;
 		int var;
 
 		void init();
-		void initRails();
-		void initButtons();
-		void redrawRail(int index);
-		void redrawButton(int index);
+
+		int getEmptyCaseAlea();
+		int getNotEmptyCaseAlea();
+
 
 
 };

@@ -460,14 +460,6 @@ void Player::doSomething(SDL_Surface * surfaceToDraw) {
 			posX = GameConfig::Instance().getPlayerPosX(playerNumber);
 			posY = GameConfig::Instance().getPlayerPosY(playerNumber);
 
-			if (roundX + roundY * sizeX < sizeX * sizeY) {
-				if (tabBonus[roundX + roundY * sizeX] != noBonus && tab[roundX + roundY * sizeX] < brickElement) {
-					foundABonus(tabBonus[roundX + roundY * sizeX]);
-				}else if (tabBonus[roundX + roundY * sizeX] != noBonus && tab[roundX + roundY * sizeX] == bombeElement) {
-					foundABonus(tabBonus[roundX + roundY * sizeX]);
-				}
-			}
-
 			if (invincibleTime == 0) {
 				if (!inSuddenDeathTime) {
 					if (tab[roundX + roundY * sizeX] == explosionElement) {
@@ -883,64 +875,79 @@ void Player::winTheGame() {
 	}
 }
 
-void Player::foundABonus(int bonusIndex) {
+int Player::foundABonus() {
+
 	int roundX = floor(posX);
 	int roundY = floor(posY);
-	switch (bonusIndex) {
-		case deathBonus:
-			getAMalusBonus();
-			break;
-		case rollerBonus:
-			if (playerSpeed < 0.15) {
-				playerSpeed += 0.02;
-			}
-			break;
-		case fireBonus:
-			flameStrengh++;
-			break;
-		case fireMaxBonus:
-			flameStrengh += 10;
-			break;
-		case bombeBonus:
-			NbBombeMax++;
-			NBBombeRemaining++;
-			break;
-		case kickBonus:
-			kickPower = true;
-			break;
-		case gloveBonus:
-			break;
-		case radioBombeBonus:
-			bombeType = radioBombeType;
-			break;
-		case bubbleBonus:
-			bombeType = bubbleBombeType;
-			break;
-		case powerBombeBonus:
-			bombeType = powerBombeType;
-			break;
-		case getaBonus:
-			if (playerSpeed > 0.05) {
-				playerSpeed -= 0.02;
-			}
-			break;
-		case ghostBonus:
-			ghostModePower = true;
-			break;
-		case eggBonus:
-			louisType = rand() % nbTypeLouis;
-			playerState = onLouis;
-			Sound::Instance().playLouisSound();
-			break;
-		case shieldBonus:
-			invincibleTime = 15 * 50;
-			break;
-		case lineOfBombeBonus:
-			lineOfBombePower = true;
-			break;
 
+	int bonusIndex = -1;
+
+	if (roundX + roundY * sizeX < sizeX * sizeY) {
+		if (tabBonus[roundX + roundY * sizeX] != noBonus && tab[roundX + roundY * sizeX] < brickElement) {
+			bonusIndex = tabBonus[roundX + roundY * sizeX];
+		}else if (tabBonus[roundX + roundY * sizeX] != noBonus && tab[roundX + roundY * sizeX] == bombeElement) {
+			bonusIndex = tabBonus[roundX + roundY * sizeX];
+		}
 	}
-	grid->burnBonus(roundX, roundY);
+	if(bonusIndex != -1){
+		switch (bonusIndex) {
+			case deathBonus:
+				getAMalusBonus();
+				break;
+			case rollerBonus:
+				if (playerSpeed < 0.15) {
+					playerSpeed += 0.02;
+				}
+				break;
+			case fireBonus:
+				flameStrengh++;
+				break;
+			case fireMaxBonus:
+				flameStrengh += 10;
+				break;
+			case bombeBonus:
+				NbBombeMax++;
+				NBBombeRemaining++;
+				break;
+			case kickBonus:
+				kickPower = true;
+				break;
+			case gloveBonus:
+				break;
+			case radioBombeBonus:
+				bombeType = radioBombeType;
+				break;
+			case bubbleBonus:
+				bombeType = bubbleBombeType;
+				break;
+			case powerBombeBonus:
+				bombeType = powerBombeType;
+				break;
+			case getaBonus:
+				if (playerSpeed > 0.05) {
+					playerSpeed -= 0.02;
+				}
+				break;
+			case ghostBonus:
+				ghostModePower = true;
+				break;
+			case eggBonus:
+				louisType = rand() % nbTypeLouis;
+				playerState = onLouis;
+				Sound::Instance().playLouisSound();
+				break;
+			case shieldBonus:
+				invincibleTime = 15 * 50;
+				break;
+			case lineOfBombeBonus:
+				lineOfBombePower = true;
+				break;
+
+		}
+		return roundX + roundY * sizeX;
+	}else{
+		return -1;
+	}
 }
 
 void Player::releaseMalus() {

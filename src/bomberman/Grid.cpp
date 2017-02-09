@@ -79,9 +79,6 @@ void Grid::generateGrid() {
 	skyRect.w = largeSpriteLevelSizeWidth;
 	skyRect.h = largeSpriteLevelSizeHeight;
 
-	initRails();
-	initButtons();
-
 	for(int j=0;j<sizeY;j++) {
 		for(int i=0;i<sizeX;i++) {
 			tab[i] = emptyElement;
@@ -106,7 +103,7 @@ void Grid::generateGrid() {
 				}
 			} else if(LevelService::Instance().getLevel(lvl)->getVariantes(var)->isDrawInSky(LevelService::Instance().getLevel(lvl)->getVariantes(var)->getDefinition(j*sizeX+i))) {
 				tab[i+(j*sizeX)] = emptyElement;
-				emptyCase.push_back(i);
+				emptyCase[i] = i;
 				dstrect.x = (i-1) * smallSpriteLevelSizeWidth;
 				dstrect.y = (j-1) * smallSpriteLevelSizeHeight;
 				dstrect.w = largeSpriteLevelSizeWidth;
@@ -128,27 +125,19 @@ void Grid::generateGrid() {
 						if((rand() % 9 + 1)>=2) {
 							if(LevelService::Instance().getLevel(lvl)->getVariantes(var)->isReserved(j*sizeX+i) == 0) {
 								tab[i+(j*sizeX)] = brickElement;
-								notEmptyCase.push_back(i+(j*sizeX));
+								notEmptyCase[i+(j*sizeX)] = i+(j*sizeX);
 								dstrect.x = i * smallSpriteLevelSizeWidth;
 								dstrect.y = j * smallSpriteLevelSizeHeight;
 								dstrect.w = smallSpriteLevelSizeWidth;
 								dstrect.h = smallSpriteLevelSizeHeight;
 								SDL_BlitSurface(Sprite::Instance().getLevel(21, lvl), &srcrect, brickShadow, &dstrect);
-							} else {
-								redrawRail(i+(j*sizeX));
-								redrawButton(i+(j*sizeX));
 							}
 						} else {
-							emptyCase.push_back(i+(j*sizeX));
-							redrawRail(i+(j*sizeX));
-							redrawButton(i+(j*sizeX));
+							emptyCase[i+(j*sizeX)] = i+(j*sizeX);
 						}
 					}
 				} else {
-					for (std::map<int, Rail*>::iterator it = rails.begin(); it != rails.end(); ++it) {
-						it->second->drawHimself(brickShadow);
-					}
-					emptyCase.push_back(i+(j*sizeX));
+					emptyCase[i+(j*sizeX)];
 				}
 			}
 		}
@@ -180,10 +169,7 @@ void Grid::generateGrid() {
 
 	//draw Death bonus for a level
 	for(int i = 0; i < nbDeathBonus; i++) {
-		int ind = emptyCase[rand() % emptyCase.size() + 1];
-		while(LevelService::Instance().getLevel(lvl)->getVariantes(var)->isReserved(ind) != 0) {
-			ind = emptyCase[rand() % emptyCase.size() + 1];
-		}
+		int ind = getEmptyCaseAlea();
 		tabBonus[ind] = deathBonus;
 		SDL_Rect dstrect;
 		dstrect.x = ((ind % sizeX) * smallSpriteLevelSizeWidth) + 1;
@@ -204,49 +190,47 @@ void Grid::generateGrid() {
 			}
 
 			for(int i = 0; i < nbBonusType; i++) {
-				int ind = notEmptyCase[rand() % notEmptyCase.size()];
-				while(tabBonus[ind] != noBonus) {
-					ind = notEmptyCase[rand() % notEmptyCase.size()];
-				}
+				int ind = getNotEmptyCaseAlea();
 				tabBonus[ind] = y;
 			}
 		}
 	}
 }
 
-void Grid::redrawRail(int index) {
-	std::map<int, Rail*>::iterator it = rails.find(index);
-	if (it != rails.end()) {
-		it->second->drawHimself(brickShadow);
-	}
-	if (tabBonus[index] != noBonus) {
-		SDL_Rect dstrect;
-		dstrect.x = (index % 35) * smallSpriteLevelSizeWidth + 1;
-		dstrect.y = ((int) floor(index / 35)) * smallSpriteLevelSizeHeight;
-		dstrect.w = defaultSpriteSize;
-		dstrect.h = defaultSpriteSize;
-		SDL_BlitSurface(Sprite::Instance().getBonus(tabBonus[index]), NULL, brickShadow, &dstrect);
-	}
-}
 
-void Grid::redrawButton(int index) {
-	std::map<int, Button*>::iterator it = buttons.find(index);
-	if (it != buttons.end()) {
-		it->second->drawHimself(brickShadow);
-	}
-}
 
 void Grid::burnABrick(int posX, int posY) {
 	if (tab[posX + posY * sizeX] == brickElement) {
-		SDL_Rect rect;
-		rect.x = posX * smallSpriteLevelSizeWidth;
-		rect.y = posY * smallSpriteLevelSizeHeight;
-		rect.w = smallSpriteLevelSizeWidth;
-		rect.h = smallSpriteLevelSizeHeight;
-		SDL_FillRect(brickShadow, &rect, 0x000000);
+		eraseArea(posX, posY);
 	}
-	redrawRail(posX + (posY * 35));
-	redrawButton(posX + (posY * 35));
+	drawBonus(posX, posY);
+	notEmptyCase.erase(posX + (posY * sizeX));
+}
+
+void Grid::burnBonus(int posX, int posY) {
+	eraseArea(posX, posY);
+	if (tabBonus[posX + posY * sizeX] != noBonus) {
+		if (tabBonus[posX + posY * sizeX] == deathBonus) {
+			placeNewDeathMalus();
+		}
+		tabBonus[posX + posY * sizeX] = noBonus;
+	}
+}
+
+void Grid::eraseArea(int posX, int posY){
+	SDL_Rect rect;
+	rect.x = posX * smallSpriteLevelSizeWidth;
+	rect.y = posY * smallSpriteLevelSizeHeight;
+	rect.w = smallSpriteLevelSizeWidth;
+	rect.h = smallSpriteLevelSizeHeight;
+	SDL_FillRect(brickShadow, &rect, 0x000000);
+}
+
+void Grid::drawBonus(int index){
+	drawBonus(index%sizeX, floor(index/35));
+}
+
+void Grid::drawBonus(int posX, int posY){
 	if (tabBonus[posX + posY * sizeX] != noBonus) {
 		SDL_Rect dstrect;
 		dstrect.x = posX * smallSpriteLevelSizeWidth + 1;
@@ -255,45 +239,14 @@ void Grid::burnABrick(int posX, int posY) {
 		dstrect.h = defaultSpriteSize;
 		SDL_BlitSurface(Sprite::Instance().getBonus(tabBonus[posX + posY * sizeX]), NULL, brickShadow, &dstrect);
 	}
-	for (unsigned int i = 0; i < notEmptyCase.size(); i++) {
-		if (notEmptyCase[i] == (posX + (posY * sizeX))) {
-			//fprintf(stderr, "remove %i ", notEmptyCase[i]);
-			notEmptyCase.erase(notEmptyCase.begin() + i);
-			emptyCase.push_back(posX + (posY * sizeX));
-			break;
-		}
-	}
-}
-
-void Grid::burnBonus(int posX, int posY) {
-	if (tabBonus[posX + posY * sizeX] != noBonus) {
-		SDL_Rect rect;
-		rect.x = posX * smallSpriteLevelSizeWidth;
-		rect.y = posY * smallSpriteLevelSizeHeight;
-		rect.w = smallSpriteLevelSizeWidth;
-		rect.h = smallSpriteLevelSizeHeight;
-		SDL_FillRect(brickShadow, &rect, 0x000000);
-		if (tabBonus[posX + posY * sizeX] == deathBonus) {
-			placeNewDeathMalus();
-		}
-		tabBonus[posX + posY * sizeX] = noBonus;
-	}
-	redrawRail(posX + (posY * 35));
-	redrawButton(posX + (posY * 35));
 }
 
 void Grid::placeNewDeathMalus() {
-	int ind = emptyCase[rand() % emptyCase.size() + 1];
-	while (tabBonus[ind] != noBonus) {
-		ind = emptyCase[rand() % emptyCase.size() + 1];
-	}
+	int ind = getEmptyCaseAlea();
 	tabBonus[ind] = deathBonus;
-	SDL_Rect dstrect;
-	dstrect.x = ((ind % sizeX) * smallSpriteLevelSizeWidth) + 1;
-	dstrect.y = floor(ind / sizeX) * smallSpriteLevelSizeHeight;
-	dstrect.w = defaultSpriteSize;
-	dstrect.h = defaultSpriteSize;
-	SDL_BlitSurface(Sprite::Instance().getBonus(0), NULL, brickShadow, &dstrect);
+	int posX =  (ind % sizeX);
+	int posY =  floor(ind / sizeX);
+	drawBonus(posX, posY);
 }
 
 void Grid::placeSuddenDeathWall(int x, int y) {
@@ -304,117 +257,61 @@ void Grid::placeSuddenDeathWall(int x, int y) {
 	dstrect.h = smallSpriteLevelSizeHeight;
 	SDL_BlitSurface(Sprite::Instance().getLevel(suddenDeathWallSpriteIndex, lvl), NULL, brickShadow, &dstrect);
 	tab[x + y * sizeX] = suddenDeathElement;
-	for (unsigned int i = 0; i < emptyCase.size(); i++) {
-		if (emptyCase[i] == (x + (y * sizeX))) {
-			//fprintf(stderr, "remove %i ", emptyCase[i]);
-			emptyCase.erase(emptyCase.begin() + i);
-			break;
-		}
-	}
+	emptyCase.erase(x + (y * sizeX));
 }
 
 int Grid::playerDeadNeedBonus(int bonusIndex) {
-	int ind = emptyCase[rand() % emptyCase.size()];
+	int ind = getEmptyCaseAlea();
 	int nbTry = 0;
 	while (tabBonus[ind] != noBonus) {
 		if (nbTry > 4)
 			break;
-		ind = emptyCase[rand() % emptyCase.size()];
+		ind = getEmptyCaseAlea();
 		nbTry++;
 	}
 	tabBonus[ind] = bonusIndex;
-	SDL_Rect dstrect;
-	dstrect.x = ((ind % sizeX) * smallSpriteLevelSizeWidth) + 1;
-	dstrect.y = floor(ind / sizeX) * smallSpriteLevelSizeHeight;
-	dstrect.w = defaultSpriteSize;
-	dstrect.h = defaultSpriteSize;
-	SDL_BlitSurface(Sprite::Instance().getBonus(tabBonus[ind]), NULL, brickShadow, &dstrect);
+	int posX =  (ind % sizeX);
+	int posY =  floor(ind / sizeX);
+	drawBonus(posX, posY);
 	return ind;
 }
 
-void Grid::initRails() {
-	std::map<int, RailSwitch *> railsIndex = LevelService::Instance().getLevel(lvl)->getVariantes(var)->getRailsIndex();
-	if (railsIndex.size() != 0) {
-		for (std::map<int, RailSwitch *>::iterator it1 = railsIndex.begin(); it1 != railsIndex.end(); ++it1) {
-			if (it1->second == NULL) {
-				Rail * rail = new Rail(it1->first);
-				rails[it1->first] = rail;
-			} else {
-				Rail * rail = new Rail(it1->first, it1->second->getPrevIndex(), it1->second->getNextIndex(), it1->second->getNextIndexAlt());
-				rails[it1->first] = rail;
-			}
-		}
-		int index = 0;
-		if (rails.size() != 0) {
 
-			for (std::map<int, Rail*>::iterator it = rails.begin(); it != rails.end(); ++it) {
 
-				it->second->init(rails);
-			}
-			for (std::map<int, Rail*>::iterator it = rails.begin(); it != rails.end(); ++it) {
-				if (it->second->isBumper()) {
-					index = it->second->getIndex();
-					break;
-				}
-			}
-//			Rail * rail = rails.find(index)->second;
-//			fprintf(stderr, "rail %i start, next %i", rail->getIndex(), rail->getNext(index));
-//			rail = rails.find(rail->getNext(index))->second;
-//			while (true) {
-//				if (!rail->isBumper()) {
-//					rail = rails.find(rail->getNext(index))->second;
-//					fprintf(stderr, "rail %i start", rail->getIndex());
-//				} else {
-//					break;
-//				}
-//			}
-//			rails.find(112)->second->switching();
-//
-//			for (std::map<int, Rail*>::iterator it = rails.begin(); it != rails.end(); ++it) {
-//				if (it->second->isBumper()) {
-//					index = it->second->getIndex();
-//					break;
-//				}
-//			}
-//			fprintf(stderr, "%i index found\n", index);
-//			rail = rails.find(index)->second;
-//			fprintf(stderr, "rail %i start, next %i", rail->getIndex(), rail->getNext(index));
-//			rail = rails.find(rail->getNext(index))->second;
-//			while (true) {
-//				if (!rail->isBumper()) {
-//					rail = rails.find(rail->getNext(index))->second;
-//					fprintf(stderr, "rail %i start", rail->getIndex());
-//				} else {
-//					break;
-//				}
-//			}
-		}
-
+int Grid::getEmptyCaseAlea(){
+	std::map<int,int>::iterator it = emptyCase.begin();
+	std::advance(it, rand() % emptyCase.size() + 1);
+	int ind = it->first;
+	//int ind = notEmptyCase[rand() % notEmptyCase.size()];
+	while(tabBonus[ind] != noBonus) {
+		it = emptyCase.begin();
+		std::advance(it, rand() % emptyCase.size() + 1);
+		ind = it->first;
 	}
+	return ind;
+}
+int Grid::getNotEmptyCaseAlea(){
+	std::map<int,int>::iterator it = notEmptyCase.begin();
+	std::advance(it, rand() % notEmptyCase.size() + 1);
+	int ind = it->first;
+	//int ind = notEmptyCase[rand() % notEmptyCase.size()];
+	while(tabBonus[ind] != noBonus) {
+		it = notEmptyCase.begin();
+		std::advance(it, rand() % notEmptyCase.size() + 1);
+		ind = it->first;
+	}
+	return ind;
 }
 
-void Grid::initButtons() {
-	std::vector<int> buttonsIndex = LevelService::Instance().getLevel(lvl)->getVariantes(var)->getButtonsIndex();
-	if (buttonsIndex.size() != 0) {
-		for (int i = 0; i < buttonsIndex.size(); i++) {
-			int indexButton = buttonsIndex[i];
-			Button * button = new Button(indexButton);
-			buttons[indexButton] = button;
-		}
-	}
-}
 
-void Grid::buttonDoSomething() {
-	for (std::map<int, Button*>::iterator it = buttons.begin(); it != buttons.end(); ++it) {
-		if (it->second->doSomething(brickShadow)) {
-			for (std::map<int, Rail*>::iterator it1 = rails.begin(); it1 != rails.end(); ++it1) {
-				if (tab[it1->second->getIndex()] != brickElement) {
-					it1->second->switching();
-					redrawRail(it1->second->getIndex());
-				} else {
-					it1->second->switching();
-				}
-			}
-		}
-	}
-}
+//std::map <int,int> test;
+//	test[3] = 1;
+//	test [12] = 2;
+//	test [10] = 2;
+//	test [5] = 2;
+//	std::map<int,int>::iterator it = test.begin();
+//	fprintf(stderr, "%i\n", it->first);
+//	std::advance(it,2);
+//	fprintf(stderr, "%i\n", it->first);
+//	fprintf(stderr, "%i\n", test[3]);
+//	fprintf(stderr, "%i\n", test.size());

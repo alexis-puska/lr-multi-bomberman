@@ -37,6 +37,8 @@ Sound::Sound() {
 	Mix_PlayMusic(menu, -1);
 	Mix_VolumeMusic (MIX_MAX_VOLUME);
 	Mix_AllocateChannels(9);
+	Mix_Volume(0,MIX_MAX_VOLUME/2);
+	Mix_Volume(3,MIX_MAX_VOLUME/2);
 }
 
 Sound::~Sound() {

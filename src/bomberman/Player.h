@@ -60,6 +60,8 @@ class Player {
 
 		void brainPressButton();
 
+		int foundABonus();
+
 	private:
 		/*
 		 * VAR
@@ -140,6 +142,6 @@ class Player {
 		void getAMalusBonus();
 		void releaseMalus();
 		int findIndexPlayer();
-		void foundABonus(int bonusIndex);
+
 };
 #endif

@@ -5,6 +5,7 @@
 #endif
 
 #include "utils/Sprite.h"
+#include "utils/Sound.h"
 #include "utils/GameConfig.h"
 
 #ifndef __MYCLASS_MINE
@@ -20,7 +21,9 @@ class Mine {
 		void drawHimself(SDL_Surface * surfaceToDraw);
 	private:
 		int index;
-		int position;
+		int type;
+		int countdown;
+
 		bool activate[nbPlayer];
 };
 

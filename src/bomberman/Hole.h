@@ -10,7 +10,7 @@
 #ifndef __MYCLASS_HOLE
 #define __MYCLASS_HOLE
 
-#define nb	2
+#define nbWalkOn	2
 
 class Hole {
 	public:

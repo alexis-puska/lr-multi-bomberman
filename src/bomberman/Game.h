@@ -89,6 +89,7 @@ class Game {
 		bool isThreadAlive;
 		bool requestStopGame;
 		bool configured;
+		bool gameInitElement;
 
 		//SUDDENT DEATH
 		bool suddenDeath;
@@ -134,6 +135,29 @@ class Game {
 		void updateTimeDisplay();
 		void drawResultOfGame();
 		void updateHeaderPlayer(int i, int playerNumber);
+		void InitElementOfGame();
+		void redrawElement(int x, int y);
+
+
+
+
+		std::map<int, Rail *> rails;
+		std::map<int, Button *> buttons;
+		std::map<int, Trolley *> trolleys;
+		std::map<int, Mine *> mines;
+		std::map<int, Hole *> holes;
+		std::map<int, Teleporter *> teleporters;
+		void buttonDoSomething();
+		void mineDoSomething();
+		void holeDoSomething();
+		void teleporterDoSomething();
+		void initRails();
+		void initButtons();
+		void initHole();
+		void initMine();
+		void initTeleporter();
+		void redrawRail(int index);
+		void redrawButton(int index);
 
 };
 #endif

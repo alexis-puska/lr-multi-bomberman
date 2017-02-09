@@ -12,7 +12,7 @@ Hole::~Hole() {
 }
 
 bool Hole::doSomething(){
-	if(position < nb){
+	if(position < nbWalkOn){
 		for(int i = 0; i< nbPlayer; i++){
 			if(index == GameConfig::Instance().getPlayerIndex(i) && activate[i] == false){
 				position++;
@@ -22,7 +22,7 @@ bool Hole::doSomething(){
 			}
 		}
 	}
-	if (position == nb){
+	if (position == nbWalkOn){
 		return true;
 	}
 	return false;
@@ -34,10 +34,10 @@ void Hole::drawHimself(SDL_Surface * surfaceToDraw) {
 	dstRect.y = ((int) floor(index / 35)) * smallSpriteLevelSizeHeight;
 	dstRect.w = smallSpriteLevelSizeWidth;
 	dstRect.h = smallSpriteLevelSizeHeight;
-	if (position != 0 && position <= nb) {
+	if (position != 0 && position <= nbWalkOn) {
 		SDL_BlitSurface(Sprite::Instance().getHole(0), NULL, surfaceToDraw, &dstRect);
 		return;
-	} else if (position >= nb) {
+	} else if (position >= nbWalkOn) {
 		SDL_BlitSurface(Sprite::Instance().getHole(1), NULL, surfaceToDraw, &dstRect);
 		return;
 	}

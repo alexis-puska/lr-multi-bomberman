@@ -27,7 +27,6 @@ static int metronome(void* data) {
 		}
 
 		delay = gameTick - milliseconds;
-
 		if (delay > 0) {
 			if (delay < 5) {
 				warningCount++;
@@ -65,6 +64,7 @@ Game::Game(SDL_Surface * vout_buf, unsigned short * in_keystate) {
 
 this	->vout_buf = vout_buf;
 	this->in_keystate = in_keystate;
+	this->gameInitElement = false;
 
 	levelIndex = GameConfig::Instance().getLevel();
 	variante = GameConfig::Instance().getVariante();
@@ -117,6 +117,9 @@ this	->vout_buf = vout_buf;
 	/*
 	 *	LOAD PLAYER ON GRID
 	 */
+
+	initRails();
+	initButtons();
 
 	//in_keystate = in_keystateLibretro;
 	in_keystate_cpu = new unsigned short[16];
@@ -419,6 +422,7 @@ void Game::updateTimeDisplay() {
  * 			check if the player request to put a bombe
  */
 void Game::tick() {
+
 	amask = 0xff000000;
 	rmask = 0x00ff0000;
 	gmask = 0x0000ff00;
@@ -433,7 +437,6 @@ void Game::tick() {
 			}
 			break;
 		case gameStart:
-
 			nbPlayerAlive = 0;
 			if (in_keystate[0] & keyPadStart && !requestStopGame) {
 				gameState = gamePause;
@@ -466,12 +469,18 @@ void Game::tick() {
 			}
 			SDL_FillRect(playerBombeExplode, NULL, SDL_MapRGBA(playerBombeExplode->format, 0, 0, 0, 0));
 
+			if (!gameInitElement) {
+				InitElementOfGame();
+				gameInitElement = true;
+			}
+
 			/*
 			 *
 			 * GAME PART : BUTTON
 			 *
 			 */
-			grid->buttonDoSomething();
+
+			buttonDoSomething();
 
 			/*
 			 *
@@ -508,6 +517,7 @@ void Game::tick() {
 					explosions.push_back(new Explosion(posXBombe, posYBombe, 0, tab, tabBonus));
 					if (tabBonus[posXBombe + posYBombe * sizeX] != -1) {
 						grid->burnBonus(posXBombe, posYBombe);
+						redrawElement(posXBombe, posYBombe);
 						BurnBonusList.push_back(new BurnBonus(posXBombe, posYBombe));
 					}
 
@@ -535,6 +545,7 @@ void Game::tick() {
 							case brickElement:
 								burnWalls.push_back(new BurnWall(posXBombe, posYcalc, ind, tab, tabBonus));
 								grid->burnABrick(posXBombe, posYcalc);
+								redrawElement(posXBombe, posYcalc);
 								if (!isAPowerBombe) {
 									exitLoop = true;
 								}
@@ -559,6 +570,7 @@ void Game::tick() {
 							// if we don't have burn a wall, we can have a bonus in the case of table. we remove it !
 							if (tabBonus[posXBombe + posYcalc * sizeX] != -1) {
 								grid->burnBonus(posXBombe, posYcalc);
+								redrawElement(posXBombe, posYBombe);
 								BurnBonusList.push_back(new BurnBonus(posXBombe, posYcalc));
 							}
 						}
@@ -585,6 +597,7 @@ void Game::tick() {
 							case brickElement:
 								burnWalls.push_back(new BurnWall((posXBombe + j), posYBombe, ind, tab, tabBonus));
 								grid->burnABrick((posXBombe + j), posYBombe);
+								redrawElement((posXBombe + j), posYBombe);
 								if (!isAPowerBombe) {
 									exitLoop = true;
 								}
@@ -609,6 +622,7 @@ void Game::tick() {
 							// if we don't have burn a wall, we can have a bonus in the case of table. we remove it !
 							if (tabBonus[(posXBombe + j) + posYBombe * sizeX] != -1) {
 								grid->burnBonus((posXBombe + j), posYBombe);
+								redrawElement((posXBombe + j), posYBombe);
 								BurnBonusList.push_back(new BurnBonus(posXBombe + j, posYBombe));
 							}
 						}
@@ -640,6 +654,7 @@ void Game::tick() {
 							case brickElement:
 								burnWalls.push_back(new BurnWall(posXBombe, posYcalc, ind, tab, tabBonus));
 								grid->burnABrick(posXBombe, posYcalc);
+								redrawElement(posXBombe, posYcalc);
 								if (!isAPowerBombe) {
 									exitLoop = true;
 								}
@@ -664,6 +679,7 @@ void Game::tick() {
 							// if we don't have burn a wall, we can have a bonus in the case of table. we remove it !
 							if (tabBonus[posXBombe + posYcalc * sizeX] != -1) {
 								grid->burnBonus(posXBombe, posYcalc);
+								redrawElement(posXBombe, posYcalc);
 								BurnBonusList.push_back(new BurnBonus(posXBombe, posYcalc));
 							}
 						}
@@ -691,6 +707,7 @@ void Game::tick() {
 							case brickElement:
 								burnWalls.push_back(new BurnWall((posXBombe - j), posYBombe, ind, tab, tabBonus));
 								grid->burnABrick((posXBombe - j), posYBombe);
+								redrawElement((posXBombe - j), posYBombe);
 								if (!isAPowerBombe) {
 									exitLoop = true;
 								}
@@ -715,11 +732,11 @@ void Game::tick() {
 							// if we don't have burn a wall, we can have a bonus in the case of table. we remove it !
 							if (tabBonus[(posXBombe - j) + posYBombe * sizeX] != -1) {
 								grid->burnBonus((posXBombe - j), posYBombe);
+								redrawElement((posXBombe - j), posYBombe);
 								BurnBonusList.push_back(new BurnBonus(posXBombe - j, posYBombe));
 							}
 						}
 					}
-
 					bombes.erase(bombes.begin() + i);
 				}
 			}
@@ -787,6 +804,11 @@ void Game::tick() {
 			 *
 			 */
 			for (unsigned int i = 0; i < players.size(); i++) {
+				int caseToRedraw = players[i]->foundABonus();
+				if (caseToRedraw != -1) {
+					grid->burnBonus(caseToRedraw % sizeX, round(caseToRedraw / sizeX));
+					redrawElement(caseToRedraw % sizeX, round(caseToRedraw / sizeX));
+				}
 				players[i]->doSomething(playerBombeExplode);
 				if (players[i]->isAlive()) {
 					nbPlayerAlive++;
@@ -1133,3 +1155,152 @@ void Game::updateHeaderPlayer(int i, int playerNumber) {
 	Sprite::Instance().drawText(vout_buf, playerNumber * 36 + offsetScore, 2, score, red, false);
 }
 
+void Game::initRails() {
+	std::map<int, RailSwitch *> railsIndex = LevelService::Instance().getLevel(levelIndex)->getVariantes(variante)->getRailsIndex();
+	if (railsIndex.size() != 0) {
+		for (std::map<int, RailSwitch *>::iterator it1 = railsIndex.begin(); it1 != railsIndex.end(); ++it1) {
+			if (it1->second == NULL) {
+				Rail * rail = new Rail(it1->first);
+				rails[it1->first] = rail;
+			} else {
+				Rail * rail = new Rail(it1->first, it1->second->getPrevIndex(), it1->second->getNextIndex(), it1->second->getNextIndexAlt());
+				rails[it1->first] = rail;
+			}
+		}
+		int index = 0;
+		if (rails.size() != 0) {
+
+			for (std::map<int, Rail*>::iterator it = rails.begin(); it != rails.end(); ++it) {
+
+				it->second->init(rails);
+			}
+			for (std::map<int, Rail*>::iterator it = rails.begin(); it != rails.end(); ++it) {
+				if (it->second->isBumper()) {
+					index = it->second->getIndex();
+					break;
+				}
+			}
+//			Rail * rail = rails.find(index)->second;
+//			fprintf(stderr, "rail %i start, next %i", rail->getIndex(), rail->getNext(index));
+//			rail = rails.find(rail->getNext(index))->second;
+//			while (true) {
+//				if (!rail->isBumper()) {
+//					rail = rails.find(rail->getNext(index))->second;
+//					fprintf(stderr, "rail %i start", rail->getIndex());
+//				} else {
+//					break;
+//				}
+//			}
+//			rails.find(112)->second->switching();
+//
+//			for (std::map<int, Rail*>::iterator it = rails.begin(); it != rails.end(); ++it) {
+//				if (it->second->isBumper()) {
+//					index = it->second->getIndex();
+//					break;
+//				}
+//			}
+//			fprintf(stderr, "%i index found\n", index);
+//			rail = rails.find(index)->second;
+//			fprintf(stderr, "rail %i start, next %i", rail->getIndex(), rail->getNext(index));
+//			rail = rails.find(rail->getNext(index))->second;
+//			while (true) {
+//				if (!rail->isBumper()) {
+//					rail = rails.find(rail->getNext(index))->second;
+//					fprintf(stderr, "rail %i start", rail->getIndex());
+//				} else {
+//					break;
+//				}
+//			}
+		}
+
+	}
+}
+
+void Game::initButtons() {
+	std::vector<int> buttonsIndex = LevelService::Instance().getLevel(levelIndex)->getVariantes(variante)->getButtonsIndex();
+	if (buttonsIndex.size() != 0) {
+		for (int i = 0; i < buttonsIndex.size(); i++) {
+			int indexButton = buttonsIndex[i];
+			Button * button = new Button(indexButton);
+			buttons[indexButton] = button;
+		}
+	}
+}
+
+void Game::initHole(){
+
+}
+
+void Game::initMine(){
+
+}
+
+void Game::initTeleporter(){
+
+}
+
+void Game::buttonDoSomething() {
+	for (std::map<int, Button*>::iterator it = buttons.begin(); it != buttons.end(); ++it) {
+		if (it->second->doSomething(grid->getBricksLayer())) {
+			for (std::map<int, Rail*>::iterator it1 = rails.begin(); it1 != rails.end(); ++it1) {
+				if (tab[it1->second->getIndex()] != brickElement) {
+					it1->second->switching();
+					redrawRail(it1->second->getIndex());
+				} else {
+					it1->second->switching();
+				}
+			}
+		}
+	}
+}
+
+void Game::mineDoSomething(){
+
+}
+
+void Game::holeDoSomething(){
+
+}
+
+void Game::teleporterDoSomething(){
+
+}
+
+void Game::redrawElement(int x, int y) {
+	int index = x + (sizeX * y);
+	redrawRail(index);
+	redrawButton(index);
+}
+
+void Game::redrawRail(int index) {
+	std::map<int, Rail*>::iterator it = rails.find(index);
+	if (it != rails.end()) {
+		it->second->drawHimself(grid->getBricksLayer());
+	}
+	if (tabBonus[index] != noBonus) {
+		grid->drawBonus(index);
+	}
+}
+
+void Game::redrawButton(int index) {
+	std::map<int, Button*>::iterator it = buttons.find(index);
+	if (it != buttons.end()) {
+		it->second->drawHimself(grid->getBricksLayer());
+	}
+	if (tabBonus[index] != noBonus) {
+		grid->drawBonus(index);
+	}
+}
+
+void Game::InitElementOfGame() {
+	for (std::map<int, Rail*>::iterator it = rails.begin(); it != rails.end(); ++it) {
+		if (tab[it->first] < brickElement || tab[it->first] == bombeElement) {
+			it->second->drawHimself(grid->getBricksLayer());
+		}
+	}
+	for (std::map<int, Button*>::iterator it = buttons.begin(); it != buttons.end(); ++it) {
+		if (tab[it->first] < brickElement || tab[it->first] == bombeElement) {
+			it->second->drawHimself(grid->getBricksLayer());
+		}
+	}
+}
