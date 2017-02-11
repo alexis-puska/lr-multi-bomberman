@@ -97,6 +97,7 @@ void Brain::think() {
  */
 
 void Brain::level1() {
+
 	switch (brainStep) {
 		case lvl1CheckCanDropBomb:
 			bfs->resetCheckDropBombe();
@@ -120,7 +121,7 @@ void Brain::level1() {
 			}
 			break;
 		case lvl1WalkToNearWall:
-			if (walkToObjectif(objectifIndex)) {
+			if (walkToObjectif(objectifIndex) == 1) {
 				if (bfs->checkDropBombe(currentIndex)) {
 					brainStep = lvl1DropBomb;
 				} else {
