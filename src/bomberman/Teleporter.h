@@ -6,6 +6,7 @@
 
 #include "utils/Sprite.h"
 #include "utils/GameConfig.h"
+#include "utils/Sound.h"
 
 #ifndef __MYCLASS_TELEPORTER
 #define __MYCLASS_TELEPORTER

@@ -11,7 +11,7 @@
 #ifndef __MYCLASS_MINE
 #define __MYCLASS_MINE
 
-#define nb	2
+#define nbCycle 150
 
 class Mine {
 	public:
@@ -22,9 +22,10 @@ class Mine {
 	private:
 		int index;
 		int type;
-		int countdown;
+		int count;
 
 		bool activate[nbPlayer];
+		bool work;
 };
 
 #endif

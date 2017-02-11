@@ -62,9 +62,8 @@ Game::Game() {
 Game::Game(SDL_Surface * vout_buf, unsigned short * in_keystate) {
 	srand (time(NULL));
 
-	this->vout_buf = vout_buf;
+this	->vout_buf = vout_buf;
 	this->in_keystate = in_keystate;
-
 
 	levelIndex = GameConfig::Instance().getLevel();
 	variante = GameConfig::Instance().getVariante();
@@ -491,6 +490,9 @@ void Game::tick() {
 			 */
 
 			buttonDoSomething();
+			holeDoSomething();
+			mineDoSomething();
+			teleporterDoSomething();
 
 			/*
 			 *
@@ -1310,15 +1312,28 @@ void Game::buttonDoSomething() {
 }
 
 void Game::mineDoSomething() {
-
+	for (std::map<int, Mine*>::iterator it = mines.begin(); it != mines.end(); ++it) {
+		it->second->doSomething();
+	}
 }
 
 void Game::holeDoSomething() {
-
+	for (std::map<int, Hole*>::iterator it = holes.begin(); it != holes.end(); ++it) {
+		bool makeWall = it->second->doSomething(grid->getBricksLayer());
+		int index = it->second->getIndex();
+		if (tabBonus[index] != noBonus && tab[index] < brickElement) {
+			grid->drawBonus(index);
+		}
+		if (makeWall) {
+			tab[index] = wallElement;
+		}
+	}
 }
 
 void Game::teleporterDoSomething() {
-
+	for (std::map<int, Teleporter*>::iterator it = teleporters.begin(); it != teleporters.end(); ++it) {
+		it->second->doSomething();
+	}
 }
 
 void Game::redrawElement(int x, int y) {
@@ -1336,7 +1351,7 @@ void Game::redrawRail(int index) {
 	if (it != rails.end()) {
 		it->second->drawHimself(grid->getBricksLayer());
 	}
-	if (tabBonus[index] != noBonus) {
+	if (tabBonus[index] != noBonus && tab[index] < brickElement) {
 		grid->drawBonus(index);
 	}
 }
@@ -1346,18 +1361,36 @@ void Game::redrawButton(int index) {
 	if (it != buttons.end()) {
 		it->second->drawHimself(grid->getBricksLayer());
 	}
-	if (tabBonus[index] != noBonus) {
+	if (tabBonus[index] != noBonus && tab[index] < brickElement) {
 		grid->drawBonus(index);
 	}
 }
 void Game::redrawHole(int index) {
-
+	std::map<int, Hole*>::iterator it = holes.find(index);
+	if (it != holes.end()) {
+		it->second->drawHimself(grid->getBricksLayer());
+	}
+	if (tabBonus[index] != noBonus && tab[index] < brickElement) {
+		grid->drawBonus(index);
+	}
 }
 void Game::redrawMine(int index) {
-
+	std::map<int, Mine*>::iterator it = mines.find(index);
+	if (it != mines.end()) {
+		it->second->drawHimself(grid->getBricksLayer());
+	}
+	if (tabBonus[index] != noBonus && tab[index] < brickElement) {
+		grid->drawBonus(index);
+	}
 }
 void Game::redrawTeleporter(int index) {
-
+	std::map<int, Teleporter*>::iterator it = teleporters.find(index);
+	if (it != teleporters.end()) {
+		it->second->drawHimself(grid->getBricksLayer());
+	}
+	if (tabBonus[index] != noBonus && tab[index] < brickElement) {
+		grid->drawBonus(index);
+	}
 }
 void Game::redrawTrolley(int index) {
 
@@ -1374,4 +1407,24 @@ void Game::InitElementOfGame() {
 			it->second->drawHimself(grid->getBricksLayer());
 		}
 	}
+	for (std::map<int, Mine*>::iterator it = mines.begin(); it != mines.end(); ++it) {
+		if (tab[it->first] < brickElement || tab[it->first] == bombeElement) {
+			it->second->drawHimself(grid->getBricksLayer());
+		}
+	}
+	for (std::map<int, Hole*>::iterator it = holes.begin(); it != holes.end(); ++it) {
+		if (tab[it->first] < brickElement || tab[it->first] == bombeElement) {
+			it->second->drawHimself(grid->getBricksLayer());
+		}
+	}
+	for (std::map<int, Teleporter*>::iterator it = teleporters.begin(); it != teleporters.end(); ++it) {
+		if (tab[it->first] < brickElement || tab[it->first] == bombeElement) {
+			it->second->drawHimself(grid->getBricksLayer());
+		}
+	}
+//	for (std::map<int, Trolley*>::iterator it = trolleys.begin(); it != trolleys.end(); ++it) {
+//		if (tab[it->first] < brickElement || tab[it->first] == bombeElement) {
+//			it->second->drawHimself(grid->getBricksLayer());
+//		}
+//	}
 }

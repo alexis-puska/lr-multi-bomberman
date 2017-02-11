@@ -49,22 +49,39 @@ void Brain::think() {
 		currentIndex = -1;
 	}
 	if (currentIndex >= 0 && currentIndex < sizeX * sizeY) {
-		switch (GameConfig::Instance().getIALevel()) {
-			case 1:
-				level1();
-				break;
-			case 2:
-				level1();
-				break;
-			case 3:
-				level1();
-				break;
-			case 4:
-				level1();
-				break;
-			case 5:
-				level1();
-				break;
+		if(tab[currentIndex] == wallElement){
+			//player blocked by a hole
+			if (tab[currentIndex + 1] < brickElement) {
+				*keystate += (short) brainKeyRight;
+				prevDir = right;
+			} else if (tab[currentIndex - 1] < brickElement) {
+				*keystate += (short) brainKeyLeft;
+				prevDir = left;
+			} else if (tab[currentIndex - sizeX] < brickElement) {
+				*keystate += (short) brainKeyUp;
+				prevDir = up;
+			} else if (tab[currentIndex +sizeX] < brickElement) {
+				*keystate += (short) brainKeyDown;
+				prevDir = down;
+			}
+		}else{
+			switch (GameConfig::Instance().getIALevel()) {
+				case 1:
+					level1();
+					break;
+				case 2:
+					level1();
+					break;
+				case 3:
+					level1();
+					break;
+				case 4:
+					level1();
+					break;
+				case 5:
+					level1();
+					break;
+			}
 		}
 	}
 }

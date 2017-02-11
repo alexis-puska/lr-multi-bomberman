@@ -5,19 +5,21 @@
 #endif
 
 #include "utils/Sprite.h"
+#include "utils/Sound.h"
 #include "utils/GameConfig.h"
 
 #ifndef __MYCLASS_HOLE
 #define __MYCLASS_HOLE
 
-#define nbWalkOn	2
+#define nbWalkOn 3
 
 class Hole {
 	public:
 		Hole(int index);
 		~Hole();
-		bool doSomething();
+		bool doSomething(SDL_Surface * surfaceToDraw);
 		void drawHimself(SDL_Surface * surfaceToDraw);
+		int getIndex();
 	private:
 		int index;
 		int position;

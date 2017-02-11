@@ -27,6 +27,13 @@ class Sound {
 		void playPlayerKickSound();
 		void playBombeBounceSound();
 		void playEndSound();
+		void startMineSound();
+		void stopMineSound();
+		void playHole1Sound();
+		void playHole2Sound();
+		void playHole3Sound();
+		void playTeleporterCloseSound();
+		void playTeleporterOpenSound();
 
 	private:
 		Sound& operator=(const Sound&);
@@ -47,5 +54,11 @@ class Sound {
 		Mix_Chunk *playerKickSound;
 		Mix_Chunk *bombeBounceSound;
 		Mix_Chunk *endSound;
+		Mix_Chunk *hole1Sound;
+		Mix_Chunk *hole2Sound;
+		Mix_Chunk *hole3Sound;
+		Mix_Chunk *teleporterOpenSound;
+		Mix_Chunk *teleporterCloseSound;
+		Mix_Chunk *mineSound;
 };
 #endif

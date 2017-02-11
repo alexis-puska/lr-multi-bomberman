@@ -1,4 +1,4 @@
-#include "trolley.h"
+#include "Trolley.h"
 
 Trolley::Trolley(int index){
 

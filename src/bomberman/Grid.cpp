@@ -203,7 +203,6 @@ void Grid::burnABrick(int posX, int posY) {
 	if (tab[posX + posY * sizeX] == brickElement) {
 		eraseArea(posX, posY);
 	}
-	drawBonus(posX, posY);
 	notEmptyCase.erase(posX + (posY * sizeX));
 }
 

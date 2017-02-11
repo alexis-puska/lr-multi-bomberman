@@ -13,6 +13,12 @@ const static char *bounceSoundPath = "./resources/sound/bounce.wav";
 const static char *playerBurnSoundPath = "./resources/sound/burn.wav";
 const static char *playerKickSoundPath = "./resources/sound/kick.wav";
 const static char *endSoundPath = "./resources/sound/end.wav";
+const static char *hole1SoundPath = "./resources/sound/hole1.wav";
+const static char *hole2SoundPath = "./resources/sound/hole2.wav";
+const static char *hole3SoundPath = "./resources/sound/hole3.wav";
+const static char *teleporterOpenSoundPath = "./resources/sound/teleporter_open.wav";
+const static char *teleporterCloseSoundPath = "./resources/sound/teleporter_close.wav";
+const static char *mineSoundPath = "./resources/sound/mine.wav";
 
 Sound Sound::m_instance = Sound();
 
@@ -33,12 +39,18 @@ Sound::Sound() {
 	playerKickSound = Mix_LoadWAV(playerKickSoundPath);
 	bombeBounceSound = Mix_LoadWAV(bounceSoundPath);
 	endSound = Mix_LoadWAV(endSoundPath);
+	hole1Sound = Mix_LoadWAV(hole1SoundPath);
+	hole2Sound = Mix_LoadWAV(hole2SoundPath);
+	hole3Sound = Mix_LoadWAV(hole3SoundPath);
+	teleporterOpenSound = Mix_LoadWAV(teleporterOpenSoundPath);
+	teleporterCloseSound = Mix_LoadWAV(teleporterCloseSoundPath);
+	mineSound = Mix_LoadWAV(mineSoundPath);
 
 	Mix_PlayMusic(menu, -1);
 	Mix_VolumeMusic (MIX_MAX_VOLUME);
-	Mix_AllocateChannels(9);
-	Mix_Volume(0,MIX_MAX_VOLUME/2);
-	Mix_Volume(3,MIX_MAX_VOLUME/2);
+	Mix_AllocateChannels(14);
+	Mix_Volume(0, MIX_MAX_VOLUME / 2);
+	Mix_Volume(3, MIX_MAX_VOLUME / 2);
 }
 
 Sound::~Sound() {
@@ -55,6 +67,12 @@ Sound::~Sound() {
 	Mix_FreeChunk(playerBurnSound);
 	Mix_FreeChunk(playerKickSound);
 	Mix_FreeChunk(endSound);
+	Mix_FreeChunk(hole1Sound);
+	Mix_FreeChunk(hole2Sound);
+	Mix_FreeChunk(hole3Sound);
+	Mix_FreeChunk(teleporterOpenSound);
+	Mix_FreeChunk(teleporterCloseSound);
+	Mix_FreeChunk(mineSound);
 	Mix_CloseAudio();
 }
 
@@ -111,3 +129,32 @@ void Sound::playBombeBounceSound() {
 void Sound::playEndSound() {
 	Mix_PlayChannel(8, endSound, 0);
 }
+
+void Sound::startMineSound() {
+	Mix_PlayChannel(9, mineSound, -1);
+}
+
+void Sound::stopMineSound() {
+	Mix_HaltChannel(9);
+}
+
+void Sound::playHole1Sound() {
+	Mix_PlayChannel(10, hole1Sound, 0);
+}
+
+void Sound::playHole2Sound() {
+	Mix_PlayChannel(10, hole2Sound, 0);
+}
+
+void Sound::playHole3Sound() {
+	Mix_PlayChannel(11, hole3Sound, 0);
+}
+
+void Sound::playTeleporterCloseSound() {
+	Mix_PlayChannel(12, teleporterCloseSound, 0);
+}
+
+void Sound::playTeleporterOpenSound() {
+	Mix_PlayChannel(13, teleporterOpenSound, 0);
+}
+

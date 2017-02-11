@@ -11,11 +11,12 @@ Hole::Hole(int index) {
 Hole::~Hole() {
 }
 
-bool Hole::doSomething(){
+bool Hole::doSomething(SDL_Surface * surfaceToDraw){
 	if(position < nbWalkOn){
 		for(int i = 0; i< nbPlayer; i++){
 			if(index == GameConfig::Instance().getPlayerIndex(i) && activate[i] == false){
 				position++;
+				drawHimself(surfaceToDraw);
 				activate[i] = true;
 			}else if(index != GameConfig::Instance().getPlayerIndex(i) && activate[i] == true){
 				activate[i] = false;
@@ -34,11 +35,21 @@ void Hole::drawHimself(SDL_Surface * surfaceToDraw) {
 	dstRect.y = ((int) floor(index / 35)) * smallSpriteLevelSizeHeight;
 	dstRect.w = smallSpriteLevelSizeWidth;
 	dstRect.h = smallSpriteLevelSizeHeight;
-	if (position != 0 && position <= nbWalkOn) {
+	if (position != 0 && position < nbWalkOn) {
+		if(position == 1){
+			Sound::Instance().playHole1Sound();
+		}else{
+			Sound::Instance().playHole2Sound();
+		}
 		SDL_BlitSurface(Sprite::Instance().getHole(0), NULL, surfaceToDraw, &dstRect);
 		return;
 	} else if (position >= nbWalkOn) {
+		Sound::Instance().playHole3Sound();
 		SDL_BlitSurface(Sprite::Instance().getHole(1), NULL, surfaceToDraw, &dstRect);
 		return;
 	}
+}
+
+int Hole::getIndex(){
+	return index;
 }
