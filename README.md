@@ -111,10 +111,10 @@ After this step lr-multi-bomberman is installed, compile, and integrated in emul
 |player underwater							|    |           |X   |
 |button										|    |           |X   |
 |rail										|    |           |X   |
-|Trolley									|    |X          |    |
+|Holl in game								|    |           |X   |
+|Teleporter									|    |           |X   |
 |Mine										|	 |X			 |	  |
-|Holl in game								|    |X          |    |
-|Teleporter									|    |X          |    |
+|Trolley									|    |X          |    |
 |Game type bad bomber						|X   |           |    |
 |Power(glove)								|X   |           |    |
 |Artificial interlligence 					|X   |           |    |
