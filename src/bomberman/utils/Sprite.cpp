@@ -30,6 +30,7 @@ Sprite Sprite::m_instance = Sprite();
 
 Sprite::Sprite() {
 	TTF_Init();
+	IMG_Init(IMG_INIT_PNG);
 	fprintf(stderr, "Init sprite system\n");
 	shadowAreaSprite = new SDL_Surface *[nbShadowAreaSprite];
 	playerSprite = new SDL_Surface *[nbSpritePlayerX * nbSpritePlayerY * nbColorPlayer * nbTypePlayer * (nbFrameWater + 1)];
@@ -133,6 +134,7 @@ Sprite::~Sprite() {
 	delete button;
 	fprintf(stderr, "close font text system\n");
 	TTF_CloseFont(font);
+	IMG_Quit();
 	TTF_Quit();
 }
 
