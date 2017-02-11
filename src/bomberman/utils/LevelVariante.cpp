@@ -129,32 +129,32 @@ std::vector<int> LevelVariante::getButtonsIndex() {
 	return buttons;
 }
 
-
-
-
-
-
-void LevelVariante::addMine(int index){
+void LevelVariante::addMine(int index) {
 	mines.push_back(index);
 }
-std::vector<int> LevelVariante::getMinesIndex(){
+std::vector<int> LevelVariante::getMinesIndex() {
 	return mines;
 }
-void LevelVariante::addHole(int index){
+void LevelVariante::addHole(int index) {
 	holes.push_back(index);
 }
-std::vector<int> LevelVariante::getHolesIndex(){
+std::vector<int> LevelVariante::getHolesIndex() {
 	return holes;
 }
-void LevelVariante::addTeleporter(int index){
-	teleporters.push_back(index);
+void LevelVariante::addTeleporter(int i) {
+	reserved[i] = true;
+	reserved[i - 1] = true;
+	reserved[i + 1] = true;
+	reserved[i - 35] = true;
+	reserved[i + 35] = true;
+	teleporters.push_back(i);
 }
-std::vector<int> LevelVariante::getTeleportersIndex(){
+std::vector<int> LevelVariante::getTeleportersIndex() {
 	return teleporters;
 }
-void LevelVariante::addTrolley(int index){
+void LevelVariante::addTrolley(int index) {
 	trolleys.push_back(index);
 }
-std::vector<int> LevelVariante::getTrolleysIndex(){
+std::vector<int> LevelVariante::getTrolleysIndex() {
 	return trolleys;
 }
