@@ -1336,6 +1336,7 @@ void Game::teleporterDoSomething() {
 	}
 }
 
+//redessine quand on gille un bonus ou lorsque l'on grille une brick, dessine l'element puis le bonus dans tout les cas
 void Game::redrawElement(int x, int y) {
 	int index = x + (sizeX * y);
 	redrawRail(index);
@@ -1344,53 +1345,60 @@ void Game::redrawElement(int x, int y) {
 	redrawMine(index);
 	redrawTeleporter(index);
 	redrawTrolley(index);
+	grid->drawBonus(x,y);
 }
 
+//redessine l'element que si la fonction et appeller, redessine le bonus que si il n'y a pas de brick au dessus.
 void Game::redrawRail(int index) {
 	std::map<int, Rail*>::iterator it = rails.find(index);
 	if (it != rails.end()) {
 		it->second->drawHimself(grid->getBricksLayer());
+		if (tabBonus[index] != noBonus && tab[index] < brickElement) {
+			grid->drawBonus(index);
+		}
 	}
-	if (tabBonus[index] != noBonus && tab[index] < brickElement) {
-		grid->drawBonus(index);
-	}
+
 }
 
 void Game::redrawButton(int index) {
 	std::map<int, Button*>::iterator it = buttons.find(index);
 	if (it != buttons.end()) {
 		it->second->drawHimself(grid->getBricksLayer());
+		if (tabBonus[index] != noBonus && tab[index] < brickElement) {
+			grid->drawBonus(index);
+		}
 	}
-	if (tabBonus[index] != noBonus && tab[index] < brickElement) {
-		grid->drawBonus(index);
-	}
+
 }
 void Game::redrawHole(int index) {
 	std::map<int, Hole*>::iterator it = holes.find(index);
 	if (it != holes.end()) {
 		it->second->drawHimself(grid->getBricksLayer());
+		if (tabBonus[index] != noBonus && tab[index] < brickElement) {
+			grid->drawBonus(index);
+		}
 	}
-	if (tabBonus[index] != noBonus && tab[index] < brickElement) {
-		grid->drawBonus(index);
-	}
+
 }
 void Game::redrawMine(int index) {
 	std::map<int, Mine*>::iterator it = mines.find(index);
 	if (it != mines.end()) {
 		it->second->drawHimself(grid->getBricksLayer());
+		if (tabBonus[index] != noBonus && tab[index] < brickElement) {
+			grid->drawBonus(index);
+		}
 	}
-	if (tabBonus[index] != noBonus && tab[index] < brickElement) {
-		grid->drawBonus(index);
-	}
+
 }
 void Game::redrawTeleporter(int index) {
 	std::map<int, Teleporter*>::iterator it = teleporters.find(index);
 	if (it != teleporters.end()) {
 		it->second->drawHimself(grid->getBricksLayer());
+		if (tabBonus[index] != noBonus && tab[index] < brickElement) {
+			grid->drawBonus(index);
+		}
 	}
-	if (tabBonus[index] != noBonus && tab[index] < brickElement) {
-		grid->drawBonus(index);
-	}
+
 }
 void Game::redrawTrolley(int index) {
 
