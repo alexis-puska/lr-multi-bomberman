@@ -1,4 +1,4 @@
-#include "rail.h"
+#include "Rail.h"
 
 Rail::Rail(int index, int prev, int next, int nextAlt) {
 	this->index = index;
