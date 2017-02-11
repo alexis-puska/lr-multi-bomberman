@@ -9,7 +9,7 @@ Mine::~Mine() {
 	Sound::Instance().stopMineSound();
 }
 
-bool Mine::doSomething() {
+bool Mine::doSomething(SDL_Surface * surface) {
 	if (work) {
 		count++;
 		if (count >= nbCycle) {

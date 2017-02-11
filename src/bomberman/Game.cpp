@@ -1299,9 +1299,7 @@ void Game::initRails() {
 		}
 //		int index = 0;
 		if (rails.size() != 0) {
-
 			for (std::map<int, Rail*>::iterator it = rails.begin(); it != rails.end(); ++it) {
-
 				it->second->init(rails);
 			}
 //			for (std::map<int, Rail*>::iterator it = rails.begin(); it != rails.end(); ++it) {
@@ -1398,6 +1396,11 @@ void Game::initTeleporter() {
 			Teleporter * teleporter = new Teleporter(indexTeleporter);
 			teleporters[indexTeleporter] = teleporter;
 		}
+		for (std::map<int, Teleporter*>::iterator it = teleporters.begin(); it != teleporters.end(); ++it) {
+			for (std::map<int, Teleporter*>::iterator it2 = teleporters.begin(); it2 != teleporters.end(); ++it2) {
+				it->second->addDestination(it2->second);
+			}
+		}
 	}
 }
 
@@ -1418,7 +1421,7 @@ void Game::buttonDoSomething() {
 
 void Game::mineDoSomething() {
 	for (std::map<int, Mine*>::iterator it = mines.begin(); it != mines.end(); ++it) {
-		it->second->doSomething();
+		it->second->doSomething(grid->getBricksLayer());
 	}
 }
 
@@ -1437,7 +1440,7 @@ void Game::holeDoSomething() {
 
 void Game::teleporterDoSomething() {
 	for (std::map<int, Teleporter*>::iterator it = teleporters.begin(); it != teleporters.end(); ++it) {
-		it->second->doSomething();
+		it->second->doSomething(grid->getBricksLayer());
 	}
 }
 
@@ -1498,7 +1501,7 @@ void Game::redrawMine(int index) {
 void Game::redrawTeleporter(int index) {
 	std::map<int, Teleporter*>::iterator it = teleporters.find(index);
 	if (it != teleporters.end()) {
-		it->second->drawHimself(grid->getBricksLayer());
+		it->second->drawHimself(grid->getBricksLayer(), 0);
 		if (tabBonus[index] != noBonus && tab[index] < brickElement) {
 			grid->drawBonus(index);
 		}
@@ -1532,7 +1535,7 @@ void Game::InitElementOfGame() {
 	}
 	for (std::map<int, Teleporter*>::iterator it = teleporters.begin(); it != teleporters.end(); ++it) {
 		if (tab[it->first] < brickElement || tab[it->first] == bombeElement) {
-			it->second->drawHimself(grid->getBricksLayer());
+			it->second->drawHimself(grid->getBricksLayer(), 0);
 		}
 	}
 //	for (std::map<int, Trolley*>::iterator it = trolleys.begin(); it != trolleys.end(); ++it) {

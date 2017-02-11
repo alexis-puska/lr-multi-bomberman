@@ -251,10 +251,9 @@ void LevelService::createLevel0(){
 	variante->addHole(176);
 	variante->addMine(211);
 	variante->addTeleporter(141);
-
+	variante->addTeleporter(143);
+	variante->addTeleporter(149);
 	level->addVariante(variante);
-
-
 
 	LevelVariante * variante1 = new LevelVariante(1, "level without bricks", "level without bricks", false, descV2, bonusV2, 6, 6);
 	variante1->textureIsAWall(0,17);

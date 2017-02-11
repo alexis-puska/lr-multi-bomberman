@@ -17,7 +17,7 @@ class Mine {
 	public:
 		Mine(int index);
 		~Mine();
-		bool doSomething();
+		bool doSomething(SDL_Surface * surface);
 		void drawHimself(SDL_Surface * surfaceToDraw);
 	private:
 		int index;
