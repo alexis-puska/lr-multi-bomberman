@@ -100,7 +100,7 @@ Player::Player(unsigned short * in_keystate, float posX, float posY, int playerN
 }
 
 Player::~Player() {
-	delete in_keystate;
+	in_keystate = NULL;
 	tab = NULL;
 	tabBonus = NULL;
 	grid = NULL;

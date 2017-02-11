@@ -51,6 +51,17 @@ void Grid::init() {
 	skyFixe = SDL_CreateRGBSurface(0, 630, 336, 32, rmask, gmask, bmask, amask);
 }
 
+void Grid::reset() {
+	emptyCase.clear();
+	notEmptyCase.clear();
+	for (int j = 0; j < sizeY; j++) {
+		for (int i = 0; i < sizeX; i++) {
+			tab[i] = emptyElement;
+			tabBonus[i] = noMalus;
+		}
+	}
+}
+
 void Grid::resetSurface() {
 	Uint32 rmask, gmask, bmask, amask;
 	amask = 0xff000000;
@@ -82,7 +93,7 @@ void Grid::generateGrid() {
 	for(int j=0;j<sizeY;j++) {
 		for(int i=0;i<sizeX;i++) {
 			tab[i] = emptyElement;
-			tabBonus[i] = -1;
+			tabBonus[i] = noMalus;
 			dstrect.x = i * smallSpriteLevelSizeWidth;
 			dstrect.y = j * smallSpriteLevelSizeHeight;
 			dstrect.w = smallSpriteLevelSizeWidth;
@@ -197,8 +208,6 @@ void Grid::generateGrid() {
 	}
 }
 
-
-
 void Grid::burnABrick(int posX, int posY) {
 	if (tab[posX + posY * sizeX] == brickElement) {
 		eraseArea(posX, posY);
@@ -216,7 +225,7 @@ void Grid::burnBonus(int posX, int posY) {
 	}
 }
 
-void Grid::eraseArea(int posX, int posY){
+void Grid::eraseArea(int posX, int posY) {
 	SDL_Rect rect;
 	rect.x = posX * smallSpriteLevelSizeWidth;
 	rect.y = posY * smallSpriteLevelSizeHeight;
@@ -225,11 +234,11 @@ void Grid::eraseArea(int posX, int posY){
 	SDL_FillRect(brickShadow, &rect, 0x000000);
 }
 
-void Grid::drawBonus(int index){
-	drawBonus(index%sizeX, floor(index/35));
+void Grid::drawBonus(int index) {
+	drawBonus(index % sizeX, floor(index / 35));
 }
 
-void Grid::drawBonus(int posX, int posY){
+void Grid::drawBonus(int posX, int posY) {
 	if (tabBonus[posX + posY * sizeX] != noBonus) {
 		SDL_Rect dstrect;
 		dstrect.x = posX * smallSpriteLevelSizeWidth + 1;
@@ -243,8 +252,8 @@ void Grid::drawBonus(int posX, int posY){
 void Grid::placeNewDeathMalus() {
 	int ind = getEmptyCaseAlea();
 	tabBonus[ind] = deathBonus;
-	int posX =  (ind % sizeX);
-	int posY =  floor(ind / sizeX);
+	int posX = (ind % sizeX);
+	int posY = floor(ind / sizeX);
 	drawBonus(posX, posY);
 }
 
@@ -269,39 +278,36 @@ int Grid::playerDeadNeedBonus(int bonusIndex) {
 		nbTry++;
 	}
 	tabBonus[ind] = bonusIndex;
-	int posX =  (ind % sizeX);
-	int posY =  floor(ind / sizeX);
+	int posX = (ind % sizeX);
+	int posY = floor(ind / sizeX);
 	drawBonus(posX, posY);
 	return ind;
 }
 
-
-
-int Grid::getEmptyCaseAlea(){
-	std::map<int,int>::iterator it = emptyCase.begin();
+int Grid::getEmptyCaseAlea() {
+	std::map<int, int>::iterator it = emptyCase.begin();
 	std::advance(it, rand() % emptyCase.size() + 1);
 	int ind = it->first;
 	//int ind = notEmptyCase[rand() % notEmptyCase.size()];
-	while(tabBonus[ind] != noBonus) {
+	while (tabBonus[ind] != noBonus) {
 		it = emptyCase.begin();
 		std::advance(it, rand() % emptyCase.size() + 1);
 		ind = it->first;
 	}
 	return ind;
 }
-int Grid::getNotEmptyCaseAlea(){
-	std::map<int,int>::iterator it = notEmptyCase.begin();
+int Grid::getNotEmptyCaseAlea() {
+	std::map<int, int>::iterator it = notEmptyCase.begin();
 	std::advance(it, rand() % notEmptyCase.size() + 1);
 	int ind = it->first;
 	//int ind = notEmptyCase[rand() % notEmptyCase.size()];
-	while(tabBonus[ind] != noBonus) {
+	while (tabBonus[ind] != noBonus) {
 		it = notEmptyCase.begin();
 		std::advance(it, rand() % notEmptyCase.size() + 1);
 		ind = it->first;
 	}
 	return ind;
 }
-
 
 //std::map <int,int> test;
 //	test[3] = 1;

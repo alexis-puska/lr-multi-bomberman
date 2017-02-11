@@ -194,11 +194,59 @@ this	->vout_buf = vout_buf;
 
 Game::~Game() {
 	exitGame();
+	for (unsigned int i = 0; i < brains.size(); i++) {
+		delete brains[i];
+	}
+	for (unsigned int i = 0; i < players.size(); i++) {
+		delete players[i];
+	}
+	for (unsigned int i = 0; i < bombes.size(); i++) {
+		delete bombes[i];
+	}
+	for (unsigned int i = 0; i < explosions.size(); i++) {
+		delete explosions[i];
+	}
+	for (unsigned int i = 0; i < burnWalls.size(); i++) {
+		delete burnWalls[i];
+	}
+	for (unsigned int i = 0; i < suddenDeathAnimations.size(); i++) {
+		delete suddenDeathAnimations[i];
+	}
+	for (unsigned int i = 0; i < louisBurns.size(); i++) {
+		delete louisBurns[i];
+	}
+	for (unsigned int i = 0; i < PopBonusList.size(); i++) {
+		delete PopBonusList[i];
+	}
+	for (unsigned int i = 0; i < BurnBonusList.size(); i++) {
+		delete BurnBonusList[i];
+	}
+	for (std::map<int, Rail*>::iterator it = rails.begin(); it != rails.end(); ++it) {
+		delete it->second;
+	}
+	for (std::map<int, Button*>::iterator it = buttons.begin(); it != buttons.end(); ++it) {
+		delete it->second;
+	}
+	for (std::map<int, Trolley*>::iterator it = trolleys.begin(); it != trolleys.end(); ++it) {
+		delete it->second;
+	}
+	for (std::map<int, Mine*>::iterator it = mines.begin(); it != mines.end(); ++it) {
+		delete it->second;
+	}
+	for (std::map<int, Hole*>::iterator it = holes.begin(); it != holes.end(); ++it) {
+		delete it->second;
+	}
+	for (std::map<int, Teleporter*>::iterator it = teleporters.begin(); it != teleporters.end(); ++it) {
+		delete it->second;
+	}
+
 	brains.clear();
 	players.clear();
 	bombes.clear();
 	explosions.clear();
 	burnWalls.clear();
+	suddenDeathAnimations.clear();
+	louisBurns.clear();
 	PopBonusList.clear();
 	BurnBonusList.clear();
 	rails.clear();
@@ -211,6 +259,7 @@ Game::~Game() {
 	delete grid;
 	delete tab;
 	delete tabBonus;
+
 	in_keystate = NULL;
 	delete in_keystate_cpu;
 
@@ -749,6 +798,7 @@ void Game::tick() {
 							}
 						}
 					}
+					delete bombes[i];
 					bombes.erase(bombes.begin() + i);
 				}
 			}
@@ -761,6 +811,7 @@ void Game::tick() {
 			for (unsigned int i = 0; i < explosions.size(); i++) {
 				explosions[i]->tick(playerBombeExplode);
 				if (explosions[i]->canBeDelete()) {
+					delete explosions[i];
 					explosions.erase(explosions.begin() + i);
 				}
 			}
@@ -773,6 +824,7 @@ void Game::tick() {
 			for (unsigned int i = 0; i < burnWalls.size(); i++) {
 				burnWalls[i]->tick(playerBombeExplode);
 				if (burnWalls[i]->canBeDelete()) {
+					delete burnWalls[i];
 					burnWalls.erase(burnWalls.begin() + i);
 				}
 			}
@@ -785,6 +837,7 @@ void Game::tick() {
 			for (unsigned int i = 0; i < BurnBonusList.size(); i++) {
 				BurnBonusList[i]->tick(playerBombeExplode);
 				if (BurnBonusList[i]->canBeDelete()) {
+					delete BurnBonusList[i];
 					BurnBonusList.erase(BurnBonusList.begin() + i);
 				}
 			}
@@ -797,6 +850,7 @@ void Game::tick() {
 			for (unsigned int i = 0; i < PopBonusList.size(); i++) {
 				PopBonusList[i]->tick(playerBombeExplode);
 				if (PopBonusList[i]->canBeDelete()) {
+					delete PopBonusList[i];
 					PopBonusList.erase(PopBonusList.begin() + i);
 				}
 			}
@@ -943,6 +997,7 @@ void Game::tick() {
 			for (unsigned int i = 0; i < louisBurns.size(); i++) {
 				louisBurns[i]->tick(playerBombeExplode);
 				if (louisBurns[i]->canBeDelete()) {
+					delete louisBurns[i];
 					louisBurns.erase(louisBurns.begin() + i);
 				}
 			}
@@ -1024,6 +1079,7 @@ void Game::tick() {
 //				purge old animation
 				for (unsigned int i = 0; i < suddenDeathAnimations.size(); i++) {
 					if (suddenDeathAnimations[i]->canBeDeleted()) {
+						delete suddenDeathAnimations[i];
 						suddenDeathAnimations.erase(suddenDeathAnimations.begin() + i);
 					}
 					suddenDeathAnimations[i]->tick(playerBombeExplode);
@@ -1073,6 +1129,52 @@ void Game::tick() {
 				generateHeader();
 				nbTickForGame = nbTickForGameParam;
 				suddenDeathCase = false;
+
+				for (unsigned int i = 0; i < brains.size(); i++) {
+					delete brains[i];
+				}
+				for (unsigned int i = 0; i < players.size(); i++) {
+					delete players[i];
+				}
+				for (unsigned int i = 0; i < bombes.size(); i++) {
+					delete bombes[i];
+				}
+				for (unsigned int i = 0; i < explosions.size(); i++) {
+					delete explosions[i];
+				}
+				for (unsigned int i = 0; i < burnWalls.size(); i++) {
+					delete burnWalls[i];
+				}
+				for (unsigned int i = 0; i < suddenDeathAnimations.size(); i++) {
+					delete suddenDeathAnimations[i];
+				}
+				for (unsigned int i = 0; i < louisBurns.size(); i++) {
+					delete louisBurns[i];
+				}
+				for (unsigned int i = 0; i < PopBonusList.size(); i++) {
+					delete PopBonusList[i];
+				}
+				for (unsigned int i = 0; i < BurnBonusList.size(); i++) {
+					delete BurnBonusList[i];
+				}
+				for (std::map<int, Rail*>::iterator it = rails.begin(); it != rails.end(); ++it) {
+					delete it->second;
+				}
+				for (std::map<int, Button*>::iterator it = buttons.begin(); it != buttons.end(); ++it) {
+					delete it->second;
+				}
+				for (std::map<int, Trolley*>::iterator it = trolleys.begin(); it != trolleys.end(); ++it) {
+					delete it->second;
+				}
+				for (std::map<int, Mine*>::iterator it = mines.begin(); it != mines.end(); ++it) {
+					delete it->second;
+				}
+				for (std::map<int, Hole*>::iterator it = holes.begin(); it != holes.end(); ++it) {
+					delete it->second;
+				}
+				for (std::map<int, Teleporter*>::iterator it = teleporters.begin(); it != teleporters.end(); ++it) {
+					delete it->second;
+				}
 				brains.clear();
 				players.clear();
 				bombes.clear();
@@ -1088,13 +1190,16 @@ void Game::tick() {
 				mines.clear();
 				holes.clear();
 				teleporters.clear();
+
 				grid->resetSurface();
+				grid->reset();
 				grid->generateGrid();
 
 				int indexLibretro = 0;
 				int index = 0;
 				nbPlayerInGame = 0;
 				int indexPlayerForGame = 0;
+				SDL_FillRect(playerBombeExplode, NULL, SDL_MapRGBA(playerBombeExplode->format, 0, 0, 0, 0));
 
 				Player * player;
 				Brain * brain;
@@ -1345,7 +1450,7 @@ void Game::redrawElement(int x, int y) {
 	redrawMine(index);
 	redrawTeleporter(index);
 	redrawTrolley(index);
-	grid->drawBonus(x,y);
+	grid->drawBonus(x, y);
 }
 
 //redessine l'element que si la fonction et appeller, redessine le bonus que si il n'y a pas de brick au dessus.

@@ -6,6 +6,7 @@ Mine::Mine(int index) {
 }
 
 Mine::~Mine() {
+	Sound::Instance().stopMineSound();
 }
 
 bool Mine::doSomething() {

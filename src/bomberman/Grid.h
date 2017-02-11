@@ -79,6 +79,7 @@ class Grid {
 		//configure the grid and build it
 		void configure(int levelNumber);
 		void generateGrid();
+		void reset();
 		void resetSurface();
 
 		void burnABrick(int posX, int posY);
