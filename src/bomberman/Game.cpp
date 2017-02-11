@@ -1440,7 +1440,9 @@ void Game::holeDoSomething() {
 
 void Game::teleporterDoSomething() {
 	for (std::map<int, Teleporter*>::iterator it = teleporters.begin(); it != teleporters.end(); ++it) {
-		it->second->doSomething(grid->getBricksLayer());
+		if (it->second->doSomething(grid->getBricksLayer())) {
+			grid->drawBonus(it->second->getIndex());
+		}
 	}
 }
 
