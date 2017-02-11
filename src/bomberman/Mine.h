@@ -13,6 +13,11 @@
 
 #define nbCycle 150
 
+enum mineTypeEnum {
+	straight = 0,
+	crooked = 1
+};
+
 class Mine {
 	public:
 		Mine(int index);

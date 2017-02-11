@@ -2,6 +2,7 @@
 
 Mine::Mine(int index) {
 	this->index = index;
+	this->type = straight;
 	work = false;
 }
 
@@ -30,12 +31,7 @@ bool Mine::doSomething(SDL_Surface * surface) {
 			}
 		}
 	}
-
 	return false;
-//	if (position == nb){
-//		return true;
-//	}
-//	return false;
 }
 
 void Mine::drawHimself(SDL_Surface * surfaceToDraw) {

@@ -97,7 +97,6 @@ void Brain::think() {
  */
 
 void Brain::level1() {
-	int tmp = 0;
 	switch (brainStep) {
 		case lvl1CheckCanDropBomb:
 			bfs->resetCheckDropBombe();
@@ -121,16 +120,13 @@ void Brain::level1() {
 			}
 			break;
 		case lvl1WalkToNearWall:
-			tmp = walkToObjectif(objectifIndex);
-			if (tmp == 1) {
+			if (walkToObjectif(objectifIndex)) {
 				if (bfs->checkDropBombe(currentIndex)) {
 					brainStep = lvl1DropBomb;
 				} else {
 					bfs->addIgnoreCase(objectifIndex);
 					objectifIndex = bfs->findNextBrick(currentIndex);
 				}
-			}else if(tmp == -1){
-				objectifIndex = bfs->findNextBrick(currentIndex);
 			}
 			break;
 		case lvl1DropBomb:
@@ -280,8 +276,6 @@ int Brain::walkToObjectif(int objectif) {
 		}
 		parent = NULL;
 		return nbCaseRemaining;
-	}else{
-		return -1;
 	}
 	return 0;
 }
