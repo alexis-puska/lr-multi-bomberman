@@ -1192,19 +1192,19 @@ void Game::initRails() {
 				rails[it1->first] = rail;
 			}
 		}
-		int index = 0;
+//		int index = 0;
 		if (rails.size() != 0) {
 
 			for (std::map<int, Rail*>::iterator it = rails.begin(); it != rails.end(); ++it) {
 
 				it->second->init(rails);
 			}
-			for (std::map<int, Rail*>::iterator it = rails.begin(); it != rails.end(); ++it) {
-				if (it->second->isBumper()) {
-					index = it->second->getIndex();
-					break;
-				}
-			}
+//			for (std::map<int, Rail*>::iterator it = rails.begin(); it != rails.end(); ++it) {
+//				if (it->second->isBumper()) {
+//					index = it->second->getIndex();
+//					break;
+//				}
+//			}
 //			Rail * rail = rails.find(index)->second;
 //			fprintf(stderr, "rail %i start, next %i", rail->getIndex(), rail->getNext(index));
 //			rail = rails.find(rail->getNext(index))->second;
@@ -1244,7 +1244,7 @@ void Game::initRails() {
 void Game::initButtons() {
 	std::vector<int> buttonsIndex = LevelService::Instance().getLevel(levelIndex)->getVariantes(variante)->getButtonsIndex();
 	if (buttonsIndex.size() != 0) {
-		for (int i = 0; i < buttonsIndex.size(); i++) {
+		for (unsigned int i = 0; i < buttonsIndex.size(); i++) {
 			int indexButton = buttonsIndex[i];
 			Button * button = new Button(indexButton);
 			buttons[indexButton] = button;
@@ -1255,7 +1255,7 @@ void Game::initButtons() {
 void Game::initHole() {
 	std::vector<int> holesIndex = LevelService::Instance().getLevel(levelIndex)->getVariantes(variante)->getHolesIndex();
 	if (holesIndex.size() != 0) {
-		for (int i = 0; i < holesIndex.size(); i++) {
+		for (unsigned int i = 0; i < holesIndex.size(); i++) {
 			int indexHole = holesIndex[i];
 			Hole * hole = new Hole(indexHole);
 			holes[indexHole] = hole;
@@ -1266,7 +1266,7 @@ void Game::initHole() {
 void Game::initTrolley() {
 	std::vector<int> trolleysIndex = LevelService::Instance().getLevel(levelIndex)->getVariantes(variante)->getTrolleysIndex();
 	if (trolleysIndex.size() != 0) {
-		for (int i = 0; i < trolleysIndex.size(); i++) {
+		for (unsigned int i = 0; i < trolleysIndex.size(); i++) {
 			int indexTrolley = trolleysIndex[i];
 			Trolley * trolley = new Trolley(indexTrolley);
 			trolleys[indexTrolley] = trolley;
@@ -1277,7 +1277,7 @@ void Game::initTrolley() {
 void Game::initMine() {
 	std::vector<int> minesIndex = LevelService::Instance().getLevel(levelIndex)->getVariantes(variante)->getMinesIndex();
 	if (minesIndex.size() != 0) {
-		for (int i = 0; i < minesIndex.size(); i++) {
+		for (unsigned int i = 0; i < minesIndex.size(); i++) {
 			int indexMine = minesIndex[i];
 			Mine * mine = new Mine(indexMine);
 			mines[indexMine] = mine;
@@ -1288,7 +1288,7 @@ void Game::initMine() {
 void Game::initTeleporter() {
 	std::vector<int> teleportersIndex = LevelService::Instance().getLevel(levelIndex)->getVariantes(variante)->getTeleportersIndex();
 	if (teleportersIndex.size() != 0) {
-		for (int i = 0; i < teleportersIndex.size(); i++) {
+		for (unsigned int i = 0; i < teleportersIndex.size(); i++) {
 			int indexTeleporter = teleportersIndex[i];
 			Teleporter * teleporter = new Teleporter(indexTeleporter);
 			teleporters[indexTeleporter] = teleporter;
