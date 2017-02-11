@@ -8,14 +8,16 @@
 #include "utils/Sound.h"
 #include "utils/GameConfig.h"
 
+#include <time.h>
+
 #ifndef __MYCLASS_MINE
 #define __MYCLASS_MINE
 
-#define nbCycle 150
+#define nbCycle 200
+#define nbFrameMine 10
 
 enum mineTypeEnum {
-	straight = 0,
-	crooked = 1
+	straight = 0, crooked = 1
 };
 
 class Mine {
@@ -23,7 +25,7 @@ class Mine {
 		Mine(int index);
 		~Mine();
 		bool doSomething(SDL_Surface * surface);
-		void drawHimself(SDL_Surface * surfaceToDraw);
+		void drawHimself(SDL_Surface * surfaceToDraw, int offsetSpriteAnimation);
 	private:
 		int index;
 		int type;
@@ -31,6 +33,11 @@ class Mine {
 
 		bool activate[nbPlayer];
 		bool work;
+
+		//animation
+		int frameCounter;
+		int offsetSprite;
+		int nbFrameForAnimation;
 };
 
 #endif

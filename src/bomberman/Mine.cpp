@@ -3,6 +3,12 @@
 Mine::Mine(int index) {
 	this->index = index;
 	this->type = straight;
+	srand (time(NULL));
+
+	//for animation
+	frameCounter = 0;
+	offsetSprite = 0;
+	nbFrameForAnimation = 8;
 	work = false;
 }
 
@@ -13,10 +19,21 @@ Mine::~Mine() {
 bool Mine::doSomething(SDL_Surface * surface) {
 	if (work) {
 		count++;
-		if (count >= nbCycle) {
-			count = 0;
+		frameCounter++;
+		if (frameCounter > nbFrameMine) {
+			frameCounter = 0;
+			offsetSprite++;
+			if (offsetSprite >= nbFrameForAnimation) {
+				offsetSprite = 0;
+			}
+		}
+		frameCounter++;
+		drawHimself(surface, offsetSprite);
+		if (count > nbCycle) {
 			work = false;
+			count = 0;
 			Sound::Instance().stopMineSound();
+			drawHimself(surface, 12);
 		}
 	} else {
 		for (int i = 0; i < nbPlayer; i++) {
@@ -34,11 +51,12 @@ bool Mine::doSomething(SDL_Surface * surface) {
 	return false;
 }
 
-void Mine::drawHimself(SDL_Surface * surfaceToDraw) {
+void Mine::drawHimself(SDL_Surface * surfaceToDraw, int offsetSpriteAnimation) {
 	SDL_Rect dstRect;
 	dstRect.x = (index % 35) * smallSpriteLevelSizeWidth;
 	dstRect.y = ((int) floor(index / 35)) * smallSpriteLevelSizeHeight;
 	dstRect.w = smallSpriteLevelSizeWidth;
 	dstRect.h = smallSpriteLevelSizeHeight;
-	SDL_BlitSurface(Sprite::Instance().getMine(0), NULL, surfaceToDraw, &dstRect);
+	SDL_FillRect(surfaceToDraw, &dstRect, 0x000000);
+	SDL_BlitSurface(Sprite::Instance().getMine(offsetSpriteAnimation), NULL, surfaceToDraw, &dstRect);
 }

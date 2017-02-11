@@ -1493,7 +1493,7 @@ void Game::redrawHole(int index) {
 void Game::redrawMine(int index) {
 	std::map<int, Mine*>::iterator it = mines.find(index);
 	if (it != mines.end()) {
-		it->second->drawHimself(grid->getBricksLayer());
+		it->second->drawHimself(grid->getBricksLayer(), 12);
 		if (tabBonus[index] != noBonus && tab[index] < brickElement) {
 			grid->drawBonus(index);
 		}
@@ -1527,7 +1527,7 @@ void Game::InitElementOfGame() {
 	}
 	for (std::map<int, Mine*>::iterator it = mines.begin(); it != mines.end(); ++it) {
 		if (tab[it->first] < brickElement || tab[it->first] == bombeElement) {
-			it->second->drawHimself(grid->getBricksLayer());
+			it->second->drawHimself(grid->getBricksLayer(), 12);
 		}
 	}
 	for (std::map<int, Hole*>::iterator it = holes.begin(); it != holes.end(); ++it) {
