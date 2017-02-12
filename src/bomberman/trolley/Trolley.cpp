@@ -22,8 +22,8 @@ void Trolley::drawHimself(SDL_Surface * surface) {
 	SDL_Rect dstRect;
 	int posX = (index % 35);
 	int posY = ((int) floor(index / 35));
-	dstRect.x = (posX * blockSizeX) - ((sprite_sizeW - blockSizeX) / 2);
-	dstRect.y = (posY * blockSizeY) - ((sprite_sizeH - blockSizeY) );
+	dstRect.x = 1;//(posX * blockSizeX) - ((sprite_sizeW - blockSizeX) / 2);
+	dstRect.y = 1;//(posY * blockSizeY) - ((sprite_sizeH - blockSizeY) );
 	dstRect.w = smallSpriteLevelSizeWidth;
 	dstRect.h = smallSpriteLevelSizeHeight;
 	SDL_BlitSurface(Sprite::Instance().getTrolley(0), NULL, surface, &dstRect);
