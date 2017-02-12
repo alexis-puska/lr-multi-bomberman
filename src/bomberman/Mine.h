@@ -13,11 +13,21 @@
 #ifndef __MYCLASS_MINE
 #define __MYCLASS_MINE
 
-#define nbCycle 200
-#define nbFrameMine 10
+#define nbCycle 			200
+#define nbCycleEnd		215
+#define nbFrameMine 		10
+#define straightNbFrame		4
+#define crookedNbframe 		8
 
 enum mineTypeEnum {
 	straight = 0, crooked = 1
+};
+
+enum mineExplosionDirectionEnum {
+	mineUp = 0,
+	mineRight = 1,
+	mineDown = 2,
+	mineLeft = 3
 };
 
 class Mine {
@@ -26,10 +36,18 @@ class Mine {
 		~Mine();
 		bool doSomething(SDL_Surface * surface);
 		void drawHimself(SDL_Surface * surfaceToDraw, int offsetSpriteAnimation);
+		int getFirstDirection();
+		int getSecondDirection();
+		int getIndex();
 	private:
 		int index;
 		int type;
 		int count;
+
+		int first;
+		int second;
+
+		int channelSound;
 
 		bool activate[nbPlayer];
 		bool work;

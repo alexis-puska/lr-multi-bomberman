@@ -48,9 +48,11 @@ Sound::Sound() {
 
 	Mix_PlayMusic(menu, -1);
 	Mix_VolumeMusic (MIX_MAX_VOLUME);
-	Mix_AllocateChannels(14);
+	Mix_AllocateChannels(nbChannelSound);
 	Mix_Volume(0, MIX_MAX_VOLUME / 2);
 	Mix_Volume(3, MIX_MAX_VOLUME / 2);
+
+	mineOffsetChannel = 14;
 }
 
 Sound::~Sound() {
@@ -130,16 +132,8 @@ void Sound::playEndSound() {
 	Mix_PlayChannel(8, endSound, 0);
 }
 
-void Sound::startMineSound() {
-	Mix_PlayChannel(9, mineSound, -1);
-}
-
-void Sound::stopMineSound() {
-	Mix_HaltChannel(9);
-}
-
 void Sound::playHole1Sound() {
-	Mix_PlayChannel(10, hole1Sound, 0);
+	Mix_PlayChannel(9, hole1Sound, 0);
 }
 
 void Sound::playHole2Sound() {
@@ -158,3 +152,19 @@ void Sound::playTeleporterOpenSound() {
 	Mix_PlayChannel(13, teleporterOpenSound, 0);
 }
 
+int Sound::getNextMineOffsetChannel(){
+	mineOffsetChannel++;
+	if(mineOffsetChannel >= 20){
+		mineOffsetChannel = 14;
+	}
+	return mineOffsetChannel - 1;
+}
+
+void Sound::startMineSound(int channel) {
+
+	Mix_PlayChannel(channel, mineSound, -1);
+}
+
+void Sound::stopMineSound(int channel) {
+	Mix_HaltChannel(channel);
+}

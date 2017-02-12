@@ -137,6 +137,7 @@ class Game {
 		void updateHeaderPlayer(int i, int playerNumber);
 		void InitElementOfGame();
 		void redrawElement(int x, int y);
+		void GenerateMineExplosion(int index, int direction);
 
 
 

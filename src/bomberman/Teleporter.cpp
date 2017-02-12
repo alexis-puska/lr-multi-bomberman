@@ -80,7 +80,7 @@ void Teleporter::teleporte() {
 	if (playerToTeleporte != -1) {
 		if (destination.size() != 0) {
 			float x = (float) (indexDestination % 35) + 0.5;
-			float y = (float) (indexDestination / 35) + 0.5;
+			float y = (float) (floor(indexDestination / 35)) + 0.5;
 			GameConfig::Instance().updatePlayerPosition(playerToTeleporte, x, y);
 			playerToTeleporte = -1;
 			activate[playerToTeleporte] = false;
@@ -121,6 +121,6 @@ int Teleporter::getIndex() {
 //keep player on the case the time before teleportation
 void Teleporter::keepPlayer() {
 	float x = (float) (index % 35) + 0.5;
-	float y = (float) (index / 35) + 0.5;
+	float y = (float) (floor(index / 35)) + 0.5;
 	GameConfig::Instance().updatePlayerPosition(playerToTeleporte, x, y);
 }

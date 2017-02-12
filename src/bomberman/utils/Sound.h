@@ -9,6 +9,8 @@
 #ifndef __MYCLASS_Sound
 #define __MYCLASS_Sound
 
+#define nbChannelSound 20
+
 class Sound {
 	public:
 		static Sound& Instance();
@@ -27,18 +29,21 @@ class Sound {
 		void playPlayerKickSound();
 		void playBombeBounceSound();
 		void playEndSound();
-		void startMineSound();
-		void stopMineSound();
+		void startMineSound(int channel);
+		void stopMineSound(int channel);
 		void playHole1Sound();
 		void playHole2Sound();
 		void playHole3Sound();
 		void playTeleporterCloseSound();
 		void playTeleporterOpenSound();
+		int getNextMineOffsetChannel();
 
 	private:
 		Sound& operator=(const Sound&);
 		Sound(const Sound&);
 		static Sound m_instance;
+
+		int mineOffsetChannel;
 
 		//musique
 		Mix_Music *menu;
@@ -60,5 +65,6 @@ class Sound {
 		Mix_Chunk *teleporterOpenSound;
 		Mix_Chunk *teleporterCloseSound;
 		Mix_Chunk *mineSound;
+
 };
 #endif

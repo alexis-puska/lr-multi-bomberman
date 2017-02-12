@@ -1421,7 +1421,10 @@ void Game::buttonDoSomething() {
 
 void Game::mineDoSomething() {
 	for (std::map<int, Mine*>::iterator it = mines.begin(); it != mines.end(); ++it) {
-		it->second->doSomething(grid->getBricksLayer());
+		if (it->second->doSomething(grid->getBricksLayer())) {
+			GenerateMineExplosion(it->second->getIndex(), it->second->getFirstDirection());
+			GenerateMineExplosion(it->second->getIndex(), it->second->getSecondDirection());
+		}
 	}
 }
 
@@ -1545,4 +1548,241 @@ void Game::InitElementOfGame() {
 //			it->second->drawHimself(grid->getBricksLayer());
 //		}
 //	}
+}
+
+void Game::GenerateMineExplosion(int index, int direction) {
+	Sound::Instance().playFireSound();
+	int strenght = 20;
+	int posXMine = index % 35;
+	int posYMine = floor(index / 35);
+	int posYcalc = 0;
+	bool exitLoop = false;
+	bool aWallHasBurn = false;
+	int ind = 0;
+
+	//UP
+	if (direction == mineUp) {
+		for (int j = 1; j < strenght + 1; j++) {
+			if (exitLoop == true) {
+				break;
+			}
+			posYcalc = posYMine - j;
+			if (posYcalc < 0) {
+				posYcalc = sizeY + posYcalc;
+			}
+
+			//explostion and wall
+			switch (tab[posXMine + posYcalc * sizeX]) {
+				case emptyElement:
+				case explosionElement:
+					if (j == strenght) {
+						ind = 1;
+					} else if (j == 1) {
+						ind = 5;
+					} else {
+						ind = 2;
+					}
+					explosions.push_back(new Explosion(posXMine, posYcalc, ind, tab, tabBonus));
+					break;
+				case brickElement:
+					burnWalls.push_back(new BurnWall(posXMine, posYcalc, ind, tab, tabBonus));
+					grid->burnABrick(posXMine, posYcalc);
+					redrawElement(posXMine, posYcalc);
+
+					exitLoop = true;
+
+					aWallHasBurn = true;
+					break;
+				case bombeElement:
+					for (unsigned int k = 0; k < bombes.size(); k++) {
+						if (bombes[k]->getCase() == posXMine + posYcalc * sizeX) {
+							bombes[k]->explode();
+
+							exitLoop = true;
+
+							break;
+						}
+					}
+					break;
+				case wallElement:
+					exitLoop = true;
+					break;
+			}
+			if (!aWallHasBurn) {
+				// if we don't have burn a wall, we can have a bonus in the case of table. we remove it !
+				if (tabBonus[posXMine + posYcalc * sizeX] != -1) {
+					grid->burnBonus(posXMine, posYcalc);
+					redrawElement(posXMine, posYMine);
+					BurnBonusList.push_back(new BurnBonus(posXMine, posYcalc));
+				}
+			}
+		}
+	}
+
+	if (direction == mineRight) {
+		exitLoop = false;
+		aWallHasBurn = false;
+		for (int j = 1; j < strenght + 1; j++) {
+			if (exitLoop == true) {
+				break;
+			}
+
+			switch (tab[(posXMine + j) + posYMine * sizeX]) {
+				case emptyElement:
+				case explosionElement:
+					if (j == strenght) {
+						ind = 7;
+					} else if (j == 1) {
+						ind = 3;
+					} else {
+						ind = 8;
+					}
+					explosions.push_back(new Explosion((posXMine + j), posYMine, ind, tab, tabBonus));
+					break;
+				case brickElement:
+					burnWalls.push_back(new BurnWall((posXMine + j), posYMine, ind, tab, tabBonus));
+					grid->burnABrick((posXMine + j), posYMine);
+					redrawElement((posXMine + j), posYMine);
+
+					exitLoop = true;
+
+					aWallHasBurn = true;
+					break;
+				case bombeElement:
+					for (unsigned int k = 0; k < bombes.size(); k++) {
+						if (bombes[k]->getCase() == (posXMine + j) + posYMine * sizeX) {
+							bombes[k]->explode();
+
+							exitLoop = true;
+
+							break;
+						}
+					}
+					break;
+				case wallElement:
+					exitLoop = true;
+					break;
+			}
+			if (!aWallHasBurn) {
+				// if we don't have burn a wall, we can have a bonus in the case of table. we remove it !
+				if (tabBonus[(posXMine + j) + posYMine * sizeX] != -1) {
+					grid->burnBonus((posXMine + j), posYMine);
+					redrawElement((posXMine + j), posYMine);
+					BurnBonusList.push_back(new BurnBonus(posXMine + j, posYMine));
+				}
+			}
+		}
+	}
+
+	if (direction == mineDown) {
+		exitLoop = false;
+		aWallHasBurn = false;
+		for (int j = 1; j < strenght + 1; j++) {
+			if (exitLoop == true) {
+				break;
+			}
+
+			posYcalc = posYMine + j;
+			if (posYcalc >= sizeY) {
+				posYcalc = posYcalc - sizeY;
+			}
+
+			switch (tab[posXMine + posYcalc * sizeX]) {
+				case emptyElement:
+				case explosionElement:
+					if (j == strenght) {
+						ind = 5;
+					} else if (j == 1) {
+						ind = 1;
+					} else {
+						ind = 6;
+					}
+					explosions.push_back(new Explosion(posXMine, posYcalc, ind, tab, tabBonus));
+					break;
+				case brickElement:
+					burnWalls.push_back(new BurnWall(posXMine, posYcalc, ind, tab, tabBonus));
+					grid->burnABrick(posXMine, posYcalc);
+					redrawElement(posXMine, posYcalc);
+
+					exitLoop = true;
+
+					aWallHasBurn = true;
+					break;
+				case bombeElement:
+					for (unsigned int k = 0; k < bombes.size(); k++) {
+						if (bombes[k]->getCase() == posXMine + posYcalc * sizeX) {
+							bombes[k]->explode();
+
+							exitLoop = true;
+
+							break;
+						}
+					}
+					break;
+				case wallElement:
+					exitLoop = true;
+					break;
+			}
+			if (!aWallHasBurn) {
+				// if we don't have burn a wall, we can have a bonus in the case of table. we remove it !
+				if (tabBonus[posXMine + posYcalc * sizeX] != -1) {
+					grid->burnBonus(posXMine, posYcalc);
+					redrawElement(posXMine, posYcalc);
+					BurnBonusList.push_back(new BurnBonus(posXMine, posYcalc));
+				}
+			}
+
+		}
+	}
+
+	if (direction == mineLeft) {
+		exitLoop = false;
+		aWallHasBurn = false;
+		for (int j = 1; j < strenght + 1; j++) {
+			if (exitLoop == true) {
+				break;
+			}
+
+			switch (tab[(posXMine - j) + posYMine * sizeX]) {
+				case emptyElement:
+				case explosionElement:
+					if (j == strenght) {
+						ind = 3;
+					} else if (j == 1) {
+						ind = 7;
+					} else {
+						ind = 4;
+					}
+					explosions.push_back(new Explosion((posXMine - j), posYMine, ind, tab, tabBonus));
+					break;
+				case brickElement:
+					burnWalls.push_back(new BurnWall((posXMine - j), posYMine, ind, tab, tabBonus));
+					grid->burnABrick((posXMine - j), posYMine);
+					redrawElement((posXMine - j), posYMine);
+					exitLoop = true;
+					aWallHasBurn = true;
+					break;
+				case bombeElement:
+					for (unsigned int k = 0; k < bombes.size(); k++) {
+						if (bombes[k]->getCase() == (posXMine - j) + posYMine * sizeX) {
+							bombes[k]->explode();
+							exitLoop = true;
+							break;
+						}
+					}
+					break;
+				case wallElement:
+					exitLoop = true;
+					break;
+			}
+			if (!aWallHasBurn) {
+				// if we don't have burn a wall, we can have a bonus in the case of table. we remove it !
+				if (tabBonus[(posXMine - j) + posYMine * sizeX] != -1) {
+					grid->burnBonus((posXMine - j), posYMine);
+					redrawElement((posXMine - j), posYMine);
+					BurnBonusList.push_back(new BurnBonus(posXMine - j, posYMine));
+				}
+			}
+		}
+	}
 }

@@ -249,7 +249,15 @@ void LevelService::createLevel0(){
 	variante->addButton(73);
 	variante->addButton(75);
 	variante->addHole(176);
+	variante->addMine(213);
 	variante->addMine(211);
+	variante->addMine(215);
+	variante->addMine(219);
+	variante->addMine(256);
+	variante->addMine(258);
+	variante->addMine(260);
+	variante->addMine(262);
+	variante->addMine(264);
 	variante->addTeleporter(179);
 	variante->addTeleporter(122);
 	variante->addTeleporter(205);
