@@ -1411,6 +1411,7 @@ void Game::buttonDoSomething() {
 				if (tab[it1->second->getIndex()] != brickElement) {
 					it1->second->switching();
 					redrawRail(it1->second->getIndex());
+					redrawTrolley(it1->second->getIndex());
 				} else {
 					it1->second->switching();
 				}
