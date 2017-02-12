@@ -56,8 +56,8 @@ void Grid::reset() {
 	notEmptyCase.clear();
 	for (int j = 0; j < sizeY; j++) {
 		for (int i = 0; i < sizeX; i++) {
-			tab[i] = emptyElement;
-			tabBonus[i] = noMalus;
+			tab[i+j*sizeX] = emptyElement;
+			tabBonus[i+j*sizeX] = noBonus;
 		}
 	}
 }
@@ -92,8 +92,8 @@ void Grid::generateGrid() {
 
 	for(int j=0;j<sizeY;j++) {
 		for(int i=0;i<sizeX;i++) {
-			tab[i] = emptyElement;
-			tabBonus[i] = noMalus;
+			tab[i+j*sizeX] = emptyElement;
+			tabBonus[i+j*sizeX] = noBonus;
 			dstrect.x = i * smallSpriteLevelSizeWidth;
 			dstrect.y = j * smallSpriteLevelSizeHeight;
 			dstrect.w = smallSpriteLevelSizeWidth;

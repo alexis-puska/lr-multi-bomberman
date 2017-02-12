@@ -1511,10 +1511,16 @@ void Game::redrawTeleporter(int index) {
 			grid->drawBonus(index);
 		}
 	}
-
 }
-void Game::redrawTrolley(int index) {
 
+void Game::redrawTrolley(int index) {
+	std::map<int, Trolley*>::iterator it = trolleys.find(index);
+	if (it != trolleys.end()) {
+		it->second->drawHimself(grid->getBricksLayer());
+		if (tabBonus[index] != noBonus && tab[index] < brickElement) {
+			grid->drawBonus(index);
+		}
+	}
 }
 
 void Game::InitElementOfGame() {
@@ -1543,11 +1549,11 @@ void Game::InitElementOfGame() {
 			it->second->drawHimself(grid->getBricksLayer(), 0);
 		}
 	}
-//	for (std::map<int, Trolley*>::iterator it = trolleys.begin(); it != trolleys.end(); ++it) {
-//		if (tab[it->first] < brickElement || tab[it->first] == bombeElement) {
-//			it->second->drawHimself(grid->getBricksLayer());
-//		}
-//	}
+	for (std::map<int, Trolley*>::iterator it = trolleys.begin(); it != trolleys.end(); ++it) {
+		if (tab[it->first] < brickElement || tab[it->first] == bombeElement) {
+			it->second->drawHimself(grid->getBricksLayer());
+		}
+	}
 }
 
 void Game::GenerateMineExplosion(int index, int direction) {

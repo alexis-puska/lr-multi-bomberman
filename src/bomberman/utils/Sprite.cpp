@@ -1181,6 +1181,9 @@ SDL_Surface* Sprite::getHole(int idx) {
 SDL_Surface* Sprite::getRail(int idx) {
 	return rail[idx];
 }
+SDL_Surface* Sprite::getTrolley(int idx) {
+	return trolleySprite[idx];
+}
 
 void Sprite::applyUnderwaterOverlay(SDL_Surface * surface, int idx) {
 	SDL_Rect destTextureRectTmp;

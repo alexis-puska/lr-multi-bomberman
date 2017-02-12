@@ -128,6 +128,7 @@ class Sprite {
 		SDL_Surface* getTeleporter(int idx);
 		SDL_Surface* getHole(int idx);
 		SDL_Surface* getRail(int idx);
+		SDL_Surface* getTrolley(int idx);
 		/*
 		 * DRAW PLAYER FUNCTION
 		 */

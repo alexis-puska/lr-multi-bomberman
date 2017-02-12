@@ -208,6 +208,10 @@ void LevelService::createLevel0(){
 	variante->textureIsAWall(0,17);
 
 	variante->addRail(36);
+	variante->addTrolley(36);
+	variante->addTrolley(37);
+	variante->addTrolley(38);
+	variante->addTrolley(39);
 	variante->addRail(37);
 	variante->addRail(38);
 	variante->addRail(39);

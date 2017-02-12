@@ -13,7 +13,17 @@ class Trolley {
 	public:
 		Trolley(int index);
 		~Trolley();
+		void doSomething(SDL_Surface * surface);
+		void drawHimself(SDL_Surface * surface);
+		int getCurrentIndex();
+		int getPrevIndex();
 	private:
+		//case présent
+		int index;
+		int prevIndex;
+		//position en mouvement
+		float x;
+		float y;
 
 
 };

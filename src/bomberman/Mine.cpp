@@ -14,6 +14,9 @@ Mine::Mine(int index) {
 	work = false;
 	channelSound = 0;
 	count = 0;
+	for(int i = 0; i < nbPlayer; i++){
+		activate[i] = false;
+	}
 }
 
 Mine::~Mine() {
@@ -45,6 +48,7 @@ bool Mine::doSomething(SDL_Surface * surface) {
 			frameCounter++;
 			drawHimself(surface, (type == straight ? offsetSprite + 8 : offsetSprite));
 		}
+		//freeze animation avant explostion
 		if (count == nbCycle) {
 			Sound::Instance().stopMineSound(channelSound);
 			if (type == straight) {
@@ -92,9 +96,17 @@ bool Mine::doSomething(SDL_Surface * surface) {
 			}
 			drawHimself(surface, (type == straight ? offsetSprite + 8 : offsetSprite));
 		}
-		if (count > nbCycleEnd) {
+		if (count >= nbCycleEnd) {
+			//fin animation : reset
 			work = false;
 			count = 0;
+			frameCounter = 0;
+			offsetSprite = 0;
+			nbFrameForAnimation = 8;
+			channelSound = 0;
+			for(int i = 0; i < nbPlayer; i++){
+				activate[i] = false;
+			}
 			drawHimself(surface, 12);
 			return true;
 		}
@@ -106,6 +118,11 @@ bool Mine::doSomething(SDL_Surface * surface) {
 				activate[i] = true;
 				if (!work) {
 					type = rand() % 2;
+					if(type == straight){
+						offsetSprite = rand() % 4;
+					}else{
+						offsetSprite = rand() % 8;
+					}
 					work = true;
 				}
 			} else if (index != GameConfig::Instance().getPlayerIndex(i) && activate[i] == true) {

@@ -154,6 +154,7 @@ std::vector<int> LevelVariante::getTeleportersIndex() {
 }
 void LevelVariante::addTrolley(int index) {
 	trolleys.push_back(index);
+	reserved[index] = true;
 }
 std::vector<int> LevelVariante::getTrolleysIndex() {
 	return trolleys;
