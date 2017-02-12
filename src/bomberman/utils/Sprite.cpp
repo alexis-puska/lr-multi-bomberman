@@ -17,8 +17,8 @@ const static char *spriteFirePath = "./resources/sprite/other/Fire.png";
 const static char *spriteMiscPath = "./resources/sprite/other/Misc.png";
 const static char *spritePreviewLevelPath = "./resources/sprite/level/LevelView.png";
 const static char *spriteLevelPath = "./resources/sprite/level/AllLevel.png";
-const static char *spriteTrolleyPath = "./resources/sprite/other/trolley.png";
-const static char *spriteSpaceShipPath = "./resources/sprite/other/spaceShip.png";
+const static char *spriteTrolleyPath = "./resources/sprite/other/Trolleys.png";
+const static char *spriteSpaceShipPath = "./resources/sprite/other/SpaceShips.png";
 
 const static char *fontPath = "./resources/font/fragile_bombers.ttf";
 const static SDL_Color greenColor = { 0, 255, 0 };
