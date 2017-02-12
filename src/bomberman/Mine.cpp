@@ -8,11 +8,12 @@ Mine::Mine(int index) {
 	srand (time(NULL));
 
 	//for animation
-frameCounter	= 0;
+	frameCounter = 0;
 	offsetSprite = 0;
 	nbFrameForAnimation = 8;
 	work = false;
 	channelSound = 0;
+	count = 0;
 }
 
 Mine::~Mine() {
