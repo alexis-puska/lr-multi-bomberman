@@ -57,6 +57,18 @@ make -f Makefile.libretro
 ```
 
 Raspberry pi 2/3: 
+
+Change your swapFile default size, since the sprite, sound, musique, image is encode un binary in the code we need to have more swap to compile 
+- sudo nano /etc/dphys-swapfile
+The default value in Raspbian is:
+```
+CONF_SWAPSIZE=100
+```
+change to 
+```
+CONF_SWAPSIZE=200
+```
+
 - edit the file : Makefile.libretro
 - uncommente the line : #platform = rpi
 - add the version of your raspberry pi
