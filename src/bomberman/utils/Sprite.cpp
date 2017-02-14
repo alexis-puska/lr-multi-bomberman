@@ -1,26 +1,35 @@
 #include "Sprite.h"
 #include <vector>
 
-const static char *splashScreen = "./resources/image/SplashScreen.png";
-const static char *menuBackground = "./resources/image/MenuBackground.png";
-const static char *background = "./resources/image/EmptyBackground.png";
-const static char *spriteBombermanPath = "./resources/sprite/characters/AllBomberman.png";
-const static char *spriteBombermanBarbarPath = "./resources/sprite/characters/AllBombermanBarbar.png";
-const static char *spriteBombermanChanPath = "./resources/sprite/characters/AllBombermanChan.png";
-const static char *spriteBombermanCossakPath = "./resources/sprite/characters/AllBombermanCossak.png";
-const static char *spriteBombermanKidPath = "./resources/sprite/characters/AllBombermanKid.png";
-const static char *spriteBombermanMexicanPath = "./resources/sprite/characters/AllBombermanMexican.png";
-const static char *spriteBombermanPrettyPath = "./resources/sprite/characters/AllBombermanPretty.png";
-const static char *spriteBombermanPunkPath = "./resources/sprite/characters/AllBombermanPunk.png";
-const static char *spriteLouisPath = "./resources/sprite/characters/AllLouis.png";
-const static char *spriteFirePath = "./resources/sprite/other/Fire.png";
-const static char *spriteMiscPath = "./resources/sprite/other/Misc.png";
-const static char *spritePreviewLevelPath = "./resources/sprite/level/LevelView.png";
-const static char *spriteLevelPath = "./resources/sprite/level/AllLevel.png";
-const static char *spriteTrolleyPath = "./resources/sprite/other/Trolleys.png";
-const static char *spriteSpaceShipPath = "./resources/sprite/other/SpaceShips.png";
+//include ressource memory area
 
-const static char *fontPath = "./resources/font/fragile_bombers.ttf";
+
+//image
+#include "resources/img_empty_background.h"
+#include "resources/img_menu_background.h"
+#include "resources/img_splash_screen.h"
+
+//sprite
+#include "resources/sprite_all_level.h"
+#include "resources/sprite_bomberman_barbar.h"
+#include "resources/sprite_bomberman_chan.h"
+#include "resources/sprite_bomberman_cossak.h"
+#include "resources/sprite_bomberman_kid.h"
+#include "resources/sprite_bomberman_mexican.h"
+#include "resources/sprite_bomberman_pretty.h"
+#include "resources/sprite_bomberman_punk.h"
+#include "resources/sprite_bomberman.h"
+#include "resources/sprite_fire.h"
+#include "resources/sprite_level_view.h"
+#include "resources/sprite_louis.h"
+#include "resources/sprite_misc.h"
+#include "resources/sprite_space_ship.h"
+#include "resources/sprite_trolley.h"
+
+//font
+#include "resources/font_fragile_bombers.h"
+
+
 const static SDL_Color greenColor = { 0, 255, 0 };
 const static SDL_Color redColor = { 255, 0, 0 };
 const static SDL_Color blueColor = { 0, 140, 255 };
@@ -29,6 +38,9 @@ const static SDL_Color goldColor = { 255, 255, 0 };
 Sprite Sprite::m_instance = Sprite();
 
 Sprite::Sprite() {
+
+
+
 	TTF_Init();
 	IMG_Init(IMG_INIT_PNG);
 	fprintf(stderr, "Init sprite system\n");
@@ -48,12 +60,14 @@ Sprite::Sprite() {
 	waterOverlay = new SDL_Surface *[nbWaterOverlayX * nbWaterOverlayY];
 	rail = new SDL_Surface *[nbRailX * nbRailY];
 	button = new SDL_Surface *[nbButtonX * nbButtonY];
-	splashScreenSurface = IMG_Load(splashScreen);
-	menuBackgroundSurface = IMG_Load(menuBackground);
-	backgroundSurface = IMG_Load(background);
+
+
+	splashScreenSurface = IMG_LoadPNG_RW(SDL_RWFromMem(img_splash_screen_png, img_splash_screen_png_len));
+	menuBackgroundSurface = IMG_LoadPNG_RW(SDL_RWFromMem(img_menu_background_png, img_menu_background_png_len));
+	backgroundSurface = IMG_LoadPNG_RW(SDL_RWFromMem(img_empty_background_png, img_empty_background_png_len));
 	cropSurface();
 	fprintf(stderr, "init font text system\n");
-	font = TTF_OpenFont(fontPath, 16);
+	font = TTF_OpenFontRW(SDL_RWFromMem(font_fragile_bombers_ttf, font_fragile_bombers_ttf_len),1, 16);
 }
 
 Sprite::~Sprite() {
@@ -490,7 +504,7 @@ SDL_Surface* Sprite::applyLouisColor(SDL_Surface * surface, int color) {
 void Sprite::cropSurface() {
 	createShadowArea();
 
-	SDL_Surface * misc = IMG_Load(spriteMiscPath);
+	SDL_Surface * misc = IMG_LoadPNG_RW(SDL_RWFromMem(sprite_misc_png, sprite_misc_png_len));
 	cropBombeSurface(misc);
 	cropBonusSurface(misc);
 	cropMineSurface(misc);
@@ -503,25 +517,25 @@ void Sprite::cropSurface() {
 
 	for (int i = 0; i < (nbFrameWater + 1); i++) {
 		int idx = nbSpritePlayerX * nbSpritePlayerY * nbColorPlayer * nbTypePlayer * i;
-		cropPlayerSurface(IMG_Load(spriteBombermanPath), idx + (nbSpritePlayerX * nbSpritePlayerY * nbColorPlayer * 0), (i - 1));
-		cropPlayerSurface(IMG_Load(spriteBombermanCossakPath), idx + (nbSpritePlayerX * nbSpritePlayerY * nbColorPlayer * 1), (i - 1));
-		cropPlayerSurface(IMG_Load(spriteBombermanBarbarPath), idx + (nbSpritePlayerX * nbSpritePlayerY * nbColorPlayer * 2), (i - 1));
-		cropPlayerSurface(IMG_Load(spriteBombermanChanPath), idx + (nbSpritePlayerX * nbSpritePlayerY * nbColorPlayer * 3), (i - 1));
-		cropPlayerSurface(IMG_Load(spriteBombermanKidPath), idx + (nbSpritePlayerX * nbSpritePlayerY * nbColorPlayer * 4), (i - 1));
-		cropPlayerSurface(IMG_Load(spriteBombermanPrettyPath), idx + (nbSpritePlayerX * nbSpritePlayerY * nbColorPlayer * 5), (i - 1));
-		cropPlayerSurface(IMG_Load(spriteBombermanPunkPath), idx + (nbSpritePlayerX * nbSpritePlayerY * nbColorPlayer * 6), (i - 1));
-		cropPlayerSurface(IMG_Load(spriteBombermanMexicanPath), idx + (nbSpritePlayerX * nbSpritePlayerY * nbColorPlayer * 7), (i - 1));
+		cropPlayerSurface(IMG_LoadPNG_RW(SDL_RWFromMem(sprite_bomberman_png, sprite_bomberman_png_len)), idx + (nbSpritePlayerX * nbSpritePlayerY * nbColorPlayer * 0), (i - 1));
+		cropPlayerSurface(IMG_LoadPNG_RW(SDL_RWFromMem(sprite_bomberman_cossak_png, sprite_bomberman_cossak_png_len)), idx + (nbSpritePlayerX * nbSpritePlayerY * nbColorPlayer * 1), (i - 1));
+		cropPlayerSurface(IMG_LoadPNG_RW(SDL_RWFromMem(sprite_bomberman_barbar_png, sprite_bomberman_barbar_png_len)), idx + (nbSpritePlayerX * nbSpritePlayerY * nbColorPlayer * 2), (i - 1));
+		cropPlayerSurface(IMG_LoadPNG_RW(SDL_RWFromMem(sprite_bomberman_chan_png, sprite_bomberman_chan_png_len)), idx + (nbSpritePlayerX * nbSpritePlayerY * nbColorPlayer * 3), (i - 1));
+		cropPlayerSurface(IMG_LoadPNG_RW(SDL_RWFromMem(sprite_bomberman_kid_png, sprite_bomberman_kid_png_len)), idx + (nbSpritePlayerX * nbSpritePlayerY * nbColorPlayer * 4), (i - 1));
+		cropPlayerSurface(IMG_LoadPNG_RW(SDL_RWFromMem(sprite_bomberman_pretty_png, sprite_bomberman_pretty_png_len)), idx + (nbSpritePlayerX * nbSpritePlayerY * nbColorPlayer * 5), (i - 1));
+		cropPlayerSurface(IMG_LoadPNG_RW(SDL_RWFromMem(sprite_bomberman_punk_png, sprite_bomberman_punk_png_len)), idx + (nbSpritePlayerX * nbSpritePlayerY * nbColorPlayer * 6), (i - 1));
+		cropPlayerSurface(IMG_LoadPNG_RW(SDL_RWFromMem(sprite_bomberman_mexican_png, sprite_bomberman_mexican_png_len)), idx + (nbSpritePlayerX * nbSpritePlayerY * nbColorPlayer * 7), (i - 1));
 	}
 	for (int i = 0; i < (nbFrameWater + 1); i++) {
 		int offset = nbTypeLouis * nbSpriteLouisY * nbSpriteLouisX * i;
-		cropLouisSurface(IMG_Load(spriteLouisPath), offset, (i - 1));
+		cropLouisSurface(IMG_LoadPNG_RW(SDL_RWFromMem(sprite_louis_png, sprite_louis_png_len)), offset, (i - 1));
 	}
 
-	cropFireSurface(IMG_Load(spriteFirePath));
-	cropPreviewLevelSurface(IMG_Load(spritePreviewLevelPath));
-	cropLevelSurface(IMG_Load(spriteLevelPath));
-	cropTrolleySurface(IMG_Load(spriteTrolleyPath));
-	cropSpaceShipSurface(IMG_Load(spriteSpaceShipPath));
+	cropFireSurface(IMG_LoadPNG_RW(SDL_RWFromMem(sprite_fire_png, sprite_fire_png_len)));
+	cropPreviewLevelSurface(IMG_LoadPNG_RW(SDL_RWFromMem(sprite_level_view_png, sprite_level_view_png_len)));
+	cropLevelSurface(IMG_LoadPNG_RW(SDL_RWFromMem(sprite_all_level_png, sprite_all_level_png_len)));
+	cropTrolleySurface(IMG_LoadPNG_RW(SDL_RWFromMem(sprite_trolley_png, sprite_trolley_png_len)));
+	cropSpaceShipSurface(IMG_LoadPNG_RW(SDL_RWFromMem(sprite_space_ship_png, sprite_space_ship_png_len)));
 }
 
 void Sprite::createShadowArea() {

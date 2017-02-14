@@ -10,10 +10,16 @@
 
 - Linux / Ubuntu
 ```
-sudo apt-get install libsdl2-image-mixer
-sudo apt-get install libsdl2-image-dev
-sudo apt-get install libsdl2-ttf-dev
-sudo apt-get install libsdl2-dev
+sudo apt-get install -y make libsdl2-dev 
+sudo apt-get install -y make libsdl2-image-dev 
+sudo apt-get install -y make libsdl2-ttf-dev 
+sudo apt-get install -y make libsdl2-mixer-dev 
+
+- Linux / Fedora
+sudo dnf install SDL2-devel
+sudo dnf install SDL2_mixer-devel
+sudo dnf install SDL2_ttf-devel
+sudo dnf install SDL2_image-devel
 ```
 
 

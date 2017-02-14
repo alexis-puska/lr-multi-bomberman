@@ -1,24 +1,24 @@
 #include "Sound.h"
 
 //musique
-const static char *musiquePath = "./resources/musique/menu.mp3";
-const static char *battlePath = "./resources/musique/battle.mp3";
+#include "resources/music_menu.h"
+#include "resources/music_battle.h"
 //sound
-const static char *valideSoundPath = "./resources/sound/valide.wav";
-const static char *cancelSoundPath = "./resources/sound/cancel.wav";
-const static char *bipSoundPath = "./resources/sound/bip.wav";
-const static char *fireSoundPath = "./resources/sound/fire.wav";
-const static char *LouisSoundPath = "./resources/sound/louis.wav";
-const static char *bounceSoundPath = "./resources/sound/bounce.wav";
-const static char *playerBurnSoundPath = "./resources/sound/burn.wav";
-const static char *playerKickSoundPath = "./resources/sound/kick.wav";
-const static char *endSoundPath = "./resources/sound/end.wav";
-const static char *hole1SoundPath = "./resources/sound/hole1.wav";
-const static char *hole2SoundPath = "./resources/sound/hole2.wav";
-const static char *hole3SoundPath = "./resources/sound/hole3.wav";
-const static char *teleporterOpenSoundPath = "./resources/sound/teleporter_open.wav";
-const static char *teleporterCloseSoundPath = "./resources/sound/teleporter_close.wav";
-const static char *mineSoundPath = "./resources/sound/mine.wav";
+#include "resources/sound_bip.h"
+#include "resources/sound_bounce.h"
+#include "resources/sound_burn.h"
+#include "resources/sound_cancel.h"
+#include "resources/sound_end.h"
+#include "resources/sound_fire.h"
+#include "resources/sound_hole1.h"
+#include "resources/sound_hole2.h"
+#include "resources/sound_hole3.h"
+#include "resources/sound_kick.h"
+#include "resources/sound_louis.h"
+#include "resources/sound_mine.h"
+#include "resources/sound_teleporter_close.h"
+#include "resources/sound_teleporter_open.h"
+#include "resources/sound_valide.h"
 
 Sound Sound::m_instance = Sound();
 
@@ -27,25 +27,26 @@ Sound::Sound() {
 	if (Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, MIX_DEFAULT_CHANNELS, 1024) == -1) {
 		printf("%s", Mix_GetError());
 	}
-	menu = Mix_LoadMUS(musiquePath);
-	battle = Mix_LoadMUS(battlePath);
 
-	validSound = Mix_LoadWAV(valideSoundPath);
-	cancelSound = Mix_LoadWAV(cancelSoundPath);
-	bipSound = Mix_LoadWAV(bipSoundPath);
-	fireSound = Mix_LoadWAV(fireSoundPath);
-	louisSound = Mix_LoadWAV(LouisSoundPath);
-	playerBurnSound = Mix_LoadWAV(playerBurnSoundPath);
-	playerKickSound = Mix_LoadWAV(playerKickSoundPath);
-	bombeBounceSound = Mix_LoadWAV(bounceSoundPath);
-	endSound = Mix_LoadWAV(endSoundPath);
-	hole1Sound = Mix_LoadWAV(hole1SoundPath);
-	hole2Sound = Mix_LoadWAV(hole2SoundPath);
-	hole3Sound = Mix_LoadWAV(hole3SoundPath);
-	teleporterOpenSound = Mix_LoadWAV(teleporterOpenSoundPath);
-	teleporterCloseSound = Mix_LoadWAV(teleporterCloseSoundPath);
-	mineSound = Mix_LoadWAV(mineSoundPath);
 
+	menu = Mix_LoadMUSType_RW(SDL_RWFromMem(music_menu_mp3, music_menu_mp3_len), MUS_MP3, 0);
+	battle = Mix_LoadMUSType_RW(SDL_RWFromMem(music_battle_mp3, music_battle_mp3_len), MUS_MP3, 0);
+
+	bipSound = Mix_LoadWAV_RW(SDL_RWFromMem(sound_bip_wav, sound_bip_wav_len), 0);
+	bombeBounceSound = Mix_LoadWAV_RW(SDL_RWFromMem(sound_bounce_wav, sound_bounce_wav_len), 0);
+	playerBurnSound = Mix_LoadWAV_RW(SDL_RWFromMem(sound_burn_wav, sound_burn_wav_len), 0);
+	cancelSound = Mix_LoadWAV_RW(SDL_RWFromMem(sound_cancel_wav, sound_cancel_wav_len), 0);
+	endSound = Mix_LoadWAV_RW(SDL_RWFromMem(sound_end_wav, sound_end_wav_len), 0);
+	fireSound = Mix_LoadWAV_RW(SDL_RWFromMem(sound_fire_wav, sound_fire_wav_len), 0);
+	hole1Sound = Mix_LoadWAV_RW(SDL_RWFromMem(sound_hole1_wav, sound_hole1_wav_len), 0);
+	hole2Sound = Mix_LoadWAV_RW(SDL_RWFromMem(sound_hole2_wav, sound_hole2_wav_len), 0);
+	hole3Sound = Mix_LoadWAV_RW(SDL_RWFromMem(sound_hole3_wav, sound_hole3_wav_len), 0);
+	playerKickSound = Mix_LoadWAV_RW(SDL_RWFromMem(sound_kick_wav, sound_kick_wav_len), 0);
+	louisSound = Mix_LoadWAV_RW(SDL_RWFromMem(sound_louis_wav, sound_louis_wav_len), 0);
+	mineSound = Mix_LoadWAV_RW(SDL_RWFromMem(sound_mine_wav, sound_mine_wav_len), 0);
+	teleporterCloseSound = Mix_LoadWAV_RW(SDL_RWFromMem(sound_teleporter_close_wav, sound_teleporter_close_wav_len), 0);
+	teleporterOpenSound = Mix_LoadWAV_RW(SDL_RWFromMem(sound_teleporter_open_wav, sound_teleporter_open_wav_len), 0);
+	validSound = Mix_LoadWAV_RW(SDL_RWFromMem(sound_valide_wav, sound_valide_wav_len), 0);
 	Mix_PlayMusic(menu, -1);
 	Mix_VolumeMusic (MIX_MAX_VOLUME);
 	Mix_AllocateChannels(nbChannelSound);
