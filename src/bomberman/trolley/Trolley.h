@@ -5,6 +5,7 @@
 #endif
 
 #include "../utils/Sprite.h"
+#include "../utils/GameConfig.h"
 
 #ifndef __MYCLASS_TROLLEY
 #define __MYCLASS_TROLLEY
@@ -17,6 +18,8 @@ class Trolley {
 		void drawHimself(SDL_Surface * surface);
 		int getCurrentIndex();
 		int getPrevIndex();
+
+		bool isMove();
 	private:
 		//case présent
 		int index;
@@ -24,7 +27,8 @@ class Trolley {
 		//position en mouvement
 		float x;
 		float y;
-
+		bool move;
+		bool activate[nbPlayer];
 
 };
 #endif

@@ -34,7 +34,7 @@ enum playerSprite {
 };
 
 enum playerStateEnum {
-	normal = 0, onLouis = 1, carryBombe = 2, throwBombe = 3, burning = 4, victory = 5, victoryOnLouis = 6, crying = 7, dead = 8
+	normal = 0, onLouis = 1, insideTrolley = 2, carryBombe = 3, throwBombe = 4, burning = 5, victory = 6, victoryOnLouis = 7, crying = 8, dead = 9
 };
 
 enum nbFrameAnimationEnum {
