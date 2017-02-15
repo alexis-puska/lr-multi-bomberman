@@ -194,14 +194,32 @@ this	->vout_buf = vout_buf;
 
 Game::~Game() {
 	exitGame();
+	for (std::map<int, Trolley*>::iterator it = trolleys.begin(); it != trolleys.end(); ++it) {
+		delete it->second;
+	}
+	for (std::map<int, Button*>::iterator it = buttons.begin(); it != buttons.end(); ++it) {
+		delete it->second;
+	}
+	for (std::map<int, Rail*>::iterator it = rails.begin(); it != rails.end(); ++it) {
+		delete it->second;
+	}
+	for (std::map<int, Mine*>::iterator it = mines.begin(); it != mines.end(); ++it) {
+		delete it->second;
+	}
+	for (std::map<int, Hole*>::iterator it = holes.begin(); it != holes.end(); ++it) {
+		delete it->second;
+	}
+	for (std::map<int, Teleporter*>::iterator it = teleporters.begin(); it != teleporters.end(); ++it) {
+		delete it->second;
+	}
+	for (unsigned int i = 0; i < bombes.size(); i++) {
+		delete bombes[i];
+	}
 	for (unsigned int i = 0; i < brains.size(); i++) {
 		delete brains[i];
 	}
 	for (unsigned int i = 0; i < players.size(); i++) {
 		delete players[i];
-	}
-	for (unsigned int i = 0; i < bombes.size(); i++) {
-		delete bombes[i];
 	}
 	for (unsigned int i = 0; i < explosions.size(); i++) {
 		delete explosions[i];
@@ -220,24 +238,6 @@ Game::~Game() {
 	}
 	for (unsigned int i = 0; i < BurnBonusList.size(); i++) {
 		delete BurnBonusList[i];
-	}
-	for (std::map<int, Rail*>::iterator it = rails.begin(); it != rails.end(); ++it) {
-		delete it->second;
-	}
-	for (std::map<int, Button*>::iterator it = buttons.begin(); it != buttons.end(); ++it) {
-		delete it->second;
-	}
-	for (std::map<int, Trolley*>::iterator it = trolleys.begin(); it != trolleys.end(); ++it) {
-		delete it->second;
-	}
-	for (std::map<int, Mine*>::iterator it = mines.begin(); it != mines.end(); ++it) {
-		delete it->second;
-	}
-	for (std::map<int, Hole*>::iterator it = holes.begin(); it != holes.end(); ++it) {
-		delete it->second;
-	}
-	for (std::map<int, Teleporter*>::iterator it = teleporters.begin(); it != teleporters.end(); ++it) {
-		delete it->second;
 	}
 
 	brains.clear();
@@ -542,6 +542,7 @@ void Game::tick() {
 			holeDoSomething();
 			mineDoSomething();
 			teleporterDoSomething();
+			trolleyDoSomething();
 
 			/*
 			 *
@@ -1371,7 +1372,7 @@ void Game::initTrolley() {
 	if (trolleysIndex.size() != 0) {
 		for (unsigned int i = 0; i < trolleysIndex.size(); i++) {
 			int indexTrolley = trolleysIndex[i];
-			Trolley * trolley = new Trolley(indexTrolley);
+			Trolley * trolley = new Trolley(indexTrolley, &players, &rails);
 			trolleys[indexTrolley] = trolley;
 		}
 	}
@@ -1447,6 +1448,21 @@ void Game::teleporterDoSomething() {
 		if (it->second->doSomething(grid->getBricksLayer())) {
 			grid->drawBonus(it->second->getIndex());
 		}
+	}
+}
+
+void Game::trolleyDoSomething() {
+	for (std::map<int, Trolley*>::iterator it = trolleys.begin(); it != trolleys.end(); ++it) {
+		it->second->doSomething(grid->getBricksLayer());
+//		int idxPlayerInside = it->second->getPlayerInside();
+//		int idxPlayerOutside = it->second->getPlayerOutside();
+//		if(idxPlayerInside != -1){
+//			players[idxPlayerInside]->goInsideTrolley();
+//			players[idxPlayerInside]->setTrolleyDirection(it->second->getDirection());
+//		}
+//		if(idxPlayerOutside != -1){
+//			players[idxPlayerOutside]->goOutsideTrolley();
+//		}
 	}
 }
 

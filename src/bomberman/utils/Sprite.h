@@ -134,6 +134,7 @@ class Sprite {
 		 */
 		SDL_Surface* playerDrawNormal(int type, int color, int move, int pos, int offsetUnderWater);
 		SDL_Surface* drawOnLouis(int type, int color, int move, int offsetUnderWater);
+		SDL_Surface* playerDrawInsideTrolley(int type, int color, int trolleyDirection);
 		SDL_Surface* drawWithBombe(int type, int color, int move, int pos, int offsetUnderWater);
 		SDL_Surface* drawThrowBombe(int type, int color, int move, int pos, int offsetUnderWater);
 		SDL_Surface* drawBurning(int type, int color, int pos, int offsetUnderWater);

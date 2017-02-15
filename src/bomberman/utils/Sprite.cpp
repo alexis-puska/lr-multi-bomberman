@@ -1119,6 +1119,14 @@ SDL_Surface* Sprite::playerDrawNormal(int type, int color, int move, int pos, in
 	return playerSprite[calcStartIndexPlayer(type, color, offsetUnderWater) + (nbSpritePlayerX * move) + pos];
 }
 
+SDL_Surface* Sprite::playerDrawInsideTrolley(int type, int color, int trolleyDirection) {
+	if(trolleyDirection >= 4){
+		return playerSprite[calcStartIndexPlayer(type, color, 0) + 41 + trolleyDirection];
+	}else{
+		return playerSprite[calcStartIndexPlayer(type, color, 0) + 50 + trolleyDirection];
+	}
+}
+
 SDL_Surface* Sprite::drawOnLouis(int type, int color, int move, int offsetUnderWater) {
 	return playerSprite[calcStartIndexPlayer(type, color, offsetUnderWater) + (nbSpritePlayerX * move) + 8];
 }

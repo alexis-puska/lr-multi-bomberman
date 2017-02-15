@@ -11,7 +11,7 @@
 #include <vector>
 #include <algorithm>
 
-#include "Player.h"
+
 #include "ia/Brain.h"
 #include "utils/Sound.h"
 #include "utils/LevelService.h"
@@ -22,6 +22,12 @@
 #include "animation/BurnBonus.h"
 #include "utils/Sprite.h"
 #include "utils/GameConfig.h"
+#include "trolley/Rail.h"
+#include "trolley/Button.h"
+#include "trolley/Trolley.h"
+#include "Teleporter.h"
+#include "Mine.h"
+#include "Hole.h"
 
 #ifndef __MYCLASS_GAME
 #define __MYCLASS_GAME
@@ -152,6 +158,7 @@ class Game {
 		void mineDoSomething();
 		void holeDoSomething();
 		void teleporterDoSomething();
+		void trolleyDoSomething();
 		void initRails();
 		void initButtons();
 		void initHole();

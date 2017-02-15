@@ -10,11 +10,14 @@
 #include "Grid.h"
 #include "utils/Sound.h"
 
+
 #ifndef __MYCLASS_BOMBE
 #define __MYCLASS_BOMBE
 
 #define sizeX 35
 #define sizeY 21
+
+class Player;
 
 class Bombe {
 

@@ -61,6 +61,9 @@ class Player {
 		void brainPressButton();
 
 		int foundABonus();
+		bool goInsideTrolley();
+		void goOutsideTrolley();
+		void setTrolleyDirection(int direction);
 
 	private:
 		/*
@@ -77,6 +80,7 @@ class Player {
 		float posY;
 		float playerSpeed;
 		int playerState;
+		int previousPlayerState;
 		int nbTickMalus;
 		int playerMalus;
 		float previousSpeedValue;
@@ -109,6 +113,7 @@ class Player {
 		//direction variable
 		unsigned short * in_keystate;
 		int previousDirection;
+		int trolleyDirection;
 
 		//animation part
 		int frameCounter;
@@ -131,6 +136,7 @@ class Player {
 		 */
 		void drawNormal(SDL_Surface * surfaceToDraw, bool animate, int offsetUnderWater);
 		void drawOnLouis(SDL_Surface * surfaceToDraw, bool animate, int offsetUnderWater);
+		void drawInsideTrolley(SDL_Surface * surfaceToDraw);
 		void drawWithBombe(SDL_Surface * surfaceToDraw, bool animate, int offsetUnderWater);
 		void drawThrowBombe(SDL_Surface * surfaceToDraw, bool animate, int offsetUnderWater);
 		void drawBurning(SDL_Surface * surfaceToDraw, bool animate, int offsetUnderWater);

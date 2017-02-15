@@ -73,6 +73,7 @@ Player::Player(unsigned short * in_keystate, float posX, float posY, int playerN
 
 
 	playerState = normal;
+	previousPlayerState = normal;
 	invincibleTime = 0;
 	NbBombeMax = GameConfig::Instance().getBombe();
 	NBBombeRemaining = GameConfig::Instance().getBombe();
@@ -86,6 +87,7 @@ Player::Player(unsigned short * in_keystate, float posX, float posY, int playerN
 	inSuddenDeathTime = false;
 	kickIndex = -1;
 	kickDirection = -1;
+	trolleyDirection = -1;
 
 	flameStrengh = GameConfig::Instance().getStrenghtBombe();
 	playerSpeed = 0.1;
@@ -206,6 +208,21 @@ void Player::drawOnLouis(SDL_Surface * surfaceToDraw, bool animate, int offsetUn
 		SDL_BlitSurface(louisMergebuffer, &srcTextureRect, surfaceToDraw, &destTextureRect);
 	}
 	SDL_FreeSurface(louisMergebuffer);
+}
+
+void Player::drawInsideTrolley(SDL_Surface * surfaceToDraw) {
+	nbFrameForAnimation = 0;
+	SDL_Rect srcTextureRect;
+	SDL_Rect destTextureRect;
+	destTextureRect.x = (posX * blockSizeX) - (sprite_sizeW / 2);
+	destTextureRect.y = (posY * blockSizeY) - (sprite_sizeH - 7);
+	destTextureRect.w = sprite_sizeW;
+	destTextureRect.h = sprite_sizeH;
+	srcTextureRect.x = 0;
+	srcTextureRect.y = 0;
+	srcTextureRect.w = sprite_sizeW;
+	srcTextureRect.h = sprite_sizeH;
+	SDL_BlitSurface(Sprite::Instance().playerDrawInsideTrolley(characterSpriteIndex, color, trolleyDirection), &srcTextureRect, surfaceToDraw, &destTextureRect);
 }
 
 void Player::drawWithBombe(SDL_Surface * surfaceToDraw, bool animate, int offsetUnderWater) {
@@ -689,6 +706,9 @@ void Player::doSomething(SDL_Surface * surfaceToDraw) {
 		case onLouis:
 			drawOnLouis(surfaceToDraw, animate, offsetUnderWater);
 			break;
+		case insideTrolley:
+			drawInsideTrolley(surfaceToDraw);
+			break;
 		case carryBombe:
 			drawWithBombe(surfaceToDraw, animate, offsetUnderWater);
 			break;
@@ -1058,4 +1078,22 @@ int Player::getBombeRemaining(){
 
 int Player::getPreviousDirection(){
 	return previousDirection;
+}
+
+bool Player::goInsideTrolley(){
+	if(playerState == normal || playerState == onLouis){
+		previousPlayerState = playerState;
+		playerState = insideTrolley;
+		trolleyDirection = 0;
+		return true;
+	}
+	return false;
+}
+
+void Player::goOutsideTrolley(){
+	playerState = previousPlayerState;
+}
+
+void Player::setTrolleyDirection(int direction){
+	trolleyDirection = direction;
 }

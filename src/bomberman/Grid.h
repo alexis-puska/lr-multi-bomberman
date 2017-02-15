@@ -11,12 +11,6 @@
 #include "utils/Sprite.h"
 #include "utils/LevelService.h"
 #include "utils/GameConfig.h"
-#include "trolley/Rail.h"
-#include "trolley/Button.h"
-#include "trolley/Trolley.h"
-#include "Teleporter.h"
-#include "Mine.h"
-#include "Hole.h"
 
 
 #ifndef __MYCLASS_GRID

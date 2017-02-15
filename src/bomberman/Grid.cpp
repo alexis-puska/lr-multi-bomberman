@@ -286,9 +286,8 @@ int Grid::playerDeadNeedBonus(int bonusIndex) {
 
 int Grid::getEmptyCaseAlea() {
 	std::map<int, int>::iterator it = emptyCase.begin();
-	std::advance(it, rand() % emptyCase.size() + 1);
+	std::advance(it, rand() % emptyCase.size());
 	int ind = it->first;
-	//int ind = notEmptyCase[rand() % notEmptyCase.size()];
 	while (tabBonus[ind] != noBonus) {
 		it = emptyCase.begin();
 		std::advance(it, rand() % emptyCase.size() + 1);
@@ -298,9 +297,8 @@ int Grid::getEmptyCaseAlea() {
 }
 int Grid::getNotEmptyCaseAlea() {
 	std::map<int, int>::iterator it = notEmptyCase.begin();
-	std::advance(it, rand() % notEmptyCase.size() + 1);
+	std::advance(it, rand() % notEmptyCase.size());
 	int ind = it->first;
-	//int ind = notEmptyCase[rand() % notEmptyCase.size()];
 	while (tabBonus[ind] != noBonus) {
 		it = notEmptyCase.begin();
 		std::advance(it, rand() % notEmptyCase.size() + 1);
