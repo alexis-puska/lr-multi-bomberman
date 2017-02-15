@@ -25,11 +25,13 @@ class Rail {
 		~Rail();
 		void init(std::map<int, Rail*> rails);
 		int getIndex();
-		int getNext(int previous);
+		int getNext(int prev, int cur);
 		void switching();
 		bool isBumper();
 		bool isSwitching();
 		void drawHimself(SDL_Surface * surfaceToDraw);
+		void print();
+		int getNextIndex();
 	private:
 		void initImpl(int index, std::map<int, Rail*> rails);
 		int index;

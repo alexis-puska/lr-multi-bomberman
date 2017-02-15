@@ -14,7 +14,7 @@ Trolley::Trolley(int index) {
 	move = false;
 }
 
-Trolley::Trolley(int index, std::vector <Player*> * players, std::map<int, Rail *> * rails) {
+Trolley::Trolley(int index, std::vector<Player*> * players, std::map<int, Rail *> * rails) {
 	this->index = index;
 	this->prevIndex = -1;
 	this->playerInside = -1;
@@ -39,11 +39,41 @@ void Trolley::doSomething(SDL_Surface * surface) {
 			players->at(i)->setTrolleyDirection(0);
 			playerInside = i;
 			playerOutside = -1;
+
+			Rail * rail = rails->find(index)->second;
+
+			int cur = index;
+			int nxt = rail->getNextIndex();
+			int prv = -1;
+			fprintf(stderr, "start idx %i next %i\n", cur, nxt);
+
+			while (true) {
+
+				if (!rail->isBumper()) {
+					prv = cur;
+					cur = nxt;
+
+					nxt = rail->getNext(prv, cur);
+
+					if (nxt == -1) {
+						fprintf(stderr, "aiguillage en mauvaise position\n");
+						break;
+					}
+					rail = rails->find(nxt)->second;
+
+					fprintf(stderr, "idx  %i next %i\n", cur, nxt);
+
+				} else {
+					fprintf(stderr, "break");
+					break;
+				}
+			}
+			//fprintf(stderr,"break2");
+
 			break;
 		} else if (index != GameConfig::Instance().getPlayerIndex(i) && activate[i] == true) {
 			activate[i] = false;
-			if(playerInside != -1)
-			{
+			if (playerInside != -1) {
 				players->at(playerInside)->goOutsideTrolley();
 				playerOutside = playerInside;
 				playerInside = -1;
@@ -54,8 +84,8 @@ void Trolley::doSomething(SDL_Surface * surface) {
 
 void Trolley::drawHimself(SDL_Surface * surface) {
 	SDL_Rect dstRect;
-	float posX = (float)(index % 35) + 0.5;
-	float posY = (float)(floor(index / 35)) + 0.5;
+	float posX = (float) (index % 35) + 0.5;
+	float posY = (float) (floor(index / 35)) + 0.5;
 	dstRect.x = (posX * blockSizeX) - (sprite_sizeW / 2);
 	dstRect.y = (posY * blockSizeY) - (sprite_sizeH - 10);
 	dstRect.w = smallSpriteLevelSizeWidth;
@@ -70,20 +100,20 @@ int Trolley::getPrevIndex() {
 	return prevIndex;
 }
 
-bool Trolley::isMove(){
+bool Trolley::isMove() {
 	return move;
 }
 
-int Trolley::getPlayerInside(){
+int Trolley::getPlayerInside() {
 	return playerInside;
 }
 
-int Trolley::getPlayerOutside(){
+int Trolley::getPlayerOutside() {
 	int tmp = playerOutside;
 	playerOutside = -1;
 	return tmp;;
 }
 
-int Trolley::getDirection(){
+int Trolley::getDirection() {
 	return direction;
 }

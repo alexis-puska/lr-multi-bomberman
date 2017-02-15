@@ -1298,50 +1298,16 @@ void Game::initRails() {
 				rails[it1->first] = rail;
 			}
 		}
-//		int index = 0;
+		int index = 0;
 		if (rails.size() != 0) {
 			for (std::map<int, Rail*>::iterator it = rails.begin(); it != rails.end(); ++it) {
 				it->second->init(rails);
 			}
-//			for (std::map<int, Rail*>::iterator it = rails.begin(); it != rails.end(); ++it) {
-//				if (it->second->isBumper()) {
-//					index = it->second->getIndex();
-//					break;
-//				}
-//			}
-//			Rail * rail = rails.find(index)->second;
-//			fprintf(stderr, "rail %i start, next %i", rail->getIndex(), rail->getNext(index));
-//			rail = rails.find(rail->getNext(index))->second;
-//			while (true) {
-//				if (!rail->isBumper()) {
-//					rail = rails.find(rail->getNext(index))->second;
-//					fprintf(stderr, "rail %i start", rail->getIndex());
-//				} else {
-//					break;
-//				}
-//			}
-//			rails.find(112)->second->switching();
-//
-//			for (std::map<int, Rail*>::iterator it = rails.begin(); it != rails.end(); ++it) {
-//				if (it->second->isBumper()) {
-//					index = it->second->getIndex();
-//					break;
-//				}
-//			}
-//			fprintf(stderr, "%i index found\n", index);
-//			rail = rails.find(index)->second;
-//			fprintf(stderr, "rail %i start, next %i", rail->getIndex(), rail->getNext(index));
-//			rail = rails.find(rail->getNext(index))->second;
-//			while (true) {
-//				if (!rail->isBumper()) {
-//					rail = rails.find(rail->getNext(index))->second;
-//					fprintf(stderr, "rail %i start", rail->getIndex());
-//				} else {
-//					break;
-//				}
-//			}
-		}
 
+			for (std::map<int, Rail*>::iterator it = rails.begin(); it != rails.end(); ++it) {
+				it->second->print();
+			}
+		}
 	}
 }
 

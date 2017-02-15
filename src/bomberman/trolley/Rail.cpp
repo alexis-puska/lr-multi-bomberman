@@ -65,16 +65,19 @@ int Rail::getIndex() {
 	return index;
 }
 
-int Rail::getNext(int prev) {
-	if (prev == nextIndex) {
+int Rail::getNext(int prv, int cur) {
+
+	if (prv == nextIndex) {
 		return prevIndex;
-	} else {
-		if (nextIndex != -1) {
-			return nextIndex;
-		} else {
-			return prevIndex;
-		}
 	}
+	if(prv == nextIndexAlt){
+		return -1;
+	}
+	return nextIndex;
+}
+
+int Rail::getNextIndex() {
+	return nextIndex;
 }
 
 void Rail::switching() {
@@ -147,4 +150,8 @@ void Rail::drawHimself(SDL_Surface * surfaceToDraw) {
 				}
 		}
 	}
+}
+
+void Rail::print() {
+	fprintf(stderr, "rail %i %i %i %i\n", index, nextIndex, prevIndex, nextIndexAlt);
 }
