@@ -32,7 +32,6 @@ Trolley::~Trolley() {
 }
 
 void Trolley::doSomething(SDL_Surface * surface) {
-	fprintf(stderr, "%i", players->size());
 	for (int i = 0; i < nbPlayer; i++) {
 		if (index == GameConfig::Instance().getPlayerIndex(i) && activate[i] == false) {
 			activate[i] = true;

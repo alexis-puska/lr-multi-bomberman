@@ -17,8 +17,6 @@
 #define sizeX 35
 #define sizeY 21
 
-class Player;
-
 class Bombe {
 
 	public:
