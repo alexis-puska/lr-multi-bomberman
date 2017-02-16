@@ -25,6 +25,7 @@ class Rail {
 		~Rail();
 		void init(std::map<int, Rail*> rails);
 		int getIndex();
+		int getPrevIndex();
 		int getNext(int prev, int cur);
 		void switching();
 		bool isBumper();

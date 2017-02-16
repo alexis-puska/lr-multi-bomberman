@@ -1,18 +1,26 @@
 #include "Button.h"
 
-Button::Button(int index) {
+Button::Button(int index, std::map<int, Trolley *> * trolleys) {
 	this->index = index;
 	this->pressed = false;
+	this->trolleys = trolleys;
 	for(int i = 0; i< nbPlayer; i++){
 		activate[i] = false;
 	}
 }
 
 Button::~Button() {
+	trolleys = NULL;
 }
 
 bool Button::doSomething(SDL_Surface * surfaceToDraw){
 	bool switched = false;
+	bool oneTrolleyMove;
+	for (std::map<int, Trolley*>::iterator it = trolleys->begin(); it != trolleys->end(); ++it) {
+		if(it->second->isMove()){
+			return false;
+		}
+	}
 	for(int i = 0; i< nbPlayer; i++){
 		if(index == GameConfig::Instance().getPlayerIndex(i) && activate[i] == false){
 			switching(surfaceToDraw);

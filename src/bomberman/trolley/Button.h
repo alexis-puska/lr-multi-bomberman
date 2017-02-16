@@ -7,6 +7,7 @@
 #include <stdio.h>
 #include "../utils/Sprite.h"
 #include "../utils/GameConfig.h"
+#include "Trolley.h"
 
 #ifndef __MYCLASS_BUTTON
 #define __MYCLASS_BUTTON
@@ -17,7 +18,7 @@
 
 class Button {
 	public:
-		Button(int index);;
+		Button(int index, std::map<int, Trolley *> * trolleys);
 		~Button();
 		bool doSomething(SDL_Surface * surfaceToDraw);
 		void drawHimself(SDL_Surface * surfaceToDraw);
@@ -26,6 +27,7 @@ class Button {
 		int index;
 		bool pressed;
 		bool activate[nbPlayer];
+		std::map<int, Trolley *> * trolleys;
 };
 
 #endif

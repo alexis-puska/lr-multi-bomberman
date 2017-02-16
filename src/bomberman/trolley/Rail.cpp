@@ -66,18 +66,18 @@ int Rail::getIndex() {
 }
 
 int Rail::getNext(int prv, int cur) {
-
-	if (prv == nextIndex) {
+	if (prv == nextIndex || prv == nextIndexAlt) {
 		return prevIndex;
-	}
-	if(prv == nextIndexAlt){
-		return -1;
 	}
 	return nextIndex;
 }
 
 int Rail::getNextIndex() {
 	return nextIndex;
+}
+
+int Rail::getPrevIndex() {
+	return prevIndex;
 }
 
 void Rail::switching() {

@@ -22,11 +22,6 @@ class Trolley {
 		void doSomething(SDL_Surface * surface);
 		void drawHimself(SDL_Surface * surface);
 		int getCurrentIndex();
-		int getPrevIndex();
-		int getDirection();
-		int getPlayerInside();
-		int getPlayerOutside();
-
 		bool isMove();
 	private:
 		//case présent
@@ -41,6 +36,7 @@ class Trolley {
 		int playerInside;
 		int playerOutside;
 		int direction;
+		bool switchBadPosition;
 
 		std::vector <Player *> * players;
 		std::map<int, Rail *> * rails;

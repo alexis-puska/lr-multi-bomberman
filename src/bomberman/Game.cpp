@@ -1298,7 +1298,6 @@ void Game::initRails() {
 				rails[it1->first] = rail;
 			}
 		}
-		int index = 0;
 		if (rails.size() != 0) {
 			for (std::map<int, Rail*>::iterator it = rails.begin(); it != rails.end(); ++it) {
 				it->second->init(rails);
@@ -1316,7 +1315,7 @@ void Game::initButtons() {
 	if (buttonsIndex.size() != 0) {
 		for (unsigned int i = 0; i < buttonsIndex.size(); i++) {
 			int indexButton = buttonsIndex[i];
-			Button * button = new Button(indexButton);
+			Button * button = new Button(indexButton, &trolleys);
 			buttons[indexButton] = button;
 		}
 	}
