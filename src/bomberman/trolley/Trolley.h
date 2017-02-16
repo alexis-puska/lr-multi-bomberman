@@ -26,7 +26,6 @@ class Trolley {
 	private:
 		//case actuelle
 		int index;
-		//case précédente pour supprimer la simulation d'explosion
 		int prevIndex;
 		//position en mouvement
 		float x;
@@ -34,11 +33,19 @@ class Trolley {
 		//en déplacement
 		bool move;
 		bool activate[nbPlayer];
+		bool placeInMiddle;
+
+
+		int cur;
+		int nxt;
+		int prv;
+		Rail * rail;
 
 		int playerInside;
 		int direction;
 
 		std::vector <Player *> * players;
 		std::map<int, Rail *> * rails;
+		void correctValue();
 };
 #endif
