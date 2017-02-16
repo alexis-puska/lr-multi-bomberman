@@ -15,7 +15,6 @@ Button::~Button() {
 
 bool Button::doSomething(SDL_Surface * surfaceToDraw){
 	bool switched = false;
-	bool oneTrolleyMove;
 	for (std::map<int, Trolley*>::iterator it = trolleys->begin(); it != trolleys->end(); ++it) {
 		if(it->second->isMove()){
 			return false;
