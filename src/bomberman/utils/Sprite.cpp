@@ -1120,10 +1120,10 @@ SDL_Surface* Sprite::playerDrawNormal(int type, int color, int move, int pos, in
 }
 
 SDL_Surface* Sprite::playerDrawInsideTrolley(int type, int color, int trolleyDirection) {
-	if(trolleyDirection >= 4){
+	if(trolleyDirection < 4){
 		return playerSprite[calcStartIndexPlayer(type, color, 0) + 41 + trolleyDirection];
 	}else{
-		return playerSprite[calcStartIndexPlayer(type, color, 0) + 50 + trolleyDirection];
+		return playerSprite[calcStartIndexPlayer(type, color, 0) + 46 + trolleyDirection];
 	}
 }
 

@@ -45,6 +45,8 @@ enum louisTypeEnum {
 	blueLouis = 0, yellowLouis = 1, pinkLouis = 2, greenLouis = 3, brownLouis = 4
 };
 
+
+
 Player::Player(unsigned short * in_keystate, float posX, float posY, int playerNumber, int tab[sizeX * sizeY], int tabBonus[sizeX * sizeY], Grid * gridParam,
 		int indexPlayerForGame, bool isUnderWater) {
 	srand (time(NULL));grid = gridParam;
@@ -466,7 +468,7 @@ void Player::doSomething(SDL_Surface * surfaceToDraw) {
 	bool animate = false;
 	louisBurn = false;
 	if (playerState != dead || playerState == victory) {
-		if (playerState != burning) {
+		if (playerState != burning && playerState != insideTrolley) {
 			/*
 			 * Direction of a player
 			 */
@@ -684,8 +686,10 @@ void Player::doSomething(SDL_Surface * surfaceToDraw) {
 			if (playerMalus == diarheeMalus) {
 				putABombe = true;
 			}
+		}else if(playerState == insideTrolley){
+			posX = GameConfig::Instance().getPlayerPosX(playerNumber);
+			posY = GameConfig::Instance().getPlayerPosY(playerNumber);
 		}
-
 	}
 
 

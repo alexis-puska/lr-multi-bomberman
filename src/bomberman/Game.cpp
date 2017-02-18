@@ -1524,7 +1524,7 @@ void Game::InitElementOfGame() {
 	}
 	for (std::map<int, Trolley*>::iterator it = trolleys.begin(); it != trolleys.end(); ++it) {
 		if (tab[it->first] < brickElement || tab[it->first] == bombeElement) {
-			it->second->drawHimself(grid->getBricksLayer());
+			it->second->drawHimself(playerBombeExplode);
 		}
 	}
 }
