@@ -30,6 +30,7 @@ class Trolley {
 		void doSomething(SDL_Surface * surface);
 		void drawHimself(SDL_Surface * surface);
 		int getCurrentIndex();
+		int getPreviousIndex();
 		bool isMove();
 	private:
 		//case actuelle

@@ -1419,6 +1419,33 @@ void Game::teleporterDoSomething() {
 void Game::trolleyDoSomething() {
 	for (std::map<int, Trolley*>::iterator it = trolleys.begin(); it != trolleys.end(); ++it) {
 		it->second->doSomething(playerBombeExplode);
+		if (it->second->isMove()) {
+			int cur = it->second->getCurrentIndex();
+			fprintf(stderr, "cur : %i\n", cur);
+			int prv = it->second->getPreviousIndex();
+			int curX = cur % sizeX;
+			int curY = floor(cur / sizeX);
+			if (tab[cur] == brickElement) {
+				grid->burnABrick(curX, curY);
+				redrawRail(cur);
+				redrawRail(prv);
+				burnWalls.push_back(new BurnWall(curX, curY, 0, tab, tabBonus));
+			}
+			for (unsigned int k = 0; k < bombes.size(); k++) {
+				if (bombes[k]->getCase() == cur) {
+					bombes[k]->explode();
+					break;
+				}
+			}
+			grid->burnBonus(curX, curY);
+			tab[cur] = explosionElement;
+			if (prv != -1) {
+				redrawRail(prv);
+				tab[prv] = emptyElement;
+			}
+		} else {
+			tab[it->second->getCurrentIndex()] = emptyElement;
+		}
 	}
 }
 

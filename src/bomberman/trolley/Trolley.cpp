@@ -68,7 +68,7 @@ void Trolley::doSomething(SDL_Surface * surface) {
 				if (nxt == -1) {
 					nxt = rail->getPrevIndex();
 				}
-				fprintf(stderr, "idx  %i next %i\n", cur, nxt);
+				//fprintf(stderr, "idx  %i next %i\n", cur, nxt);
 				break;
 			} else if (index != GameConfig::Instance().getPlayerIndex(i) && activate[i] == true) {
 				activate[i] = false;
@@ -90,7 +90,7 @@ void Trolley::doSomething(SDL_Surface * surface) {
 					prv = cur;
 					cur = nxt;
 					nxt = rail->getNext(prv, cur);
-					fprintf(stderr, "idx  %i next %i\n", cur, nxt);
+					//fprintf(stderr, "idx  %i next %i\n", cur, nxt);
 				}
 				prevIndex = index;
 			} else if (rail->isBumper() && prv != -1) {
@@ -133,6 +133,10 @@ int Trolley::getCurrentIndex() {
 
 bool Trolley::isMove() {
 	return move;
+}
+
+int Trolley::getPreviousIndex(){
+	return prv;
 }
 
 void Trolley::correctValue() {
@@ -257,7 +261,7 @@ void Trolley::moveTrolley() {
 			case 36:
 				//PC
 				//-N
-				fprintf(stderr, "%f, %f\n", x, y);
+				//fprintf(stderr, "%f, %f\n", x, y);
 				if (nxt - cur == 35) {
 					if (x - floor(x) < 0.4) {
 						x += speed;
