@@ -806,8 +806,8 @@ void Sprite::cropSpaceShipSurface(SDL_Surface * surface) {
 	destTextureRect.w = spaceShipSpriteSizeWidth;
 	destTextureRect.h = spaceShipSpriteSizeHeight;
 
-	for (int j = 0; j < nbSpaceShipSpriteY; j++) {
-		for (int i = 0; i < nbSpaceShipSpriteX; i++) {
+	for (int i = 0; i < nbSpaceShipSpriteX; i++) {
+		for (int j = 0; j < nbSpaceShipSpriteY; j++) {
 			srcTextureRect.x = i * spaceShipSpriteSizeWidth;
 			srcTextureRect.y = j * spaceShipSpriteSizeHeight;
 			srcTextureRect.w = spaceShipSpriteSizeWidth;
@@ -1175,6 +1175,12 @@ SDL_Surface* Sprite::drawLouisBurning(int type, int pos, int offsetUnderWater) {
 
 SDL_Surface* Sprite::drawVictoryOnLouis(int type, int pos, int offsetUnderWater) {
 	return louisSprite[(nbSpriteLouisX * nbSpriteLouisY * nbTypeLouis) * offsetUnderWater + (nbSpriteLouisX * nbSpriteLouisY * type) + (4 * nbSpriteLouisX) + 4 + pos];
+}
+/****************
+ * SPACESHIP
+ ****************/
+SDL_Surface* Sprite::getSpaceShip(int index){
+	return spaceShipSprite[index];
 }
 /****************
  * menu /header shadow area

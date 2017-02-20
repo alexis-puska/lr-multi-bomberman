@@ -146,6 +146,7 @@ class Sprite {
 		SDL_Surface* drawVictoryOnLouis(int type, int pos, int offsetUnderWater);
 		SDL_Surface* getHappySprite(int type, int color, int offsetUnderWater);
 		SDL_Surface* getCryingSprite(int type, int color, int offsetUnderWater);
+		SDL_Surface* getSpaceShip(int index);
 		/*
 		 * DRAW TEXT FUNCTION
 		 */

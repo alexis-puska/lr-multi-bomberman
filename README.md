@@ -132,11 +132,12 @@ After this step lr-multi-bomberman is installed, compile, and integrated in emul
 |Holl in game								|    |           |X   |
 |Teleporter									|    |           |X   |
 |Mine										|	 | 			 |X   |
-|Trolley									|    |X          |    |
-|Game type bad bomber						|X   |           |    |
-|Power(glove)								|X   |           |    |
-|Artificial interlligence 					|X   |           |    |
+|Trolley									|    |           |X   |
+|make level for trolley						|    |X          |    |
+|Game type bad bomber						|    |X          |    |
+|Power(glove)								|    |X          |    |
 |Net (multiplayer over internet)			|X   |           |    |
+|Artificial interlligence 					|X   |           |    |
 |other level design (pirates, ring)			|X   |           |    |
 
 convoyeur (3 * 8)

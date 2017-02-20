@@ -45,10 +45,12 @@ enum louisTypeEnum {
 	blueLouis = 0, yellowLouis = 1, pinkLouis = 2, greenLouis = 3, brownLouis = 4
 };
 
+enum spaceShipTypeEnum {
+	spaceShipFront = 0, spaceShipRight = 1, spaceShipBottom = 2, spaceShipLeft = 3
+};
 
-
-Player::Player(unsigned short * in_keystate, float posX, float posY, int playerNumber, int tab[sizeX * sizeY], int tabBonus[sizeX * sizeY], Grid * gridParam,
-		int indexPlayerForGame, bool isUnderWater) {
+Player::Player(unsigned short * in_keystate, float posX, float posY, int playerNumber, int tab[sizeX * sizeY], int tabBonus[sizeX * sizeY], Grid * gridParam, int indexPlayerForGame,
+		bool isUnderWater) {
 	srand (time(NULL));grid = gridParam;
 	this->indexPlayerForGame = indexPlayerForGame;
 	this->posX = posX;
@@ -62,17 +64,15 @@ Player::Player(unsigned short * in_keystate, float posX, float posY, int playerN
 	this->color = GameConfig::Instance().getPlayerColor(playerNumber);;
 	this->louisType = blueLouis;
 	this->isUnderWater = isUnderWater;
-	if(isUnderWater){
+	if(isUnderWater) {
 		offsetUnderWater = 1;
-	}else{
+	} else {
 		offsetUnderWater = 0;
 	}
 	indexUnderWater = 0;
 
-
 	//fprintf(stderr, "%i %2it %2ic %2is %2isc %2ist\n", playerNumber, GameConfig::Instance().getPlayerColor(), );
 	GameConfig::Instance().updatePlayerPosition(playerNumber, posX, posY);
-
 
 	playerState = normal;
 	previousPlayerState = normal;
@@ -152,7 +152,7 @@ void Player::drawNormal(SDL_Surface * surfaceToDraw, bool animate, int offsetUnd
 			offsetSpriteAnimation = 2;
 			break;
 	}
-	SDL_BlitSurface(Sprite::Instance().playerDrawNormal(characterSpriteIndex, color, previousDirection, offsetSpriteAnimation,  offsetUnderWater), &srcTextureRect, surfaceToDraw, &destTextureRect);
+	SDL_BlitSurface(Sprite::Instance().playerDrawNormal(characterSpriteIndex, color, previousDirection, offsetSpriteAnimation, offsetUnderWater), &srcTextureRect, surfaceToDraw, &destTextureRect);
 }
 
 void Player::drawOnLouis(SDL_Surface * surfaceToDraw, bool animate, int offsetUnderWater) {
@@ -212,6 +212,44 @@ void Player::drawOnLouis(SDL_Surface * surfaceToDraw, bool animate, int offsetUn
 	SDL_FreeSurface(louisMergebuffer);
 }
 
+void Player::drawBadBomber(SDL_Surface * surfaceToDraw) {
+	Uint32 rmask, gmask, bmask, amask;
+	amask = 0xff000000;
+	rmask = 0x00ff0000;
+	gmask = 0x0000ff00;
+	bmask = 0x000000ff;
+	nbFrameForAnimation = animationOnLouis;
+	SDL_Rect srcTextureRect;
+	SDL_Rect destTextureRect;
+	destTextureRect.x = (posX * blockSizeX) - (sprite_sizeW / 2);
+	destTextureRect.y = (posY * blockSizeY) - 20;
+	destTextureRect.w = sprite_sizeW;
+	destTextureRect.h = sprite_sizeH;
+	srcTextureRect.x = 0;
+	srcTextureRect.y = 0;
+	srcTextureRect.w = sprite_sizeW;
+	srcTextureRect.h = sprite_sizeH;
+	louisMergebuffer = SDL_CreateRGBSurface(0, sprite_sizeW, sprite_sizeH, 32, rmask, gmask, bmask, amask);
+	if (posX == 0.5) {
+		SDL_BlitSurface(Sprite::Instance().drawOnLouis(characterSpriteIndex, color, right, 0), &srcTextureRect, louisMergebuffer, &srcTextureRect);
+		SDL_BlitSurface(Sprite::Instance().getSpaceShip(spaceShipLeft), &srcTextureRect, louisMergebuffer, &srcTextureRect);
+		SDL_BlitSurface(louisMergebuffer, &srcTextureRect, surfaceToDraw, &destTextureRect);
+	} else if (posX == 34.5) {
+		SDL_BlitSurface(Sprite::Instance().drawOnLouis(characterSpriteIndex, color, left, 0), &srcTextureRect, louisMergebuffer, &srcTextureRect);
+		SDL_BlitSurface(Sprite::Instance().getSpaceShip(spaceShipRight), &srcTextureRect, louisMergebuffer, &srcTextureRect);
+		SDL_BlitSurface(louisMergebuffer, &srcTextureRect, surfaceToDraw, &destTextureRect);
+	} else if (posY == 0.5) {
+		SDL_BlitSurface(Sprite::Instance().drawOnLouis(characterSpriteIndex, color, down, 0), &srcTextureRect, louisMergebuffer, &srcTextureRect);
+		SDL_BlitSurface(Sprite::Instance().getSpaceShip(spaceShipFront), &srcTextureRect, louisMergebuffer, &srcTextureRect);
+		SDL_BlitSurface(louisMergebuffer, &srcTextureRect, surfaceToDraw, &destTextureRect);
+	} else if (posY == 20.5) {
+		SDL_BlitSurface(Sprite::Instance().drawOnLouis(characterSpriteIndex, color, up, 0), &srcTextureRect, louisMergebuffer, &srcTextureRect);
+		SDL_BlitSurface(Sprite::Instance().getSpaceShip(spaceShipBottom), &srcTextureRect, louisMergebuffer, &srcTextureRect);
+		SDL_BlitSurface(louisMergebuffer, &srcTextureRect, surfaceToDraw, &destTextureRect);
+	}
+	SDL_FreeSurface(louisMergebuffer);
+}
+
 void Player::drawInsideTrolley(SDL_Surface * surfaceToDraw) {
 	nbFrameForAnimation = 0;
 	SDL_Rect srcTextureRect;
@@ -266,7 +304,7 @@ void Player::drawWithBombe(SDL_Surface * surfaceToDraw, bool animate, int offset
 			offsetSpriteAnimation = 2;
 			break;
 	}
-	SDL_BlitSurface(Sprite::Instance().drawWithBombe(characterSpriteIndex, color, previousDirection, offsetSpriteAnimation,  offsetUnderWater), &srcTextureRect, surfaceToDraw, &destTextureRect);
+	SDL_BlitSurface(Sprite::Instance().drawWithBombe(characterSpriteIndex, color, previousDirection, offsetSpriteAnimation, offsetUnderWater), &srcTextureRect, surfaceToDraw, &destTextureRect);
 }
 
 void Player::drawThrowBombe(SDL_Surface * surfaceToDraw, bool animate, int offsetUnderWater) {
@@ -293,7 +331,7 @@ void Player::drawThrowBombe(SDL_Surface * surfaceToDraw, bool animate, int offse
 	} else {
 		offsetSprite = 0;
 	}
-	SDL_BlitSurface(Sprite::Instance().drawThrowBombe(characterSpriteIndex, color, previousDirection, offsetSprite,  offsetUnderWater), &srcTextureRect, surfaceToDraw, &destTextureRect);
+	SDL_BlitSurface(Sprite::Instance().drawThrowBombe(characterSpriteIndex, color, previousDirection, offsetSprite, offsetUnderWater), &srcTextureRect, surfaceToDraw, &destTextureRect);
 }
 
 void Player::drawBurning(SDL_Surface * surfaceToDraw, bool animate, int offsetUnderWater) {
@@ -315,7 +353,11 @@ void Player::drawBurning(SDL_Surface * surfaceToDraw, bool animate, int offsetUn
 			if (offsetSprite >= nbFrameForAnimation) {
 				offsetSprite = 0;
 				playerState = dead;
-				GameConfig::Instance().updatePlayerPosition(playerNumber, -1.0, -1.0);
+				if (GameConfig::Instance().isBadBomberMode()) {
+					initBadBomberPosition();
+				} else {
+					GameConfig::Instance().updatePlayerPosition(playerNumber, -1.0, -1.0);
+				}
 				return;
 			}
 		}
@@ -323,7 +365,7 @@ void Player::drawBurning(SDL_Surface * surfaceToDraw, bool animate, int offsetUn
 	} else {
 		offsetSprite = 0;
 	}
-	SDL_BlitSurface(Sprite::Instance().drawBurning(characterSpriteIndex, color, offsetSprite,  offsetUnderWater), &srcTextureRect, surfaceToDraw, &destTextureRect);
+	SDL_BlitSurface(Sprite::Instance().drawBurning(characterSpriteIndex, color, offsetSprite, offsetUnderWater), &srcTextureRect, surfaceToDraw, &destTextureRect);
 }
 
 void Player::drawVictory(SDL_Surface * surfaceToDraw, bool animate, int offsetUnderWater) {
@@ -365,7 +407,7 @@ void Player::drawVictory(SDL_Surface * surfaceToDraw, bool animate, int offsetUn
 			offsetSpriteAnimation = 2;
 			break;
 	}
-	SDL_BlitSurface(Sprite::Instance().drawVictory(characterSpriteIndex, color, offsetSpriteAnimation,  offsetUnderWater), &srcTextureRect, surfaceToDraw, &destTextureRect);
+	SDL_BlitSurface(Sprite::Instance().drawVictory(characterSpriteIndex, color, offsetSpriteAnimation, offsetUnderWater), &srcTextureRect, surfaceToDraw, &destTextureRect);
 }
 
 void Player::drawVictoryOnLouis(SDL_Surface * surfaceToDraw, bool animate, int offsetUnderWater) {
@@ -413,12 +455,11 @@ void Player::drawVictoryOnLouis(SDL_Surface * surfaceToDraw, bool animate, int o
 			break;
 	}
 	louisMergebuffer = SDL_CreateRGBSurface(0, sprite_sizeW, sprite_sizeH, 32, rmask, gmask, bmask, amask);
-		SDL_BlitSurface(Sprite::Instance().drawPlayerVictoryOnLouis(characterSpriteIndex, color,  offsetUnderWater), &srcTextureRect, louisMergebuffer, &srcTextureRect);
-		SDL_BlitSurface(Sprite::Instance().drawVictoryOnLouis(louisType, offsetSpriteAnimation,  offsetUnderWater), &srcTextureRect, louisMergebuffer, &srcTextureRect);
-		SDL_BlitSurface(louisMergebuffer, &srcTextureRect, surfaceToDraw, &destTextureRect);
+	SDL_BlitSurface(Sprite::Instance().drawPlayerVictoryOnLouis(characterSpriteIndex, color, offsetUnderWater), &srcTextureRect, louisMergebuffer, &srcTextureRect);
+	SDL_BlitSurface(Sprite::Instance().drawVictoryOnLouis(louisType, offsetSpriteAnimation, offsetUnderWater), &srcTextureRect, louisMergebuffer, &srcTextureRect);
+	SDL_BlitSurface(louisMergebuffer, &srcTextureRect, surfaceToDraw, &destTextureRect);
 	SDL_FreeSurface(louisMergebuffer);
 }
-
 
 void Player::drawCrying(SDL_Surface * surfaceToDraw, bool animate, int offsetUnderWater) {
 	nbFrameForAnimation = animationCrying;
@@ -674,7 +715,7 @@ void Player::doSomething(SDL_Surface * surfaceToDraw) {
 			}
 			if (keystate & keyPadX) {
 				if (playerMalus != constipationMalus) {
-					if(lineOfBombePower){
+					if (lineOfBombePower) {
 						putLineOfBombe = true;
 					}
 				}
@@ -686,18 +727,82 @@ void Player::doSomething(SDL_Surface * surfaceToDraw) {
 			if (playerMalus == diarheeMalus) {
 				putABombe = true;
 			}
-		}else if(playerState == insideTrolley){
+		} else if (playerState == insideTrolley) {
 			posX = GameConfig::Instance().getPlayerPosX(playerNumber);
 			posY = GameConfig::Instance().getPlayerPosY(playerNumber);
 		}
+	} else if (playerState == dead && GameConfig::Instance().isBadBomberMode() && !inSuddenDeathTime) {
+		//BAD BOMBER MOVE
+		posX = GameConfig::Instance().getPlayerPosX(playerNumber);
+		posY = GameConfig::Instance().getPlayerPosY(playerNumber);
+		float speed = 0.1;
+		if (keystate & keyPadL1) {
+			speed += 0.1;
+		}
+		if (keystate & keyPadL2) {
+			speed += 0.1;
+		}
+		if (keystate & keyPadR1) {
+			speed += 0.1;
+		}
+		if (keystate & keyPadR2) {
+			speed += 0.1;
+		}
+		if (speed >= 0.5) {
+			speed = 0.5;
+		}
+		if (keystate & keyPadLeft) {
+			if (floor(posY) == 0 || floor(posY) == 20) {
+				posY = floor(posY) + 0.5;
+				if (posX > 0.5) {
+					posX -= speed;
+					if (posX <= 0.5) {
+						posX = 0.5;
+					}
+				}
+			}
+		}
+		if (keystate & keyPadUp) {
+			if (floor(posX) == 0 || floor(posX) == 34) {
+				posX = floor(posX) + 0.5;
+				if (posY > 0.5) {
+					posY -= speed;
+					if (posY <= 0.5) {
+						posY = 0.5;
+					}
+				}
+			}
+		}
+		if (keystate & keyPadRight) {
+			if (floor(posY) == 0 || floor(posY) == 20) {
+				posY = floor(posY) + 0.5;
+				if (posX < 34.5) {
+					posX += speed;
+					if (posX >= 34.5) {
+						posX = 34.5;
+					}
+				}
+			}
+		}
+		if (keystate & keyPadDown) {
+			if (floor(posX) == 0 || floor(posX) == 34) {
+				posX = floor(posX) + 0.5;
+				if (posY < 20.5) {
+					posY += speed;
+					if (posY <= 0.5) {
+						posY = 0.5;
+					}
+				}
+			}
+		}
+		GameConfig::Instance().updatePlayerPosition(playerNumber, posX, posY);
 	}
 
-
-	if(isUnderWater){
-		if(indexUnderWater > nbFrameUnderWater){
+	if (isUnderWater) {
+		if (indexUnderWater > nbFrameUnderWater) {
 			offsetUnderWater++;
 		}
-		if( offsetUnderWater > nbFrameWater){
+		if (offsetUnderWater > nbFrameWater) {
 			offsetUnderWater = 1;
 		}
 		indexUnderWater++;
@@ -731,9 +836,14 @@ void Player::doSomething(SDL_Surface * surfaceToDraw) {
 		case crying:
 			drawCrying(surfaceToDraw, animate, offsetUnderWater);
 			break;
+		case dead:
+			if (GameConfig::Instance().isBadBomberMode() && !inSuddenDeathTime) {
+				drawBadBomber(surfaceToDraw);
+			}
+			break;
 	}
 
-	if (playerState == dead) {
+	if (playerState == dead && !GameConfig::Instance().isBadBomberMode()) {
 		GameConfig::Instance().updatePlayerPosition(playerNumber, -1.0, -1.0);
 	} else {
 		//malus treatment
@@ -749,15 +859,15 @@ void Player::doSomething(SDL_Surface * surfaceToDraw) {
 
 	//correct value for AStar
 	if (floor(GameConfig::Instance().getPlayerPosY(playerNumber)) > sizeY - 1) {
-		GameConfig::Instance().updatePlayerPosY(playerNumber,0);
+		GameConfig::Instance().updatePlayerPosY(playerNumber, 0);
 	}
 }
 
-BurnLouis* Player::louisBurnAnimation(){
+BurnLouis* Player::louisBurnAnimation() {
 	return new BurnLouis(posX, posY);
 }
 
-bool Player::isLouisBurn(){
+bool Player::isLouisBurn() {
 	return louisBurn;
 }
 
@@ -787,7 +897,6 @@ Bombe * Player::addBombe() {
 	return new Bombe(strenght, floor(posX) + 0.5, floor(posY) + 0.5, bombeType, indexPlayerForGame, time, tab);
 }
 
-
 Bombe * Player::addBombe(int x, int y) {
 	int time = 100;
 	int strenght = flameStrengh;
@@ -812,13 +921,12 @@ Bombe * Player::addBombe(int x, int y) {
 			break;
 	}
 
-	if(tab[((int)floor(posX) + x) + ((int)floor(posY) + y)*sizeX ] < brickElement){
+	if (tab[((int) floor(posX) + x) + ((int) floor(posY) + y) * sizeX] < brickElement) {
 		return new Bombe(strenght, floor(posX) + 0.5 + x, floor(posY) + 0.5 + y, bombeType, indexPlayerForGame, time, tab);
-	}else{
+	} else {
 		return NULL;
 	}
 }
-
 
 int Player::getPlayerNumber() {
 	return playerNumber;
@@ -848,7 +956,7 @@ bool Player::wantPutBombe() {
 	return false;
 }
 
-bool Player::wantPutLineOfBombe(){
+bool Player::wantPutLineOfBombe() {
 	if (isAlive()) {
 		if (NBBombeRemaining > 0 && tab[(int) floor(posX) + ((int) floor(posY) * sizeX)] != bombeElement) {
 			return putLineOfBombe;
@@ -860,7 +968,7 @@ bool Player::wantPutLineOfBombe(){
 	return false;
 }
 
-void Player::releaseLineOfBombe(){
+void Player::releaseLineOfBombe() {
 	putLineOfBombe = false;
 }
 
@@ -892,9 +1000,9 @@ bool Player::isAlive() {
 }
 
 void Player::winTheGame() {
-	if(playerState == onLouis){
+	if (playerState == onLouis) {
 		playerState = victoryOnLouis;
-	}else{
+	} else {
 		playerState = victory;
 	}
 }
@@ -909,11 +1017,11 @@ int Player::foundABonus() {
 	if (roundX + roundY * sizeX < sizeX * sizeY) {
 		if (tabBonus[roundX + roundY * sizeX] != noBonus && tab[roundX + roundY * sizeX] < brickElement) {
 			bonusIndex = tabBonus[roundX + roundY * sizeX];
-		}else if (tabBonus[roundX + roundY * sizeX] != noBonus && tab[roundX + roundY * sizeX] == bombeElement) {
+		} else if (tabBonus[roundX + roundY * sizeX] != noBonus && tab[roundX + roundY * sizeX] == bombeElement) {
 			bonusIndex = tabBonus[roundX + roundY * sizeX];
 		}
 	}
-	if(bonusIndex != -1){
+	if (bonusIndex != -1) {
 		switch (bonusIndex) {
 			case deathBonus:
 				getAMalusBonus();
@@ -969,7 +1077,7 @@ int Player::foundABonus() {
 
 		}
 		return roundX + roundY * sizeX;
-	}else{
+	} else {
 		return -1;
 	}
 }
@@ -1023,10 +1131,10 @@ void Player::getAMalusBonus() {
 			int playerToSwitch = findIndexPlayer();
 			float toSwitchX = floor(GameConfig::Instance().getPlayerPosX(playerToSwitch)) + 0.5;
 			float toSwitchY = floor(GameConfig::Instance().getPlayerPosY(playerToSwitch)) + 0.5;
-			GameConfig::Instance().updatePlayerPosX(playerToSwitch,floor(posX) + 0.5);
-			GameConfig::Instance().updatePlayerPosY(playerToSwitch,floor(posY) + 0.5);
-			GameConfig::Instance().updatePlayerPosX(playerNumber,toSwitchX);
-			GameConfig::Instance().updatePlayerPosY(playerNumber,toSwitchY);
+			GameConfig::Instance().updatePlayerPosX(playerToSwitch, floor(posX) + 0.5);
+			GameConfig::Instance().updatePlayerPosY(playerToSwitch, floor(posY) + 0.5);
+			GameConfig::Instance().updatePlayerPosX(playerNumber, toSwitchX);
+			GameConfig::Instance().updatePlayerPosY(playerNumber, toSwitchY);
 			posX = toSwitchX;
 			posY = toSwitchY;
 			break;
@@ -1068,24 +1176,24 @@ void Player::itSuddenDeathTime() {
 	inSuddenDeathTime = true;
 }
 
-int Player::getBombeType(){
+int Player::getBombeType() {
 	return bombeType;
 }
 
-void Player::brainPressButton(){
+void Player::brainPressButton() {
 	triggerBombe = true;
 }
 
-int Player::getBombeRemaining(){
+int Player::getBombeRemaining() {
 	return NBBombeRemaining;
 }
 
-int Player::getPreviousDirection(){
+int Player::getPreviousDirection() {
 	return previousDirection;
 }
 
-bool Player::goInsideTrolley(){
-	if(playerState == normal || playerState == onLouis){
+bool Player::goInsideTrolley() {
+	if (playerState == normal || playerState == onLouis) {
 		previousPlayerState = playerState;
 		playerState = insideTrolley;
 		trolleyDirection = 0;
@@ -1094,10 +1202,27 @@ bool Player::goInsideTrolley(){
 	return false;
 }
 
-void Player::goOutsideTrolley(){
+void Player::goOutsideTrolley() {
 	playerState = previousPlayerState;
 }
 
-void Player::setTrolleyDirection(int direction){
+void Player::setTrolleyDirection(int direction) {
 	trolleyDirection = direction;
+}
+
+void Player::initBadBomberPosition() {
+	if (floor(posX) < 7) {
+		posX = 0.5;
+		posY = (floor(posY)) + 0.5;
+	} else if (floor(posX) > 28) {
+		posX = 34.5;
+		posY = (floor(posY)) + 0.5;
+	} else if (floor(posY) < 11) {
+		posY = 0.5;
+		posX = (floor(posX)) + 0.5;
+	} else {
+		posY = 20.5;
+		posX = (floor(posX)) + 0.5;
+	}
+	GameConfig::Instance().updatePlayerPosition(playerNumber, posX, posY);
 }

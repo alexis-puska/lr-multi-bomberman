@@ -143,11 +143,14 @@ class Player {
 		void drawVictory(SDL_Surface * surfaceToDraw, bool animate, int offsetUnderWater);
 		void drawCrying(SDL_Surface * surfaceToDraw, bool animate, int offsetUnderWater);
 		void drawVictoryOnLouis(SDL_Surface * surfaceToDraw, bool animate, int offsetUnderWater);
+		void drawBadBomber(SDL_Surface * surfaceToDraw);
 
 		//malus function
 		void getAMalusBonus();
 		void releaseMalus();
 		int findIndexPlayer();
+
+		void initBadBomberPosition();
 
 };
 #endif

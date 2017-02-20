@@ -1377,7 +1377,7 @@ void Game::buttonDoSomething() {
 				if (tab[it1->second->getIndex()] != brickElement) {
 					it1->second->switching();
 					redrawRail(it1->second->getIndex());
-					redrawTrolley(it1->second->getIndex());
+
 				} else {
 					it1->second->switching();
 				}
@@ -1421,7 +1421,7 @@ void Game::trolleyDoSomething() {
 		it->second->doSomething(playerBombeExplode);
 		if (it->second->isMove()) {
 			int cur = it->second->getCurrentIndex();
-			fprintf(stderr, "cur : %i\n", cur);
+			//fprintf(stderr, "cur : %i\n", cur);
 			int prv = it->second->getPreviousIndex();
 			int curX = cur % sizeX;
 			int curY = floor(cur / sizeX);
