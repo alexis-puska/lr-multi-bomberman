@@ -29,6 +29,7 @@ class Player {
 		 */
 		Bombe * addBombe();
 		Bombe * addBombe(int x, int y);
+		Bombe * addBombeBadBomber();
 		BurnLouis* louisBurnAnimation();
 
 		bool wantPutBombe();

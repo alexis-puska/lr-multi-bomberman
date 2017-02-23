@@ -951,7 +951,7 @@ void Game::tick() {
 							}
 						}
 					}
-					if (players[i]->wantPutBombe()) {
+					if (players[i]->wantPutBombe() && players[i]->isAlive()) {
 						bombes.push_back(players[i]->addBombe());
 						players[i]->ABombeIsSet();
 					}
@@ -959,6 +959,17 @@ void Game::tick() {
 						louisBurns.push_back(players[i]->louisBurnAnimation());
 					}
 				}
+				if (players[i]->wantPutBombe() && GameConfig::Instance().isBadBomberMode() && !suddenDeathCase && !players[i]->isAlive()) {
+					fprintf(stderr, "badbomberputbombe\n");
+					Bombe * bombe = players[i]->addBombeBadBomber();
+					if(bombe){
+						fprintf(stderr, "une bombe est ajoutée ! ");
+						bombes.push_back(bombe);
+						players[i]->ABombeIsSet();
+					}
+				}
+
+
 				if (players[i]->triggerPowerBombe()) {
 					for (unsigned int j = 0; j < bombes.size(); j++) {
 						if (bombes[j]->getPlayer() == players[i]->getIndexPlayerForGame()) {

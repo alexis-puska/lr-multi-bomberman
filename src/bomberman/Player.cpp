@@ -71,7 +71,6 @@ Player::Player(unsigned short * in_keystate, float posX, float posY, int playerN
 	}
 	indexUnderWater = 0;
 
-	//fprintf(stderr, "%i %2it %2ic %2is %2isc %2ist\n", playerNumber, GameConfig::Instance().getPlayerColor(), );
 	GameConfig::Instance().updatePlayerPosition(playerNumber, posX, posY);
 
 	playerState = normal;
@@ -375,6 +374,7 @@ void Player::drawBurning(SDL_Surface * surfaceToDraw, bool animate, int offsetUn
 				offsetSprite = 0;
 				playerState = dead;
 				if (GameConfig::Instance().isBadBomberMode()) {
+					NBBombeRemaining = 1;
 					initBadBomberPosition();
 				} else {
 					GameConfig::Instance().updatePlayerPosition(playerNumber, -1.0, -1.0);
@@ -774,29 +774,25 @@ void Player::doSomething(SDL_Surface * surfaceToDraw) {
 			float y = 0.0;
 
 			if (posX >= 1.5 && posX <= 33.5) {
-				x = posX;
+				x = posX - 0.5;
 				if (posY > 2) {
-					y = posY - closeBombeValue - 1;
+					y = posY - closeBombeValue - 1.0;
 				} else {
 					y = posY + closeBombeValue;
 				}
 			} else if (posY >= 1.5 && posY <= 19.5) {
 				y = posY;
 				if (posX > 2) {
-					x = posX - closeBombeValue - 1;
+					x = posX - closeBombeValue - 1.0;
 				} else {
 					x = posX + closeBombeValue;
 				}
 			}
-
-			fprintf(stderr,"draw : %f %f ",x ,y);
 			drawGhostBombe(surfaceToDraw, x * 18.0, y * 16.0);
-			fprintf(stderr, "closeBombeValue : %f\n", closeBombeValue);
 		} else {
 			if (badBomberWantThrowBombe) {
 				badBomberWantThrowBombe = false;
-				//new Bombe();
-				fprintf(stderr, "throw bombe : %f\n", closeBombeValue);
+				putABombe = true;
 			}
 			float speed = 0.1;
 			if (keystate & keyPadL1) {
@@ -961,6 +957,38 @@ Bombe * Player::addBombe() {
 	return new Bombe(strenght, floor(posX) + 0.5, floor(posY) + 0.5, bombeType, indexPlayerForGame, time, tab);
 }
 
+Bombe * Player::addBombeBadBomber() {
+	int x = 0;
+	int y = 0;
+	if (posX >= 1.5 && posX <= 33.5) {
+		x = floor(posX);
+		if (posY > 2) {
+			y = floor(posY - closeBombeValue - 1);
+		} else {
+			y = floor(posY + closeBombeValue);
+		}
+	} else if (posY >= 1.5 && posY <= 19.5) {
+		y = floor(posY);
+		if (posX > 2) {
+			x = floor(posX - closeBombeValue - 1);
+		} else {
+			x = floor(posX + closeBombeValue);
+		}
+	}
+	fprintf(stderr, "%i %i\n", x, y);
+	int time = 100;
+	int strenght = flameStrengh;
+	int bombeType = normalBombeType;
+
+	if(tab[x + y * sizeX] < brickElement){
+		fprintf(stderr, "ajout d'une bombe ");
+		return new Bombe(strenght, (float) x + 0.5, (float) y + 0.5, bombeType, indexPlayerForGame, time, tab);
+	}else{
+		putABombe = false;
+		return NULL;
+	}
+}
+
 Bombe * Player::addBombe(int x, int y) {
 	int time = 100;
 	int strenght = flameStrengh;
@@ -1009,8 +1037,10 @@ void Player::releaseTrigger() {
 }
 
 bool Player::wantPutBombe() {
-	if (isAlive()) {
-		if (NBBombeRemaining > 0 && tab[(int) floor(posX) + ((int) floor(posY) * sizeX)] != bombeElement) {
+	if (isAlive() || (GameConfig::Instance().isBadBomberMode() && !inSuddenDeathTime)) {
+		if (!isAlive() && GameConfig::Instance().isBadBomberMode() && !inSuddenDeathTime && NBBombeRemaining > 0) {
+			return putABombe;
+		} else if (NBBombeRemaining > 0 && tab[(int) floor(posX) + ((int) floor(posY) * sizeX)] != bombeElement) {
 			return putABombe;
 		} else {
 			putABombe = false;
@@ -1039,7 +1069,9 @@ void Player::releaseLineOfBombe() {
 bool Player::walkOnWall() {
 	if (tab[(int) floor(posX) + (int) floor(posY) * sizeX] < brickElement) {
 		return false;
-	} else {
+	} else if(!isAlive() && GameConfig::Instance().isBadBomberMode()){
+		return false;
+	}else{
 		putABombe = false;
 		putLineOfBombe = false;
 		return true;
@@ -1048,6 +1080,9 @@ bool Player::walkOnWall() {
 
 void Player::ABombeExplode() {
 	triggerBombe = false;
+	if(!isAlive() && GameConfig::Instance().isBadBomberMode() && NBBombeRemaining >= 1){
+		NBBombeRemaining = 0;
+	}
 	NBBombeRemaining++;
 }
 
