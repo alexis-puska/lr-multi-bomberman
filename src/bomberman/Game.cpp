@@ -1302,10 +1302,6 @@ void Game::initRails() {
 			for (std::map<int, Rail*>::iterator it = rails.begin(); it != rails.end(); ++it) {
 				it->second->init(rails);
 			}
-
-			for (std::map<int, Rail*>::iterator it = rails.begin(); it != rails.end(); ++it) {
-				it->second->print();
-			}
 		}
 	}
 }

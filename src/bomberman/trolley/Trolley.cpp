@@ -106,7 +106,7 @@ void Trolley::doSomething(SDL_Surface * surface) {
 			double xCalc = x - floor(x);
 			double yCalc = y - floor(y);
 			if (xCalc > 0.4 && xCalc < 0.6 && yCalc > 0.4 && yCalc < 0.6) {
-				fprintf(stderr, "eject player %i at  %i\n", playerInside, index);
+				//fprintf(stderr, "eject player %i at  %i\n", playerInside, index);
 				players->at(playerInside)->goOutsideTrolley();
 				playerInside = -1;
 				move = false;

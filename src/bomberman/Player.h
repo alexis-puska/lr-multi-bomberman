@@ -150,7 +150,13 @@ class Player {
 		void releaseMalus();
 		int findIndexPlayer();
 
+		//BadBomberPart
 		void initBadBomberPosition();
+		void drawGhostBombe(SDL_Surface * surface, float x, float y);
+		SDL_Surface * bombeGhost;
+		bool closeBombe;
+		bool badBomberWantThrowBombe;
+		float closeBombeValue;
 
 };
 #endif

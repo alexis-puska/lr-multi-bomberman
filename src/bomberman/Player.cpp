@@ -101,6 +101,9 @@ Player::Player(unsigned short * in_keystate, float posX, float posY, int playerN
 	frameCounter = 0;
 	offsetSprite = 0;
 	previousDirection = down;
+	closeBombe = false;
+	badBomberWantThrowBombe = false;
+	closeBombeValue = 1.5;
 }
 
 Player::~Player() {
@@ -263,6 +266,24 @@ void Player::drawInsideTrolley(SDL_Surface * surfaceToDraw) {
 	srcTextureRect.w = sprite_sizeW;
 	srcTextureRect.h = sprite_sizeH;
 	SDL_BlitSurface(Sprite::Instance().playerDrawInsideTrolley(characterSpriteIndex, color, trolleyDirection), &srcTextureRect, surfaceToDraw, &destTextureRect);
+}
+
+void Player::drawGhostBombe(SDL_Surface * surface, float x, float y) {
+	Uint32 rmask, gmask, bmask, amask;
+	amask = 0xff000000;
+	rmask = 0x00ff0000;
+	gmask = 0x0000ff00;
+	bmask = 0x000000ff;
+	SDL_Rect dstRect;
+	dstRect.x = x;
+	dstRect.y = y;
+	dstRect.w = defaultSpriteSize;
+	dstRect.h = defaultSpriteSize;
+	bombeGhost = SDL_CreateRGBSurface(0, defaultSpriteSize, defaultSpriteSize, 32, rmask, gmask, bmask, amask);
+	SDL_BlitSurface(Sprite::Instance().getBombe(0, bombeType), NULL, bombeGhost, NULL);
+	SDL_SetSurfaceAlphaMod(bombeGhost, 60);
+	SDL_BlitSurface(bombeGhost, NULL, surface, &dstRect);
+	SDL_FreeSurface(bombeGhost);
 }
 
 void Player::drawWithBombe(SDL_Surface * surfaceToDraw, bool animate, int offsetUnderWater) {
@@ -735,67 +756,110 @@ void Player::doSomething(SDL_Surface * surfaceToDraw) {
 		//BAD BOMBER MOVE
 		posX = GameConfig::Instance().getPlayerPosX(playerNumber);
 		posY = GameConfig::Instance().getPlayerPosY(playerNumber);
-		float speed = 0.1;
-		if (keystate & keyPadL1) {
-			speed += 0.1;
-		}
-		if (keystate & keyPadL2) {
-			speed += 0.1;
-		}
-		if (keystate & keyPadR1) {
-			speed += 0.1;
-		}
-		if (keystate & keyPadR2) {
-			speed += 0.1;
-		}
-		if (speed >= 0.5) {
-			speed = 0.5;
-		}
-		if (keystate & keyPadLeft) {
-			if (floor(posY) == 0 || floor(posY) == 20) {
-				posY = floor(posY) + 0.5;
-				if (posX > 0.5) {
-					posX -= speed;
-					if (posX <= 0.5) {
-						posX = 0.5;
+		if (keystate & keyPadA && !badBomberWantThrowBombe) {
+			badBomberWantThrowBombe = true;
+		} else if (keystate & keyPadA && badBomberWantThrowBombe) {
+			if (closeBombe) {
+				closeBombeValue -= 0.5;
+				if (closeBombeValue <= 1.5) {
+					closeBombe = false;
+				}
+			} else {
+				closeBombeValue += 0.5;
+				if (closeBombeValue >= 11.5) {
+					closeBombe = true;
+				}
+			}
+			float x = 0.0;
+			float y = 0.0;
+
+			if (posX >= 1.5 && posX <= 33.5) {
+				x = posX;
+				if (posY > 2) {
+					y = posY - closeBombeValue - 1;
+				} else {
+					y = posY + closeBombeValue;
+				}
+			} else if (posY >= 1.5 && posY <= 19.5) {
+				y = posY;
+				if (posX > 2) {
+					x = posX - closeBombeValue - 1;
+				} else {
+					x = posX + closeBombeValue;
+				}
+			}
+
+			fprintf(stderr,"draw : %f %f ",x ,y);
+			drawGhostBombe(surfaceToDraw, x * 18.0, y * 16.0);
+			fprintf(stderr, "closeBombeValue : %f\n", closeBombeValue);
+		} else {
+			if (badBomberWantThrowBombe) {
+				badBomberWantThrowBombe = false;
+				//new Bombe();
+				fprintf(stderr, "throw bombe : %f\n", closeBombeValue);
+			}
+			float speed = 0.1;
+			if (keystate & keyPadL1) {
+				speed += 0.1;
+			}
+			if (keystate & keyPadL2) {
+				speed += 0.1;
+			}
+			if (keystate & keyPadR1) {
+				speed += 0.1;
+			}
+			if (keystate & keyPadR2) {
+				speed += 0.1;
+			}
+			if (speed >= 0.5) {
+				speed = 0.5;
+			}
+			if (keystate & keyPadLeft) {
+				if (floor(posY) == 0 || floor(posY) == 20) {
+					posY = floor(posY) + 0.5;
+					if (posX > 0.5) {
+						posX -= speed;
+						if (posX <= 0.5) {
+							posX = 0.5;
+						}
 					}
 				}
 			}
-		}
-		if (keystate & keyPadUp) {
-			if (floor(posX) == 0 || floor(posX) == 34) {
-				posX = floor(posX) + 0.5;
-				if (posY > 0.5) {
-					posY -= speed;
-					if (posY <= 0.5) {
-						posY = 0.5;
+			if (keystate & keyPadUp) {
+				if (floor(posX) == 0 || floor(posX) == 34) {
+					posX = floor(posX) + 0.5;
+					if (posY > 0.5) {
+						posY -= speed;
+						if (posY <= 0.5) {
+							posY = 0.5;
+						}
 					}
 				}
 			}
-		}
-		if (keystate & keyPadRight) {
-			if (floor(posY) == 0 || floor(posY) == 20) {
-				posY = floor(posY) + 0.5;
-				if (posX < 34.5) {
-					posX += speed;
-					if (posX >= 34.5) {
-						posX = 34.5;
+			if (keystate & keyPadRight) {
+				if (floor(posY) == 0 || floor(posY) == 20) {
+					posY = floor(posY) + 0.5;
+					if (posX < 34.5) {
+						posX += speed;
+						if (posX >= 34.5) {
+							posX = 34.5;
+						}
 					}
 				}
 			}
-		}
-		if (keystate & keyPadDown) {
-			if (floor(posX) == 0 || floor(posX) == 34) {
-				posX = floor(posX) + 0.5;
-				if (posY < 20.5) {
-					posY += speed;
-					if (posY <= 0.5) {
-						posY = 0.5;
+			if (keystate & keyPadDown) {
+				if (floor(posX) == 0 || floor(posX) == 34) {
+					posX = floor(posX) + 0.5;
+					if (posY < 20.5) {
+						posY += speed;
+						if (posY <= 0.5) {
+							posY = 0.5;
+						}
 					}
 				}
 			}
+			GameConfig::Instance().updatePlayerPosition(playerNumber, posX, posY);
 		}
-		GameConfig::Instance().updatePlayerPosition(playerNumber, posX, posY);
 	}
 
 	if (isUnderWater) {
@@ -857,13 +921,13 @@ void Player::doSomething(SDL_Surface * surfaceToDraw) {
 		}
 	}
 
-	//correct value for AStar
+//correct value for AStar
 	if (floor(GameConfig::Instance().getPlayerPosY(playerNumber)) > sizeY - 1) {
 		GameConfig::Instance().updatePlayerPosY(playerNumber, 0);
 	}
 }
 
-BurnLouis* Player::louisBurnAnimation() {
+BurnLouis * Player::louisBurnAnimation() {
 	return new BurnLouis(posX, posY);
 }
 
@@ -1097,7 +1161,7 @@ void Player::releaseMalus() {
 }
 
 void Player::getAMalusBonus() {
-	//reset in first Time the previous malus if exist
+//reset in first Time the previous malus if exist
 	if (playerMalus != noMalus) {
 		releaseMalus();
 	}
