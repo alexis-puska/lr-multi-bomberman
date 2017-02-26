@@ -9,7 +9,7 @@
 #include "../utils/Sprite.h"
 #include "../utils/GameConfig.h"
 #include "../Player.h"
-#include "rail.h"
+#include "Rail.h"
 
 #ifndef __MYCLASS_TROLLEY
 #define __MYCLASS_TROLLEY
