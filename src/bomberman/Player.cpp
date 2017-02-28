@@ -49,8 +49,8 @@ enum spaceShipTypeEnum {
 	spaceShipFront = 0, spaceShipRight = 1, spaceShipBottom = 2, spaceShipLeft = 3
 };
 
-Player::Player(unsigned short * in_keystate, float posX, float posY, int playerNumber, int tab[sizeX * sizeY], int tabBonus[sizeX * sizeY], Grid * gridParam, int indexPlayerForGame,
-		bool isUnderWater) {
+Player::Player(unsigned short * in_keystate, float posX, float posY, int playerNumber, int tab[sizeX * sizeY], int tabBonus[sizeX * sizeY], Grid * gridParam, int indexPlayerForGame, bool isUnderWater,
+		std::vector<Bombe *> * bombes, std::vector<BurnLouis *> * louisBurns) {
 	srand (time(NULL));grid = gridParam;
 	this->indexPlayerForGame = indexPlayerForGame;
 	this->posX = posX;
@@ -64,6 +64,8 @@ Player::Player(unsigned short * in_keystate, float posX, float posY, int playerN
 	this->color = GameConfig::Instance().getPlayerColor(playerNumber);;
 	this->louisType = blueLouis;
 	this->isUnderWater = isUnderWater;
+	this->bombes = bombes;
+	this->louisBurns = louisBurns;
 	if(isUnderWater) {
 		offsetUnderWater = 1;
 	} else {
@@ -79,11 +81,8 @@ Player::Player(unsigned short * in_keystate, float posX, float posY, int playerN
 	NbBombeMax = GameConfig::Instance().getBombe();
 	NBBombeRemaining = GameConfig::Instance().getBombe();
 	bombeType = normalBombeType;
-	putABombe = false;
 	lineOfBombePower = false;
-	putLineOfBombe = false;
 	ghostModePower = false;
-	triggerBombe = false;
 	kickPower = false;
 	inSuddenDeathTime = false;
 	kickIndex = -1;
@@ -110,6 +109,8 @@ Player::~Player() {
 	tab = NULL;
 	tabBonus = NULL;
 	grid = NULL;
+	bombes = NULL;
+	louisBurns = NULL;
 }
 
 /*
@@ -726,27 +727,49 @@ void Player::doSomething(SDL_Surface * surfaceToDraw) {
 			}
 			if (keystate & keyPadA) {
 				if (playerMalus != constipationMalus) {
-					putABombe = true;
+					if (NBBombeRemaining > 0 && tab[(int) floor(posX) + ((int) floor(posY) * sizeX)] != bombeElement) {
+						if (!walkOnWall()) {
+							Bombe * bombe = addBombe();
+							if (bombe != NULL) {
+								NBBombeRemaining--;
+								bombes->push_back(bombe);
+							}
+						}
+					}
+
+					//putABombe = true;
 				}
 			}
 			if (keystate & keyPadB) {
+				//trigger Bombe
 				if (bombeType == radioBombeType) {
-					triggerBombe = true;
+					for (unsigned int j = 0; j < bombes->size(); j++) {
+						if (bombes->at(j)->getPlayer() == indexPlayerForGame) {
+							bombes->at(j)->explodeNow();
+						}
+					}
 				}
 			}
 			if (keystate & keyPadX) {
 				if (playerMalus != constipationMalus) {
 					if (lineOfBombePower) {
-						putLineOfBombe = true;
+						putLineOfBombe();
 					}
 				}
 			}
 			if (keystate & keyPadY) {
-				//display menu	
+				//display menu
 			}
 
 			if (playerMalus == diarheeMalus) {
-				putABombe = true;
+				if (NBBombeRemaining > 0 && tab[(int) floor(posX) + ((int) floor(posY) * sizeX)] != bombeElement) {
+					Bombe * bombe = addBombe();
+					if (bombe != NULL) {
+						NBBombeRemaining--;
+						bombes->push_back(bombe);
+					}
+				}
+				//putABombe = true;
 			}
 		} else if (playerState == insideTrolley) {
 			posX = GameConfig::Instance().getPlayerPosX(playerNumber);
@@ -792,7 +815,13 @@ void Player::doSomething(SDL_Surface * surfaceToDraw) {
 		} else {
 			if (badBomberWantThrowBombe) {
 				badBomberWantThrowBombe = false;
-				putABombe = true;
+				if (NBBombeRemaining > 0 && tab[(int) floor(posX) + ((int) floor(posY) * sizeX)] != bombeElement) {
+					Bombe * bombe = addBombeBadBomber();
+					if (bombe != NULL) {
+						NBBombeRemaining--;
+						bombes->push_back(bombe);
+					}
+				}
 			}
 			float speed = 0.1;
 			if (keystate & keyPadL1) {
@@ -868,6 +897,10 @@ void Player::doSomething(SDL_Surface * surfaceToDraw) {
 		indexUnderWater++;
 	}
 
+	if (louisBurn) {
+		louisBurns->push_back(new BurnLouis(posX, posY));
+	}
+
 	switch (playerState) {
 		case normal:
 			drawNormal(surfaceToDraw, animate, offsetUnderWater);
@@ -923,14 +956,6 @@ void Player::doSomething(SDL_Surface * surfaceToDraw) {
 	}
 }
 
-BurnLouis * Player::louisBurnAnimation() {
-	return new BurnLouis(posX, posY);
-}
-
-bool Player::isLouisBurn() {
-	return louisBurn;
-}
-
 Bombe * Player::addBombe() {
 	int time = 100;
 	int strenght = flameStrengh;
@@ -975,16 +1000,16 @@ Bombe * Player::addBombeBadBomber() {
 			x = floor(posX + closeBombeValue);
 		}
 	}
-	fprintf(stderr, "%i %i\n", x, y);
+	fprintf(stderr, "abb %i %i\n", x, y);
 	int time = 100;
 	int strenght = flameStrengh;
 	int bombeType = normalBombeType;
 
-	if(tab[x + y * sizeX] < brickElement){
+	if (tab[x + y * sizeX] < brickElement) {
 		fprintf(stderr, "ajout d'une bombe ");
 		return new Bombe(strenght, (float) x + 0.5, (float) y + 0.5, bombeType, indexPlayerForGame, time, tab);
-	}else{
-		putABombe = false;
+	} else {
+		//putABombe = false;
 		return NULL;
 	}
 }
@@ -1028,67 +1053,21 @@ int Player::getIndexPlayerForGame() {
 	return indexPlayerForGame;
 }
 
-bool Player::triggerPowerBombe() {
-	return triggerBombe;
-}
-
-void Player::releaseTrigger() {
-	triggerBombe = false;
-}
-
-bool Player::wantPutBombe() {
-	if (isAlive() || (GameConfig::Instance().isBadBomberMode() && !inSuddenDeathTime)) {
-		if (!isAlive() && GameConfig::Instance().isBadBomberMode() && !inSuddenDeathTime && NBBombeRemaining > 0) {
-			return putABombe;
-		} else if (NBBombeRemaining > 0 && tab[(int) floor(posX) + ((int) floor(posY) * sizeX)] != bombeElement) {
-			return putABombe;
-		} else {
-			putABombe = false;
-			return false;
-		}
-	}
-	return false;
-}
-
-bool Player::wantPutLineOfBombe() {
-	if (isAlive()) {
-		if (NBBombeRemaining > 0 && tab[(int) floor(posX) + ((int) floor(posY) * sizeX)] != bombeElement) {
-			return putLineOfBombe;
-		} else {
-			putLineOfBombe = false;
-			return false;
-		}
-	}
-	return false;
-}
-
-void Player::releaseLineOfBombe() {
-	putLineOfBombe = false;
-}
-
 bool Player::walkOnWall() {
 	if (tab[(int) floor(posX) + (int) floor(posY) * sizeX] < brickElement) {
 		return false;
-	} else if(!isAlive() && GameConfig::Instance().isBadBomberMode()){
+	} else if (!isAlive() && GameConfig::Instance().isBadBomberMode()) {
 		return false;
-	}else{
-		putABombe = false;
-		putLineOfBombe = false;
+	} else {
 		return true;
 	}
 }
 
 void Player::ABombeExplode() {
-	triggerBombe = false;
-	if(!isAlive() && GameConfig::Instance().isBadBomberMode() && NBBombeRemaining >= 1){
+	if (!isAlive() && GameConfig::Instance().isBadBomberMode() && NBBombeRemaining >= 1) {
 		NBBombeRemaining = 0;
 	}
 	NBBombeRemaining++;
-}
-
-void Player::ABombeIsSet() {
-	NBBombeRemaining--;
-	putABombe = false;
 }
 
 bool Player::isAlive() {
@@ -1280,7 +1259,11 @@ int Player::getBombeType() {
 }
 
 void Player::brainPressButton() {
-	triggerBombe = true;
+	for (unsigned int j = 0; j < bombes->size(); j++) {
+		if (bombes->at(j)->getPlayer() == indexPlayerForGame) {
+			bombes->at(j)->explodeNow();
+		}
+	}
 }
 
 int Player::getBombeRemaining() {
@@ -1324,4 +1307,53 @@ void Player::initBadBomberPosition() {
 		posX = (floor(posX)) + 0.5;
 	}
 	GameConfig::Instance().updatePlayerPosition(playerNumber, posX, posY);
+}
+
+void Player::putLineOfBombe() {
+	if (!walkOnWall()) {
+		if (previousDirection == up) {
+			int n = NBBombeRemaining;
+			for (int j = 0; j < n; j++) {
+				Bombe * bombe = addBombe(0, -j);
+				if (bombe == NULL) {
+					break;
+				} else {
+					NBBombeRemaining--;
+					bombes->push_back(bombe);
+				}
+			}
+		} else if (previousDirection == right) {
+			int n = NBBombeRemaining;
+			for (int j = 0; j < n; j++) {
+				Bombe * bombe = addBombe(j, 0);
+				if (bombe == NULL) {
+					break;
+				} else {
+					NBBombeRemaining--;
+					bombes->push_back(bombe);
+				}
+			}
+		} else if (previousDirection == down) {
+			int n = NBBombeRemaining;
+			for (int j = 0; j < n; j++) {
+				Bombe * bombe = addBombe(0, j);
+				if (bombe == NULL) {
+					break;
+				} else {
+					NBBombeRemaining--;
+					bombes->push_back(bombe);
+				}
+			}
+		} else if (previousDirection == left) {
+			int n = NBBombeRemaining;
+			for (int j = 0; j < n; j++) {
+				Bombe * bombe = addBombe(-j, 0);
+				if (bombe == NULL) {
+					break;
+				} else
+					NBBombeRemaining--;
+				bombes->push_back(bombe);
+			}
+		}
+	}
 }

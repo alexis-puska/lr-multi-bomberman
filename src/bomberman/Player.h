@@ -19,24 +19,17 @@
 #define __MYCLASS_PLAYER
 class Player {
 	public:
-		Player(unsigned short * in_keystate, float startPositionX, float startPositionY, int playerNumber, int tab[sizeX * sizeY], int tabBonus[sizeX * sizeY],
-				Grid * gridParam, int indexPlayerForGame, bool isUnderWater);
+		Player(unsigned short * in_keystate, float startPositionX, float startPositionY, int playerNumber, int tab[sizeX * sizeY], int tabBonus[sizeX * sizeY], Grid * gridParam,
+				int indexPlayerForGame, bool isUnderWater, std::vector<Bombe *> * bombes, std::vector<BurnLouis *> *louisBurns);
 		~Player();
 		void doSomething(SDL_Surface * surfaceToDraw);
 
 		/*
 		 * Game Function
 		 */
-		Bombe * addBombe();
-		Bombe * addBombe(int x, int y);
-		Bombe * addBombeBadBomber();
 		BurnLouis* louisBurnAnimation();
 
-		bool wantPutBombe();
-		bool wantPutLineOfBombe();
-		void releaseLineOfBombe();
 		int getBombeRemaining();
-		bool triggerPowerBombe();
 		bool walkOnWall();
 		bool isAlive();
 		bool hasKickPower();
@@ -44,8 +37,6 @@ class Player {
 
 		void winTheGame();
 		void ABombeExplode();
-		void releaseTrigger();
-		void ABombeIsSet();
 
 		//kick
 		int isKickingBombe();
@@ -99,10 +90,6 @@ class Player {
 		int kickIndex;
 		int kickDirection;
 
-		//bombe variable
-		bool triggerBombe;
-		bool putABombe;
-		bool putLineOfBombe;
 		int flameStrengh;
 		int bombeType;
 		int NbBombeMax;
@@ -128,6 +115,8 @@ class Player {
 		int * tab;
 		int * tabBonus;
 		Grid * grid;
+		std::vector<Bombe *> * bombes;
+		std::vector<BurnLouis *> * louisBurns;
 
 		//image of differente sprite of player
 		SDL_Surface *louisMergebuffer;
@@ -150,6 +139,11 @@ class Player {
 		void getAMalusBonus();
 		void releaseMalus();
 		int findIndexPlayer();
+
+		void putLineOfBombe();
+		Bombe * addBombe();
+		Bombe * addBombe(int x, int y);
+		Bombe * addBombeBadBomber();
 
 		//BadBomberPart
 		void initBadBomberPosition();

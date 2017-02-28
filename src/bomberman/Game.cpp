@@ -152,7 +152,7 @@ this	->vout_buf = vout_buf;
 			case HUMAN:
 
 			// if a human link the next keystate of libretro, else link a empty value
-			player = new Player(&in_keystate[indexLibretro], startX, startY, i, tab, tabBonus, grid, indexPlayerForGame, LevelService::Instance().getLevel(levelIndex)->isWaterOverlayMode());
+			player = new Player(&in_keystate[indexLibretro], startX, startY, i, tab, tabBonus, grid, indexPlayerForGame, LevelService::Instance().getLevel(levelIndex)->isWaterOverlayMode(), &bombes, &louisBurns);
 			players.push_back(player);
 			player = NULL;
 			indexLibretro++;
@@ -160,7 +160,7 @@ this	->vout_buf = vout_buf;
 			indexPlayerForGame++;
 			break;
 			case CPU:
-			player = new Player(&in_keystate_cpu[index], startX, startY, i, tab, tabBonus, grid, indexPlayerForGame, LevelService::Instance().getLevel(levelIndex)->isWaterOverlayMode());
+			player = new Player(&in_keystate_cpu[index], startX, startY, i, tab, tabBonus, grid, indexPlayerForGame, LevelService::Instance().getLevel(levelIndex)->isWaterOverlayMode(), &bombes, &louisBurns);
 			players.push_back(player);
 			player = NULL;
 
@@ -901,84 +901,6 @@ void Game::tick() {
 						updateHeaderPlayer(players[i]->getIndexPlayerForGame(), players[i]->getPlayerNumber());
 					}
 				}
-				if (!players[i]->walkOnWall()) {
-					if (players[i]->wantPutLineOfBombe()) {
-
-						players[i]->releaseLineOfBombe();
-						if (players[i]->getPreviousDirection() == up) {
-							int n = players[i]->getBombeRemaining();
-							for (int j = 0; j < n; j++) {
-								Bombe * bombe = players[i]->addBombe(0, -j);
-								if (bombe == NULL) {
-									break;
-								} else {
-									players[i]->ABombeIsSet();
-									bombes.push_back(bombe);
-								}
-							}
-						} else if (players[i]->getPreviousDirection() == right) {
-							int n = players[i]->getBombeRemaining();
-							for (int j = 0; j < n; j++) {
-								Bombe * bombe = players[i]->addBombe(j, 0);
-								if (bombe == NULL) {
-									break;
-								} else {
-									players[i]->ABombeIsSet();
-									bombes.push_back(bombe);
-								}
-							}
-						} else if (players[i]->getPreviousDirection() == down) {
-							int n = players[i]->getBombeRemaining();
-							for (int j = 0; j < n; j++) {
-								Bombe * bombe = players[i]->addBombe(0, j);
-								if (bombe == NULL) {
-									break;
-								} else {
-									players[i]->ABombeIsSet();
-									bombes.push_back(bombe);
-								}
-							}
-						} else if (players[i]->getPreviousDirection() == left) {
-							int n = players[i]->getBombeRemaining();
-							for (int j = 0; j < n; j++) {
-								Bombe * bombe = players[i]->addBombe(-j, 0);
-								if (bombe == NULL) {
-									break;
-								} else {
-									players[i]->ABombeIsSet();
-									bombes.push_back(bombe);
-								}
-							}
-						}
-					}
-					if (players[i]->wantPutBombe() && players[i]->isAlive()) {
-						bombes.push_back(players[i]->addBombe());
-						players[i]->ABombeIsSet();
-					}
-					if (players[i]->isLouisBurn()) {
-						louisBurns.push_back(players[i]->louisBurnAnimation());
-					}
-				}
-				if (players[i]->wantPutBombe() && GameConfig::Instance().isBadBomberMode() && !suddenDeathCase && !players[i]->isAlive()) {
-					fprintf(stderr, "badbomberputbombe\n");
-					Bombe * bombe = players[i]->addBombeBadBomber();
-					if(bombe){
-						fprintf(stderr, "une bombe est ajoutée ! ");
-						bombes.push_back(bombe);
-						players[i]->ABombeIsSet();
-					}
-				}
-
-
-				if (players[i]->triggerPowerBombe()) {
-					for (unsigned int j = 0; j < bombes.size(); j++) {
-						if (bombes[j]->getPlayer() == players[i]->getIndexPlayerForGame()) {
-							bombes[j]->explodeNow();
-						}
-					}
-					players[i]->releaseTrigger();
-				}
-
 				//kick treatment				
 				if (players[i]->hasKickPower() && players[i]->isKickingBombe() != -1) {
 					for (unsigned int j = 0; j < bombes.size(); j++) {
@@ -1235,7 +1157,7 @@ void Game::tick() {
 						case HUMAN:
 							// if a human link the next keystate of libretro, else link a empty value
 							player = new Player(&in_keystate[indexLibretro], startX, startY, i, tab, tabBonus, grid, indexPlayerForGame,
-									LevelService::Instance().getLevel(levelIndex)->isWaterOverlayMode());
+									LevelService::Instance().getLevel(levelIndex)->isWaterOverlayMode(), &bombes, &louisBurns);
 							players.push_back(player);
 							player = NULL;
 							indexLibretro++;
@@ -1244,7 +1166,7 @@ void Game::tick() {
 							break;
 						case CPU:
 							player = new Player(&in_keystate_cpu[index], startX, startY, i, tab, tabBonus, grid, indexPlayerForGame,
-									LevelService::Instance().getLevel(levelIndex)->isWaterOverlayMode());
+									LevelService::Instance().getLevel(levelIndex)->isWaterOverlayMode(), &bombes, &louisBurns);
 							players.push_back(player);
 							brain = new Brain(&in_keystate_cpu[index], tab, i, players[indexPlayerForGame]);
 							brains.push_back(brain);
