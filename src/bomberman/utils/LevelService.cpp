@@ -500,29 +500,336 @@ void LevelService::createLevel7(){
 	int desc[735] = { 0,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  1,
 					 10,'S', 18, 18, 18, 18, 18, 18, 18, 18, 18,'S', 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18,'S', 18, 18, 18, 18, 18, 18, 18, 18, 18,'S', 13,
 					 10, 18, 16, 18, 16, 18, 16, 18, 16, 18, 16, 18, 16, 18, 16, 18, 16, 18, 16, 18, 16, 18, 16, 18, 16, 18, 16, 18, 16, 18, 16, 18, 16, 18, 13,
-					 10, 18, 18, 18, 18, 30, 31, 31, 31, 29, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 30, 31, 29, 18, 18, 18, 18, 18, 18, 18, 18, 13,
-					 10, 18, 16, 18, 16, 33, 16, 18, 16, 18, 16, 18, 16, 18, 16, 18, 16, 18, 16, 18, 16, 18, 16, 33, 16, 18, 16, 18, 16, 18, 16, 18, 16, 18, 13,
-					 10, 18, 18, 30, 31, 34, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 30, 31, 34, 18, 18, 18, 18, 18, 18, 28, 32, 18, 18, 13,
-					 10, 18, 16, 33, 16, 18, 16,'S', 16, 18, 16, 18, 16, 18, 16, 18, 16,'S', 16, 18, 16, 33, 16, 18, 16, 18, 16,'S', 16, 18, 16, 33, 16, 18, 13,
-					 10, 18, 18, 33, 18, 18, 18, 30, 31, 31, 31, 32, 18, 18, 18, 18, 18, 18, 18, 18, 18, 35, 31, 32, 18, 18, 18, 18, 18, 18, 18, 33, 18, 18, 13,
-					 10, 18, 16, 33, 16, 18, 16, 33, 16, 18, 16, 33, 16, 18, 16, 18, 16, 18, 16, 18, 16, 18, 16, 33, 16, 18, 16, 18, 16, 18, 16, 33, 16, 18, 13,
-					 10, 18, 18, 35, 31, 31, 31, 34, 18, 18, 28, 34, 18, 18, 18, 18, 18, 28, 31, 31, 31, 32, 18, 35, 31, 32, 18, 18, 18, 30, 31, 34, 18, 18, 13,
-					 10,'S', 16, 18, 16, 18, 16, 18, 16, 18, 16, 18, 16, 18, 16, 18, 16, 18, 16, 18, 16, 33, 16, 18, 16, 33, 16, 18, 16, 33, 16, 18, 16,'S', 13,
-					 10, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 30, 31, 29, 18, 18, 18, 18, 18, 18, 18, 35, 31, 31, 31, 34, 18, 18, 28, 34, 18, 18, 18, 18, 13,
-					 10, 18, 16, 18, 16, 18, 16, 18, 16, 18, 16, 33, 16, 18, 16, 18, 16, 18, 16, 18, 16, 18, 16, 18, 16, 18, 16, 18, 16, 18, 16, 18, 16, 18, 13,
-					 10, 18, 18, 18, 18, 18, 18, 18, 18, 28, 31, 34, 18, 30, 29, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 13,
-					 10, 18, 16, 18, 16, 18, 16,'S', 16, 18, 16, 18, 16, 33, 16, 18, 16, 18, 16, 18, 16, 18, 16, 18, 16, 18, 16,'S', 16, 18, 16, 18, 16, 18, 13,
-					 10, 18, 18, 18, 28, 32, 18, 18, 18, 18, 18, 18, 18, 33, 18, 18, 18,'S', 18, 28, 31, 31, 31, 32, 18, 18, 18, 18, 18, 30, 31, 29, 18, 18, 13,
-					 10, 18, 16, 18, 16, 33, 16, 18, 16, 18, 16, 18, 16, 33, 16, 18, 16, 18, 16, 18, 16, 18, 16, 33, 16, 18, 16, 18, 16, 33, 16, 18, 16, 18, 13,
-					 10, 18, 18, 18, 18, 35, 31, 31, 31, 32, 18, 30, 31, 34, 18, 18, 18, 18, 18, 18, 18, 18, 18, 35, 31, 31, 31, 32, 18, 33, 18, 18, 18, 18, 13,
-					 10, 18, 16, 18, 16, 18, 16, 18, 16, 33, 16, 33, 16, 18, 16, 18, 16, 18, 16, 18, 16, 18, 16, 18, 16, 18, 16, 33, 16, 33, 16, 18, 16, 18, 13,
-					 10,'S', 18, 18, 18, 18, 18, 18, 18, 35, 31,'S', 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18,'S', 18, 18, 18, 35, 31, 34, 18, 18, 18,'S', 13,
+					 10, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 13,
+					 10, 18, 16, 18, 16, 18, 16, 18, 16, 18, 16, 18, 16, 18, 16, 18, 16, 18, 16, 18, 16, 18, 16, 18, 16, 18, 16, 18, 16, 18, 16, 18, 16, 18, 13,
+					 10, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 13,
+					 10, 18, 16, 18, 16, 18, 16,'S', 16, 18, 16, 18, 16, 18, 16, 18, 16,'S', 16, 18, 16, 18, 16, 18, 16, 18, 16,'S', 16, 18, 16, 18, 16, 18, 13,
+					 10, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 13,
+					 10, 18, 16, 18, 16, 18, 16, 18, 16, 18, 16, 18, 16, 18, 16, 18, 16, 18, 16, 18, 16, 18, 16, 18, 16, 18, 16, 18, 16, 18, 16, 18, 16, 18, 13,
+					 10, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 13,
+					 10,'S', 16, 18, 16, 18, 16, 18, 16, 18, 16, 18, 16, 18, 16, 18, 16, 18, 16, 18, 16, 18, 16, 18, 16, 18, 16, 18, 16, 18, 16, 18, 16,'S', 13,
+					 10, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 13,
+					 10, 18, 16, 18, 16, 18, 16, 18, 16, 18, 16, 18, 16, 18, 16, 18, 16, 18, 16, 18, 16, 18, 16, 18, 16, 18, 16, 18, 16, 18, 16, 18, 16, 18, 13,
+					 10, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 13,
+					 10, 18, 16, 18, 16, 18, 16,'S', 16, 18, 16, 18, 16, 18, 16, 18, 16, 18, 16, 18, 16, 18, 16, 18, 16, 18, 16,'S', 16, 18, 16, 18, 16, 18, 13,
+					 10, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18,'S', 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 13,
+					 10, 18, 16, 18, 16, 18, 16, 18, 16, 18, 16, 18, 16, 18, 16, 18, 16, 18, 16, 18, 16, 18, 16, 18, 16, 18, 16, 18, 16, 18, 16, 18, 16, 18, 13,
+					 10, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 13,
+					 10, 18, 16, 18, 16, 18, 16, 18, 16, 18, 16, 18, 16, 18, 16, 18, 16, 18, 16, 18, 16, 18, 16, 18, 16, 18, 16, 18, 16, 18, 16, 18, 16, 18, 13,
+					 10,'S', 18, 18, 18, 18, 18, 18, 18, 18, 18,'S', 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18,'S', 18, 18, 18, 18, 18, 18, 18, 18, 18,'S', 13,
 					  5,  7,  7,  7,  7,  7,  7,  7,  7,  7,  7,  7,  7,  7,  7,  7,  7,  7,  7,  7,  7,  7,  7,  7,  7,  7,  7,  7,  7,  7,  7,  7,  7,  7,  6};
 	int bonus[nbTypeBonus]= {  3, 12, 18,  0, 18,  0,  6,  6,  3,  0,  0,  0, 15, 0, 0};
 	Level * level = new Level(1, "Spitfire", false);
 	LevelVariante * variante = new LevelVariante(1, "Niveau Classique", "Niveau Classique", true, desc, bonus, 2, 2);
+	variante->addRail(38);
+	variante->addRail(39);
+	variante->addRail(40);
+	variante->addRail(41);
+	variante->addRail(42);
+	variante->addRail(43);
+	variante->addRail(44);
+	variante->addRail(45);
+	variante->addRail(46);
+	variante->addRail(47);
+	variante->addRail(48);
+	variante->addRail(73);
+	variante->addRail(83);
+	variante->addRail(106);
+	variante->addRail(107);
+	variante->addRail(108);
+	variante->addRail(110);
+	variante->addRail(111);
+	variante->addRail(112);
+	variante->addRail(113);
+	variante->addRail(114);
+	variante->addRail(118);
+	variante->addRail(119);
+	variante->addRail(120);
+	variante->addRail(121);
+	variante->addRail(122);
+	variante->addRail(123);
+	variante->addRail(124);
+	variante->addRail(128);
+	variante->addRail(129);
+	variante->addRail(130);
+	variante->addRail(131);
+	variante->addRail(132);
+	variante->addRail(133);
+	variante->addRail(141);
+	variante->addRail(145);
+	variante->addRail(163);
+	variante->addRail(176);
+	variante->addRail(178);
+	variante->addRail(179);
+	variante->addRail(180);
+	variante->addRail(183);
+	variante->addRail(184);
+	variante->addRail(185);
+	variante->addRail(186);
+	variante->addRail(187);
+	variante->addRail(188);
+	variante->addRail(189);
+	variante->addRail(190);
+	variante->addRail(196);
+	variante->addRail(197);
+	variante->addRail(198);
+	variante->addRail(204);
+	variante->addRail(205);
+	variante->addRail(206);
+	variante->addRail(211);
+	variante->addRail(213);
+	variante->addRail(225);
+	variante->addRail(231);
+	variante->addRail(241);
+	variante->addRail(246);
+	variante->addRail(248);
+	variante->addRail(260);
+	variante->addRail(266);
+	variante->addRail(267);
+	variante->addRail(268);
+	variante->addRail(276);
+	variante->addRail(281);
+	variante->addRail(283);
+	variante->addRail(295);
+	variante->addRail(303);
+	variante->addRail(311);
+	variante->addRail(316);
+	variante->addRail(318);
+	variante->addRail(319);
+	variante->addRail(320);
+	variante->addRail(321);
+	variante->addRail(322);
+	variante->addRail(324);
+	variante->addRail(325);
+	variante->addRail(326);
+	variante->addRail(327);
+	variante->addRail(328);
+	variante->addRail(330);
+	variante->addRail(332);
+	variante->addRail(333);
+	variante->addRail(334);
+	variante->addRail(335);
+	variante->addRail(336);
+	variante->addRail(338);
+	variante->addRail(339);
+	variante->addRail(340);
+	variante->addRail(346);
+	variante->addRail(351);
+	variante->addRail(359);
+	variante->addRail(365);
+	variante->addRail(371);
+	variante->addRail(375);
+	variante->addRail(381);
+	variante->addRail(386);
+	variante->addRail(387);
+	variante->addRail(388);
+	variante->addRail(389);
+	variante->addRail(390);
+	variante->addRail(391);
+	variante->addRail(392);
+	variante->addRail(394);
+	variante->addRail(400);
+	variante->addRail(401);
+	variante->addRail(402);
+	variante->addRail(403);
+	variante->addRail(404);
+	variante->addRail(406);
+	variante->addRail(407);
+	variante->addRail(408);
+	variante->addRail(409);
+	variante->addRail(410);
+	variante->addRail(416);
+	variante->addRail(427);
+	variante->addRail(429);
+	variante->addRail(439);
+	variante->addRail(451);
+	variante->addRail(462);
+	variante->addRail(464);
+	variante->addRail(465);
+	variante->addRail(466);
+	variante->addRail(467);
+	variante->addRail(468);
+	variante->addRail(469);
+	variante->addRail(470);
+	variante->addRail(474);
+	variante->addRail(475);
+	variante->addRail(476);
+	variante->addRail(477);
+	variante->addRail(478);
+	variante->addRail(479);
+	variante->addRail(480);
+	variante->addRail(481);
+	variante->addRail(482);
+	variante->addRail(483);
+	variante->addRail(484);
+	variante->addRail(485);
+	variante->addRail(486);
+	variante->addRail(497);
+	variante->addRail(505);
+	variante->addRail(528);
+	variante->addRail(529);
+	variante->addRail(530);
+	variante->addRail(532);
+	variante->addRail(533);
+	variante->addRail(534);
+	variante->addRail(535);
+	variante->addRail(536);
+	variante->addRail(537);
+	variante->addRail(538);
+	variante->addRail(540);
+	variante->addRail(543);
+	variante->addRail(544);
+	variante->addRail(545);
+	variante->addRail(546);
+	variante->addRail(547);
+	variante->addRail(548);
+	variante->addRail(554);
+	variante->addRail(555);
+	variante->addRail(556);
+	variante->addRail(565);
+	variante->addRail(575);
+	variante->addRail(583);
+	variante->addRail(589);
+	variante->addRail(600);
+	variante->addRail(601);
+	variante->addRail(602);
+	variante->addRail(603);
+	variante->addRail(604);
+	variante->addRail(605);
+	variante->addRail(606);
+	variante->addRail(608);
+	variante->addRail(609);
+	variante->addRail(610);
+	variante->addRail(618);
+	variante->addRail(619);
+	variante->addRail(620);
+	variante->addRail(621);
+	variante->addRail(622);
+	variante->addRail(624);
+	variante->addRail(641);
+	variante->addRail(643);
+	variante->addRail(657);
+	variante->addRail(659);
+	variante->addRail(676);
+	variante->addRail(677);
+	variante->addRail(678);
+	variante->addRail(692);
+	variante->addRail(693);
+	variante->addRail(694);
+	variante->addTrolley(124);
+	variante->addTrolley(183);
+	variante->addTrolley(322);
+	variante->addTrolley(133);
+	variante->addTrolley(528);
+	variante->addTrolley(556);
+
 	variante->textureIsAWall(0,17);
 	level->addVariante(variante);
+
+
+
+
+
+	LevelVariante * variante1 = new LevelVariante(1, "Niveau Perso", "Niveau Perso", true, desc, bonus, 3, 3);
+
+	variante1->addRail(112);
+	variante1->addRail(113);
+	variante1->addRail(114);
+	variante1->addRail(124);
+	variante1->addRail(125);
+	variante1->addRail(126);
+	variante1->addRail(127);
+	variante1->addRail(128);
+	variante1->addRail(129);
+	variante1->addRail(130);
+	variante1->addRail(131);
+	variante1->addRail(132);
+	variante1->addRail(147);
+	variante1->addRail(149);
+	variante1->addRail(159);
+	variante1->addRail(167);
+	variante1->addRail(182);
+	variante1->addRail(184);
+	variante1->addRail(194);
+	variante1->addRail(202);
+	variante1->addRail(217);
+	variante1->addRail(219);
+	variante1->addRail(229);
+	variante1->addRail(237);
+	variante1->addRail(250);
+	variante1->addRail(251);
+	variante1->addRail(252);
+	variante1->addRail(254);
+	variante1->addRail(255);
+	variante1->addRail(256);
+	variante1->addRail(264);
+	variante1->addRail(272);
+	variante1->addRail(285);
+	variante1->addRail(291);
+	variante1->addRail(299);
+	variante1->addRail(307);
+	variante1->addRail(320);
+	variante1->addRail(326);
+	variante1->addRail(334);
+	variante1->addRail(342);
+	variante1->addRail(355);
+	variante1->addRail(361);
+	variante1->addRail(369);
+	variante1->addRail(377);
+	variante1->addRail(390);
+	variante1->addRail(396);
+	variante1->addRail(404, new RailSwitch(439, 369, 405));
+	variante1->addRail(405);
+	variante1->addRail(406);
+	variante1->addRail(407);
+	variante1->addRail(408);
+	variante1->addRail(409);
+	variante1->addRail(410);
+	variante1->addRail(411);
+	variante1->addRail(412);
+	variante1->addRail(425);
+	variante1->addRail(431);
+	variante1->addRail(439);
+	variante1->addRail(458);
+	variante1->addRail(459);
+	variante1->addRail(460, new RailSwitch(459, 425, 461));
+	variante1->addRail(461);
+	variante1->addRail(462);
+	variante1->addRail(463);
+	variante1->addRail(464);
+	variante1->addRail(465);
+	variante1->addRail(466, new RailSwitch(467, 431, 465));
+	variante1->addRail(467);
+	variante1->addRail(468);
+	variante1->addRail(474);
+	variante1->addRail(493);
+	variante1->addRail(503);
+	variante1->addRail(509);
+	variante1->addRail(528);
+	variante1->addRail(538);
+	variante1->addRail(544);
+	variante1->addRail(563);
+	variante1->addRail(573);
+	variante1->addRail(579);
+	variante1->addRail(596);
+	variante1->addRail(597);
+	variante1->addRail(598);
+	variante1->addRail(608);
+	variante1->addRail(609);
+	variante1->addRail(610);
+	variante1->addRail(612);
+	variante1->addRail(613);
+	variante1->addRail(614);
+
+
+
+	variante1->addButton(323);
+	variante1->addButton(268);
+	variante1->addTrolley(596);
+	variante1->addTrolley(612);
+	variante1->textureIsAWall(0,17);
+	level->addVariante(variante1);
+
 	levels.push_back(level);
 }
 
