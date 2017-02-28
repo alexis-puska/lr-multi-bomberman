@@ -207,35 +207,6 @@ void LevelService::createLevel0(){
 	LevelVariante * variante = new LevelVariante(0, "classic level", "classic level", true, desc, bonus, 2, 2);
 	variante->textureIsAWall(0,17);
 
-	variante->addButton(73);
-	variante->addTrolley(37);
-
-	variante->addRail(37);
-	variante->addRail(38);
-	variante->addRail(39);
-	variante->addRail(40);
-	variante->addRail(41);
-	variante->addRail(42, new RailSwitch(41, 77, 43));
-	variante->addRail(43);
-	variante->addRail(44, new RailSwitch(45, 79, 43));
-	variante->addRail(45);
-	variante->addRail(46);
-	variante->addRail(47);
-	variante->addRail(77);
-	variante->addRail(79);
-	variante->addRail(112);
-	variante->addRail(113);
-	variante->addRail(114);
-	variante->addHole(176);
-	variante->addMine(213);
-	variante->addMine(211);
-	variante->addMine(215);
-	variante->addMine(219);
-	variante->addMine(256);
-	variante->addMine(258);
-	variante->addMine(260);
-	variante->addMine(262);
-	variante->addMine(264);
 	variante->addTeleporter(179);
 	variante->addTeleporter(122);
 	variante->addTeleporter(205);
@@ -355,6 +326,25 @@ void LevelService::createLevel2(){
 	variante->textureIsAWall(0,17);
 	level->addVariante(variante);
 
+
+	variante->addMine(99);
+		variante->addMine(123);
+		variante->addMine(143);
+		variante->addMine(221);
+		variante->addMine(235);
+		variante->addMine(331);
+		variante->addMine(341);
+		variante->addMine(391);
+		variante->addMine(415);
+		variante->addMine(474);
+		variante->addMine(567);
+		variante->addMine(551);
+		variante->addMine(633);
+		variante->addMine(653);
+		variante->addMine(678);
+
+
+
 	LevelVariante * variante1 = new LevelVariante(1, "Niveau Classique", "Niveau Classique", true, desc2, bonus, 2, 2);
 	variante1->textureIsAWall(0,17);
 	variante1->textureIsAWall('W');
@@ -425,6 +415,22 @@ void LevelService::createLevel4(){
 	int bonus[nbTypeBonus]= {  3,  6, 18,  0, 18,  0,  6,  6,  0,  0,  0,  0, 15, 0, 0};
 	Level * level = new Level(1, "Slip N' Slide", false);
 	LevelVariante * variante = new LevelVariante(1, "Niveau Classique", "Niveau Classique", true, desc, bonus, 2, 2);
+	variante->addHole(99);
+	variante->addHole(123);
+	variante->addHole(143);
+	variante->addHole(221);
+	variante->addHole(235);
+	variante->addHole(331);
+	variante->addHole(341);
+	variante->addHole(391);
+	variante->addHole(415);
+	variante->addHole(474);
+	variante->addHole(567);
+	variante->addHole(551);
+	variante->addHole(633);
+	variante->addHole(653);
+	variante->addHole(678);
+
 	variante->textureIsAWall(0,17);
 	variante->textureIsAWall(28);
 	variante->textureIsAWall(29);

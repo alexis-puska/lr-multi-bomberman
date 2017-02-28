@@ -133,7 +133,7 @@ After this step lr-multi-bomberman is installed, compile, and integrated in emul
 |Teleporter									|    |           |X   |
 |Mine										|	 | 			 |X   |
 |Trolley									|    |           |X   |
-|make level for trolley						|    |X          |    |
+|make level for trolley						|    |           |X   |
 |Game type bad bomber						|    |           |X   |
 |Power(glove)								|    |X          |    |
 |Net (multiplayer over internet)			|X   |           |    |
