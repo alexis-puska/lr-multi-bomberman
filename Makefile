@@ -28,6 +28,7 @@ endif
 #OBJECT TO COMPILE
 OBJS += src/libretro/libretro.o
 OBJS += src/bomberman/Bomberman.o
+OBJS += src/bomberman/BomberNet.o
 OBJS += src/bomberman/MyWrapper.o
 OBJS += src/bomberman/Grid.o
 OBJS += src/bomberman/Hole.o
