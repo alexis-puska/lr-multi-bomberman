@@ -8,6 +8,9 @@ Bomberman::Bomberman(SDL_Surface * vout_bufLibretro) {
 	GameConfig::Instance();
 	Sound::Instance();
 	Sound::Instance().startMenuMusique();
+	BomberNet::Instance();
+	BomberNet::Instance().createTcpServer();
+	BomberNet::Instance().startServer();
 
 
 	//color mask
@@ -29,6 +32,7 @@ Uint32 	rmask, gmask, bmask, amask;
 }
 
 Bomberman::~Bomberman() {
+	BomberNet::Instance().stopServer();
 	SDL_FreeSurface(screenBuffer);
 	if (game) {
 		if (game->isConfigured()) {
