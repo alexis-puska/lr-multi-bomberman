@@ -18,7 +18,8 @@ static int metronome(void* data) {
 	long warningCount = 0l;
 	while (game->isAlive()) {
 		gettimeofday(&t1, NULL);
-		BomberNet::Instance().sendLine();
+		//BomberNetServer::Instance().sendLine();
+		//BomberNetClient::Instance().sendLine();
 		game->tick();
 		gettimeofday(&t2, NULL);
 

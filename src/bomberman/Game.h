@@ -28,7 +28,8 @@
 #include "Teleporter.h"
 #include "Mine.h"
 #include "Hole.h"
-#include "utils/network/BomberNet.h"
+#include "utils/network/BomberNetServer.h"
+#include "utils/network/BomberNetClient.h"
 
 #ifndef __MYCLASS_GAME
 #define __MYCLASS_GAME
