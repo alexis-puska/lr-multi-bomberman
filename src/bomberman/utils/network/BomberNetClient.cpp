@@ -102,11 +102,7 @@ bool BomberNetClient::isAlive() {
 
 void BomberNetClient::sendLine() {
 	unsigned char data[11] = "ABCDEFGHI\n";
-	for (int i = 0; i < GAME_MAXPEOPLE; i++) {
-		if (bomber[i].active) {
-			SDLNet_TCP_Send(bomber[i].sock, &data, 11);
-		}
-	}
+	SDLNet_TCP_Send(BomberNetClient::tcpsock, &data, 11);
 }
 
 /**************************************
@@ -136,6 +132,13 @@ void BomberNetClient::connectClient() {
 }
 
 void BomberNetClient::disconnectClient() {
-
+	if (tcpsock != NULL) {
+		SDLNet_TCP_Close(tcpsock);
+		tcpsock = NULL;
+	}
+	if (socketset != NULL) {
+		SDLNet_FreeSocketSet(socketset);
+		socketset = NULL;
+	}
 }
 

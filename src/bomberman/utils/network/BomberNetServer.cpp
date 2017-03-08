@@ -25,16 +25,16 @@ BomberNetServer::BomberNetServer() {
 BomberNetServer::~BomberNetServer() {
 	alive = false;
 	cleanup();
-	//fprintf(stderr, "Close network system\n");
+	fprintf(stderr, "Close network system\n");
 }
 
 void BomberNetServer::initSDLNet() {
-	//fprintf(stderr, "Init network system : ");
+	fprintf(stderr, "Init network system : ");
 	if (SDLNet_Init() < 0) {
-		//fprintf(stderr, "%s\n", SDLNet_GetError());
-		//fprintf(stderr, "ERROR\n");
+		fprintf(stderr, "%s\n", SDLNet_GetError());
+		fprintf(stderr, "ERROR\n");
 	} else {
-		//fprintf(stderr, "SUCCES\n");
+		fprintf(stderr, "SUCCES\n");
 	}
 }
 
@@ -55,7 +55,7 @@ void BomberNetServer::allocateSockets() {
 	/* Allocate the socket set */
 	socketset = SDLNet_AllocSocketSet(15);
 	if (socketset == NULL) {
-		//fprintf(stderr, "Couldn't create socket set: %s\n", SDLNet_GetError());
+		fprintf(stderr, "Couldn't create socket set: %s\n", SDLNet_GetError());
 		cleanup();
 	}
 }
@@ -64,10 +64,10 @@ void BomberNetServer::createServerSocket() {
 	IPaddress serverIP;
 	/* Create the server socket */
 	SDLNet_ResolveHost(&serverIP, NULL, GAME_PORT);
-	//fprintf(stderr, "Server IP: %x, %d\n", serverIP.host, serverIP.port);
+	fprintf(stderr, "Server IP: %x, %d\n", serverIP.host, serverIP.port);
 	servsock = SDLNet_TCP_Open(&serverIP);
 	if (servsock == NULL) {
-		//fprintf(stderr, "Couldn't create server socket: %s\n", SDLNet_GetError());
+		fprintf(stderr, "Couldn't create server socket: %s\n", SDLNet_GetError());
 		cleanup();
 	}
 	SDLNet_TCP_AddSocket(socketset, servsock);
@@ -82,7 +82,7 @@ void BomberNetServer::createTcpServer() {
 void BomberNetServer::startServer() {
 	alive = true;
 	net_thread = SDL_CreateThread(net_thread_main, "tcp server thread", servsock);
-	//fprintf(stderr, "Starting server...\n");
+	fprintf(stderr, "Starting server...\n");
 }
 
 void BomberNetServer::addInactiveSocket(int which, TCPsocket newsock) {
@@ -99,7 +99,7 @@ void BomberNetServer::roomFull(TCPsocket newsock) {
 }
 
 int BomberNetServer::net_thread_main(void *data) {
-	//fprintf(stderr, "Starting thread server...\n");
+	fprintf(stderr, "Starting thread server...\n");
 	BomberNetServer *bomberNet = ((BomberNetServer *) data);
 	while (bomberNet->isAlive()) {
 		SDLNet_CheckSockets(socketset, ~0);
@@ -118,17 +118,17 @@ int BomberNetServer::net_thread_main(void *data) {
 }
 
 void BomberNetServer::stopServer() {
-	//fprintf(stderr, "Start killing server\n");
+	fprintf(stderr, "Start killing server\n");
 	if (alive) {
 		alive = false;
 		for (int i = 0; i < GAME_MAXPEOPLE; i++) {
-			//fprintf(stderr, "...");
+			fprintf(stderr, "...");
 			deleteConnection(i);
 		}
 		cleanup();
 		int treadResult = 0;
 		SDL_WaitThread(net_thread, &treadResult);
-		//fprintf(stderr, "\nServer KILLED : %i\n", treadResult);
+		fprintf(stderr, "\nServer KILLED : %i\n", treadResult);
 
 	}
 }
@@ -149,7 +149,7 @@ void BomberNetServer::HandleServer(void) {
 		printf("This may be a server socket.\n");
 	} else {
 
-		//fprintf(stderr, "New Player %i.%i.%i.%i %i\n", ip >> 24, (ip >> 16) & 0xff, (ip >> 8) & 0xff, ip & 0xff, remote_ip->port);
+		fprintf(stderr, "New Player %i.%i.%i.%i %i\n", ip >> 24, (ip >> 16) & 0xff, (ip >> 8) & 0xff, ip & 0xff, remote_ip->port);
 	}
 
 	if (newsock == NULL) {
@@ -191,7 +191,7 @@ void BomberNetServer::HandleClient(int which) {
 			printf("This may be a server socket.\n");
 		} else {
 			bomber[which].active = 0;
-			//fprintf(stderr, "Player left : %i.%i.%i.%i %i\n", ip >> 24, (ip >> 16) & 0xff, (ip >> 8) & 0xff, ip & 0xff, remote_ip->port);
+			fprintf(stderr, "Player left : %i.%i.%i.%i %i\n", ip >> 24, (ip >> 16) & 0xff, (ip >> 8) & 0xff, ip & 0xff, remote_ip->port);
 		}
 		deleteConnection(which);
 	} else {
@@ -200,7 +200,7 @@ void BomberNetServer::HandleClient(int which) {
 				bomber[which].active = 0;
 				break;
 			default:
-				//fprintf(stderr, "Receive from client %i : %s", which, data);
+				fprintf(stderr, "Receive from client %i : %s", which, data);
 				bomber[which].active = 1;
 				break;
 		}
