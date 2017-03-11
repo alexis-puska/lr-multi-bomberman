@@ -59,7 +59,7 @@ void BomberNetServer::allocateSockets() {
 	}
 }
 
-void BomberNetServer::createServerSocket() {
+bool BomberNetServer::createServerSocket() {
 	IPaddress serverIP;
 	/* Create the server socket */
 	SDLNet_ResolveHost(&serverIP, NULL, GameConfig::Instance().getPortValue());
@@ -68,14 +68,16 @@ void BomberNetServer::createServerSocket() {
 	if (servsock == NULL) {
 		fprintf(stderr, "Couldn't create server socket: %s\n", SDLNet_GetError());
 		cleanup();
+		return false;
 	}
 	SDLNet_TCP_AddSocket(socketset, servsock);
+	return true;
 }
 
-void BomberNetServer::createTcpServer() {
+bool BomberNetServer::createTcpServer() {
 	initSDLNet();
 	allocateSockets();
-	createServerSocket();
+	return createServerSocket();
 }
 
 void BomberNetServer::startServer() {

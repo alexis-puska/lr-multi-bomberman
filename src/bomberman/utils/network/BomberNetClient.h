@@ -11,7 +11,6 @@
 
 #define GAME_PORT			7777
 #define GAME_BYE			255
-#define GAME_MAXPEOPLE		2
 
 class BomberNetClient {
 	public:

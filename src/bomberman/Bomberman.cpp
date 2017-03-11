@@ -96,11 +96,11 @@ void Bomberman::tick(unsigned short in_keystateLibretro[16]) {
 					}
 					break;
 				case serverNumberOfClient:
-					cursorPosition = 0;
-					currentStep = PlayerTypeMenu;
-					BomberNetServer::Instance();
-					BomberNetServer::Instance().createTcpServer();
-					BomberNetServer::Instance().startServer();
+					if (BomberNetServer::Instance().createTcpServer()) {
+						BomberNetServer::Instance().startServer();
+						cursorPosition = 0;
+						currentStep = PlayerTypeMenu;
+					}
 					break;
 				case clientNumberPlayerName:
 					cursorPosition = 0;
@@ -108,7 +108,7 @@ void Bomberman::tick(unsigned short in_keystateLibretro[16]) {
 					break;
 				case clientIpPort:
 					BomberNetClient::Instance().createTcpClient();
-					if(BomberNetClient::Instance().connectClient()){
+					if (BomberNetClient::Instance().connectClient()) {
 						cursorPosition = 0;
 						currentStep = PlayerTypeMenu;
 					}

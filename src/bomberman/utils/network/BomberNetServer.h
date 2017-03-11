@@ -21,7 +21,7 @@ class BomberNetServer {
 		BomberNetServer();
 		~BomberNetServer();
 
-		void createTcpServer();
+		bool createTcpServer();
 		void startServer();
 		void stopServer();
 		void sendLine();
@@ -41,7 +41,7 @@ class BomberNetServer {
 		void initSDLNet();
 		void cleanup();
 		void allocateSockets();
-		void createServerSocket();
+		bool createServerSocket();
 		void addInactiveSocket(int which, TCPsocket newsock);
 		void roomFull(TCPsocket newsock);
 		void HandleServer(void);
