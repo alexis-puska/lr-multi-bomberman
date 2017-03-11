@@ -5,6 +5,7 @@ BomberNetServer BomberNetServer::m_instance = BomberNetServer();
 TCPsocket BomberNetServer::servsock = NULL;
 SDLNet_SocketSet BomberNetServer::socketset = NULL;
 bool BomberNetServer::alive = false;
+int BomberNetServer::nbClientConnected = 0;
 
 static struct {
 		int active;
@@ -65,6 +66,7 @@ bool BomberNetServer::createServerSocket() {
 	SDLNet_ResolveHost(&serverIP, NULL, GameConfig::Instance().getPortValue());
 	fprintf(stderr, "Server IP: %x, %d\n", serverIP.host, serverIP.port);
 	servsock = SDLNet_TCP_Open(&serverIP);
+	nbClientConnected = 0;
 	if (servsock == NULL) {
 		fprintf(stderr, "Couldn't create server socket: %s\n", SDLNet_GetError());
 		cleanup();
@@ -96,6 +98,12 @@ void BomberNetServer::addInactiveSocket(int which, TCPsocket newsock) {
 void BomberNetServer::roomFull(TCPsocket newsock) {
 	char tmp[47] = "This server of LR-Multi-Bomberman is full !!!\n";
 	SDLNet_TCP_Send(newsock, tmp, 47);
+	SDLNet_TCP_Close(newsock);
+}
+
+void BomberNetServer::serverAllReadyInGame(TCPsocket newsock) {
+	char tmp[60] = "This server of LR-Multi-Bomberman is all ready in game !!!\n";
+	SDLNet_TCP_Send(newsock, tmp, 60);
 	SDLNet_TCP_Close(newsock);
 }
 
@@ -168,8 +176,11 @@ void BomberNetServer::HandleServer(void) {
 	}
 	if (which == GameConfig::Instance().getNbClientServer()) {
 		roomFull(newsock);
-	} else {
+	} else if (!GameConfig::Instance().getAcceptClient()){
+		serverAllReadyInGame(newsock);
+	}else{
 		addInactiveSocket(which, newsock);
+		nbClientConnected++;
 		char tmp[42] = "Welcome to LR-Multi-Bomberman Server !!!\n";
 		bomber[which].active = 1;
 		SDLNet_TCP_Send(newsock, tmp, 42);
@@ -193,6 +204,7 @@ void BomberNetServer::HandleClient(int which) {
 		} else {
 			bomber[which].active = 0;
 			fprintf(stderr, "Player left : %i.%i.%i.%i %i\n", ip >> 24, (ip >> 16) & 0xff, (ip >> 8) & 0xff, ip & 0xff, remote_ip->port);
+			nbClientConnected--;
 		}
 		deleteConnection(which);
 	} else {
@@ -240,4 +252,8 @@ void BomberNetServer::sendLine() {
 			SDLNet_TCP_Send(bomber[i].sock, &data, 11);
 		}
 	}
+}
+
+int BomberNetServer::getNbClientConnected(){
+	return nbClientConnected;
 }

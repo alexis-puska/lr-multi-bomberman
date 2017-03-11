@@ -548,3 +548,11 @@ char * GameConfig::getPortValueForMenu() {
 
 	return portString;
 }
+
+bool GameConfig::getAcceptClient(){
+	return acceptClient;
+}
+
+void GameConfig::setAcceptClient(bool accept){
+	acceptClient = accept;
+}

@@ -19,6 +19,7 @@ enum bombermanStepEnum {
 	home = 0,			//spashscreen
 	gameMode,
 	serverNumberOfClient,
+	serverWaitForClient,
 	clientNumberPlayerName,
 	clientIpPort,
 	PlayerTypeMenu, 		//type of Player CPU / HUMAN / OFF
@@ -53,6 +54,7 @@ class Bomberman {
 
 		void drawSelectGameModeMenu();
 		void drawServerConfigurationMenu();
+		void drawServerWaitForClient();
 		void drawClientConfigurationMenu();
 		void drawClientIpMenu();
 

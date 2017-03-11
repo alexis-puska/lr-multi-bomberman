@@ -100,12 +100,19 @@ void Bomberman::tick(unsigned short in_keystateLibretro[16]) {
 					if (BomberNetServer::Instance().createTcpServer()) {
 						BomberNetServer::Instance().startServer();
 						cursorPosition = 0;
-						currentStep = PlayerTypeMenu;
+						currentStep = serverWaitForClient;
+						GameConfig::Instance().setAcceptClient(true);
 						error = false;
 					} else {
 						error = true;
 						sprintf(errorString, "Couln't create server port already used");
 					}
+					break;
+				case serverWaitForClient:
+					error = false;
+					cursorPosition = 0;
+					currentStep = PlayerTypeMenu;
+					GameConfig::Instance().setAcceptClient(false);
 					break;
 				case clientNumberPlayerName:
 					cursorPosition = 0;
@@ -171,6 +178,14 @@ void Bomberman::tick(unsigned short in_keystateLibretro[16]) {
 					cursorPosition = 0;
 					currentStep = clientNumberPlayerName;
 					break;
+				case serverWaitForClient:
+					error = false;
+					cursorPosition = 0;
+					GameConfig::Instance().setAcceptClient(false);
+					BomberNetServer::Instance().stopServer();
+					currentStep = serverNumberOfClient;
+					break;
+
 				case PlayerTypeMenu:
 					cursorPosition = 0;
 					switch (GameConfig::Instance().getGameModeType()) {
@@ -178,7 +193,7 @@ void Bomberman::tick(unsigned short in_keystateLibretro[16]) {
 							currentStep = gameMode;
 							break;
 						case NET_SERVER:
-							BomberNetClient::Instance().disconnectClient();
+							GameConfig::Instance().setAcceptClient(false);
 							BomberNetServer::Instance().stopServer();
 							currentStep = serverNumberOfClient;
 							break;
@@ -220,6 +235,9 @@ void Bomberman::tick(unsigned short in_keystateLibretro[16]) {
 				break;
 			case serverNumberOfClient:
 				drawServerConfigurationMenu();
+				break;
+			case serverWaitForClient:
+				drawServerWaitForClient();
 				break;
 			case clientNumberPlayerName:
 				drawClientConfigurationMenu();
@@ -1145,4 +1163,19 @@ void Bomberman::drawServerConfigurationMenu() {
 		copySurfaceToBackRenderer(cursor.getCurrentFrame(), vout_buf, cursorPosX, cursorPosY);
 	}
 
+}
+
+void Bomberman::drawServerWaitForClient() {
+
+	SDL_BlitSurface(Sprite::Instance().getMenuBackground(), NULL, screenBuffer, NULL);
+	copySurfaceToBackRenderer(Sprite::Instance().getShadowArea(0), screenBuffer, 33, 150);
+	copySurfaceToBackRenderer(Sprite::Instance().getShadowArea(2), screenBuffer, 33, 183);
+	Sprite::Instance().drawText(screenBuffer, (640 / 2), 154, "WAIT FOR GAME CLIENT", green, true);
+	Sprite::Instance().drawText(screenBuffer, (640 / 2), 335, "- - just wait for other player - -", gold, true);
+
+	char num[2];
+	sprintf(num, "%i", BomberNetServer::Instance().getNbClientConnected());
+	Sprite::Instance().drawText(screenBuffer, (640 / 2), 234, "Number of bomber net client connecter", green, true);
+	Sprite::Instance().drawText(screenBuffer, (640 / 2), 254, num, blue, true);
+	copySurfaceToBackRenderer(screenBuffer, vout_buf, 0, 0);
 }

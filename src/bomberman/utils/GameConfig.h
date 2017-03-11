@@ -127,6 +127,9 @@ class GameConfig {
 		int getPortValue();
 		char * getPortValueForMenu();
 
+		bool getAcceptClient();
+		void setAcceptClient(bool accept);
+
 	private:
 		GameConfig& operator=(const GameConfig&);
 		GameConfig(const GameConfig&);
@@ -157,6 +160,7 @@ class GameConfig {
 		int port;
 		char ipString[17];
 		char portString[6];
+		bool acceptClient;
 
 };
 #endif
