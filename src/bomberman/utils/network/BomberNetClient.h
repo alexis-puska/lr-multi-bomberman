@@ -4,6 +4,7 @@
 #else
 #include <SDL2_net/SDL_net.h>
 #endif
+#include "../GameConfig.h"
 
 #ifndef __MYCLASS_BOMBERNETCLIENT
 #define __MYCLASS_BOMBERNETCLIENT
@@ -22,7 +23,8 @@ class BomberNetClient {
 		~BomberNetClient();
 
 		void sendLine();
-		void connectClient();
+		void createTcpClient();
+		bool connectClient();
 		void disconnectClient();
 
 	private:
@@ -37,6 +39,7 @@ class BomberNetClient {
 		BomberNetClient& operator=(const BomberNetClient&);
 		BomberNetClient(const BomberNetClient&);
 		void initSDLNet();
+		void allocateSocket();
 		bool isAlive();
 		void cleanup();
 		void handleNet();

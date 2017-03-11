@@ -6,21 +6,22 @@
 #include "Sprite.h"
 #include "LevelService.h"
 
-#define nbBombeMax	 			6
-#define nbBombeMin	 			1
+#define nbBombeMax	 		6
+#define nbBombeMin	 		1
 #define nbBombedefault 			2
 #define bombeStrenghtMax		6
 #define bombeStrenghtMin		1
-#define bombeStrenghtDefault	2
+#define bombeStrenghtDefault		2
 #define nbPlayer				16
-#define nbMaxIALevel				5
-#define nbTypeBonus				15
+#define nbMaxIALevel			5
+#define nbTypeBonus			15
 #define nbMaxBonusTotal			150
 #define nbMaxBonusCat			50
 #define timeOfGameMax			5
 #define timeOfGameMin			2
 #define timeOfGameDefault		3
 #define timeOfGameInf			-1
+#define nbClientMax			4
 
 #define sizeX 35
 #define sizeY 21
@@ -29,7 +30,11 @@
 #define __MYCLASS_GAMECONFIG
 
 enum playerTypeEnum {
-	HUMAN = 0, CPU = 1, OFF = 2
+	HUMAN = 0, CPU = 1, OFF = 2, NET = 3
+};
+
+enum gameModeEnum {
+	LOCAL = 0, NET_SERVER = 1, NET_CLIENT = 2
 };
 
 class GameConfig {
@@ -91,7 +96,7 @@ class GameConfig {
 		int isPlayerAlive(int idx);
 		void resetPlayerStatus();
 		void printPlayerConfiguration();
-		
+
 		void updatePlayerPosition(int player, float x, float y);
 		void updatePlayerPosX(int player, float y);
 		void updatePlayerPosY(int player, float y);
@@ -100,13 +105,32 @@ class GameConfig {
 		int getPlayerIndex(int player);
 		void resetPlayerCord();
 
+		void incGameModeType();
+		void decGameModeType();
+		int getGameModeType();
+		//server config
+		void incNbClientServer();
+		void decNbClientServer();
+		int getNbClientServer();
+		//client config
+		void incNbPlayerOfClient();
+		void decNbPlayerOfClient();
+		int getNbPlayerOfClient();
+
+		void incIpValue(int idx, int val);
+		void decIpValue(int idx, int val);
+		char * getIpString();
+
+		void incPortValue(int val);
+		void decPortValue(int val);
+		int getPortValue();
 
 	private:
 		GameConfig& operator=(const GameConfig&);
 		GameConfig(const GameConfig&);
 		static GameConfig m_instance;
 		void copyLevelBonus();
-		
+
 		int level;
 		int variante;
 		int nbBombe;
@@ -124,5 +148,12 @@ class GameConfig {
 		int playerScore[nbPlayer];
 		int playerStatus[nbPlayer];
 		float playerCord[nbPlayer][2];
+		int gameMode;
+		int nbPlayerOfClient;
+		int nbClientServer;
+		int ipTab[4];
+		int port;
+		char ipString[17];
+
 };
 #endif

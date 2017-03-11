@@ -4,13 +4,13 @@
 #else
 #include <SDL2_net/SDL_net.h>
 #endif
+#include "../GameConfig.h"
 
 #ifndef __MYCLASS_BOMBERNETSERVER
 #define __MYCLASS_BOMBERNETSERVER
 
-#define GAME_PORT			7777
 #define GAME_BYE			255
-#define GAME_MAXPEOPLE		2
+#define GAME_MAXPEOPLE		15
 
 class BomberNetServer {
 	public:

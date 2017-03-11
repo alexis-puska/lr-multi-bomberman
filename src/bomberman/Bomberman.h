@@ -16,11 +16,15 @@
 #include "utils/network/BomberNetServer.h"
 
 enum bombermanStepEnum {
-	home = 0,					//spashscreen
+	home = 0,			//spashscreen
+	gameMode,
+	serverNumberOfClient,
+	clientNumberPlayerName,
+	clientIpPort,
 	PlayerTypeMenu, 		//type of Player CPU / HUMAN / OFF
 	PlayerSpriteMenu,
-	gameOptionMenu,			//Sudden death / Bad Bomber / CPU Level
-	levelSelectionMenu,		// Select the grid design
+	gameOptionMenu,		//Sudden death / Bad Bomber / CPU Level
+	levelSelectionMenu,	// Select the grid design
 	gameStep
 };
 
@@ -45,6 +49,13 @@ class Bomberman {
 		void drawPlayerSpriteMenu();
 		void drawGameOptionMenu();
 		void drawLevelSelectionMenu();
+
+
+		void drawSelectGameModeMenu();
+		void drawServerConfigurationMenu();
+		void drawClientConfigurationMenu();
+		void drawClientIpMenu();
+
 		//function to evoid key repetition
 		void keyPressed();
 

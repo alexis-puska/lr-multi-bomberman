@@ -48,7 +48,6 @@ void BomberNetServer::cleanup() {
 		socketset = NULL;
 	}
 	SDLNet_Quit();
-	SDL_Quit();
 }
 
 void BomberNetServer::allocateSockets() {
@@ -63,7 +62,7 @@ void BomberNetServer::allocateSockets() {
 void BomberNetServer::createServerSocket() {
 	IPaddress serverIP;
 	/* Create the server socket */
-	SDLNet_ResolveHost(&serverIP, NULL, GAME_PORT);
+	SDLNet_ResolveHost(&serverIP, NULL, GameConfig::Instance().getPortValue());
 	fprintf(stderr, "Server IP: %x, %d\n", serverIP.host, serverIP.port);
 	servsock = SDLNet_TCP_Open(&serverIP);
 	if (servsock == NULL) {
@@ -108,7 +107,7 @@ int BomberNetServer::net_thread_main(void *data) {
 			bomberNet->HandleServer();
 		}
 		/* Check for events on existing clients */
-		for (int i = 0; i < GAME_MAXPEOPLE; ++i) {
+		for (int i = 0; i < GameConfig::Instance().getNbClientServer(); ++i) {
 			if (SDLNet_SocketReady(bomber[i].sock)) {
 				bomberNet->HandleClient(i);
 			}
@@ -121,7 +120,7 @@ void BomberNetServer::stopServer() {
 	fprintf(stderr, "Start killing server\n");
 	if (alive) {
 		alive = false;
-		for (int i = 0; i < GAME_MAXPEOPLE; i++) {
+		for (int i = 0; i < GameConfig::Instance().getNbClientServer(); i++) {
 			fprintf(stderr, "...");
 			deleteConnection(i);
 		}
@@ -157,15 +156,15 @@ void BomberNetServer::HandleServer(void) {
 	}
 
 	/* Look for unconnected person slot */
-	for (which = 0; which < GAME_MAXPEOPLE; ++which) {
+	for (which = 0; which < GameConfig::Instance().getNbClientServer(); ++which) {
 		if (!bomber[which].sock) {
 			break;
 		}
 	}
-	if (which == GAME_MAXPEOPLE) {
+	if (which == GameConfig::Instance().getNbClientServer()) {
 		findInactivePersonSlot(which);
 	}
-	if (which == GAME_MAXPEOPLE) {
+	if (which == GameConfig::Instance().getNbClientServer()) {
 		roomFull(newsock);
 	} else {
 		addInactiveSocket(which, newsock);
@@ -216,7 +215,7 @@ void BomberNetServer::deleteConnection(int which) {
 }
 
 void BomberNetServer::findInactivePersonSlot(int &which) {
-	for (which = 0; which < GAME_MAXPEOPLE; ++which) {
+	for (which = 0; which < GameConfig::Instance().getNbClientServer(); ++which) {
 		if (bomber[which].sock && !bomber[which].active) {
 			/* Kick them out.. */
 			unsigned char data = GAME_BYE;
@@ -234,7 +233,7 @@ bool BomberNetServer::isAlive() {
 
 void BomberNetServer::sendLine() {
 	unsigned char data[11] = "ABCDEFGHI\n";
-	for (int i = 0; i < GAME_MAXPEOPLE; i++) {
+	for (int i = 0; i < GameConfig::Instance().getNbClientServer(); i++) {
 		if (bomber[i].active) {
 			SDLNet_TCP_Send(bomber[i].sock, &data, 11);
 		}
