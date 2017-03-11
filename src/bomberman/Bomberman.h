@@ -67,6 +67,11 @@ class Bomberman {
 		//the bomb cursor
 		Cursor cursor;
 
+
+		bool error;
+		char errorString[255];
+
+
 		//refreshbuffer, for menu, if need to be full redraw
 		bool refreshBuffer;
 

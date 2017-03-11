@@ -28,6 +28,7 @@ Bomberman::Bomberman(SDL_Surface * vout_bufLibretro) {
 	currentStep = home;
 
 	game = NULL;
+	error = false;
 }
 
 Bomberman::~Bomberman() {
@@ -100,6 +101,10 @@ void Bomberman::tick(unsigned short in_keystateLibretro[16]) {
 						BomberNetServer::Instance().startServer();
 						cursorPosition = 0;
 						currentStep = PlayerTypeMenu;
+						error = false;
+					} else {
+						error = true;
+						sprintf(errorString, "Couln't create server port already used");
 					}
 					break;
 				case clientNumberPlayerName:
@@ -111,6 +116,10 @@ void Bomberman::tick(unsigned short in_keystateLibretro[16]) {
 					if (BomberNetClient::Instance().connectClient()) {
 						cursorPosition = 0;
 						currentStep = PlayerTypeMenu;
+						error = false;
+					} else {
+						error = true;
+						sprintf(errorString, "Couln't connect to this server");
 					}
 					break;
 				case PlayerTypeMenu:
@@ -141,6 +150,7 @@ void Bomberman::tick(unsigned short in_keystateLibretro[16]) {
 		} else if (previousPlayerKeystate[0] & keyPadSelect && keychange[0]) {
 			Sound::Instance().playCancelSound();
 			refreshBuffer = true;
+			error = false;
 			switch (currentStep) {
 				case home:
 					cursorPosition = 0;
@@ -205,6 +215,7 @@ void Bomberman::tick(unsigned short in_keystateLibretro[16]) {
 				}
 				break;
 			case gameMode:
+				cursor.startAnimation();
 				drawSelectGameModeMenu();
 				break;
 			case serverNumberOfClient:
@@ -214,6 +225,7 @@ void Bomberman::tick(unsigned short in_keystateLibretro[16]) {
 				drawClientConfigurationMenu();
 				break;
 			case clientIpPort:
+				cursor.startAnimation();
 				drawClientIpMenu();
 				break;
 			case PlayerTypeMenu:
@@ -833,47 +845,304 @@ void Bomberman::drawSelectGameModeMenu() {
 	}
 }
 
-void Bomberman::drawServerConfigurationMenu() {
-	if (refreshBuffer || keychange[0]) {
-		SDL_BlitSurface(Sprite::Instance().getMenuBackground(), NULL, screenBuffer, NULL);
-		copySurfaceToBackRenderer(Sprite::Instance().getShadowArea(0), screenBuffer, 33, 150);
-		copySurfaceToBackRenderer(Sprite::Instance().getShadowArea(2), screenBuffer, 33, 183);
-		Sprite::Instance().drawText(screenBuffer, (640 / 2), 154, "SERVER CONFIGURATION", green, true);
-		Sprite::Instance().drawText(screenBuffer, (640 / 2), 335, "- - move cursor with arrow and change with A / B - -", gold, true);
-
-		int cursorPosX = 36 + (((cursorPosition - (cursorPosition % 4)) / 4) * 133);
-		int cursorposY = 187 + ((cursorPosition % 4) * 20);
-		copySurfaceToBackRenderer(screenBuffer, vout_buf, 0, 0);
-		copySurfaceToBackRenderer(cursor.getCurrentFrame(), vout_buf, cursorPosX, cursorposY);
-	}
-}
-
 void Bomberman::drawClientConfigurationMenu() {
 	if (refreshBuffer || keychange[0]) {
 		SDL_BlitSurface(Sprite::Instance().getMenuBackground(), NULL, screenBuffer, NULL);
 		copySurfaceToBackRenderer(Sprite::Instance().getShadowArea(0), screenBuffer, 33, 150);
 		copySurfaceToBackRenderer(Sprite::Instance().getShadowArea(2), screenBuffer, 33, 183);
 		Sprite::Instance().drawText(screenBuffer, (640 / 2), 154, "CLIENT CONFIGURATION", green, true);
-		Sprite::Instance().drawText(screenBuffer, (640 / 2), 335, "- - move cursor with arrow and change with A / B - -", gold, true);
+		Sprite::Instance().drawText(screenBuffer, (640 / 2), 335, "- - Use A / B to change the number of player - -", gold, true);
 
-		int cursorPosX = 36 + (((cursorPosition - (cursorPosition % 4)) / 4) * 133);
-		int cursorposY = 187 + ((cursorPosition % 4) * 20);
+		if (previousPlayerKeystate[0] & keyPadA && keychange[0]) {
+			Sound::Instance().playBipSound();
+			GameConfig::Instance().incNbPlayerOfClient();
+		} else if (previousPlayerKeystate[0] & keyPadB && keychange[0]) {
+			Sound::Instance().playBipSound();
+			GameConfig::Instance().decNbPlayerOfClient();
+		}
+		char num[2];
+		sprintf(num, "%i", GameConfig::Instance().getNbPlayerOfClient());
+		Sprite::Instance().drawText(screenBuffer, (640 / 2), 234, "Number of HUMAN player on this computer", green, true);
+		Sprite::Instance().drawText(screenBuffer, (640 / 2), 254, num, blue, true);
 		copySurfaceToBackRenderer(screenBuffer, vout_buf, 0, 0);
-		copySurfaceToBackRenderer(cursor.getCurrentFrame(), vout_buf, cursorPosX, cursorposY);
 	}
 }
 
 void Bomberman::drawClientIpMenu() {
 	if (refreshBuffer || keychange[0]) {
 		SDL_BlitSurface(Sprite::Instance().getMenuBackground(), NULL, screenBuffer, NULL);
+
+		if (previousPlayerKeystate[0] & keyPadRight && keychange[0]) {
+			Sound::Instance().playBipSound();
+			cursorPosition++;
+			if (cursorPosition > 20) {
+				cursorPosition = 0;
+			}
+			switch (cursorPosition) {
+				case 3:
+				case 7:
+				case 11:
+				case 15:
+					cursorPosition++;
+			}
+		} else if (previousPlayerKeystate[0] & keyPadLeft && keychange[0]) {
+			Sound::Instance().playBipSound();
+			cursorPosition--;
+			if (cursorPosition < 0) {
+				cursorPosition = 20;
+			}
+			switch (cursorPosition) {
+				case 3:
+				case 7:
+				case 11:
+				case 15:
+					cursorPosition--;
+			}
+		} else if (previousPlayerKeystate[0] & keyPadA && keychange[0]) {
+			Sound::Instance().playBipSound();
+			switch (cursorPosition) {
+				case 0:
+					GameConfig::Instance().incIpValue(0, 100);
+					break;
+				case 1:
+					GameConfig::Instance().incIpValue(0, 10);
+					break;
+				case 2:
+					GameConfig::Instance().incIpValue(0, 1);
+					break;
+				case 4:
+					GameConfig::Instance().incIpValue(1, 100);
+					break;
+				case 5:
+					GameConfig::Instance().incIpValue(1, 10);
+					break;
+				case 6:
+					GameConfig::Instance().incIpValue(1, 1);
+					break;
+				case 8:
+					GameConfig::Instance().incIpValue(2, 100);
+					break;
+				case 9:
+					GameConfig::Instance().incIpValue(2, 10);
+					break;
+				case 10:
+					GameConfig::Instance().incIpValue(2, 1);
+					break;
+				case 12:
+					GameConfig::Instance().incIpValue(3, 100);
+					break;
+				case 13:
+					GameConfig::Instance().incIpValue(3, 10);
+					break;
+				case 14:
+					GameConfig::Instance().incIpValue(3, 1);
+					break;
+				case 16:
+					GameConfig::Instance().incPortValue(10000);
+					break;
+				case 17:
+					GameConfig::Instance().incPortValue(1000);
+					break;
+				case 18:
+					GameConfig::Instance().incPortValue(100);
+					break;
+				case 19:
+					GameConfig::Instance().incPortValue(10);
+					break;
+				case 20:
+					GameConfig::Instance().incPortValue(1);
+					break;
+			}
+		} else if (previousPlayerKeystate[0] & keyPadB && keychange[0]) {
+			Sound::Instance().playBipSound();
+			switch (cursorPosition) {
+				case 0:
+					GameConfig::Instance().decIpValue(0, 100);
+					break;
+				case 1:
+					GameConfig::Instance().decIpValue(0, 10);
+					break;
+				case 2:
+					GameConfig::Instance().decIpValue(0, 1);
+					break;
+				case 4:
+					GameConfig::Instance().decIpValue(1, 100);
+					break;
+				case 5:
+					GameConfig::Instance().decIpValue(1, 10);
+					break;
+				case 6:
+					GameConfig::Instance().decIpValue(1, 1);
+					break;
+				case 8:
+					GameConfig::Instance().decIpValue(2, 100);
+					break;
+				case 9:
+					GameConfig::Instance().decIpValue(2, 10);
+					break;
+				case 10:
+					GameConfig::Instance().decIpValue(2, 1);
+					break;
+				case 12:
+					GameConfig::Instance().decIpValue(3, 100);
+					break;
+				case 13:
+					GameConfig::Instance().decIpValue(3, 10);
+					break;
+				case 14:
+					GameConfig::Instance().decIpValue(3, 1);
+					break;
+				case 16:
+					GameConfig::Instance().decPortValue(10000);
+					break;
+				case 17:
+					GameConfig::Instance().decPortValue(1000);
+					break;
+				case 18:
+					GameConfig::Instance().decPortValue(100);
+					break;
+				case 19:
+					GameConfig::Instance().decPortValue(10);
+					break;
+				case 20:
+					GameConfig::Instance().decPortValue(1);
+					break;
+			}
+		}
+
+		//draw
 		copySurfaceToBackRenderer(Sprite::Instance().getShadowArea(0), screenBuffer, 33, 150);
 		copySurfaceToBackRenderer(Sprite::Instance().getShadowArea(2), screenBuffer, 33, 183);
 		Sprite::Instance().drawText(screenBuffer, (640 / 2), 154, "CLIENT CONFIGURATION", green, true);
-		Sprite::Instance().drawText(screenBuffer, (640 / 2), 335, "- - move cursor with arrow and change with A / B - -", gold, true);
+		Sprite::Instance().drawText(screenBuffer, (640 / 2), 335, "- - Use LEFT / RIGHT to move cursor, use A / B to change number - -", gold, true);
+		Sprite::Instance().drawText(screenBuffer, (640 / 2), 234, "Enter IP and Port of LR-MultiBomberman Server", green, true);
 
-		int cursorPosX = 36 + (((cursorPosition - (cursorPosition % 4)) / 4) * 133);
-		int cursorposY = 187 + ((cursorPosition % 4) * 20);
+		int cursorPosX = 0;
+		int cursorPosY = 0;
+		char tmp[2];
+		for (int i = 0; i < 21; i++) {
+			switch (i) {
+				case 3:
+				case 7:
+				case 11:
+					sprintf(tmp, ".");
+					break;
+				case 15:
+					sprintf(tmp, ":");
+					break;
+				default:
+					if (i < 15) {
+						sprintf(tmp, "%c", GameConfig::Instance().getIpStringForMenu()[i]);
+					} else {
+						sprintf(tmp, "%c", GameConfig::Instance().getPortValueForMenu()[i - 16]);
+					}
+			}
+
+			Sprite::Instance().drawText(screenBuffer, 215 + (i * 10), 254, tmp, blue, false);
+		}
+		if (error) {
+			Sprite::Instance().drawText(screenBuffer, (640 / 2), 310, errorString, red, true);
+		}
+
+		cursorPosX = 208 + (cursorPosition * 10);
+		cursorPosY = 270;
 		copySurfaceToBackRenderer(screenBuffer, vout_buf, 0, 0);
-		copySurfaceToBackRenderer(cursor.getCurrentFrame(), vout_buf, cursorPosX, cursorposY);
+		copySurfaceToBackRenderer(cursor.getCurrentFrame(), vout_buf, cursorPosX, cursorPosY);
 	}
+}
+
+void Bomberman::drawServerConfigurationMenu() {
+
+	if (refreshBuffer || keychange[0]) {
+		SDL_BlitSurface(Sprite::Instance().getMenuBackground(), NULL, screenBuffer, NULL);
+		if (previousPlayerKeystate[0] & keyPadRight && keychange[0]) {
+			Sound::Instance().playBipSound();
+			cursorPosition++;
+			if (cursorPosition > 5) {
+				cursorPosition = 0;
+			}
+		} else if (previousPlayerKeystate[0] & keyPadLeft && keychange[0]) {
+			Sound::Instance().playBipSound();
+			cursorPosition--;
+			if (cursorPosition < 0) {
+				cursorPosition = 5;
+			}
+		} else if (previousPlayerKeystate[0] & keyPadA && keychange[0]) {
+			Sound::Instance().playBipSound();
+			switch (cursorPosition) {
+				case 0:
+					GameConfig::Instance().incNbClientServer();
+					break;
+				case 1:
+					GameConfig::Instance().incPortValue(10000);
+					break;
+				case 2:
+					GameConfig::Instance().incPortValue(1000);
+					break;
+				case 3:
+					GameConfig::Instance().incPortValue(100);
+					break;
+				case 4:
+					GameConfig::Instance().incPortValue(10);
+					break;
+				case 5:
+					GameConfig::Instance().incPortValue(1);
+					break;
+			}
+		} else if (previousPlayerKeystate[0] & keyPadB && keychange[0]) {
+			Sound::Instance().playBipSound();
+			switch (cursorPosition) {
+				case 0:
+					GameConfig::Instance().decNbClientServer();
+					break;
+				case 1:
+					GameConfig::Instance().decPortValue(10000);
+					break;
+				case 2:
+					GameConfig::Instance().decPortValue(1000);
+					break;
+				case 3:
+					GameConfig::Instance().decPortValue(100);
+					break;
+				case 4:
+					GameConfig::Instance().decPortValue(10);
+					break;
+				case 5:
+					GameConfig::Instance().decPortValue(1);
+					break;
+			}
+		}
+
+		//draw
+		copySurfaceToBackRenderer(Sprite::Instance().getShadowArea(0), screenBuffer, 33, 150);
+		copySurfaceToBackRenderer(Sprite::Instance().getShadowArea(2), screenBuffer, 33, 183);
+		Sprite::Instance().drawText(screenBuffer, (640 / 2), 154, "SERVER CONFIGURATION", green, true);
+		if (error) {
+			Sprite::Instance().drawText(screenBuffer, (640 / 2), 310, errorString, red, true);
+		}
+		Sprite::Instance().drawText(screenBuffer, (640 / 2), 335, "- - Use LEFT / RIGHT to move cursor, use A / B to change number - -", gold, true);
+		Sprite::Instance().drawText(screenBuffer, 160, 234, "Number max of client : ", green, false);
+		Sprite::Instance().drawText(screenBuffer, 160, 254, "Enter Port of LR-MultiBomberman Server : ", green, false);
+
+		int cursorPosX = 0;
+		int cursorPosY = 0;
+		char tmp[2];
+		sprintf(tmp, "%i", GameConfig::Instance().getNbClientServer());
+		Sprite::Instance().drawText(screenBuffer, 450, 234, tmp, blue, false);
+		for (int i = 0; i < 5; i++) {
+			sprintf(tmp, "%c", GameConfig::Instance().getPortValueForMenu()[i]);
+			Sprite::Instance().drawText(screenBuffer, 450 + (i * 10), 254, tmp, blue, false);
+		}
+		if (cursorPosition == 0) {
+			cursorPosX = 140;
+			cursorPosY = 234;
+		} else {
+			cursorPosX = 434 + (cursorPosition * 10);
+			cursorPosY = 270;
+		}
+
+		copySurfaceToBackRenderer(screenBuffer, vout_buf, 0, 0);
+		copySurfaceToBackRenderer(cursor.getCurrentFrame(), vout_buf, cursorPosX, cursorPosY);
+	}
+
 }

@@ -120,10 +120,12 @@ class GameConfig {
 		void incIpValue(int idx, int val);
 		void decIpValue(int idx, int val);
 		char * getIpString();
+		char * getIpStringForMenu();
 
 		void incPortValue(int val);
 		void decPortValue(int val);
 		int getPortValue();
+		char * getPortValueForMenu();
 
 	private:
 		GameConfig& operator=(const GameConfig&);
@@ -154,6 +156,7 @@ class GameConfig {
 		int ipTab[4];
 		int port;
 		char ipString[17];
+		char portString[6];
 
 };
 #endif

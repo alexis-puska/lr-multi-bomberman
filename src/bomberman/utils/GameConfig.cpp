@@ -491,7 +491,7 @@ int GameConfig::getNbPlayerOfClient() {
 void GameConfig::incIpValue(int idx, int val) {
 	ipTab[idx] += val;
 	if (ipTab[idx] > 255) {
-		ipTab[idx] = 0;
+		ipTab[idx] = 255;
 	}
 	sprintf(ipString, "%i.%i.%i.%i", ipTab[0], ipTab[1], ipTab[2], ipTab[3]);
 }
@@ -499,7 +499,7 @@ void GameConfig::incIpValue(int idx, int val) {
 void GameConfig::decIpValue(int idx, int val) {
 	ipTab[idx] -= val;
 	if (ipTab[idx] < 0) {
-		ipTab[idx] = 255;
+		ipTab[idx] = 0;
 	}
 	sprintf(ipString, "%i.%i.%i.%i", ipTab[0], ipTab[1], ipTab[2], ipTab[3]);
 }
@@ -509,20 +509,42 @@ char * GameConfig::getIpString() {
 	return ipString;
 }
 
+char * GameConfig::getIpStringForMenu() {
+	sprintf(ipString, "%3i.%3i.%3i.%3i", ipTab[0], ipTab[1], ipTab[2], ipTab[3]);
+	for (int i = 0; i < 16; i++) {
+		if (ipString[i] == ' ') {
+			ipString[i] = '0';
+		}
+	}
+
+	return ipString;
+}
+
 void GameConfig::incPortValue(int val) {
 	port += val;
 	if (port > 65535) {
-		port = 0;
+		port = 65535;
 	}
 }
 
 void GameConfig::decPortValue(int val) {
 	port -= val;
 	if (port < 0) {
-		port = 65535;
+		port = 0;
 	}
 }
 
 int GameConfig::getPortValue() {
 	return port;
+}
+
+char * GameConfig::getPortValueForMenu() {
+	sprintf(portString, "%5i", port);
+	for (int i = 0; i < 5; i++) {
+		if (portString[i] == ' ') {
+			portString[i] = '0';
+		}
+	}
+
+	return portString;
 }
