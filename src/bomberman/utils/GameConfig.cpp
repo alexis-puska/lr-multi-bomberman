@@ -15,6 +15,7 @@ GameConfig::GameConfig() {
 	badBomberMode = false;
 	IALevel = 1;
 	gameMode = 0;
+	numberOfNetPlayer=0;
 	ipTab[0]=127;
 	ipTab[1]=0;
 	ipTab[2]=0;
@@ -29,7 +30,7 @@ GameConfig::GameConfig() {
 		bonus[i] = 0;
 	}
 	for(int i = 0; i < nbPlayer; i++) {
-		playerType[i] = 1;
+		playerType[i] = CPU;
 		playerColor[i] = 0;
 		playerSpriteType[i] = 0;
 	}
@@ -277,18 +278,33 @@ int GameConfig::getNbPlayerInGame() {
 
 void GameConfig::incPlayerType(int idx) {
 	if (idx != 0) {
+		bool netSet = netPlayerAllSet();
 		playerType[idx]++;
 		if (playerType[idx] > 2) {
-			playerType[idx] = 0;
+			if (playerType[idx] > 3) {
+				playerType[idx] = 0;
+			} else {
+				if (netSet) {
+					playerType[idx] = 0;
+				} else {
+					playerType[idx] = 3;
+				}
+			}
 		}
 	}
 }
 
 void GameConfig::decPlayerType(int idx) {
 	if (idx != 0) {
+		bool netSet = netPlayerAllSet();
+
 		playerType[idx]--;
 		if (playerType[idx] < 0) {
-			playerType[idx] = 2;
+			if (netSet) {
+				playerType[idx] = 2;
+			} else {
+				playerType[idx] = 3;
+			}
 		}
 	}
 }
@@ -549,10 +565,69 @@ char * GameConfig::getPortValueForMenu() {
 	return portString;
 }
 
-bool GameConfig::getAcceptClient(){
+bool GameConfig::getAcceptClient() {
 	return acceptClient;
 }
 
-void GameConfig::setAcceptClient(bool accept){
+void GameConfig::setAcceptClient(bool accept) {
 	acceptClient = accept;
 }
+
+void GameConfig::addNetPlayer(int num) {
+	numberOfNetPlayer += num;
+}
+void GameConfig::removeNetPlayer(int num) {
+	numberOfNetPlayer -= num;
+}
+int GameConfig::getNbNetPlayer(){
+	return numberOfNetPlayer;
+}
+
+void GameConfig::generateNetPlayerConfiguration() {
+	if (gameMode == LOCAL) {
+		for (int i = 1; i < nbPlayer; i++) {
+			playerType[i] = CPU;
+		}
+	} else {
+		fprintf(stderr, "generate player net : %i", numberOfNetPlayer);
+		int n = 0;
+		for (int i = 1; i < nbPlayer; i++) {
+			if (n >= numberOfNetPlayer) {
+				playerType[i] = CPU;
+			} else {
+				playerType[i] = NET;
+				n++;
+			}
+		}
+	}
+}
+bool GameConfig::netPlayerAllSet() {
+	int nb = 0;
+	for (int i = 0; i < nbPlayer; i++) {
+		if (playerType[i] == NET) {
+			nb++;
+		}
+	}
+	if (nb == numberOfNetPlayer) {
+		return true;
+	} else {
+		return false;
+	}
+}
+
+void GameConfig::resetNumberNetPlayer() {
+	numberOfNetPlayer = 0;
+	for (int i = 1; i < nbPlayer; i++) {
+		playerType[i] = CPU;
+	}
+}
+
+
+void GameConfig::setAdresseOfKeystateOverNet(unsigned short * in_keystate_over_net){
+	this->in_keystate_over_net = in_keystate_over_net;
+}
+
+void GameConfig::setKeyPressedForNetPlayer(int player, unsigned short val){
+	in_keystate_over_net[player] = val;
+}
+

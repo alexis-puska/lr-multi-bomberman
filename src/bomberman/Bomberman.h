@@ -62,6 +62,7 @@ class Bomberman {
 		void keyPressed();
 
 		unsigned short in_keystate[16];
+		unsigned short in_keystate_over_net[16];
 		SDL_Surface * vout_buf;
 
 		//position index for the cursor

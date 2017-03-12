@@ -130,11 +130,22 @@ class GameConfig {
 		bool getAcceptClient();
 		void setAcceptClient(bool accept);
 
+		void addNetPlayer(int num);
+		void removeNetPlayer(int num);
+		int getNbNetPlayer();
+		void generateNetPlayerConfiguration();
+		bool netPlayerAllSet();
+		void resetNumberNetPlayer();
+		void setAdresseOfKeystateOverNet(unsigned short * in_keystate_over_net);
+		void setKeyPressedForNetPlayer(int player, unsigned short val);
+
 	private:
 		GameConfig& operator=(const GameConfig&);
 		GameConfig(const GameConfig&);
 		static GameConfig m_instance;
 		void copyLevelBonus();
+		unsigned short * in_keystate_over_net;
+
 
 		int level;
 		int variante;
@@ -161,6 +172,7 @@ class GameConfig {
 		char ipString[17];
 		char portString[6];
 		bool acceptClient;
+		int numberOfNetPlayer;
 
 };
 #endif

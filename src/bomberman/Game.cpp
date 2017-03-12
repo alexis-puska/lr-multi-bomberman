@@ -61,11 +61,12 @@ Game::Game() {
  * constructor
  * 
  */
-Game::Game(SDL_Surface * vout_buf, unsigned short * in_keystate) {
+Game::Game(SDL_Surface * vout_buf, unsigned short * in_keystate, unsigned short * in_keystate_over_net) {
 	srand (time(NULL));
 
 this	->vout_buf = vout_buf;
 	this->in_keystate = in_keystate;
+	this->in_keystate_over_net = in_keystate_over_net;
 
 	levelIndex = GameConfig::Instance().getLevel();
 	variante = GameConfig::Instance().getVariante();
@@ -133,6 +134,7 @@ this	->vout_buf = vout_buf;
 	}
 
 	int indexLibretro = 0;
+	int indexOverInternet = 0;
 	int index = 0;
 	int indexPlayerForGame = 0;
 	Player * player;
@@ -174,6 +176,18 @@ this	->vout_buf = vout_buf;
 			index++;
 			nbPlayerAlive++;
 			indexPlayerForGame++;
+			break;
+			case NET:
+
+			// if a human link the next keystate of libretro, else link a empty value
+			player = new Player(&in_keystate_over_net[indexOverInternet], startX, startY, i, tab, tabBonus, grid, indexPlayerForGame, LevelService::Instance().getLevel(levelIndex)->isWaterOverlayMode(), &bombes, &louisBurns);
+			players.push_back(player);
+			player = NULL;
+			indexOverInternet++;
+			nbPlayerAlive++;
+			indexPlayerForGame++;
+			break;
+
 			break;
 			case OFF:
 			break;
@@ -1132,6 +1146,7 @@ void Game::tick() {
 				grid->generateGrid();
 
 				int indexLibretro = 0;
+				int indexOverNet = 0;
 				int index = 0;
 				nbPlayerInGame = 0;
 				int indexPlayerForGame = 0;
@@ -1177,6 +1192,16 @@ void Game::tick() {
 							player = NULL;
 							in_keystate[index] = 0;
 							index++;
+							nbPlayerInGame++;
+							indexPlayerForGame++;
+							break;
+						case NET:
+							// if a human link the next keystate of libretro, else link a empty value
+							player = new Player(&in_keystate_over_net[indexOverNet], startX, startY, i, tab, tabBonus, grid, indexPlayerForGame,
+									LevelService::Instance().getLevel(levelIndex)->isWaterOverlayMode(), &bombes, &louisBurns);
+							players.push_back(player);
+							player = NULL;
+							indexOverNet++;
 							nbPlayerInGame++;
 							indexPlayerForGame++;
 							break;

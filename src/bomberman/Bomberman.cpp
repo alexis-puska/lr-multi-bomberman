@@ -5,13 +5,15 @@
 Bomberman::Bomberman(SDL_Surface * vout_bufLibretro) {
 	Sprite::Instance();
 	LevelService::Instance();
-	GameConfig::Instance();
+	for (int i = 0; i < 16; i++) {
+		in_keystate_over_net[i] = 0;
+	}
+
+	GameConfig::Instance().setAdresseOfKeystateOverNet(in_keystate_over_net);
+
 	Sound::Instance();
 	Sound::Instance().startMenuMusique();
 
-//
-//	BomberNetClient::Instance();
-//	BomberNetClient::Instance().connectClient();
 
 //color mask
 	Uint32 rmask, gmask, bmask, amask;
@@ -46,9 +48,10 @@ Bomberman::~Bomberman() {
 
 void Bomberman::keyPressed() {
 	int index = 0;
+	int indexNet = 0;
 	anyPlayerkeychange = false;
 	for (int i = 0; i < 16; i++) {
-		if (GameConfig::Instance().getPlayerType(i) == 0) {
+		if (GameConfig::Instance().getPlayerType(i) == HUMAN) {
 			if (previousPlayerKeystate[i] != in_keystate[index]) {
 				keychange[i] = true;
 				anyPlayerkeychange = true;
@@ -57,6 +60,15 @@ void Bomberman::keyPressed() {
 				keychange[i] = false;
 			}
 			index++;
+		} else if (GameConfig::Instance().getPlayerType(i) == NET) {
+			if (previousPlayerKeystate[i] != in_keystate_over_net[indexNet]) {
+				keychange[i] = true;
+				anyPlayerkeychange = true;
+				previousPlayerKeystate[i] = in_keystate_over_net[indexNet];
+			} else {
+				keychange[i] = false;
+			}
+			indexNet++;
 		} else {
 			keychange[i] = false;
 		}
@@ -64,12 +76,10 @@ void Bomberman::keyPressed() {
 }
 
 void Bomberman::tick(unsigned short in_keystateLibretro[16]) {
-	//fprintf(stderr, "%u\n", in_keystate[0]);
 	//color mask
 	for (int i = 0; i < 16; i++) {
 		in_keystate[i] = in_keystateLibretro[i];
 	}
-
 	if (currentStep != gameStep) {
 		keyPressed();
 
@@ -87,6 +97,7 @@ void Bomberman::tick(unsigned short in_keystateLibretro[16]) {
 					switch (GameConfig::Instance().getGameModeType()) {
 						case LOCAL:
 							currentStep = PlayerTypeMenu;
+							GameConfig::Instance().generateNetPlayerConfiguration();
 							break;
 						case NET_SERVER:
 							currentStep = serverNumberOfClient;
@@ -97,6 +108,7 @@ void Bomberman::tick(unsigned short in_keystateLibretro[16]) {
 					}
 					break;
 				case serverNumberOfClient:
+					GameConfig::Instance().resetNumberNetPlayer();
 					if (BomberNetServer::Instance().createTcpServer()) {
 						BomberNetServer::Instance().startServer();
 						cursorPosition = 0;
@@ -112,6 +124,7 @@ void Bomberman::tick(unsigned short in_keystateLibretro[16]) {
 					error = false;
 					cursorPosition = 0;
 					currentStep = PlayerTypeMenu;
+					GameConfig::Instance().generateNetPlayerConfiguration();
 					GameConfig::Instance().setAcceptClient(false);
 					break;
 				case clientNumberPlayerName:
@@ -130,9 +143,20 @@ void Bomberman::tick(unsigned short in_keystateLibretro[16]) {
 					}
 					break;
 				case PlayerTypeMenu:
-					GameConfig::Instance().generatePlayerSpriteTypeforCPU();
-					cursorPosition = 0;
-					currentStep = PlayerSpriteMenu;
+					if (GameConfig::Instance().getGameModeType() == NET_SERVER) {
+						if (GameConfig::Instance().netPlayerAllSet()) {
+							GameConfig::Instance().generatePlayerSpriteTypeforCPU();
+							cursorPosition = 0;
+							currentStep = PlayerSpriteMenu;
+						} else {
+							error = true;
+							sprintf(errorString, "You must set %i player on NET", GameConfig::Instance().getNbNetPlayer());
+						}
+					} else {
+						GameConfig::Instance().generatePlayerSpriteTypeforCPU();
+						cursorPosition = 0;
+						currentStep = PlayerSpriteMenu;
+					}
 					break;
 				case PlayerSpriteMenu:
 					cursorPosition = 0;
@@ -144,7 +168,7 @@ void Bomberman::tick(unsigned short in_keystateLibretro[16]) {
 					break;
 				case levelSelectionMenu:
 					cursorPosition = 0;
-					game = new Game(vout_buf, in_keystate);
+					game = new Game(vout_buf, in_keystate, in_keystate_over_net);
 					currentStep = gameStep;
 					Sound::Instance().stopMusique();
 					Sound::Instance().startBattleMusique();
@@ -368,12 +392,19 @@ void Bomberman::drawPlayerTypeMenu() {
 						sprintf(playerTypeName, "OFF");
 						playerColor = red;
 						break;
+					case NET:
+						sprintf(playerTypeName, "NET");
+						playerColor = gold;
+						break;
 				}
 				Sprite::Instance().drawText(screenBuffer, 123 + (j * 133), 187 + (i * 20), playerTypeName, playerColor, false);
 				Sprite::Instance().drawText(screenBuffer, 56 + (j * 133), 187 + (i * 20), playerName, green, false);
 			}
 		}
 		refreshBuffer = false;
+		if (error) {
+			Sprite::Instance().drawText(screenBuffer, (640 / 2), 310, errorString, red, true);
+		}
 	}
 	int cursorPosX = 36 + (((cursorPosition - (cursorPosition % 4)) / 4) * 133);
 	int cursorposY = 187 + ((cursorPosition % 4) * 20);
@@ -427,6 +458,10 @@ void Bomberman::drawPlayerSpriteMenu() {
 						playerColor = green;
 						break;
 					case OFF:
+						break;
+					case NET:
+						sprintf(playerName, "NET %i", i + 1);
+						playerColor = gold;
 						break;
 				}
 				Sprite::Instance().drawText(screenBuffer, 70 + (GameConfig::Instance().getPlayerSpriteType(i) * 72), 216 + (15 * list[index]), playerName, playerColor, true);

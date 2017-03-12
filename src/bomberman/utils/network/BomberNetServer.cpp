@@ -72,6 +72,7 @@ bool BomberNetServer::createServerSocket() {
 		cleanup();
 		return false;
 	}
+	GameConfig::Instance().resetNumberNetPlayer();
 	SDLNet_TCP_AddSocket(socketset, servsock);
 	return true;
 }
@@ -157,7 +158,6 @@ void BomberNetServer::HandleServer(void) {
 		printf("SDLNet_TCP_GetPeerAddress: %s\n", SDLNet_GetError());
 		printf("This may be a server socket.\n");
 	} else {
-
 		fprintf(stderr, "New Player %i.%i.%i.%i %i\n", ip >> 24, (ip >> 16) & 0xff, (ip >> 8) & 0xff, ip & 0xff, remote_ip->port);
 	}
 
@@ -176,14 +176,18 @@ void BomberNetServer::HandleServer(void) {
 	}
 	if (which == GameConfig::Instance().getNbClientServer()) {
 		roomFull(newsock);
-	} else if (!GameConfig::Instance().getAcceptClient()){
+	} else if (!GameConfig::Instance().getAcceptClient()) {
 		serverAllReadyInGame(newsock);
-	}else{
+	} else {
 		addInactiveSocket(which, newsock);
 		nbClientConnected++;
 		char tmp[42] = "Welcome to LR-Multi-Bomberman Server !!!\n";
 		bomber[which].active = 1;
 		SDLNet_TCP_Send(newsock, tmp, 42);
+		//ADD NET PLAYER
+		//TODO MOVE TO THE PROTOCOL
+		GameConfig::Instance().addNetPlayer(4);
+
 	}
 }
 
@@ -205,6 +209,9 @@ void BomberNetServer::HandleClient(int which) {
 			bomber[which].active = 0;
 			fprintf(stderr, "Player left : %i.%i.%i.%i %i\n", ip >> 24, (ip >> 16) & 0xff, (ip >> 8) & 0xff, ip & 0xff, remote_ip->port);
 			nbClientConnected--;
+			//REMOVE NET PLAYER
+			//TODO MOVE TO THE PROTOCOL
+			GameConfig::Instance().removeNetPlayer(4);
 		}
 		deleteConnection(which);
 	} else {
@@ -213,8 +220,10 @@ void BomberNetServer::HandleClient(int which) {
 				bomber[which].active = 0;
 				break;
 			default:
-				fprintf(stderr, "Receive from client %i : %s", which, data);
+				fprintf(stderr, "Receive from client %i : %s\n", which, data);
 				bomber[which].active = 1;
+				//TODO MOVE TO THE PROTOCOL
+				GameConfig::Instance().setKeyPressedForNetPlayer(0, atoi(data));
 				break;
 		}
 
@@ -254,6 +263,6 @@ void BomberNetServer::sendLine() {
 	}
 }
 
-int BomberNetServer::getNbClientConnected(){
+int BomberNetServer::getNbClientConnected() {
 	return nbClientConnected;
 }

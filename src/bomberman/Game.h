@@ -65,7 +65,7 @@ class Game {
 
 	public:
 		Game();
-		Game(SDL_Surface * vout_buf, unsigned short * in_keystate);
+		Game(SDL_Surface * vout_buf, unsigned short * in_keystate, unsigned short * in_keystate_over_net);
 		~Game();
 		bool isAlive();
 		bool isConfigured();
@@ -115,6 +115,7 @@ class Game {
 		//keystate of player
 		unsigned short * in_keystate;
 		unsigned short * in_keystate_cpu;
+		unsigned short * in_keystate_over_net;
 
 		//containers of object that can be put in the grid
 		std::vector<Player *> players;
