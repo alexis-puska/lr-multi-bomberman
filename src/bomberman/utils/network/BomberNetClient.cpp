@@ -61,7 +61,9 @@ int BomberNetClient::net_thread_main(void *data) {
 	BomberNetClient *bomberNet = ((BomberNetClient *) data);
 	while (bomberNet->isAlive()) {
 
-		bomberNet->handleNet();
+		if(!bomberNet->handleNet()){
+			break;
+		}
 	}
 	return 0;
 }
@@ -73,7 +75,7 @@ bool BomberNetClient::isAlive() {
 /**************************************
  * CLIENT
  *************************************/
-bool BomberNetClient::connectClient() {
+int BomberNetClient::connectClient() {
 	IPaddress serverIP;
 
 	fprintf(stderr, "%s\n", GameConfig::Instance().getIpString());
@@ -88,17 +90,17 @@ bool BomberNetClient::connectClient() {
 		if (tcpsock == NULL) {
 			fprintf(stderr, "Connect failed\n");
 			cleanup();
-			return false;
+			return 1;
 		} else {
 			fprintf(stderr, "Connection established !\n");
 			socketset = SDLNet_AllocSocketSet(1);
 			SDLNet_TCP_AddSocket(socketset, tcpsock);
 			alive = true;
 			net_thread = SDL_CreateThread(net_thread_main, "tcp client thread", tcpsock);
-			return true;
+			return 0;
 		}
 	}
-	return false;
+	return 2;
 }
 
 void BomberNetClient::disconnectClient() {
@@ -111,24 +113,17 @@ void BomberNetClient::disconnectClient() {
 	}
 }
 
-void BomberNetClient::sendLine() {
-	unsigned char data[11] = "ABCDEFGHI\n";
-
-	if (SDLNet_CheckSockets(BomberNetClient::socketset, 0) > 0) {
-		SDLNet_TCP_Send(BomberNetClient::tcpsock, &data, 11);
-	}
-}
-
-void BomberNetClient::sendSendNbPlayerClient() {
-	fprintf(stderr, "send connexion !\n");
+void BomberNetClient::sendNbPlayerClient() {
 	char data[8];
 	memset(data, 0, sizeof data);
 	SDLNet_Write32(requestNumber, data);
 	data[4] = 0x00;
 	SDLNet_Write16(GameConfig::Instance().getNbPlayerOfClient(), data + 5);
 	data[7]='\0';
-	SDLNet_TCP_Send(BomberNetClient::tcpsock, &data, 8);
-	requestNumber++;
+	if (SDLNet_CheckSockets(BomberNetClient::socketset, 0) >= 0) {
+		SDLNet_TCP_Send(BomberNetClient::tcpsock, &data, 8);
+		requestNumber++;
+	}
 }
 
 void BomberNetClient::sendDisconnection() {
@@ -138,8 +133,10 @@ void BomberNetClient::sendDisconnection() {
 	data[4] = 0x01;
 	SDLNet_Write16(GameConfig::Instance().getNbPlayerOfClient(), data + 5);
 	data[7]='\0';
-	SDLNet_TCP_Send(BomberNetClient::tcpsock, &data, 7);
-	requestNumber++;
+	if (SDLNet_CheckSockets(BomberNetClient::socketset, 0) >= 0) {
+		SDLNet_TCP_Send(BomberNetClient::tcpsock, &data, 7);
+		requestNumber++;
+	}
 }
 
 void BomberNetClient::sendKeystate() {
@@ -154,11 +151,13 @@ void BomberNetClient::sendKeystate() {
 		pos += 2;
 	}
 	data[pos]='\0';
-	SDLNet_TCP_Send(BomberNetClient::tcpsock, &data, pos);
-	requestNumber++;
+	if (SDLNet_CheckSockets(BomberNetClient::socketset, 0) >= 0) {
+		SDLNet_TCP_Send(BomberNetClient::tcpsock, &data, pos);
+		requestNumber++;
+	}
 }
 
-void BomberNetClient::handleNet() {
+bool BomberNetClient::handleNet() {
 	char data[512];
 	int len, pos;
 
@@ -166,6 +165,7 @@ void BomberNetClient::handleNet() {
 
 	if (active > 0) {
 		if (SDLNet_SocketReady(BomberNetClient::tcpsock)) {
+			memset(data, 0, sizeof data);
 			len = SDLNet_TCP_Recv(tcpsock, (char *) data, 512);
 			if (len <= 0) {
 				SDLNet_TCP_Close(tcpsock);
@@ -177,9 +177,14 @@ void BomberNetClient::handleNet() {
 						int requestNumber = SDLNet_Read32(data);
 						int type = data[5];
 						fprintf(stderr, "request number : %i, %x, %x, %i", requestNumber, type, data[6], data[7]);
-				sendSendNbPlayerClient();
+						sendNbPlayerClient();
 			}
 		}
+	}else if(active == 0){
+		//no activity on socket
+	}else{
+		return false;
 	}
+	return true;
 }
 

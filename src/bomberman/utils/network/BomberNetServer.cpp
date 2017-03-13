@@ -114,15 +114,17 @@ int BomberNetServer::net_thread_main(void *data) {
 	fprintf(stderr, "Starting thread server...\n");
 	BomberNetServer *bomberNet = ((BomberNetServer *) data);
 	while (bomberNet->isAlive()) {
-		SDLNet_CheckSockets(socketset, ~0);
-		/* Check for new connections */
-		if (SDLNet_SocketReady(servsock)) {
-			bomberNet->HandleServer();
-		}
-		/* Check for events on existing clients */
-		for (int i = 0; i < GameConfig::Instance().getNbClientServer(); ++i) {
-			if (SDLNet_SocketReady(bomber[i].sock)) {
-				bomberNet->HandleClient(i);
+		int activite = SDLNet_CheckSockets(socketset, 1);
+		if (activite >= 0) {
+			/* Check for new connections */
+			if (SDLNet_SocketReady(servsock)) {
+				bomberNet->HandleServer();
+			}
+			/* Check for events on existing clients */
+			for (int i = 0; i < GameConfig::Instance().getNbClientServer(); ++i) {
+				if (SDLNet_SocketReady(bomber[i].sock)) {
+					bomberNet->HandleClient(i);
+				}
 			}
 		}
 	}
@@ -137,10 +139,8 @@ void BomberNetServer::stopServer() {
 			fprintf(stderr, "...");
 			deleteConnection(i);
 		}
-		fprintf(stderr,"cleanup!");
 		cleanup();
 		int treadResult = 0;
-		fprintf(stderr,"wait!");
 		SDL_WaitThread(net_thread, &treadResult);
 
 		fprintf(stderr, "\nServer KILLED : %i\n", treadResult);
@@ -229,22 +229,13 @@ int BomberNetServer::getNbClientConnected() {
 	return nbClientConnected;
 }
 
-void BomberNetServer::sendLine() {
-	unsigned char data[11] = "ABCDEFGHI\n";
-	for (int i = 0; i < GameConfig::Instance().getNbClientServer(); i++) {
-		if (bomber[i].active) {
-			SDLNet_TCP_Send(bomber[i].sock, &data, 11);
-		}
-	}
-}
-
 void BomberNetServer::sendSlotAvailable(int which) {
 	char data[9];
 	memset(data, 0, sizeof data);
 	SDLNet_Write32(requestNumber, data);
 	data[4] = 0x00;
 	data[5] = 0x00;
-	SDLNet_Write16((15-GameConfig::Instance().getNbNetPlayer()), data+6);
+	SDLNet_Write16((15 - GameConfig::Instance().getNbNetPlayer()), data + 6);
 	data[8] = 0x00;
 	SDLNet_TCP_Send(bomber[which].sock, &data, 9);
 	requestNumber++;

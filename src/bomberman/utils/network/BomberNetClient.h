@@ -26,12 +26,11 @@ class BomberNetClient {
 		BomberNetClient();
 		~BomberNetClient();
 
-		void sendLine();
 		void createTcpClient();
-		bool connectClient();
+		int connectClient();
 		void disconnectClient();
 
-		void sendSendNbPlayerClient();
+		void sendNbPlayerClient();
 		void sendKeystate();
 		void sendDisconnection();
 
@@ -49,7 +48,7 @@ class BomberNetClient {
 		void allocateSocket();
 		bool isAlive();
 		void cleanup();
-		void handleNet();
+		bool handleNet();
 
 };
 #endif

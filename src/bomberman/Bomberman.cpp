@@ -14,7 +14,6 @@ Bomberman::Bomberman(SDL_Surface * vout_bufLibretro) {
 	Sound::Instance();
 	Sound::Instance().startMenuMusique();
 
-
 //color mask
 	Uint32 rmask, gmask, bmask, amask;
 	rmask = 0x00ff0000;
@@ -133,13 +132,20 @@ void Bomberman::tick(unsigned short in_keystateLibretro[16]) {
 					break;
 				case clientIpPort:
 					BomberNetClient::Instance().createTcpClient();
-					if (BomberNetClient::Instance().connectClient()) {
-						cursorPosition = 0;
-						currentStep = PlayerTypeMenu;
-						error = false;
-					} else {
-						error = true;
-						sprintf(errorString, "Couln't connect to this server");
+					switch (BomberNetClient::Instance().connectClient()) {
+						case 0:
+							cursorPosition = 0;
+							currentStep = PlayerTypeMenu;
+							error = false;
+							break;
+						case 1:
+							error = true;
+							sprintf(errorString, "Connexion failed !");
+							break;
+						case 2:
+							error = true;
+							sprintf(errorString, "Couln't resolved host !");
+							break;
 					}
 					break;
 				case PlayerTypeMenu:

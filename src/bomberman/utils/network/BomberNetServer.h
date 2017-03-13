@@ -28,7 +28,6 @@ class BomberNetServer {
 		bool createTcpServer();
 		void startServer();
 		void stopServer();
-		void sendLine();
 		int getNbClientConnected();
 
 

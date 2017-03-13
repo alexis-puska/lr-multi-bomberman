@@ -16,10 +16,10 @@ GameConfig::GameConfig() {
 	IALevel = 1;
 	gameMode = 0;
 	numberOfNetPlayer=0;
-	ipTab[0]=192;
-	ipTab[1]=168;
-	ipTab[2]=147;
-	ipTab[3]=133;
+	ipTab[0]=127;
+	ipTab[1]=0;
+	ipTab[2]=0;
+	ipTab[3]=1;
 	port = 7000;
 	nbPlayerOfClient = 1;
 	nbClientServer = nbClientMax;
