@@ -138,6 +138,8 @@ class GameConfig {
 		void resetNumberNetPlayer();
 		void setAdresseOfKeystateOverNet(unsigned short * in_keystate_over_net);
 		void setKeyPressedForNetPlayer(int player, unsigned short val);
+		void setAdresseOfKeystate(unsigned short * in_keystate);
+		unsigned short getKeystate(int player);
 
 	private:
 		GameConfig& operator=(const GameConfig&);
@@ -145,6 +147,7 @@ class GameConfig {
 		static GameConfig m_instance;
 		void copyLevelBonus();
 		unsigned short * in_keystate_over_net;
+		unsigned short * in_keystate;
 
 
 		int level;

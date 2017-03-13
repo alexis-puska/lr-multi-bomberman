@@ -6,6 +6,8 @@ TCPsocket BomberNetServer::servsock = NULL;
 SDLNet_SocketSet BomberNetServer::socketset = NULL;
 bool BomberNetServer::alive = false;
 int BomberNetServer::nbClientConnected = 0;
+std::map<int, int> BomberNetServer::connexionHuman;
+int BomberNetServer::requestNumber = 0;
 
 static struct {
 		int active;
@@ -135,9 +137,12 @@ void BomberNetServer::stopServer() {
 			fprintf(stderr, "...");
 			deleteConnection(i);
 		}
+		fprintf(stderr,"cleanup!");
 		cleanup();
 		int treadResult = 0;
+		fprintf(stderr,"wait!");
 		SDL_WaitThread(net_thread, &treadResult);
+
 		fprintf(stderr, "\nServer KILLED : %i\n", treadResult);
 
 	}
@@ -181,54 +186,20 @@ void BomberNetServer::HandleServer(void) {
 	} else {
 		addInactiveSocket(which, newsock);
 		nbClientConnected++;
-		char tmp[42] = "Welcome to LR-Multi-Bomberman Server !!!\n";
 		bomber[which].active = 1;
-		SDLNet_TCP_Send(newsock, tmp, 42);
 		//ADD NET PLAYER
 		//TODO MOVE TO THE PROTOCOL
-		GameConfig::Instance().addNetPlayer(4);
+
+		sendSlotAvailable(which);
+
+//		GameConfig::Instance().addNetPlayer(4);
+//		connexionHuman[which] = 4;
+//
+//		std::map<int,int>::iterator it;
+//		for (it=connexionHuman.begin(); it!=connexionHuman.end(); ++it)
+//		    fprintf(stderr,"first %i , second %i \n",it->first,it->second);
 
 	}
-}
-
-void BomberNetServer::HandleClient(int which) {
-	char data[512];
-	memset(data, 0, sizeof data);
-	/* Has the connection been closed? */
-	if (SDLNet_TCP_Recv(bomber[which].sock, data, 512) <= 0) {
-
-		IPaddress *remote_ip;
-		Uint32 ip;
-		remote_ip = SDLNet_TCP_GetPeerAddress(bomber[which].sock);
-		bomber[which].active = 0;
-		ip = SDL_SwapBE32(remote_ip->host);
-		if (!remote_ip) {
-			printf("SDLNet_TCP_GetPeerAddress: %s\n", SDLNet_GetError());
-			printf("This may be a server socket.\n");
-		} else {
-			bomber[which].active = 0;
-			fprintf(stderr, "Player left : %i.%i.%i.%i %i\n", ip >> 24, (ip >> 16) & 0xff, (ip >> 8) & 0xff, ip & 0xff, remote_ip->port);
-			nbClientConnected--;
-			//REMOVE NET PLAYER
-			//TODO MOVE TO THE PROTOCOL
-			GameConfig::Instance().removeNetPlayer(4);
-		}
-		deleteConnection(which);
-	} else {
-		switch (data[0]) {
-			case 0x04:
-				bomber[which].active = 0;
-				break;
-			default:
-				fprintf(stderr, "Receive from client %i : %s\n", which, data);
-				bomber[which].active = 1;
-				//TODO MOVE TO THE PROTOCOL
-				GameConfig::Instance().setKeyPressedForNetPlayer(0, atoi(data));
-				break;
-		}
-
-	}
-	memset(data, 0, sizeof data);
 }
 
 void BomberNetServer::deleteConnection(int which) {
@@ -254,6 +225,10 @@ bool BomberNetServer::isAlive() {
 	return alive;
 }
 
+int BomberNetServer::getNbClientConnected() {
+	return nbClientConnected;
+}
+
 void BomberNetServer::sendLine() {
 	unsigned char data[11] = "ABCDEFGHI\n";
 	for (int i = 0; i < GameConfig::Instance().getNbClientServer(); i++) {
@@ -263,6 +238,49 @@ void BomberNetServer::sendLine() {
 	}
 }
 
-int BomberNetServer::getNbClientConnected() {
-	return nbClientConnected;
+void BomberNetServer::sendSlotAvailable(int which) {
+	char data[9];
+	memset(data, 0, sizeof data);
+	SDLNet_Write32(requestNumber, data);
+	data[4] = 0x00;
+	data[5] = 0x00;
+	SDLNet_Write16((15-GameConfig::Instance().getNbNetPlayer()), data+6);
+	data[8] = 0x00;
+	SDLNet_TCP_Send(bomber[which].sock, &data, 9);
+	requestNumber++;
 }
+
+void BomberNetServer::HandleClient(int which) {
+	char data[512];
+	memset(data, 0, sizeof data);
+	/* Has the connection been closed? */
+	if (SDLNet_TCP_Recv(bomber[which].sock, data, 512) <= 0) {
+
+		IPaddress *remote_ip;
+		Uint32 ip;
+		remote_ip = SDLNet_TCP_GetPeerAddress(bomber[which].sock);
+		bomber[which].active = 0;
+		ip = SDL_SwapBE32(remote_ip->host);
+		if (!remote_ip) {
+			printf("SDLNet_TCP_GetPeerAddress: %s\n", SDLNet_GetError());
+			printf("This may be a server socket.\n");
+		} else {
+			bomber[which].active = 0;
+			fprintf(stderr, "Player left : %i.%i.%i.%i %i\n", ip >> 24, (ip >> 16) & 0xff, (ip >> 8) & 0xff, ip & 0xff, remote_ip->port);
+			nbClientConnected--;
+			//REMOVE NET PLAYER
+			//TODO MOVE TO THE PROTOCOL
+//			GameConfig::Instance().removeNetPlayer(connexionHuman[which]);
+//			connexionHuman.erase(which);
+
+		}
+		deleteConnection(which);
+	} else {
+		fprintf(stderr, "Receive from client %i : %s\n", which, data);
+		int requestNumber = SDLNet_Read32(data);
+		int type = data[5];
+		fprintf(stderr, "request number : %i, %x, %x", requestNumber, type, data[6]);
+	}
+	memset(data, 0, sizeof data);
+}
+

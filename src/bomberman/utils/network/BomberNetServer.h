@@ -4,6 +4,7 @@
 #else
 #include <SDL2_net/SDL_net.h>
 #endif
+#include <map>
 #include "../GameConfig.h"
 
 #ifndef __MYCLASS_BOMBERNETSERVER
@@ -18,6 +19,8 @@ class BomberNetServer {
 		static TCPsocket servsock;
 		static SDLNet_SocketSet socketset;
 		static int nbClientConnected;
+		static int requestNumber;
+		static std::map<int,int> connexionHuman;
 
 		BomberNetServer();
 		~BomberNetServer();
@@ -28,6 +31,7 @@ class BomberNetServer {
 		void sendLine();
 		int getNbClientConnected();
 
+
 	private:
 		static BomberNetServer m_instance;
 
@@ -35,6 +39,7 @@ class BomberNetServer {
 		static bool alive;
 		static int net_thread_main(void *data);
 		SDL_Thread *net_thread;
+
 
 		BomberNetServer& operator=(const BomberNetServer&);
 		BomberNetServer(const BomberNetServer&);
@@ -51,5 +56,6 @@ class BomberNetServer {
 		void HandleClient(int which);
 		void deleteConnection(int which);
 		void findInactivePersonSlot(int &which);
+		void sendSlotAvailable(int which);
 };
 #endif

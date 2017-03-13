@@ -16,10 +16,10 @@ GameConfig::GameConfig() {
 	IALevel = 1;
 	gameMode = 0;
 	numberOfNetPlayer=0;
-	ipTab[0]=127;
-	ipTab[1]=0;
-	ipTab[2]=0;
-	ipTab[3]=1;
+	ipTab[0]=192;
+	ipTab[1]=168;
+	ipTab[2]=147;
+	ipTab[3]=133;
 	port = 7000;
 	nbPlayerOfClient = 1;
 	nbClientServer = nbClientMax;
@@ -579,7 +579,7 @@ void GameConfig::addNetPlayer(int num) {
 void GameConfig::removeNetPlayer(int num) {
 	numberOfNetPlayer -= num;
 }
-int GameConfig::getNbNetPlayer(){
+int GameConfig::getNbNetPlayer() {
 	return numberOfNetPlayer;
 }
 
@@ -622,12 +622,18 @@ void GameConfig::resetNumberNetPlayer() {
 	}
 }
 
-
-void GameConfig::setAdresseOfKeystateOverNet(unsigned short * in_keystate_over_net){
+void GameConfig::setAdresseOfKeystateOverNet(unsigned short * in_keystate_over_net) {
 	this->in_keystate_over_net = in_keystate_over_net;
 }
 
-void GameConfig::setKeyPressedForNetPlayer(int player, unsigned short val){
+void GameConfig::setKeyPressedForNetPlayer(int player, unsigned short val) {
 	in_keystate_over_net[player] = val;
 }
 
+void GameConfig::setAdresseOfKeystate(unsigned short * in_keystate) {
+	this->in_keystate = in_keystate;
+}
+
+unsigned short GameConfig::getKeystate(int player) {
+	return in_keystate[player];
+}

@@ -12,11 +12,16 @@
 #define GAME_PORT			7777
 #define GAME_BYE			255
 
+enum connexionStep {
+
+};
+
 class BomberNetClient {
 	public:
 		static BomberNetClient& Instance();
 		static TCPsocket tcpsock;
 		static SDLNet_SocketSet socketset;
+		static int requestNumber;
 
 		BomberNetClient();
 		~BomberNetClient();
@@ -26,6 +31,10 @@ class BomberNetClient {
 		bool connectClient();
 		void disconnectClient();
 
+		void sendSendNbPlayerClient();
+		void sendKeystate();
+		void sendDisconnection();
+
 	private:
 		static BomberNetClient m_instance;
 
@@ -33,7 +42,6 @@ class BomberNetClient {
 		static bool alive;
 		static int net_thread_main(void *data);
 		SDL_Thread *net_thread;
-
 
 		BomberNetClient& operator=(const BomberNetClient&);
 		BomberNetClient(const BomberNetClient&);
