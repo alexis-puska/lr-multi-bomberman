@@ -98,18 +98,6 @@ void BomberNetServer::addInactiveSocket(int which, TCPsocket newsock) {
 	SDLNet_TCP_AddSocket(socketset, bomber[which].sock);
 }
 
-void BomberNetServer::roomFull(TCPsocket newsock) {
-	char tmp[47] = "This server of LR-Multi-Bomberman is full !!!\n";
-	SDLNet_TCP_Send(newsock, tmp, 47);
-	SDLNet_TCP_Close(newsock);
-}
-
-void BomberNetServer::serverAllReadyInGame(TCPsocket newsock) {
-	char tmp[60] = "This server of LR-Multi-Bomberman is all ready in game !!!\n";
-	SDLNet_TCP_Send(newsock, tmp, 60);
-	SDLNet_TCP_Close(newsock);
-}
-
 int BomberNetServer::net_thread_main(void *data) {
 	fprintf(stderr, "Starting thread server...\n");
 	BomberNetServer *bomberNet = ((BomberNetServer *) data);
@@ -180,9 +168,11 @@ void BomberNetServer::HandleServer(void) {
 		findInactivePersonSlot(which);
 	}
 	if (which == GameConfig::Instance().getNbClientServer()) {
-		roomFull(newsock);
+		sendServerFull(newsock);
+		SDLNet_TCP_Close(newsock);
 	} else if (!GameConfig::Instance().getAcceptClient()) {
-		serverAllReadyInGame(newsock);
+		sendServerInGame(newsock);
+		SDLNet_TCP_Close(newsock);
 	} else {
 		addInactiveSocket(which, newsock);
 		nbClientConnected++;
@@ -229,18 +219,6 @@ int BomberNetServer::getNbClientConnected() {
 	return nbClientConnected;
 }
 
-void BomberNetServer::sendSlotAvailable(int which) {
-	char data[9];
-	memset(data, 0, sizeof data);
-	SDLNet_Write32(requestNumber, data);
-	data[4] = 0x00;
-	data[5] = 0x00;
-	SDLNet_Write16((15 - GameConfig::Instance().getNbNetPlayer()), data + 6);
-	data[8] = 0x00;
-	SDLNet_TCP_Send(bomber[which].sock, &data, 9);
-	requestNumber++;
-}
-
 void BomberNetServer::HandleClient(int which) {
 	char data[512];
 	memset(data, 0, sizeof data);
@@ -267,11 +245,77 @@ void BomberNetServer::HandleClient(int which) {
 		}
 		deleteConnection(which);
 	} else {
-		fprintf(stderr, "Receive from client %i : %s\n", which, data);
+
 		int requestNumber = SDLNet_Read32(data);
 		int type = data[5];
+
+
+
 		fprintf(stderr, "request number : %i, %x, %x", requestNumber, type, data[6]);
 	}
 	memset(data, 0, sizeof data);
+}
+
+void BomberNetServer::sendSlotAvailable(int which) {
+	fprintf(stderr,"send slot available\n");
+	char data[8];
+	memset(data, 0, sizeof data);
+	SDLNet_Write32(requestNumber, data);
+	data[4] = 0x00;
+	data[5] = 0x00;
+	SDLNet_Write16((15 - GameConfig::Instance().getNbNetPlayer()), data + 6);
+	data[7] = 0x00;
+	SDLNet_TCP_Send(bomber[which].sock, &data, 8);
+	requestNumber++;
+}
+
+void BomberNetServer::sendServerFull(TCPsocket newsock) {
+	fprintf(stderr,"send server full\n");
+	char data[7];
+	memset(data, 0, sizeof data);
+	SDLNet_Write32(requestNumber, data);
+	data[4] = 0x00;
+	data[5] = 0x01;
+	data[6] = '\0';
+	SDLNet_TCP_Send(newsock, &data, 7);
+	requestNumber++;
+}
+
+void BomberNetServer::sendServerInGame(TCPsocket newsock) {
+	fprintf(stderr,"send server in game\n");
+	char data[7];
+	memset(data, 0, sizeof data);
+	SDLNet_Write32(requestNumber, data);
+	data[4] = 0x00;
+	data[5] = 0x02;
+	data[6] = '\0';
+	SDLNet_TCP_Send(newsock, &data, 7);
+	requestNumber++;
+}
+
+void BomberNetServer::sendAcknoledgementOfClientPlayer(int which) {
+	fprintf(stderr,"send cknloedgement of player\n");
+	char data[8];
+	memset(data, 0, sizeof data);
+	SDLNet_Write32(requestNumber, data);
+	data[4] = 0x01;
+	data[5] = 0x01;
+	data[6] = connexionHuman[which];
+	data[7] = '\0';
+	SDLNet_TCP_Send(bomber[which].sock, &data, 8);
+	requestNumber++;
+}
+
+void BomberNetServer::sendErrorSlotAvailable(TCPsocket newsock) {
+	fprintf(stderr,"send error slot available\n");
+	char data[8];
+	memset(data, 0, sizeof data);
+	SDLNet_Write32(requestNumber, data);
+	data[4] = 0x00;
+	data[5] = 0x02;
+	data[6] = 15 - GameConfig::Instance().getNbNetPlayer();
+	data[7] = '\0';
+	SDLNet_TCP_Send(newsock, &data, 8);
+	requestNumber++;
 }
 

@@ -30,6 +30,12 @@ class BomberNetServer {
 		void stopServer();
 		int getNbClientConnected();
 
+		void sendServerFull(TCPsocket newsock);
+		void sendServerInGame(TCPsocket newsock);
+		void sendAcknoledgementOfClientPlayer(int which);
+		void sendErrorSlotAvailable(TCPsocket newsock);
+
+
 
 	private:
 		static BomberNetServer m_instance;
@@ -38,7 +44,6 @@ class BomberNetServer {
 		static bool alive;
 		static int net_thread_main(void *data);
 		SDL_Thread *net_thread;
-
 
 		BomberNetServer& operator=(const BomberNetServer&);
 		BomberNetServer(const BomberNetServer&);
@@ -49,8 +54,6 @@ class BomberNetServer {
 		void allocateSockets();
 		bool createServerSocket();
 		void addInactiveSocket(int which, TCPsocket newsock);
-		void roomFull(TCPsocket newsock);
-		void serverAllReadyInGame(TCPsocket newsock);
 		void HandleServer(void);
 		void HandleClient(int which);
 		void deleteConnection(int which);

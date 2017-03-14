@@ -81,6 +81,13 @@ void Bomberman::tick(unsigned short in_keystateLibretro[16]) {
 	}
 	if (currentStep != gameStep) {
 		keyPressed();
+		if (GameConfig::Instance().getGameModeType() == NET_CLIENT && BomberNetClient::errorCode > 0) {
+			error = true;
+			sprintf(errorString, "errorCode %i", BomberNetClient::errorCode);
+			currentStep = clientIpPort;
+			BomberNetClient::Instance().disconnectClient();
+			BomberNetClient::errorCode = 0;
+		}
 
 		//spash screen and start pressed !
 		if (previousPlayerKeystate[0] & keyPadStart && keychange[0]) {
@@ -149,6 +156,7 @@ void Bomberman::tick(unsigned short in_keystateLibretro[16]) {
 					}
 					break;
 				case PlayerTypeMenu:
+					fprintf(stderr, "here");
 					if (GameConfig::Instance().getGameModeType() == NET_SERVER) {
 						if (GameConfig::Instance().netPlayerAllSet()) {
 							GameConfig::Instance().generatePlayerSpriteTypeforCPU();

@@ -22,6 +22,7 @@ class BomberNetClient {
 		static TCPsocket tcpsock;
 		static SDLNet_SocketSet socketset;
 		static int requestNumber;
+		static int errorCode;
 
 		BomberNetClient();
 		~BomberNetClient();
@@ -33,6 +34,7 @@ class BomberNetClient {
 		void sendNbPlayerClient();
 		void sendKeystate();
 		void sendDisconnection();
+		bool isAlive();
 
 	private:
 		static BomberNetClient m_instance;
@@ -46,9 +48,8 @@ class BomberNetClient {
 		BomberNetClient(const BomberNetClient&);
 		void initSDLNet();
 		void allocateSocket();
-		bool isAlive();
 		void cleanup();
-		bool handleNet();
+		int handleNet();
 
 };
 #endif

@@ -5,6 +5,7 @@ BomberNetClient BomberNetClient::m_instance = BomberNetClient();
 TCPsocket BomberNetClient::tcpsock = NULL;
 SDLNet_SocketSet BomberNetClient::socketset = NULL;
 bool BomberNetClient::alive = false;
+int BomberNetClient::errorCode = 0;
 int BomberNetClient::requestNumber = 0;
 
 BomberNetClient& BomberNetClient::Instance() {
@@ -60,9 +61,10 @@ void BomberNetClient::cleanup() {
 int BomberNetClient::net_thread_main(void *data) {
 	BomberNetClient *bomberNet = ((BomberNetClient *) data);
 	while (bomberNet->isAlive()) {
-
-		if(!bomberNet->handleNet()){
-			break;
+		BomberNetClient::errorCode = bomberNet->handleNet();
+		if(BomberNetClient::errorCode > 0) {
+			BomberNetClient::alive = false;
+			return BomberNetClient::errorCode;
 		}
 	}
 	return 0;
@@ -76,6 +78,7 @@ bool BomberNetClient::isAlive() {
  * CLIENT
  *************************************/
 int BomberNetClient::connectClient() {
+	errorCode = 0;
 	IPaddress serverIP;
 
 	fprintf(stderr, "%s\n", GameConfig::Instance().getIpString());
@@ -119,7 +122,7 @@ void BomberNetClient::sendNbPlayerClient() {
 	SDLNet_Write32(requestNumber, data);
 	data[4] = 0x00;
 	SDLNet_Write16(GameConfig::Instance().getNbPlayerOfClient(), data + 5);
-	data[7]='\0';
+	data[7] = '\0';
 	if (SDLNet_CheckSockets(BomberNetClient::socketset, 0) >= 0) {
 		SDLNet_TCP_Send(BomberNetClient::tcpsock, &data, 8);
 		requestNumber++;
@@ -132,7 +135,7 @@ void BomberNetClient::sendDisconnection() {
 	SDLNet_Write32(requestNumber, data);
 	data[4] = 0x01;
 	SDLNet_Write16(GameConfig::Instance().getNbPlayerOfClient(), data + 5);
-	data[7]='\0';
+	data[7] = '\0';
 	if (SDLNet_CheckSockets(BomberNetClient::socketset, 0) >= 0) {
 		SDLNet_TCP_Send(BomberNetClient::tcpsock, &data, 7);
 		requestNumber++;
@@ -150,14 +153,14 @@ void BomberNetClient::sendKeystate() {
 		SDLNet_Write16(GameConfig::Instance().getKeystate(i), data + pos);
 		pos += 2;
 	}
-	data[pos]='\0';
+	data[pos] = '\0';
 	if (SDLNet_CheckSockets(BomberNetClient::socketset, 0) >= 0) {
 		SDLNet_TCP_Send(BomberNetClient::tcpsock, &data, pos);
 		requestNumber++;
 	}
 }
 
-bool BomberNetClient::handleNet() {
+int BomberNetClient::handleNet() {
 	char data[512];
 	int len, pos;
 
@@ -174,17 +177,61 @@ bool BomberNetClient::handleNet() {
 			} else {
 				fprintf(stderr, "Receive from Server : %s\n", data);
 
-						int requestNumber = SDLNet_Read32(data);
-						int type = data[5];
-						fprintf(stderr, "request number : %i, %x, %x, %i", requestNumber, type, data[6], data[7]);
-						sendNbPlayerClient();
+				int requestNumber = SDLNet_Read32(data);
+				int type = data[4];
+
+				fprintf(stderr, "request number : %i, %x, %x, %i\n", requestNumber, type, data[5], data[6]);
+				switch (type) {
+					case 0:
+						switch (data[5]) {
+							case 0:
+								fprintf(stderr, "Nombre de place disponible : %i\n", data[6]);
+								if (data[6] < GameConfig::Instance().getNbPlayerOfClient()) {
+									sendNbPlayerClient();
+								} else {
+									fprintf(stderr, "pas assez de place ! %i places libres\n", data[6]);
+									return 6;
+								}
+								break;
+							case 1:
+								fprintf(stderr, "serveur plein !");
+								return 1;
+							case 2:
+								fprintf(stderr, "serveur en jeu!");
+								return 2;
+						}
+						break;
+					case 1:
+						switch (data[5]) {
+							case 1:
+								fprintf(stderr, "Nombre de place disponible : %i", data[6]);
+								if (data[6] == GameConfig::Instance().getNbPlayerOfClient()) {
+									fprintf(stderr, "Server accept all player");
+									return 0;
+								} else {
+									fprintf(stderr, "le serveur ne renvoi pas le nombre correct de joueur");
+									return 3;
+								}
+								break;
+							case 2:
+								fprintf(stderr, "le serveur n'acceptera que  %i joueurs", data[6]);
+								return 4;
+								break;
+						}
+						break;
+					case 2:
+						fprintf(stderr, "Nombre d'element dans la requette : %i", data[5]);
+						return 0;
+						break;
+				}
+
 			}
 		}
-	}else if(active == 0){
+	} else if (active == 0) {
 		//no activity on socket
-	}else{
-		return false;
+	} else {
+		return 5;
 	}
-	return true;
+	return 0;
 }
 
