@@ -34,7 +34,7 @@ class BomberNetServer {
 		void sendServerInGame(TCPsocket newsock);
 		void sendAcknoledgementOfClientPlayer(int which);
 		void sendErrorSlotAvailable(int which);
-
+		void linkKeystate();
 
 
 	private:
@@ -59,6 +59,6 @@ class BomberNetServer {
 		void deleteConnection(int which);
 		void findInactivePersonSlot(int &which);
 		void sendSlotAvailable(int which);
-		void decode(char data[512], int which);
+		void decode(char data[1024], int which);
 };
 #endif

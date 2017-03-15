@@ -11,6 +11,7 @@ int BomberNetServer::requestNumber = 0;
 
 static struct {
 		int active;
+		int startIndexNetKeystate;
 		TCPsocket sock;
 		IPaddress peer;
 		Uint8 name[256 + 1];
@@ -207,11 +208,20 @@ int BomberNetServer::getNbClientConnected() {
 	return nbClientConnected;
 }
 
+void BomberNetServer::linkKeystate() {
+	int sum = 0;
+	std::map<int, int>::iterator it;
+	for (it = connexionHuman.begin(); it != connexionHuman.end(); ++it) {
+		bomber[it->first].startIndexNetKeystate = sum;
+		sum += it->second;
+	}
+}
+
 void BomberNetServer::HandleClient(int which) {
-	char data[512];
+	char data[1024];
 	memset(data, 0, sizeof data);
 	/* Has the connection been closed? */
-	if (SDLNet_TCP_Recv(bomber[which].sock, data, 512) <= 0) {
+	if (SDLNet_TCP_Recv(bomber[which].sock, data, 1024) <= 0) {
 
 		IPaddress *remote_ip;
 		Uint32 ip;
@@ -298,7 +308,7 @@ void BomberNetServer::sendErrorSlotAvailable(int which) {
 	requestNumber++;
 }
 
-void BomberNetServer::decode(char data[512], int which) {
+void BomberNetServer::decode(char data[1024], int which) {
 
 	int requestNumber = SDLNet_Read32(data);
 	int type = data[4];
@@ -316,6 +326,7 @@ void BomberNetServer::decode(char data[512], int which) {
 			}
 			if (data[5] <= 16 - sum - GameConfig::Instance().getNbReservedPlayerServer()) {
 				GameConfig::Instance().addNetPlayer(data[5]);
+
 				connexionHuman[which] = data[5];
 				sendAcknoledgementOfClientPlayer(which);
 			} else {
@@ -332,10 +343,10 @@ void BomberNetServer::decode(char data[512], int which) {
 		case 2:
 			//reception evenement manette
 			nbKeystate = data[5];
-			for (int j = 0; j < nbKeystate; j++) {
+			for (int j = bomber[which].startIndexNetKeystate; j < nbKeystate + bomber[which].startIndexNetKeystate; j++) {
 				pos = 6 + j;
-				fprintf(stderr, "%i, %i\n", data[5], SDLNet_Read16(data+pos));
-				GameConfig::Instance().setKeyPressedForNetPlayer(j, SDLNet_Read16(data+pos));
+				fprintf(stderr, "%i, %i\n", data[5], SDLNet_Read16(data + pos));
+				GameConfig::Instance().setKeyPressedForNetPlayer(j, SDLNet_Read16(data + pos));
 			}
 			break;
 

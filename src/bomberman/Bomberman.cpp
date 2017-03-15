@@ -152,6 +152,7 @@ void Bomberman::tick(unsigned short in_keystateLibretro[16]) {
 					error = false;
 					cursorPosition = 0;
 					currentStep = PlayerTypeMenu;
+					BomberNetServer::Instance().linkKeystate();
 					GameConfig::Instance().generateNetPlayerConfiguration();
 					GameConfig::Instance().setAcceptClient(false);
 					break;
