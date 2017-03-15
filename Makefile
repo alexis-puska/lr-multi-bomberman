@@ -40,6 +40,7 @@ OBJS += src/bomberman/trolley/Trolley.o
 OBJS += src/bomberman/trolley/Rail.o
 OBJS += src/bomberman/trolley/Button.o
 OBJS += src/bomberman/Game.o
+OBJS += src/bomberman/ClientViewer.o
 OBJS += src/bomberman/Player.o
 OBJS += src/bomberman/Bombe.o
 OBJS += src/bomberman/animation/Explosion.o

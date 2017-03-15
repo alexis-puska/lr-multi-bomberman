@@ -10,6 +10,7 @@ Bomberman::Bomberman(SDL_Surface * vout_bufLibretro) {
 	}
 
 	GameConfig::Instance().setAdresseOfKeystateOverNet(in_keystate_over_net);
+	GameConfig::Instance().setAdresseOfKeystate(in_keystate);
 
 	Sound::Instance();
 	Sound::Instance().startMenuMusique();
@@ -79,15 +80,36 @@ void Bomberman::tick(unsigned short in_keystateLibretro[16]) {
 	for (int i = 0; i < 16; i++) {
 		in_keystate[i] = in_keystateLibretro[i];
 	}
-	if (currentStep != gameStep) {
-		keyPressed();
-		if (GameConfig::Instance().getGameModeType() == NET_CLIENT && BomberNetClient::errorCode > 0) {
-			error = true;
-			sprintf(errorString, "errorCode %i", BomberNetClient::errorCode);
-			currentStep = clientIpPort;
-			BomberNetClient::Instance().disconnectClient();
-			BomberNetClient::errorCode = 0;
+
+	if (currentStep == clientViewStep && GameConfig::Instance().getGameModeType() == NET_CLIENT && BomberNetClient::errorCode > 0) {
+		error = true;
+		switch(BomberNetClient::errorCode){
+			case 1:
+				sprintf(errorString, "SERVER FULL");
+				break;
+			case 2:
+				sprintf(errorString, "ALREADY IN GAME");
+				break;
+			case 3:
+				sprintf(errorString, "ERROR IN SERVER");
+				break;
+			case 4:
+				sprintf(errorString, "Player slot available :  %i", BomberNetClient::errorValue);
+				break;
+			case 5:
+				sprintf(errorString, "DISCONNECTED FROM THE SERVER");
+				break;
+			case 6:
+				sprintf(errorString, "Player slot available %i", BomberNetClient::errorValue);
+				break;
 		}
+		currentStep = clientIpPort;
+		BomberNetClient::Instance().disconnectClient();
+		BomberNetClient::errorCode = 0;
+	}
+
+	if (currentStep != gameStep && currentStep != clientViewStep) {
+		keyPressed();
 
 		//spash screen and start pressed !
 		if (previousPlayerKeystate[0] & keyPadStart && keychange[0]) {
@@ -139,10 +161,11 @@ void Bomberman::tick(unsigned short in_keystateLibretro[16]) {
 					break;
 				case clientIpPort:
 					BomberNetClient::Instance().createTcpClient();
-					switch (BomberNetClient::Instance().connectClient()) {
+					switch (BomberNetClient::Instance().connectClient(vout_buf)) {
 						case 0:
 							cursorPosition = 0;
-							currentStep = PlayerTypeMenu;
+							currentStep = clientViewStep;
+							fprintf(stderr, "new client viewer");
 							error = false;
 							break;
 						case 1:
@@ -191,6 +214,8 @@ void Bomberman::tick(unsigned short in_keystateLibretro[16]) {
 					break;
 				case gameStep:
 					break;
+				case clientViewStep:
+					break;
 			}
 		} else if (previousPlayerKeystate[0] & keyPadSelect && keychange[0]) {
 			Sound::Instance().playCancelSound();
@@ -219,7 +244,7 @@ void Bomberman::tick(unsigned short in_keystateLibretro[16]) {
 				case serverWaitForClient:
 					error = false;
 					cursorPosition = 0;
-					GameConfig::Instance().setAcceptClient(false);
+					GameConfig::Instance().setAcceptClient(true);
 					BomberNetServer::Instance().stopServer();
 					currentStep = serverNumberOfClient;
 					break;
@@ -236,8 +261,6 @@ void Bomberman::tick(unsigned short in_keystateLibretro[16]) {
 							currentStep = serverNumberOfClient;
 							break;
 						case NET_CLIENT:
-							currentStep = clientIpPort;
-							BomberNetClient::Instance().disconnectClient();
 							break;
 					}
 					break;
@@ -255,6 +278,8 @@ void Bomberman::tick(unsigned short in_keystateLibretro[16]) {
 					break;
 				case gameStep:
 					currentStep = levelSelectionMenu;
+					break;
+				case clientViewStep:
 					break;
 			}
 		}
@@ -306,8 +331,14 @@ void Bomberman::tick(unsigned short in_keystateLibretro[16]) {
 					refreshBuffer = false;
 				}
 				break;
+			case clientViewStep:
+				//cursor.stopAnimation();
+				if (refreshBuffer && previousPlayerKeystate[0] & keyPadStart && keychange[0]) {
+					refreshBuffer = false;
+				}
+				break;
 		}
-	} else {
+	} else if(currentStep == gameStep){
 		if (game->isRequestStopGame()) {
 			previousPlayerKeystate[0] = in_keystate[0];
 			game->exitGame();
@@ -1125,34 +1156,37 @@ void Bomberman::drawServerConfigurationMenu() {
 		if (previousPlayerKeystate[0] & keyPadRight && keychange[0]) {
 			Sound::Instance().playBipSound();
 			cursorPosition++;
-			if (cursorPosition > 5) {
+			if (cursorPosition > 6) {
 				cursorPosition = 0;
 			}
 		} else if (previousPlayerKeystate[0] & keyPadLeft && keychange[0]) {
 			Sound::Instance().playBipSound();
 			cursorPosition--;
 			if (cursorPosition < 0) {
-				cursorPosition = 5;
+				cursorPosition = 6;
 			}
 		} else if (previousPlayerKeystate[0] & keyPadA && keychange[0]) {
 			Sound::Instance().playBipSound();
 			switch (cursorPosition) {
 				case 0:
-					GameConfig::Instance().incNbClientServer();
+					GameConfig::Instance().incNbReservedPlayerServer();
 					break;
 				case 1:
-					GameConfig::Instance().incPortValue(10000);
+					GameConfig::Instance().incNbClientServer();
 					break;
 				case 2:
-					GameConfig::Instance().incPortValue(1000);
+					GameConfig::Instance().incPortValue(10000);
 					break;
 				case 3:
-					GameConfig::Instance().incPortValue(100);
+					GameConfig::Instance().incPortValue(1000);
 					break;
 				case 4:
-					GameConfig::Instance().incPortValue(10);
+					GameConfig::Instance().incPortValue(100);
 					break;
 				case 5:
+					GameConfig::Instance().incPortValue(10);
+					break;
+				case 6:
 					GameConfig::Instance().incPortValue(1);
 					break;
 			}
@@ -1160,21 +1194,24 @@ void Bomberman::drawServerConfigurationMenu() {
 			Sound::Instance().playBipSound();
 			switch (cursorPosition) {
 				case 0:
-					GameConfig::Instance().decNbClientServer();
+					GameConfig::Instance().decNbReservedPlayerServer();
 					break;
 				case 1:
-					GameConfig::Instance().decPortValue(10000);
+					GameConfig::Instance().decNbClientServer();
 					break;
 				case 2:
-					GameConfig::Instance().decPortValue(1000);
+					GameConfig::Instance().decPortValue(10000);
 					break;
 				case 3:
-					GameConfig::Instance().decPortValue(100);
+					GameConfig::Instance().decPortValue(1000);
 					break;
 				case 4:
-					GameConfig::Instance().decPortValue(10);
+					GameConfig::Instance().decPortValue(100);
 					break;
 				case 5:
+					GameConfig::Instance().decPortValue(10);
+					break;
+				case 6:
 					GameConfig::Instance().decPortValue(1);
 					break;
 			}
@@ -1188,24 +1225,30 @@ void Bomberman::drawServerConfigurationMenu() {
 			Sprite::Instance().drawText(screenBuffer, (640 / 2), 310, errorString, red, true);
 		}
 		Sprite::Instance().drawText(screenBuffer, (640 / 2), 335, "- - Use LEFT / RIGHT to move cursor, use A / B to change number - -", gold, true);
-		Sprite::Instance().drawText(screenBuffer, 160, 234, "Number max of client : ", green, false);
-		Sprite::Instance().drawText(screenBuffer, 160, 254, "Enter Port of LR-MultiBomberman Server : ", green, false);
+		Sprite::Instance().drawText(screenBuffer, 160, 234, "Number max of Human on this server : ", green, false);
+		Sprite::Instance().drawText(screenBuffer, 160, 254, "Number max of client : ", green, false);
+		Sprite::Instance().drawText(screenBuffer, 160, 274, "Enter Port of LR-MultiBomberman Server : ", green, false);
 
 		int cursorPosX = 0;
 		int cursorPosY = 0;
-		char tmp[2];
-		sprintf(tmp, "%i", GameConfig::Instance().getNbClientServer());
+		char tmp[3];
+		sprintf(tmp, "%i", GameConfig::Instance().getNbReservedPlayerServer());
 		Sprite::Instance().drawText(screenBuffer, 450, 234, tmp, blue, false);
+		sprintf(tmp, "%i", GameConfig::Instance().getNbClientServer());
+		Sprite::Instance().drawText(screenBuffer, 450, 254, tmp, blue, false);
 		for (int i = 0; i < 5; i++) {
 			sprintf(tmp, "%c", GameConfig::Instance().getPortValueForMenu()[i]);
-			Sprite::Instance().drawText(screenBuffer, 450 + (i * 10), 254, tmp, blue, false);
+			Sprite::Instance().drawText(screenBuffer, 450 + (i * 10), 274, tmp, blue, false);
 		}
 		if (cursorPosition == 0) {
 			cursorPosX = 140;
 			cursorPosY = 234;
+		} else if (cursorPosition == 1) {
+			cursorPosX = 140;
+			cursorPosY = 254;
 		} else {
 			cursorPosX = 434 + (cursorPosition * 10);
-			cursorPosY = 270;
+			cursorPosY = 290;
 		}
 
 		copySurfaceToBackRenderer(screenBuffer, vout_buf, 0, 0);
@@ -1222,9 +1265,12 @@ void Bomberman::drawServerWaitForClient() {
 	Sprite::Instance().drawText(screenBuffer, (640 / 2), 154, "WAIT FOR GAME CLIENT", green, true);
 	Sprite::Instance().drawText(screenBuffer, (640 / 2), 335, "- - just wait for other player - -", gold, true);
 
-	char num[2];
+	char num[3];
 	sprintf(num, "%i", BomberNetServer::Instance().getNbClientConnected());
-	Sprite::Instance().drawText(screenBuffer, (640 / 2), 234, "Number of bomber net client connecter", green, true);
-	Sprite::Instance().drawText(screenBuffer, (640 / 2), 254, num, blue, true);
+	Sprite::Instance().drawText(screenBuffer, (640 / 2), 214, "Number of bomber net client connecter", green, true);
+	Sprite::Instance().drawText(screenBuffer, (640 / 2), 234, num, blue, true);
+	sprintf(num, "%i", GameConfig::Instance().getNbNetPlayer() + GameConfig::Instance().getNbReservedPlayerServer());
+	Sprite::Instance().drawText(screenBuffer, (640 / 2), 254, "Number of HUMAN player", green, true);
+	Sprite::Instance().drawText(screenBuffer, (640 / 2), 274, num, blue, true);
 	copySurfaceToBackRenderer(screenBuffer, vout_buf, 0, 0);
 }

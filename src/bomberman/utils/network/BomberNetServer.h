@@ -33,7 +33,7 @@ class BomberNetServer {
 		void sendServerFull(TCPsocket newsock);
 		void sendServerInGame(TCPsocket newsock);
 		void sendAcknoledgementOfClientPlayer(int which);
-		void sendErrorSlotAvailable(TCPsocket newsock);
+		void sendErrorSlotAvailable(int which);
 
 
 
@@ -59,5 +59,6 @@ class BomberNetServer {
 		void deleteConnection(int which);
 		void findInactivePersonSlot(int &which);
 		void sendSlotAvailable(int which);
+		void decode(char data[512], int which);
 };
 #endif

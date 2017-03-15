@@ -6,7 +6,10 @@ TCPsocket BomberNetClient::tcpsock = NULL;
 SDLNet_SocketSet BomberNetClient::socketset = NULL;
 bool BomberNetClient::alive = false;
 int BomberNetClient::errorCode = 0;
+int BomberNetClient::errorValue = 0;
 int BomberNetClient::requestNumber = 0;
+ClientViewer * BomberNetClient::viewer = NULL;
+
 
 BomberNetClient& BomberNetClient::Instance() {
 	return m_instance;
@@ -55,6 +58,10 @@ void BomberNetClient::cleanup() {
 		SDLNet_FreeSocketSet(socketset);
 		socketset = NULL;
 	}
+	if (viewer != NULL) {
+		delete viewer;
+		viewer = NULL;
+	}
 	SDLNet_Quit();
 }
 
@@ -62,9 +69,8 @@ int BomberNetClient::net_thread_main(void *data) {
 	BomberNetClient *bomberNet = ((BomberNetClient *) data);
 	while (bomberNet->isAlive()) {
 		BomberNetClient::errorCode = bomberNet->handleNet();
-		if(BomberNetClient::errorCode > 0) {
-			BomberNetClient::alive = false;
-			return BomberNetClient::errorCode;
+		if (BomberNetClient::errorCode > 0) {
+			break;
 		}
 	}
 	return 0;
@@ -77,11 +83,12 @@ bool BomberNetClient::isAlive() {
 /**************************************
  * CLIENT
  *************************************/
-int BomberNetClient::connectClient() {
+int BomberNetClient::connectClient(SDL_Surface * vout_buf) {
 	errorCode = 0;
 	IPaddress serverIP;
 
 	fprintf(stderr, "%s\n", GameConfig::Instance().getIpString());
+	viewer = new ClientViewer(vout_buf);
 	SDLNet_ResolveHost(&serverIP, GameConfig::Instance().getIpString(), GameConfig::Instance().getPortValue());
 
 	if (serverIP.host == INADDR_NONE) {
@@ -117,25 +124,25 @@ void BomberNetClient::disconnectClient() {
 }
 
 void BomberNetClient::sendNbPlayerClient() {
-	char data[8];
+	char data[7];
 	memset(data, 0, sizeof data);
 	SDLNet_Write32(requestNumber, data);
 	data[4] = 0x00;
-	SDLNet_Write16(GameConfig::Instance().getNbPlayerOfClient(), data + 5);
-	data[7] = '\0';
+	data[5] = GameConfig::Instance().getNbPlayerOfClient();
+	data[6] = '\0';
 	if (SDLNet_CheckSockets(BomberNetClient::socketset, 0) >= 0) {
-		SDLNet_TCP_Send(BomberNetClient::tcpsock, &data, 8);
+		SDLNet_TCP_Send(BomberNetClient::tcpsock, &data, 7);
 		requestNumber++;
 	}
 }
 
 void BomberNetClient::sendDisconnection() {
-	char data[8];
+	char data[7];
 	memset(data, 0, sizeof data);
 	SDLNet_Write32(requestNumber, data);
 	data[4] = 0x01;
-	SDLNet_Write16(GameConfig::Instance().getNbPlayerOfClient(), data + 5);
-	data[7] = '\0';
+	data[5] = GameConfig::Instance().getNbPlayerOfClient();
+	data[6] = '\0';
 	if (SDLNet_CheckSockets(BomberNetClient::socketset, 0) >= 0) {
 		SDLNet_TCP_Send(BomberNetClient::tcpsock, &data, 7);
 		requestNumber++;
@@ -143,13 +150,15 @@ void BomberNetClient::sendDisconnection() {
 }
 
 void BomberNetClient::sendKeystate() {
+	fprintf(stderr, "send keystate\n");
 	char data[38];
 	memset(data, 0, sizeof data);
 	SDLNet_Write32(requestNumber, data);
 	data[4] = 0x02;
-	SDLNet_Write16(GameConfig::Instance().getNbPlayerOfClient(), data + 5);
-	int pos = 9;
+	data[5] = GameConfig::Instance().getNbPlayerOfClient();
+	int pos = 6;
 	for (int i = 0; i < GameConfig::Instance().getNbPlayerOfClient(); i++) {
+		fprintf(stderr, "send keystate %i\n", GameConfig::Instance().getKeystate(i));
 		SDLNet_Write16(GameConfig::Instance().getKeystate(i), data + pos);
 		pos += 2;
 	}
@@ -176,20 +185,20 @@ int BomberNetClient::handleNet() {
 				SDLNet_TCP_DelSocket(BomberNetClient::socketset, BomberNetClient::tcpsock);
 			} else {
 				fprintf(stderr, "Receive from Server : %s\n", data);
-
 				int requestNumber = SDLNet_Read32(data);
 				int type = data[4];
 
-				fprintf(stderr, "request number : %i, %x, %x, %i\n", requestNumber, type, data[5], data[6]);
+				fprintf(stderr, "request number : %i, %x, %x\n", requestNumber, type, data[5], data[6]);
 				switch (type) {
 					case 0:
 						switch (data[5]) {
 							case 0:
 								fprintf(stderr, "Nombre de place disponible : %i\n", data[6]);
-								if (data[6] < GameConfig::Instance().getNbPlayerOfClient()) {
+								if (data[6] > GameConfig::Instance().getNbPlayerOfClient()) {
 									sendNbPlayerClient();
 								} else {
 									fprintf(stderr, "pas assez de place ! %i places libres\n", data[6]);
+									errorValue = data[6];
 									return 6;
 								}
 								break;
@@ -215,12 +224,14 @@ int BomberNetClient::handleNet() {
 								break;
 							case 2:
 								fprintf(stderr, "le serveur n'acceptera que  %i joueurs", data[6]);
+								errorValue = data[6];
 								return 4;
 								break;
 						}
 						break;
 					case 2:
 						fprintf(stderr, "Nombre d'element dans la requette : %i", data[5]);
+						BomberNetClient::viewer->decode(data);
 						return 0;
 						break;
 				}
@@ -228,9 +239,13 @@ int BomberNetClient::handleNet() {
 			}
 		}
 	} else if (active == 0) {
+
 		//no activity on socket
 	} else {
 		return 5;
+	}
+	if(viewer->checkKeystate()){
+		BomberNetClient::sendKeystate();
 	}
 	return 0;
 }

@@ -16,6 +16,7 @@ GameConfig::GameConfig() {
 	IALevel = 1;
 	gameMode = 0;
 	numberOfNetPlayer=0;
+	nbReservedPlayerServer =1;
 	ipTab[0]=192;
 	ipTab[1]=168;
 	ipTab[2]=147;
@@ -636,4 +637,21 @@ void GameConfig::setAdresseOfKeystate(unsigned short * in_keystate) {
 
 unsigned short GameConfig::getKeystate(int player) {
 	return in_keystate[player];
+}
+
+void GameConfig::incNbReservedPlayerServer(){
+	nbReservedPlayerServer++;
+	if(nbReservedPlayerServer >16){
+		nbReservedPlayerServer =1;
+	}
+
+}
+void GameConfig::decNbReservedPlayerServer(){
+	nbReservedPlayerServer--;
+	if(nbReservedPlayerServer < 1){
+		nbReservedPlayerServer = 16;
+	}
+}
+int GameConfig::getNbReservedPlayerServer(){
+	return nbReservedPlayerServer;
 }

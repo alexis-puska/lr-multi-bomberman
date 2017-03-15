@@ -112,6 +112,9 @@ class GameConfig {
 		void incNbClientServer();
 		void decNbClientServer();
 		int getNbClientServer();
+		void incNbReservedPlayerServer();
+		void decNbReservedPlayerServer();
+		int getNbReservedPlayerServer();
 		//client config
 		void incNbPlayerOfClient();
 		void decNbPlayerOfClient();
@@ -149,7 +152,6 @@ class GameConfig {
 		unsigned short * in_keystate_over_net;
 		unsigned short * in_keystate;
 
-
 		int level;
 		int variante;
 		int nbBombe;
@@ -169,6 +171,7 @@ class GameConfig {
 		float playerCord[nbPlayer][2];
 		int gameMode;
 		int nbPlayerOfClient;
+		int nbReservedPlayerServer;
 		int nbClientServer;
 		int ipTab[4];
 		int port;

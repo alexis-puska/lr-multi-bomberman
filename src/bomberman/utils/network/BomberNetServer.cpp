@@ -130,7 +130,6 @@ void BomberNetServer::stopServer() {
 		cleanup();
 		int treadResult = 0;
 		SDL_WaitThread(net_thread, &treadResult);
-
 		fprintf(stderr, "\nServer KILLED : %i\n", treadResult);
 
 	}
@@ -177,18 +176,7 @@ void BomberNetServer::HandleServer(void) {
 		addInactiveSocket(which, newsock);
 		nbClientConnected++;
 		bomber[which].active = 1;
-		//ADD NET PLAYER
-		//TODO MOVE TO THE PROTOCOL
-
 		sendSlotAvailable(which);
-
-//		GameConfig::Instance().addNetPlayer(4);
-//		connexionHuman[which] = 4;
-//
-//		std::map<int,int>::iterator it;
-//		for (it=connexionHuman.begin(); it!=connexionHuman.end(); ++it)
-//		    fprintf(stderr,"first %i , second %i \n",it->first,it->second);
-
 	}
 }
 
@@ -237,40 +225,31 @@ void BomberNetServer::HandleClient(int which) {
 			bomber[which].active = 0;
 			fprintf(stderr, "Player left : %i.%i.%i.%i %i\n", ip >> 24, (ip >> 16) & 0xff, (ip >> 8) & 0xff, ip & 0xff, remote_ip->port);
 			nbClientConnected--;
-			//REMOVE NET PLAYER
-			//TODO MOVE TO THE PROTOCOL
-//			GameConfig::Instance().removeNetPlayer(connexionHuman[which]);
-//			connexionHuman.erase(which);
-
+			GameConfig::Instance().removeNetPlayer(connexionHuman[which]);
+			connexionHuman.erase(which);
 		}
 		deleteConnection(which);
 	} else {
-
-		int requestNumber = SDLNet_Read32(data);
-		int type = data[5];
-
-
-
-		fprintf(stderr, "request number : %i, %x, %x", requestNumber, type, data[6]);
+		decode(data, which);
 	}
 	memset(data, 0, sizeof data);
 }
 
 void BomberNetServer::sendSlotAvailable(int which) {
-	fprintf(stderr,"send slot available\n");
+	fprintf(stderr, "send slot available\n");
 	char data[8];
 	memset(data, 0, sizeof data);
 	SDLNet_Write32(requestNumber, data);
 	data[4] = 0x00;
 	data[5] = 0x00;
-	SDLNet_Write16((15 - GameConfig::Instance().getNbNetPlayer()), data + 6);
+	data[6] = 16 - GameConfig::Instance().getNbReservedPlayerServer() - GameConfig::Instance().getNbNetPlayer();
 	data[7] = 0x00;
 	SDLNet_TCP_Send(bomber[which].sock, &data, 8);
 	requestNumber++;
 }
 
 void BomberNetServer::sendServerFull(TCPsocket newsock) {
-	fprintf(stderr,"send server full\n");
+	fprintf(stderr, "send server full\n");
 	char data[7];
 	memset(data, 0, sizeof data);
 	SDLNet_Write32(requestNumber, data);
@@ -282,7 +261,7 @@ void BomberNetServer::sendServerFull(TCPsocket newsock) {
 }
 
 void BomberNetServer::sendServerInGame(TCPsocket newsock) {
-	fprintf(stderr,"send server in game\n");
+	fprintf(stderr, "send server in game\n");
 	char data[7];
 	memset(data, 0, sizeof data);
 	SDLNet_Write32(requestNumber, data);
@@ -294,7 +273,7 @@ void BomberNetServer::sendServerInGame(TCPsocket newsock) {
 }
 
 void BomberNetServer::sendAcknoledgementOfClientPlayer(int which) {
-	fprintf(stderr,"send cknloedgement of player\n");
+	fprintf(stderr, "send cknloedgement of player\n");
 	char data[8];
 	memset(data, 0, sizeof data);
 	SDLNet_Write32(requestNumber, data);
@@ -306,16 +285,60 @@ void BomberNetServer::sendAcknoledgementOfClientPlayer(int which) {
 	requestNumber++;
 }
 
-void BomberNetServer::sendErrorSlotAvailable(TCPsocket newsock) {
-	fprintf(stderr,"send error slot available\n");
+void BomberNetServer::sendErrorSlotAvailable(int which) {
+	fprintf(stderr, "send error slot available\n");
 	char data[8];
 	memset(data, 0, sizeof data);
 	SDLNet_Write32(requestNumber, data);
 	data[4] = 0x00;
 	data[5] = 0x02;
-	data[6] = 15 - GameConfig::Instance().getNbNetPlayer();
+	data[6] = 16 - GameConfig::Instance().getNbReservedPlayerServer() - GameConfig::Instance().getNbNetPlayer();
 	data[7] = '\0';
-	SDLNet_TCP_Send(newsock, &data, 8);
+	SDLNet_TCP_Send(bomber[which].sock, &data, 8);
 	requestNumber++;
 }
 
+void BomberNetServer::decode(char data[512], int which) {
+
+	int requestNumber = SDLNet_Read32(data);
+	int type = data[4];
+	fprintf(stderr, "request number : %i, %x, %x", requestNumber, type, data[5]);
+
+	std::map<int, int>::iterator it;
+	int sum = 0;
+	int nbKeystate;
+	int pos;
+	switch (type) {
+		case 0:
+
+			for (it = connexionHuman.begin(); it != connexionHuman.end(); ++it) {
+				sum += it->second;
+			}
+			if (data[5] <= 16 - sum - GameConfig::Instance().getNbReservedPlayerServer()) {
+				GameConfig::Instance().addNetPlayer(data[5]);
+				connexionHuman[which] = data[5];
+				sendAcknoledgementOfClientPlayer(which);
+			} else {
+				sendErrorSlotAvailable(which);
+				deleteConnection(which);
+			}
+			break;
+		case 1:
+			//deconnection du client demandé
+			if (data[5] == connexionHuman[which]) {
+				deleteConnection(which);
+			}
+			break;
+		case 2:
+			//reception evenement manette
+			nbKeystate = data[5];
+			for (int j = 0; j < nbKeystate; j++) {
+				pos = 6 + j;
+				fprintf(stderr, "%i, %i\n", data[5], SDLNet_Read16(data+pos));
+				GameConfig::Instance().setKeyPressedForNetPlayer(j, SDLNet_Read16(data+pos));
+			}
+			break;
+
+	}
+
+}

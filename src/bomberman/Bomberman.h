@@ -26,7 +26,8 @@ enum bombermanStepEnum {
 	PlayerSpriteMenu,
 	gameOptionMenu,		//Sudden death / Bad Bomber / CPU Level
 	levelSelectionMenu,	// Select the grid design
-	gameStep
+	gameStep,
+	clientViewStep
 };
 
 enum gameOptionEnum {
