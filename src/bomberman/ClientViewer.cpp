@@ -16,10 +16,6 @@ ClientViewer::~ClientViewer() {
 	this->vout_buf = NULL;
 }
 
-void ClientViewer::decode(char data[512]) {
-	fprintf(stderr, "decode request\n");
-}
-
 bool ClientViewer::checkKeystate() {
 	bool anyPlayerkeychange = false;
 	for (int i = 0; i < GameConfig::Instance().getNbPlayerOfClient(); i++) {
@@ -46,4 +42,10 @@ void ClientViewer::copySurfaceToBackRenderer(SDL_Surface * src, SDL_Surface * de
 	srcRect.w = src->w;
 	srcRect.h = src->h;
 	SDL_BlitSurface(src, &srcRect, dest, &dstRect);
+}
+
+
+
+void ClientViewer::decode(char data[512]) {
+	fprintf(stderr, "decode request\n");
 }

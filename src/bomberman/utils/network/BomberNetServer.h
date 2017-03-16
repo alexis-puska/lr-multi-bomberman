@@ -20,7 +20,7 @@ class BomberNetServer {
 		static SDLNet_SocketSet socketset;
 		static int nbClientConnected;
 		static int requestNumber;
-		static std::map<int,int> connexionHuman;
+		static std::map<int, int> connexionHuman;
 
 		BomberNetServer();
 		~BomberNetServer();
@@ -36,6 +36,11 @@ class BomberNetServer {
 		void sendErrorSlotAvailable(int which);
 		void linkKeystate();
 
+		void sendChangeScreenCommand(int screen);
+		void sendPlayerType();
+		void sendSpriteType();
+		void sendGameOption();
+		void sendLevelInfo();
 
 	private:
 		static BomberNetServer m_instance;
