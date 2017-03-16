@@ -212,6 +212,7 @@ void BomberNetServer::linkKeystate() {
 	int sum = 0;
 	std::map<int, int>::iterator it;
 	for (it = connexionHuman.begin(); it != connexionHuman.end(); ++it) {
+		fprintf(stderr, "link : %i %i\n", it->first, sum);
 		bomber[it->first].startIndexNetKeystate = sum;
 		sum += it->second;
 	}
@@ -343,10 +344,10 @@ void BomberNetServer::decode(char data[1024], int which) {
 		case 2:
 			//reception evenement manette
 			nbKeystate = data[5];
-			for (int j = bomber[which].startIndexNetKeystate; j < nbKeystate + bomber[which].startIndexNetKeystate; j++) {
+			for (int j = 0; j < nbKeystate; j++) {
 				pos = 6 + j;
-				fprintf(stderr, "%i, %i\n", data[5], SDLNet_Read16(data + pos));
-				GameConfig::Instance().setKeyPressedForNetPlayer(j, SDLNet_Read16(data + pos));
+				fprintf(stderr, "%i, %i %i\n", data[5], SDLNet_Read16(data + pos), bomber[which].startIndexNetKeystate);
+				GameConfig::Instance().setKeyPressedForNetPlayer(bomber[which].startIndexNetKeystate + j, SDLNet_Read16(data + pos));
 			}
 			break;
 
