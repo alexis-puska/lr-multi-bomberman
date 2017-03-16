@@ -212,7 +212,7 @@ void BomberNetServer::linkKeystate() {
 	int sum = 0;
 	std::map<int, int>::iterator it;
 	for (it = connexionHuman.begin(); it != connexionHuman.end(); ++it) {
-		fprintf(stderr, "link : %i %i\n", it->first, sum);
+
 		bomber[it->first].startIndexNetKeystate = sum;
 		sum += it->second;
 	}
@@ -247,7 +247,6 @@ void BomberNetServer::HandleClient(int which) {
 }
 
 void BomberNetServer::sendSlotAvailable(int which) {
-	fprintf(stderr, "send slot available\n");
 	char data[8];
 	memset(data, 0, sizeof data);
 	SDLNet_Write32(requestNumber, data);
@@ -260,7 +259,6 @@ void BomberNetServer::sendSlotAvailable(int which) {
 }
 
 void BomberNetServer::sendServerFull(TCPsocket newsock) {
-	fprintf(stderr, "send server full\n");
 	char data[7];
 	memset(data, 0, sizeof data);
 	SDLNet_Write32(requestNumber, data);
@@ -272,7 +270,6 @@ void BomberNetServer::sendServerFull(TCPsocket newsock) {
 }
 
 void BomberNetServer::sendServerInGame(TCPsocket newsock) {
-	fprintf(stderr, "send server in game\n");
 	char data[7];
 	memset(data, 0, sizeof data);
 	SDLNet_Write32(requestNumber, data);
@@ -284,7 +281,6 @@ void BomberNetServer::sendServerInGame(TCPsocket newsock) {
 }
 
 void BomberNetServer::sendAcknoledgementOfClientPlayer(int which) {
-	fprintf(stderr, "send cknloedgement of player\n");
 	char data[8];
 	memset(data, 0, sizeof data);
 	SDLNet_Write32(requestNumber, data);
@@ -297,7 +293,6 @@ void BomberNetServer::sendAcknoledgementOfClientPlayer(int which) {
 }
 
 void BomberNetServer::sendErrorSlotAvailable(int which) {
-	fprintf(stderr, "send error slot available\n");
 	char data[8];
 	memset(data, 0, sizeof data);
 	SDLNet_Write32(requestNumber, data);
@@ -310,24 +305,20 @@ void BomberNetServer::sendErrorSlotAvailable(int which) {
 }
 
 void BomberNetServer::decode(char data[1024], int which) {
-
 	int requestNumber = SDLNet_Read32(data);
 	int type = data[4];
-	fprintf(stderr, "request number : %i, %x, %x", requestNumber, type, data[5]);
-
 	std::map<int, int>::iterator it;
 	int sum = 0;
 	int nbKeystate;
 	int pos;
 	switch (type) {
 		case 0:
-
+			//Valid the client connexion
 			for (it = connexionHuman.begin(); it != connexionHuman.end(); ++it) {
 				sum += it->second;
 			}
 			if (data[5] <= 16 - sum - GameConfig::Instance().getNbReservedPlayerServer()) {
 				GameConfig::Instance().addNetPlayer(data[5]);
-
 				connexionHuman[which] = data[5];
 				sendAcknoledgementOfClientPlayer(which);
 			} else {
@@ -346,11 +337,8 @@ void BomberNetServer::decode(char data[1024], int which) {
 			nbKeystate = data[5];
 			for (int j = 0; j < nbKeystate; j++) {
 				pos = 6 + j;
-				fprintf(stderr, "%i, %i %i\n", data[5], SDLNet_Read16(data + pos), bomber[which].startIndexNetKeystate);
 				GameConfig::Instance().setKeyPressedForNetPlayer(bomber[which].startIndexNetKeystate + j, SDLNet_Read16(data + pos));
 			}
 			break;
-
 	}
-
 }
