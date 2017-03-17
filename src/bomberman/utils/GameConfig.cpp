@@ -635,8 +635,8 @@ void GameConfig::setAdresseOfKeystate(unsigned short * in_keystate) {
 	this->in_keystate = in_keystate;
 }
 
-unsigned short GameConfig::getKeystate(int player) {
-	return in_keystate[player];
+unsigned short * GameConfig::getKeystate(int player) {
+	return in_keystate + player;
 }
 
 void GameConfig::incNbReservedPlayerServer(){

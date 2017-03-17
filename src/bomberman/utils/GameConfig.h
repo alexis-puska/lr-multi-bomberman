@@ -142,7 +142,7 @@ class GameConfig {
 		void setAdresseOfKeystateOverNet(unsigned short * in_keystate_over_net);
 		void setKeyPressedForNetPlayer(int player, unsigned short val);
 		void setAdresseOfKeystate(unsigned short * in_keystate);
-		unsigned short getKeystate(int player);
+		unsigned short * getKeystate(int player);
 
 	private:
 		GameConfig& operator=(const GameConfig&);

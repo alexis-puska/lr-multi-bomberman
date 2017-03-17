@@ -10,9 +10,13 @@ int BomberNetClient::errorValue = 0;
 int BomberNetClient::requestNumber = 0;
 ClientViewer * BomberNetClient::viewer = NULL;
 
+int BomberNetClient::nbPlayerOnThisClient = 0;
+unsigned short * BomberNetClient::keystate = NULL;
+
 bool BomberNetClient::keystateThreadAlive = false;
 bool BomberNetClient::keychange[16];
 unsigned short BomberNetClient::previousPlayerKeystate[16];
+
 
 
 BomberNetClient& BomberNetClient::Instance() {
@@ -168,7 +172,7 @@ void BomberNetClient::sendKeystate() {
 	data[5] = GameConfig::Instance().getNbPlayerOfClient();
 	int pos = 6;
 	for (int i = 0; i < GameConfig::Instance().getNbPlayerOfClient(); i++) {
-		SDLNet_Write16(GameConfig::Instance().getKeystate(i), data + pos);
+		SDLNet_Write16(keystate[i], data + pos);
 		pos += 2;
 	}
 	data[pos] = '\0';
@@ -257,13 +261,13 @@ int BomberNetClient::handleNet() {
 
 int BomberNetClient::keystateThread(void *data) {
 	fprintf(stderr, "Starting thread keystate...\n");
-	while (keystateThreadAlive) {
-		if (checkKeystate()) {
-			if(BomberNetClient::alive){
-				BomberNetClient::sendKeystate();
-			}
-		}
+	nbPlayerOnThisClient = GameConfig::Instance().getNbPlayerOfClient();
+	keystate = GameConfig::Instance().getKeystate(0);
+	while (BomberNetClient::keystateThreadAlive) {
+		SDL_Delay(1);
+		checkKeystate();
 	}
+	fprintf(stderr,"je meurs\n");
 	return 0;
 }
 
@@ -274,9 +278,9 @@ void BomberNetClient::startKeystateThread() {
 }
 
 void BomberNetClient::stopKeystateThread() {
-	fprintf(stderr, "Stoping looking keystate...\n");
-	if (keystateThreadAlive) {
-		keystateThreadAlive = false;
+	fprintf(stderr, "Stoping looking keystate...%i \n", nbPlayerOnThisClient);
+	if (BomberNetClient::keystateThreadAlive) {
+		BomberNetClient::keystateThreadAlive = false;
 		int treadResult = 0;
 		SDL_WaitThread(keystate_thread, &treadResult);
 		fprintf(stderr, "Looking keystate stopped ! : %i\n", treadResult);
@@ -284,15 +288,20 @@ void BomberNetClient::stopKeystateThread() {
 }
 
 bool BomberNetClient::checkKeystate() {
-	bool anyPlayerkeychange = false;
-	for (int i = 0; i < GameConfig::Instance().getNbPlayerOfClient(); i++) {
-		if (previousPlayerKeystate[i] != GameConfig::Instance().getKeystate(i)) {
+	bool found = false;
+	for (int i = 0; i < nbPlayerOnThisClient; i++) {
+		if (previousPlayerKeystate[i] != keystate[i]) {
+			found = true;
 			keychange[i] = true;
-			anyPlayerkeychange = true;
-			previousPlayerKeystate[i] = GameConfig::Instance().getKeystate(i);
+			previousPlayerKeystate[i] = keystate[i];
 		} else {
 			keychange[i] = false;
 		}
 	}
-	return anyPlayerkeychange;
+	if(found){
+		if(BomberNetClient::alive){
+			BomberNetClient::sendKeystate();
+		}
+	}
+
 }
