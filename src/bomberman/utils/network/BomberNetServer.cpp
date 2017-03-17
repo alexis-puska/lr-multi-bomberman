@@ -24,6 +24,9 @@ BomberNetServer& BomberNetServer::Instance() {
 BomberNetServer::BomberNetServer() {
 	alive = false;
 	net_thread = NULL;
+	memset(buffer, 0, sizeof buffer);
+	bufferPosition = 6;
+	bufferElement = 0;
 }
 
 BomberNetServer::~BomberNetServer() {
@@ -309,7 +312,6 @@ void BomberNetServer::decode(char data[1024], int which) {
 	int type = data[4];
 	std::map<int, int>::iterator it;
 	int sum = 0;
-	int nbKeystate;
 	int pos;
 	switch (type) {
 		case 0:
@@ -335,15 +337,19 @@ void BomberNetServer::decode(char data[1024], int which) {
 			break;
 		case 2:
 			//reception evenement manette
-			nbKeystate = data[5];
-			fprintf(stderr, "%i %i %i", data[5], SDLNet_Read16(data + 6), SDLNet_Read16(data + 8));
-			for (int j = 0; j < nbKeystate; j++) {
+			for (int j = 0; j < data[5]; j++) {
 				pos = 6 + (2 * j);
 				GameConfig::Instance().setKeyPressedForNetPlayer(bomber[which].startIndexNetKeystate + j, SDLNet_Read16(data + pos));
 			}
 			break;
 	}
 }
+
+/**********************
+ *
+ * GAME CONFIG REQUEST
+ *
+ *********************/
 
 void BomberNetServer::sendChangeScreenCommand(int screen) {
 	fprintf(stderr, "send screen change command %i", screen);
@@ -470,8 +476,69 @@ void BomberNetServer::sendLevelInfo() {
 		requestNumber++;
 	}
 }
-/*
- void BomberNetServer::concatBuffer(char[1024] data, int length){
 
- }
- */
+
+/**********************
+ *
+ *     GAME REQUEST
+ *
+ *********************/
+
+/********************
+ *   concat buffer
+ ********************/
+void BomberNetServer::concatBuffer(char * src, int length) {
+	strncpy(buffer + bufferPosition, src, length);
+	bufferElement++;
+	bufferPosition += length;
+}
+
+/***********************
+ *close buffer and send
+ **********************/
+void BomberNetServer::sendBuffer(){
+	buffer[5] = bufferElement;
+	buffer[bufferPosition] = '\0';
+	std::map<int, int>::iterator it;
+	for (it = connexionHuman.begin(); it != connexionHuman.end(); ++it) {
+		SDLNet_TCP_Send(bomber[it->first].sock, &buffer, 28);
+		requestNumber++;
+	}
+}
+/***********************
+ *   init buffer
+ **********************/
+void BomberNetServer::initBuffer() {
+	memset(buffer, 0, sizeof buffer);
+	SDLNet_Write32(requestNumber, buffer);
+	buffer[4] = 0x02;
+	//buffer[5] = ???, change value when send the buffer
+	bufferPosition = 6;
+	bufferElement = 0;
+}
+
+
+
+
+//tab
+//tabBonus
+
+//time/new cycle/playerState/gameState(pause/in game/end)
+//player position
+//new empty element
+
+
+//rail
+//trolley
+//button
+//burnlouis
+//burnbonus
+//burnwall
+//exposion
+//popbonus
+//suddentdeath
+//bombe
+//hole
+//mine
+//player
+//teleporter

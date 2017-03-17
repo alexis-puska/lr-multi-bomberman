@@ -46,6 +46,16 @@ class BomberNetServer {
 	private:
 		static BomberNetServer m_instance;
 
+		//DRAW REQUEST BUFFER
+		char buffer[1024];
+		int bufferLenght;
+		int bufferPosition;
+		int bufferElement;
+		void concatBuffer(char * src, int length);
+		void initBuffer();
+		void sendBuffer();
+
+
 		//server thread
 		static bool alive;
 		static int net_thread_main(void *data);
