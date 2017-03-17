@@ -6,17 +6,11 @@
 #endif
 #include "../../ClientViewer.h"
 
-
-
 #ifndef __MYCLASS_BOMBERNETCLIENT
 #define __MYCLASS_BOMBERNETCLIENT
 
 #define GAME_PORT			7777
 #define GAME_BYE			255
-
-enum connexionStep {
-
-};
 
 class BomberNetClient {
 	public:
@@ -36,7 +30,7 @@ class BomberNetClient {
 		void disconnectClient();
 
 		void sendNbPlayerClient();
-		void sendKeystate();
+		static void sendKeystate();
 		void sendDisconnection();
 		bool isAlive();
 
@@ -48,14 +42,24 @@ class BomberNetClient {
 		static int net_thread_main(void *data);
 		SDL_Thread *net_thread;
 
+		SDL_Thread *keystate_thread;
+		static bool keystateThreadAlive;
+		//keystate of client player
+		static bool keychange[16];
+		static unsigned short previousPlayerKeystate[16];
+		static int keystateThread(void *data);
+		static bool checkKeystate();
+		void startKeystateThread();
+		void stopKeystateThread();
+
+
+
+
 		BomberNetClient& operator=(const BomberNetClient&);
 		BomberNetClient(const BomberNetClient&);
 		void initSDLNet();
 		void allocateSocket();
 		void cleanup();
 		int handleNet();
-
-
-
 };
 #endif

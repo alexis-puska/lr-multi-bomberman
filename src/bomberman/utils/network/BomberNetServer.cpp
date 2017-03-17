@@ -305,7 +305,7 @@ void BomberNetServer::sendErrorSlotAvailable(int which) {
 }
 
 void BomberNetServer::decode(char data[1024], int which) {
-	int requestNumber = SDLNet_Read32(data);
+	//int requestNumber = SDLNet_Read32(data);
 	int type = data[4];
 	std::map<int, int>::iterator it;
 	int sum = 0;
@@ -335,8 +335,9 @@ void BomberNetServer::decode(char data[1024], int which) {
 		case 2:
 			//reception evenement manette
 			nbKeystate = data[5];
+			fprintf(stderr,"%i %i %i", data[5], SDLNet_Read16(data + 6), SDLNet_Read16(data + 8));
 			for (int j = 0; j < nbKeystate; j++) {
-				pos = 6 + j;
+				pos = 6 + (2*j);
 				GameConfig::Instance().setKeyPressedForNetPlayer(bomber[which].startIndexNetKeystate + j, SDLNet_Read16(data + pos));
 			}
 			break;
@@ -344,6 +345,7 @@ void BomberNetServer::decode(char data[1024], int which) {
 }
 
 void BomberNetServer::sendChangeScreenCommand(int screen) {
+	fprintf(stderr, "send screen change command %i", screen);
 	char data[9];
 	memset(data, 0, sizeof data);
 	SDLNet_Write32(requestNumber, data);
@@ -449,7 +451,8 @@ void BomberNetServer::sendLevelInfo() {
 		requestNumber++;
 	}
 }
+/*
+void BomberNetServer::concatBuffer(char[1024] data, int length){
 
-//void BomberNetServer::concatBuffer(char){
-
-//}
+}
+*/

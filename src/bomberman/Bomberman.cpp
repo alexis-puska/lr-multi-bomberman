@@ -83,7 +83,7 @@ void Bomberman::tick(unsigned short in_keystateLibretro[16]) {
 
 	if (currentStep == clientViewStep && GameConfig::Instance().getGameModeType() == NET_CLIENT && BomberNetClient::errorCode > 0) {
 		error = true;
-		switch(BomberNetClient::errorCode){
+		switch (BomberNetClient::errorCode) {
 			case 1:
 				sprintf(errorString, "SERVER FULL");
 				break;
@@ -152,6 +152,9 @@ void Bomberman::tick(unsigned short in_keystateLibretro[16]) {
 					error = false;
 					cursorPosition = 0;
 					currentStep = PlayerTypeMenu;
+					if (GameConfig::Instance().getGameModeType() == NET_SERVER) {
+						BomberNetServer::Instance().sendChangeScreenCommand(1);
+					}
 					BomberNetServer::Instance().linkKeystate();
 					GameConfig::Instance().generateNetPlayerConfiguration();
 					GameConfig::Instance().setAcceptClient(false);
@@ -183,6 +186,7 @@ void Bomberman::tick(unsigned short in_keystateLibretro[16]) {
 					fprintf(stderr, "here");
 					if (GameConfig::Instance().getGameModeType() == NET_SERVER) {
 						if (GameConfig::Instance().netPlayerAllSet()) {
+							BomberNetServer::Instance().sendChangeScreenCommand(2);
 							GameConfig::Instance().generatePlayerSpriteTypeforCPU();
 							cursorPosition = 0;
 							currentStep = PlayerSpriteMenu;
@@ -197,15 +201,24 @@ void Bomberman::tick(unsigned short in_keystateLibretro[16]) {
 					}
 					break;
 				case PlayerSpriteMenu:
+					if (GameConfig::Instance().getGameModeType() == NET_SERVER) {
+						BomberNetServer::Instance().sendChangeScreenCommand(3);
+					}
 					cursorPosition = 0;
 					currentStep = gameOptionMenu;
 					break;
 				case gameOptionMenu:
+					if (GameConfig::Instance().getGameModeType() == NET_SERVER) {
+						BomberNetServer::Instance().sendChangeScreenCommand(4);
+					}
 					cursorPosition = 0;
 					currentStep = levelSelectionMenu;
 					break;
 				case levelSelectionMenu:
 					cursorPosition = 0;
+					if (GameConfig::Instance().getGameModeType() == NET_SERVER) {
+						BomberNetServer::Instance().sendChangeScreenCommand(5);
+					}
 					game = new Game(vout_buf, in_keystate, in_keystate_over_net);
 					currentStep = gameStep;
 					Sound::Instance().stopMusique();
@@ -266,18 +279,30 @@ void Bomberman::tick(unsigned short in_keystateLibretro[16]) {
 					}
 					break;
 				case PlayerSpriteMenu:
+					if (GameConfig::Instance().getGameModeType() == NET_SERVER) {
+						BomberNetServer::Instance().sendChangeScreenCommand(1);
+					}
 					cursorPosition = 0;
 					currentStep = PlayerTypeMenu;
 					break;
 				case gameOptionMenu:
+					if (GameConfig::Instance().getGameModeType() == NET_SERVER) {
+						BomberNetServer::Instance().sendChangeScreenCommand(2);
+					}
 					cursorPosition = 0;
 					currentStep = PlayerSpriteMenu;
 					break;
 				case levelSelectionMenu:
+					if (GameConfig::Instance().getGameModeType() == NET_SERVER) {
+						BomberNetServer::Instance().sendChangeScreenCommand(3);
+					}
 					cursorPosition = 0;
 					currentStep = gameOptionMenu;
 					break;
 				case gameStep:
+					if (GameConfig::Instance().getGameModeType() == NET_SERVER) {
+						BomberNetServer::Instance().sendChangeScreenCommand(4);
+					}
 					currentStep = levelSelectionMenu;
 					break;
 				case clientViewStep:
@@ -339,7 +364,7 @@ void Bomberman::tick(unsigned short in_keystateLibretro[16]) {
 				}
 				break;
 		}
-	} else if(currentStep == gameStep){
+	} else if (currentStep == gameStep) {
 		if (game->isRequestStopGame()) {
 			previousPlayerKeystate[0] = in_keystate[0];
 			game->exitGame();

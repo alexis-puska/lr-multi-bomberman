@@ -10,6 +10,10 @@ int BomberNetClient::errorValue = 0;
 int BomberNetClient::requestNumber = 0;
 ClientViewer * BomberNetClient::viewer = NULL;
 
+bool BomberNetClient::keystateThreadAlive = false;
+bool BomberNetClient::keychange[16];
+unsigned short BomberNetClient::previousPlayerKeystate[16];
+
 
 BomberNetClient& BomberNetClient::Instance() {
 	return m_instance;
@@ -18,6 +22,11 @@ BomberNetClient& BomberNetClient::Instance() {
 BomberNetClient::BomberNetClient() {
 	alive = false;
 	net_thread = NULL;
+
+	for (int i = 0; i < 16; i++) {
+		keychange[i] = false;
+		previousPlayerKeystate[i] = false;
+	}
 }
 
 BomberNetClient::~BomberNetClient() {
@@ -62,6 +71,7 @@ void BomberNetClient::cleanup() {
 		delete viewer;
 		viewer = NULL;
 	}
+	stopKeystateThread();
 	SDLNet_Quit();
 }
 
@@ -89,6 +99,7 @@ int BomberNetClient::connectClient(SDL_Surface * vout_buf) {
 
 	fprintf(stderr, "%s\n", GameConfig::Instance().getIpString());
 	viewer = new ClientViewer(vout_buf);
+	startKeystateThread();
 	SDLNet_ResolveHost(&serverIP, GameConfig::Instance().getIpString(), GameConfig::Instance().getPortValue());
 
 	if (serverIP.host == INADDR_NONE) {
@@ -169,7 +180,7 @@ void BomberNetClient::sendKeystate() {
 
 int BomberNetClient::handleNet() {
 	char data[1024];
-	int len, pos;
+	int len;
 
 	int active = SDLNet_CheckSockets(BomberNetClient::socketset, 0);
 
@@ -183,7 +194,7 @@ int BomberNetClient::handleNet() {
 				SDLNet_TCP_DelSocket(BomberNetClient::socketset, BomberNetClient::tcpsock);
 			} else {
 				//fprintf(stderr, "Receive from Server : %s\n", data);
-				int requestNumber = SDLNet_Read32(data);
+				//int requestNumber = SDLNet_Read32(data);
 				int type = data[4];
 
 				//fprintf(stderr, "request number : %i, %x, %x\n", requestNumber, type, data[5], data[6]);
@@ -237,14 +248,51 @@ int BomberNetClient::handleNet() {
 			}
 		}
 	} else if (active == 0) {
-
 		//no activity on socket
 	} else {
 		return 5;
 	}
-	if(viewer->checkKeystate()){
-		BomberNetClient::sendKeystate();
+	return 0;
+}
+
+int BomberNetClient::keystateThread(void *data) {
+	fprintf(stderr, "Starting thread keystate...\n");
+	while (keystateThreadAlive) {
+		if (checkKeystate()) {
+			if(BomberNetClient::alive){
+				BomberNetClient::sendKeystate();
+			}
+		}
 	}
 	return 0;
 }
 
+void BomberNetClient::startKeystateThread() {
+	BomberNetClient::keystateThreadAlive = true;
+	keystate_thread = SDL_CreateThread(keystateThread, "keystate thread", this);
+	fprintf(stderr, "Starting looking keystate...\n");
+}
+
+void BomberNetClient::stopKeystateThread() {
+	fprintf(stderr, "Stoping looking keystate...\n");
+	if (keystateThreadAlive) {
+		keystateThreadAlive = false;
+		int treadResult = 0;
+		SDL_WaitThread(keystate_thread, &treadResult);
+		fprintf(stderr, "Looking keystate stopped ! : %i\n", treadResult);
+	}
+}
+
+bool BomberNetClient::checkKeystate() {
+	bool anyPlayerkeychange = false;
+	for (int i = 0; i < GameConfig::Instance().getNbPlayerOfClient(); i++) {
+		if (previousPlayerKeystate[i] != GameConfig::Instance().getKeystate(i)) {
+			keychange[i] = true;
+			anyPlayerkeychange = true;
+			previousPlayerKeystate[i] = GameConfig::Instance().getKeystate(i);
+		} else {
+			keychange[i] = false;
+		}
+	}
+	return anyPlayerkeychange;
+}
