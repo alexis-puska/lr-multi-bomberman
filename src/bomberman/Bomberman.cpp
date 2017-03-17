@@ -227,6 +227,9 @@ void Bomberman::tick(unsigned short in_keystateLibretro[16]) {
 
 					break;
 				case gameStep:
+					if (GameConfig::Instance().getGameModeType() == NET_SERVER) {
+						BomberNetServer::Instance().sendChangeScreenCommand(6);
+					}
 					break;
 				case clientViewStep:
 					break;
@@ -472,6 +475,9 @@ void Bomberman::drawPlayerTypeMenu() {
 				Sprite::Instance().drawText(screenBuffer, 56 + (j * 133), 187 + (i * 20), playerName, green, false);
 			}
 		}
+		if (GameConfig::Instance().getGameModeType() == NET_SERVER) {
+			BomberNetServer::Instance().sendPlayerType();
+		}
 		refreshBuffer = false;
 		if (error) {
 			Sprite::Instance().drawText(screenBuffer, (640 / 2), 310, errorString, red, true);
@@ -538,6 +544,9 @@ void Bomberman::drawPlayerSpriteMenu() {
 				Sprite::Instance().drawText(screenBuffer, 70 + (GameConfig::Instance().getPlayerSpriteType(i) * 72), 216 + (15 * list[index]), playerName, playerColor, true);
 				list[index] = list[index] + 1;
 			}
+		}
+		if (GameConfig::Instance().getGameModeType() == NET_SERVER) {
+			BomberNetServer::Instance().sendSpriteType();
 		}
 		refreshBuffer = false;
 		copySurfaceToBackRenderer(screenBuffer, vout_buf, 0, 0);
@@ -632,6 +641,9 @@ void Bomberman::drawGameOptionMenu() {
 		Sprite::Instance().drawText(screenBuffer, 400, 227, CPULevel, blue, false);
 		Sprite::Instance().drawText(screenBuffer, 400, 247, timeOfLevel, blue, false);
 		refreshBuffer = false;
+		if (GameConfig::Instance().getGameModeType() == NET_SERVER) {
+			BomberNetServer::Instance().sendGameOption();
+		}
 	}
 	int cursorPosX = 183;
 	int cursorposY = 187 + (cursorPosition * 20);
@@ -888,7 +900,9 @@ void Bomberman::drawLevelSelectionMenu() {
 		}
 		level = NULL;
 		refreshBuffer = false;
-
+		if (GameConfig::Instance().getGameModeType() == NET_SERVER) {
+			BomberNetServer::Instance().sendLevelInfo();
+		}
 	}
 	int cursorPosX = 0;
 	int cursorposY = 0;
@@ -1284,13 +1298,11 @@ void Bomberman::drawServerConfigurationMenu() {
 }
 
 void Bomberman::drawServerWaitForClient() {
-
 	SDL_BlitSurface(Sprite::Instance().getMenuBackground(), NULL, screenBuffer, NULL);
 	copySurfaceToBackRenderer(Sprite::Instance().getShadowArea(0), screenBuffer, 33, 150);
 	copySurfaceToBackRenderer(Sprite::Instance().getShadowArea(2), screenBuffer, 33, 183);
 	Sprite::Instance().drawText(screenBuffer, (640 / 2), 154, "WAIT FOR GAME CLIENT", green, true);
 	Sprite::Instance().drawText(screenBuffer, (640 / 2), 335, "- - just wait for other player - -", gold, true);
-
 	char num[3];
 	sprintf(num, "%i", BomberNetServer::Instance().getNbClientConnected());
 	Sprite::Instance().drawText(screenBuffer, (640 / 2), 214, "Number of bomber net client connecter", green, true);

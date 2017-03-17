@@ -36,6 +36,7 @@ class BomberNetServer {
 		void sendErrorSlotAvailable(int which);
 		void linkKeystate();
 
+		void sendNbConnected();
 		void sendChangeScreenCommand(int screen);
 		void sendPlayerType();
 		void sendSpriteType();

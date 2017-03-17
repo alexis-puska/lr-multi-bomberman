@@ -321,6 +321,7 @@ void BomberNetServer::decode(char data[1024], int which) {
 				GameConfig::Instance().addNetPlayer(data[5]);
 				connexionHuman[which] = data[5];
 				sendAcknoledgementOfClientPlayer(which);
+				sendNbConnected();
 			} else {
 				sendErrorSlotAvailable(which);
 				deleteConnection(which);
@@ -335,9 +336,9 @@ void BomberNetServer::decode(char data[1024], int which) {
 		case 2:
 			//reception evenement manette
 			nbKeystate = data[5];
-			fprintf(stderr,"%i %i %i", data[5], SDLNet_Read16(data + 6), SDLNet_Read16(data + 8));
+			fprintf(stderr, "%i %i %i", data[5], SDLNet_Read16(data + 6), SDLNet_Read16(data + 8));
 			for (int j = 0; j < nbKeystate; j++) {
-				pos = 6 + (2*j);
+				pos = 6 + (2 * j);
 				GameConfig::Instance().setKeyPressedForNetPlayer(bomber[which].startIndexNetKeystate + j, SDLNet_Read16(data + pos));
 			}
 			break;
@@ -361,29 +362,26 @@ void BomberNetServer::sendChangeScreenCommand(int screen) {
 	}
 }
 
-void BomberNetServer::sendPlayerType() {
-	char data[23];
+void BomberNetServer::sendNbConnected() {
+	char data[11];
 	memset(data, 0, sizeof data);
 	SDLNet_Write32(requestNumber, data);
 	data[4] = 0x02;
 	data[5] = 0x01; //number of object
 	data[6] = 0x02; //screen type
 	data[7] = 0x01;
-	int pos = 8;
-	for (int i = 0; i < nbPlayer; i++) {
-		data[pos] = GameConfig::Instance().getPlayerType(i);
-		pos++;
-	}
-	data[pos] = '\0';
+	data[8] = BomberNetServer::Instance().getNbClientConnected();
+	data[9] = GameConfig::Instance().getNbNetPlayer() + GameConfig::Instance().getNbReservedPlayerServer();
+	data[10] = '\0';
 	std::map<int, int>::iterator it;
 	for (it = connexionHuman.begin(); it != connexionHuman.end(); ++it) {
-		SDLNet_TCP_Send(bomber[it->first].sock, &data, 23);
+		SDLNet_TCP_Send(bomber[it->first].sock, &data, 11);
 		requestNumber++;
 	}
 }
 
-void BomberNetServer::sendSpriteType() {
-	char data[23];
+void BomberNetServer::sendPlayerType() {
+	char data[24];
 	memset(data, 0, sizeof data);
 	SDLNet_Write32(requestNumber, data);
 	data[4] = 0x02;
@@ -392,13 +390,34 @@ void BomberNetServer::sendSpriteType() {
 	data[7] = 0x02;
 	int pos = 8;
 	for (int i = 0; i < nbPlayer; i++) {
+		data[pos] = GameConfig::Instance().getPlayerType(i);
+		pos++;
+	}
+	data[pos] = '\0';
+	std::map<int, int>::iterator it;
+	for (it = connexionHuman.begin(); it != connexionHuman.end(); ++it) {
+		SDLNet_TCP_Send(bomber[it->first].sock, &data, 24);
+		requestNumber++;
+	}
+}
+
+void BomberNetServer::sendSpriteType() {
+	char data[24];
+	memset(data, 0, sizeof data);
+	SDLNet_Write32(requestNumber, data);
+	data[4] = 0x02;
+	data[5] = 0x01; //number of object
+	data[6] = 0x02; //screen type
+	data[7] = 0x03;
+	int pos = 8;
+	for (int i = 0; i < nbPlayer; i++) {
 		data[pos] = GameConfig::Instance().getPlayerSpriteType(i);
 		pos++;
 	}
 	data[pos] = '\0';
 	std::map<int, int>::iterator it;
 	for (it = connexionHuman.begin(); it != connexionHuman.end(); ++it) {
-		SDLNet_TCP_Send(bomber[it->first].sock, &data, 23);
+		SDLNet_TCP_Send(bomber[it->first].sock, &data, 24);
 		requestNumber++;
 	}
 }
@@ -410,7 +429,7 @@ void BomberNetServer::sendGameOption() {
 	data[4] = 0x02;
 	data[5] = 0x01; //number of object
 	data[6] = 0x02; //screen type
-	data[7] = 0x03;
+	data[7] = 0x04;
 
 	data[8] = GameConfig::Instance().isSuddentDeathMode() ? 1 : 0;
 	data[9] = GameConfig::Instance().isBadBomberMode() ? 1 : 0;
@@ -431,7 +450,7 @@ void BomberNetServer::sendLevelInfo() {
 	data[4] = 0x02;
 	data[5] = 0x01; //number of object
 	data[6] = 0x02; //screen type
-	data[7] = 0x04;
+	data[7] = 0x05;
 
 	data[8] = GameConfig::Instance().getLevel();
 	data[9] = GameConfig::Instance().getVariante();
@@ -452,7 +471,7 @@ void BomberNetServer::sendLevelInfo() {
 	}
 }
 /*
-void BomberNetServer::concatBuffer(char[1024] data, int length){
+ void BomberNetServer::concatBuffer(char[1024] data, int length){
 
-}
-*/
+ }
+ */

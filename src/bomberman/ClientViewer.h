@@ -10,20 +10,12 @@
 #ifndef __MYCLASS_CLIENT_VIEWER
 #define __MYCLASS_CLIENT_VIEWER
 
-
 enum objectLenght {
-	drawScreenRequest = 2,
-	playerTypeRequest = 18,
-	spriteTypeRequest = 18,
-	gameOptionRequest = 6,
-	levelInfoRequest = 22,
+	nbConnectedRequest = 4, drawScreenRequest = 2, playerTypeRequest = 18, spriteTypeRequest = 18, gameOptionRequest = 6, levelInfoRequest = 22,
 };
 
-enum screenToDrawEnum{
-	playerTypeScreen = 0,
-	spriteTypeScreen,
-	gameOptionScreen,
-	levelInfoScreen,
+enum screenToDrawEnum {
+	nbConnectedScreen = 1, playerTypeScreen, spriteTypeScreen, gameOptionScreen, levelInfoScreen, gameScreen
 };
 
 class ClientViewer {
@@ -34,12 +26,20 @@ class ClientViewer {
 
 	private:
 		SDL_Surface * vout_buf;
+		SDL_Surface *screenBuffer;
 
+		void drawServerWaitForClient();
 		void drawPlayerTypeScreen();
 		void drawSpriteTypeScreen();
 		void drawGameOptionScreen();
 		void drawLevelInfoScreen();
 
 		void copySurfaceToBackRenderer(SDL_Surface * src, SDL_Surface * dest, int x, int y);
+
+		int nbConnected[2];
+		int playerType[16];
+		int playerSprite[16];
+		int gameOption[4];
+		int levelInfo[19];
 };
 #endif
