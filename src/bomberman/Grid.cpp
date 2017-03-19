@@ -76,7 +76,12 @@ void Grid::resetSurface() {
 	skyFixe = SDL_CreateRGBSurface(0, 630, 336, 32, rmask, gmask, bmask, amask);
 }
 
+bool Grid::somethingInSky(){
+	return somethingDrawInSky;
+}
+
 void Grid::generateGrid() {
+	somethingDrawInSky = false;
 	srand (time(NULL));SDL_Rect dstrect;
 	SDL_Rect srcrect;
 	SDL_Rect skyRect;
@@ -120,6 +125,7 @@ void Grid::generateGrid() {
 				dstrect.w = largeSpriteLevelSizeWidth;
 				dstrect.h = largeSpriteLevelSizeHeight;
 				SDL_BlitSurface(Sprite::Instance().getLevel(skyStartSpriteIndex, lvl), &skyRect, skyFixe, &dstrect);
+				somethingDrawInSky = true;
 			} else {
 				tab[i+(j*sizeX)] = emptyElement;
 				dstrect.x = i * smallSpriteLevelSizeWidth;

@@ -294,7 +294,7 @@ void ClientViewer::drawLevelInfoScreen() {
 		Sprite::Instance().drawText(screenBuffer, 327, 256, "Default", blue, false);
 	}
 	for (int i = 0; i < nbTypeBonus; i++) {
-		sprintf(num, "%i", levelInfo[5+i]);
+		sprintf(num, "%i", levelInfo[5 + i]);
 		copySurfaceToBackRenderer(Sprite::Instance().getBonus(i), screenBuffer, 224 + i * 26, 292);
 		Sprite::Instance().drawText(screenBuffer, 232 + i * 26, 306, num, green, true);
 	}
@@ -304,12 +304,86 @@ void ClientViewer::drawLevelInfoScreen() {
 
 }
 
-
-
 /***********************************
  *
  * GAME PART DRAW
  *
  ***********************************/
 
+void ClientViewer::generateGround() {
+	int lvl = levelInfo[0];
+	int var = levelInfo[1];
+	SDL_Rect dstrect;
+	SDL_Rect srcrect;
+	SDL_Rect skyRect;
+	srcrect.x = 0;
+	srcrect.y = 0;
+	srcrect.w = smallSpriteLevelSizeWidth;
+	srcrect.h = smallSpriteLevelSizeHeight;
+
+	skyRect.x = 0;
+	skyRect.y = 0;
+	skyRect.w = largeSpriteLevelSizeWidth;
+	skyRect.h = largeSpriteLevelSizeHeight;
+
+	for (int j = 0; j < sizeY; j++) {
+		for (int i = 0; i < sizeX; i++) {
+			tab[i + j * sizeX] = emptyElement;
+			dstrect.x = i * smallSpriteLevelSizeWidth;
+			dstrect.y = j * smallSpriteLevelSizeHeight;
+			dstrect.w = smallSpriteLevelSizeWidth;
+			dstrect.h = smallSpriteLevelSizeHeight;
+			SDL_BlitSurface(Sprite::Instance().getLevel(18, lvl), &srcrect, ground, &dstrect);
+			if (LevelService::Instance().getLevel(lvl)->getVariantes(var)->isAWall(LevelService::Instance().getLevel(lvl)->getVariantes(var)->getDefinition(j * sizeX + i))) {
+				tab[i + (j * sizeX)] = wallElement;
+
+				int textureIndex = LevelService::Instance().getLevel(lvl)->getVariantes(var)->getDefinition(j * sizeX + i);
+				if (textureIndex != 'W') {
+					if (textureIndex < 40) {
+						dstrect.x = i * smallSpriteLevelSizeWidth;
+						dstrect.y = j * smallSpriteLevelSizeHeight;
+						dstrect.w = smallSpriteLevelSizeWidth;
+						dstrect.h = smallSpriteLevelSizeHeight;
+						SDL_BlitSurface(Sprite::Instance().getLevel(textureIndex, lvl), &srcrect, ground, &dstrect);
+					}
+				}
+			} else if (LevelService::Instance().getLevel(lvl)->getVariantes(var)->isDrawInSky(LevelService::Instance().getLevel(lvl)->getVariantes(var)->getDefinition(j * sizeX + i))) {
+				tab[i + (j * sizeX)] = emptyElement;
+				dstrect.x = (i - 1) * smallSpriteLevelSizeWidth;
+				dstrect.y = (j - 1) * smallSpriteLevelSizeHeight;
+				dstrect.w = largeSpriteLevelSizeWidth;
+				dstrect.h = largeSpriteLevelSizeHeight;
+				SDL_BlitSurface(Sprite::Instance().getLevel(skyStartSpriteIndex, lvl), &skyRect, skyFixe, &dstrect);
+			} else {
+				tab[i + (j * sizeX)] = emptyElement;
+				dstrect.x = i * smallSpriteLevelSizeWidth;
+				dstrect.y = j * smallSpriteLevelSizeHeight;
+				dstrect.w = smallSpriteLevelSizeWidth;
+				dstrect.h = smallSpriteLevelSizeHeight;
+				int textureIndex = LevelService::Instance().getLevel(lvl)->getVariantes(var)->getDefinition(j * sizeX + i);
+				if (textureIndex == 'S' || textureIndex == 'T' || textureIndex == 'U') {
+					textureIndex -= 65;
+				}
+				SDL_BlitSurface(Sprite::Instance().getLevel(textureIndex, lvl), &srcrect, ground, &dstrect);
+			}
+		}
+	}
+	for (int j = 0; j < sizeY; j++) {
+		for (int i = 0; i < sizeX; i++) {
+			if (LevelService::Instance().getLevel(lvl)->getVariantes(var)->isAWall(LevelService::Instance().getLevel(lvl)->getVariantes(var)->getDefinition(j * sizeX + i))) {
+				tab[i + (j * sizeX)] = wallElement;
+				int textureIndex = LevelService::Instance().getLevel(lvl)->getVariantes(var)->getDefinition(j * sizeX + i);
+				if (textureIndex != 'W') {
+					if (textureIndex >= 40) {
+						dstrect.x = (i - 1) * smallSpriteLevelSizeWidth;
+						dstrect.y = (j - 1) * smallSpriteLevelSizeHeight;
+						dstrect.w = largeSpriteLevelSizeWidth;
+						dstrect.h = largeSpriteLevelSizeHeight;
+						SDL_BlitSurface(Sprite::Instance().getLevel(textureIndex, lvl), &skyRect, ground, &dstrect);
+					}
+				}
+			}
+		}
+	}
+}
 

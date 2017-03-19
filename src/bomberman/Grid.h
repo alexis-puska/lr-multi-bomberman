@@ -84,6 +84,7 @@ class Grid {
 		void eraseArea(int posX, int posY);
 		void drawBonus(int posX, int posY);
 		void drawBonus(int index);
+		bool somethingInSky();
 
 
 		//get Image to render in retroarch
@@ -114,6 +115,8 @@ class Grid {
 
 		int getEmptyCaseAlea();
 		int getNotEmptyCaseAlea();
+
+		bool somethingDrawInSky;
 
 
 

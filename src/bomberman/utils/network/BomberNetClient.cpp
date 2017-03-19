@@ -303,5 +303,4 @@ bool BomberNetClient::checkKeystate() {
 			BomberNetClient::sendKeystate();
 		}
 	}
-
 }

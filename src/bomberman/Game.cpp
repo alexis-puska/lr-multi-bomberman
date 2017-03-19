@@ -18,8 +18,6 @@ static int metronome(void* data) {
 	long warningCount = 0l;
 	while (game->isAlive()) {
 		gettimeofday(&t1, NULL);
-		//BomberNetServer::Instance().sendLine();
-		//BomberNetClient::Instance().sendLine();
 		game->tick();
 		gettimeofday(&t2, NULL);
 
@@ -369,7 +367,9 @@ void Game::mergeScreen(bool mergeResult) {
 	SDL_BlitSurface(grid->getGroundLayer(), &mergeRect, screenBuffer, &mergeRect);
 	SDL_BlitSurface(grid->getBricksLayer(), &mergeRect, screenBuffer, &mergeRect);
 	SDL_BlitSurface(playerBombeExplode, &mergeRect, screenBuffer, &mergeRect);
-	SDL_BlitSurface(grid->getSkyLayer(), &mergeRect, screenBuffer, &mergeRect);
+	if(grid->somethingInSky()){
+		SDL_BlitSurface(grid->getSkyLayer(), &mergeRect, screenBuffer, &mergeRect);
+	}
 	if (mergeResult) {
 		mergeRect.x = (630 / 2) - (overlayResult->w / 2);
 		mergeRect.y = (360 / 2) - (overlayResult->h / 2);
