@@ -192,6 +192,7 @@ int BomberNetClient::handleNet() {
 		if (SDLNet_SocketReady(BomberNetClient::tcpsock)) {
 			memset(data, 0, sizeof data);
 			len = SDLNet_TCP_Recv(tcpsock, (char *) data, 1024);
+			fprintf(stderr,"longueur : %i\n",len);
 			if (len <= 0) {
 				SDLNet_TCP_Close(tcpsock);
 				BomberNetClient::tcpsock = NULL;

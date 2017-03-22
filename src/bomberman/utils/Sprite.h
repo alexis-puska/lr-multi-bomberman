@@ -132,21 +132,26 @@ class Sprite {
 		/*
 		 * DRAW PLAYER FUNCTION
 		 */
-		SDL_Surface* playerDrawNormal(int type, int color, int move, int pos, int offsetUnderWater);
-		SDL_Surface* drawOnLouis(int type, int color, int move, int offsetUnderWater);
-		SDL_Surface* playerDrawInsideTrolley(int type, int color, int trolleyDirection);
-		SDL_Surface* drawWithBombe(int type, int color, int move, int pos, int offsetUnderWater);
-		SDL_Surface* drawThrowBombe(int type, int color, int move, int pos, int offsetUnderWater);
-		SDL_Surface* drawBurning(int type, int color, int pos, int offsetUnderWater);
-		SDL_Surface* drawLouisBurning(int type, int pos, int offsetUnderWater);
-		SDL_Surface* drawVictory(int type, int color, int pos, int offsetUnderWater);
-		SDL_Surface* drawPlayerVictoryOnLouis(int type, int color, int offsetUnderWater);
-		SDL_Surface* drawCrying(int type, int color, int pos, int offsetUnderWater);
-		SDL_Surface* drawLouis(int louisType, int move, int pos, int offsetUnderWater);
-		SDL_Surface* drawVictoryOnLouis(int type, int pos, int offsetUnderWater);
-		SDL_Surface* getHappySprite(int type, int color, int offsetUnderWater);
-		SDL_Surface* getCryingSprite(int type, int color, int offsetUnderWater);
+		int playerDrawNormal(int type, int color, int move, int pos, int offsetUnderWater);
+		int drawOnLouis(int type, int color, int move, int offsetUnderWater);
+		int playerDrawInsideTrolley(int type, int color, int trolleyDirection);
+		int drawWithBombe(int type, int color, int move, int pos, int offsetUnderWater);
+		int drawThrowBombe(int type, int color, int move, int pos, int offsetUnderWater);
+		int drawBurning(int type, int color, int pos, int offsetUnderWater);
+		int drawVictory(int type, int color, int pos, int offsetUnderWater);
+		int drawPlayerVictoryOnLouis(int type, int color, int offsetUnderWater);
+		int drawCrying(int type, int color, int pos, int offsetUnderWater);
+
+		int drawLouis(int louisType, int move, int pos, int offsetUnderWater);
+		int drawVictoryOnLouis(int type, int pos, int offsetUnderWater);
+		int drawLouisBurning(int type, int pos, int offsetUnderWater);
+
+		int getHappySprite(int type, int color, int offsetUnderWater);
+		int getCryingSprite(int type, int color, int offsetUnderWater);
+
 		SDL_Surface* getSpaceShip(int index);
+		SDL_Surface* getPlayerSprite(int number);
+		SDL_Surface* getLouisSprite(int number);
 		/*
 		 * DRAW TEXT FUNCTION
 		 */

@@ -43,6 +43,31 @@ class BomberNetServer {
 		void sendGameOption();
 		void sendLevelInfo();
 
+
+		void initBuffer();
+		void sendBuffer();
+
+		void sendGameInfo(int time, bool newCycle, int gameState);
+		void sendTab(int * tab);
+		void sendTabBonus(int * tabBonus);
+		void sendPlayer(float posX, float posY, int sprite, int louis, int spaceship);
+		void sendPlayerState();
+		void sendNewEmptyElement(int idx);
+		void sendRail(int idx, int sprite);
+		void sendTrolley(float posX, float posY, int sprite);
+		void sendButton(int idx, int sprite);
+		void sendBurnLouis(float posX, float posY, int sprite);
+		void sendBurnBonus(int idx, int sprite);
+		void sendburnWall(int idx, int sprite);
+		void sendExplosion(int idx, int type, int sprite);
+		void sendPopBonus(int idx, int sprite);
+		void sendSuddenDeath(float posX, float posY, int sprite);
+		void sendBombe(float posX, float posY, int type, int sprite);
+		void sendHole(int idx, int sprite);
+		void sendMine(int idx, int sprite);
+		void sendTeleporter(int idx, int sprite);
+
+
 	private:
 		static BomberNetServer m_instance;
 
@@ -52,8 +77,7 @@ class BomberNetServer {
 		int bufferPosition;
 		int bufferElement;
 		void concatBuffer(char * src, int length);
-		void initBuffer();
-		void sendBuffer();
+
 
 
 		//server thread

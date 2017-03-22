@@ -1115,66 +1115,74 @@ int Sprite::calcStartIndexPlayer(int type, int color, int offsetUnderWater) {
 			+ ((nbSpritePlayerX * nbSpritePlayerY) * color);
 }
 
-SDL_Surface* Sprite::playerDrawNormal(int type, int color, int move, int pos, int offsetUnderWater) {
-	return playerSprite[calcStartIndexPlayer(type, color, offsetUnderWater) + (nbSpritePlayerX * move) + pos];
+int Sprite::playerDrawNormal(int type, int color, int move, int pos, int offsetUnderWater) {
+	return calcStartIndexPlayer(type, color, offsetUnderWater) + (nbSpritePlayerX * move) + pos;
 }
 
-SDL_Surface* Sprite::playerDrawInsideTrolley(int type, int color, int trolleyDirection) {
+int Sprite::playerDrawInsideTrolley(int type, int color, int trolleyDirection) {
 	if(trolleyDirection < 4){
-		return playerSprite[calcStartIndexPlayer(type, color, 0) + 41 + trolleyDirection];
+		return calcStartIndexPlayer(type, color, 0) + 41 + trolleyDirection;
 	}else{
-		return playerSprite[calcStartIndexPlayer(type, color, 0) + 46 + trolleyDirection];
+		return calcStartIndexPlayer(type, color, 0) + 46 + trolleyDirection;
 	}
 }
 
-SDL_Surface* Sprite::drawOnLouis(int type, int color, int move, int offsetUnderWater) {
-	return playerSprite[calcStartIndexPlayer(type, color, offsetUnderWater) + (nbSpritePlayerX * move) + 8];
+int Sprite::drawOnLouis(int type, int color, int move, int offsetUnderWater) {
+	return calcStartIndexPlayer(type, color, offsetUnderWater) + (nbSpritePlayerX * move) + 8;
 }
 
-SDL_Surface* Sprite::drawWithBombe(int type, int color, int move, int pos, int offsetUnderWater) {
-	return playerSprite[calcStartIndexPlayer(type, color, offsetUnderWater) + (nbSpritePlayerX * move) + 3 + pos];
+int Sprite::drawWithBombe(int type, int color, int move, int pos, int offsetUnderWater) {
+	return calcStartIndexPlayer(type, color, offsetUnderWater) + (nbSpritePlayerX * move) + 3 + pos;
 }
 
-SDL_Surface* Sprite::drawThrowBombe(int type, int color, int move, int pos, int offsetUnderWater) {
-	return playerSprite[calcStartIndexPlayer(type, color, offsetUnderWater) + (nbSpritePlayerX * move) + 6 + pos];
+int Sprite::drawThrowBombe(int type, int color, int move, int pos, int offsetUnderWater) {
+	return calcStartIndexPlayer(type, color, offsetUnderWater) + (nbSpritePlayerX * move) + 6 + pos;
 }
 
-SDL_Surface* Sprite::drawBurning(int type, int color, int pos, int offsetUnderWater) {
-	return playerSprite[calcStartIndexPlayer(type, color, offsetUnderWater) + (nbSpritePlayerX * 6) + pos];
+int Sprite::drawBurning(int type, int color, int pos, int offsetUnderWater) {
+	return calcStartIndexPlayer(type, color, offsetUnderWater) + (nbSpritePlayerX * 6) + pos;
 }
 
-SDL_Surface* Sprite::drawVictory(int type, int color, int pos, int offsetUnderWater) {
-	return playerSprite[calcStartIndexPlayer(type, color, offsetUnderWater) + (nbSpritePlayerX * 4) + pos];
+int Sprite::drawVictory(int type, int color, int pos, int offsetUnderWater) {
+	return calcStartIndexPlayer(type, color, offsetUnderWater) + (nbSpritePlayerX * 4) + pos;
 }
 
-SDL_Surface* Sprite::drawPlayerVictoryOnLouis(int type, int color, int offsetUnderWater) {
-	return playerSprite[calcStartIndexPlayer(type, color, offsetUnderWater) + (nbSpritePlayerX * 4) + 4];
+int Sprite::drawPlayerVictoryOnLouis(int type, int color, int offsetUnderWater) {
+	return calcStartIndexPlayer(type, color, offsetUnderWater) + (nbSpritePlayerX * 4) + 4;
 }
 
-SDL_Surface* Sprite::drawCrying(int type, int color, int pos, int offsetUnderWater) {
-	return playerSprite[calcStartIndexPlayer(type, color, offsetUnderWater) + (nbSpritePlayerX * 5) + pos];
+int Sprite::drawCrying(int type, int color, int pos, int offsetUnderWater) {
+	return calcStartIndexPlayer(type, color, offsetUnderWater) + (nbSpritePlayerX * 5) + pos;
 }
 
-SDL_Surface* Sprite::getHappySprite(int type, int color, int offsetUnderWater) {
-	return playerSprite[calcStartIndexPlayer(type, color, offsetUnderWater) + (nbSpritePlayerX * 5) + 3];
+int Sprite::getHappySprite(int type, int color, int offsetUnderWater) {
+	return calcStartIndexPlayer(type, color, offsetUnderWater) + (nbSpritePlayerX * 5) + 3;
 }
 
-SDL_Surface* Sprite::getCryingSprite(int type, int color, int offsetUnderWater) {
-	return playerSprite[calcStartIndexPlayer(type, color, offsetUnderWater) + (nbSpritePlayerX * 5) + 4];
+int Sprite::getCryingSprite(int type, int color, int offsetUnderWater) {
+	return calcStartIndexPlayer(type, color, offsetUnderWater) + (nbSpritePlayerX * 5) + 4;
+}
+
+SDL_Surface* Sprite::getPlayerSprite(int number){
+	return playerSprite[number];
 }
 /****************
  *	LOUIS
  ****************/
-SDL_Surface* Sprite::drawLouis(int louisType, int move, int pos, int offsetUnderWater) {
-	return louisSprite[(nbSpriteLouisX * nbSpriteLouisY * nbTypeLouis) * offsetUnderWater + (nbSpriteLouisX * nbSpriteLouisY * louisType) + (move * nbSpriteLouisX) + pos];
+int Sprite::drawLouis(int louisType, int move, int pos, int offsetUnderWater) {
+	return (nbSpriteLouisX * nbSpriteLouisY * nbTypeLouis) * offsetUnderWater + (nbSpriteLouisX * nbSpriteLouisY * louisType) + (move * nbSpriteLouisX) + pos;
 }
 
-SDL_Surface* Sprite::drawLouisBurning(int type, int pos, int offsetUnderWater) {
-	return louisSprite[(nbSpriteLouisX * nbSpriteLouisY * nbTypeLouis) * offsetUnderWater + (nbSpriteLouisX * nbSpriteLouisY * type) + (4 * nbSpriteLouisX) + pos];
+int Sprite::drawLouisBurning(int type, int pos, int offsetUnderWater) {
+	return (nbSpriteLouisX * nbSpriteLouisY * nbTypeLouis) * offsetUnderWater + (nbSpriteLouisX * nbSpriteLouisY * type) + (4 * nbSpriteLouisX) + pos;
 }
 
-SDL_Surface* Sprite::drawVictoryOnLouis(int type, int pos, int offsetUnderWater) {
-	return louisSprite[(nbSpriteLouisX * nbSpriteLouisY * nbTypeLouis) * offsetUnderWater + (nbSpriteLouisX * nbSpriteLouisY * type) + (4 * nbSpriteLouisX) + 4 + pos];
+int Sprite::drawVictoryOnLouis(int type, int pos, int offsetUnderWater) {
+	return (nbSpriteLouisX * nbSpriteLouisY * nbTypeLouis) * offsetUnderWater + (nbSpriteLouisX * nbSpriteLouisY * type) + (4 * nbSpriteLouisX) + 4 + pos;
+}
+
+SDL_Surface* Sprite::getLouisSprite(int number){
+	return louisSprite[number];
 }
 /****************
  * SPACESHIP

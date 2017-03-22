@@ -1,6 +1,8 @@
 #ifndef IS_OSX
 #include <SDL2/SDL_image.h>
+#include <SDL2/SDL_net.h>
 #else
+#include <SDL2_net/SDL_net.h>
 #include <SDL2_image/SDL_image.h>
 #endif
 #include "utils/Sound.h"

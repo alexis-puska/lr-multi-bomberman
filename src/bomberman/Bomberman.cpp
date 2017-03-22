@@ -505,7 +505,7 @@ void Bomberman::drawPlayerSpriteMenu() {
 		Sprite::Instance().drawText(screenBuffer, (640 / 2), 335, "- - change with Left / Right - -", gold, true);
 		//add player sprite
 		for (int i = 0; i < 8; i++) {
-			copySurfaceToBackRenderer(Sprite::Instance().playerDrawNormal(i, 0, 0, 0, 0), screenBuffer, 54 + (i * 72), 174);
+			copySurfaceToBackRenderer(Sprite::Instance().getPlayerSprite(Sprite::Instance().playerDrawNormal(i, 0, 0, 0, 0)), screenBuffer, 54 + (i * 72), 174);
 		}
 
 		for (int i = 0; i < 16; i++) {

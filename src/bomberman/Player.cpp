@@ -155,7 +155,10 @@ void Player::drawNormal(SDL_Surface * surfaceToDraw, bool animate, int offsetUnd
 			offsetSpriteAnimation = 2;
 			break;
 	}
-	SDL_BlitSurface(Sprite::Instance().playerDrawNormal(characterSpriteIndex, color, previousDirection, offsetSpriteAnimation, offsetUnderWater), &srcTextureRect, surfaceToDraw, &destTextureRect);
+	spriteNumber = Sprite::Instance().playerDrawNormal(characterSpriteIndex, color, previousDirection, offsetSpriteAnimation, offsetUnderWater);
+			spriteLouisNumber = -1;
+			spriteSpaceshipNumber = -1;
+	SDL_BlitSurface(Sprite::Instance().getPlayerSprite(spriteNumber), &srcTextureRect, surfaceToDraw, &destTextureRect);
 }
 
 void Player::drawOnLouis(SDL_Surface * surfaceToDraw, bool animate, int offsetUnderWater) {
@@ -204,14 +207,19 @@ void Player::drawOnLouis(SDL_Surface * surfaceToDraw, bool animate, int offsetUn
 	}
 	louisMergebuffer = SDL_CreateRGBSurface(0, sprite_sizeW, sprite_sizeH, 32, rmask, gmask, bmask, amask);
 	if (previousDirection == down) {
-		SDL_BlitSurface(Sprite::Instance().drawOnLouis(characterSpriteIndex, color, previousDirection, offsetUnderWater), &srcTextureRect, louisMergebuffer, &srcTextureRect);
-		SDL_BlitSurface(Sprite::Instance().drawLouis(louisType, previousDirection, offsetSpriteAnimation, offsetUnderWater), &srcTextureRect, louisMergebuffer, &srcTextureRect);
+		spriteNumber = Sprite::Instance().drawOnLouis(characterSpriteIndex, color, previousDirection, offsetUnderWater);
+		spriteLouisNumber = Sprite::Instance().drawLouis(louisType, previousDirection, offsetSpriteAnimation, offsetUnderWater);
+		SDL_BlitSurface(Sprite::Instance().getPlayerSprite(spriteNumber), &srcTextureRect, louisMergebuffer, &srcTextureRect);
+		SDL_BlitSurface(Sprite::Instance().getLouisSprite(spriteLouisNumber), &srcTextureRect, louisMergebuffer, &srcTextureRect);
 		SDL_BlitSurface(louisMergebuffer, &srcTextureRect, surfaceToDraw, &destTextureRect);
 	} else {
-		SDL_BlitSurface(Sprite::Instance().drawLouis(louisType, previousDirection, offsetSpriteAnimation, offsetUnderWater), &srcTextureRect, louisMergebuffer, &srcTextureRect);
-		SDL_BlitSurface(Sprite::Instance().drawOnLouis(characterSpriteIndex, color, previousDirection, offsetUnderWater), &srcTextureRect, louisMergebuffer, &srcTextureRect);
+		spriteNumber = Sprite::Instance().drawOnLouis(characterSpriteIndex, color, previousDirection, offsetUnderWater);
+		spriteLouisNumber = Sprite::Instance().drawLouis(louisType, previousDirection, offsetSpriteAnimation, offsetUnderWater);
+		SDL_BlitSurface(Sprite::Instance().getLouisSprite(spriteLouisNumber), &srcTextureRect, louisMergebuffer, &srcTextureRect);
+		SDL_BlitSurface(Sprite::Instance().getPlayerSprite(spriteNumber), &srcTextureRect, louisMergebuffer, &srcTextureRect);
 		SDL_BlitSurface(louisMergebuffer, &srcTextureRect, surfaceToDraw, &destTextureRect);
 	}
+	spriteSpaceshipNumber = -1;
 	SDL_FreeSurface(louisMergebuffer);
 }
 
@@ -234,19 +242,31 @@ void Player::drawBadBomber(SDL_Surface * surfaceToDraw) {
 	srcTextureRect.h = sprite_sizeH;
 	louisMergebuffer = SDL_CreateRGBSurface(0, sprite_sizeW, sprite_sizeH, 32, rmask, gmask, bmask, amask);
 	if (posX == 0.5) {
-		SDL_BlitSurface(Sprite::Instance().drawOnLouis(characterSpriteIndex, color, right, 0), &srcTextureRect, louisMergebuffer, &srcTextureRect);
+		spriteNumber = Sprite::Instance().drawOnLouis(characterSpriteIndex, color, right, 0);
+		spriteLouisNumber = -1;
+		spriteSpaceshipNumber = spaceShipLeft;
+		SDL_BlitSurface(Sprite::Instance().getPlayerSprite(spriteNumber), &srcTextureRect, louisMergebuffer, &srcTextureRect);
 		SDL_BlitSurface(Sprite::Instance().getSpaceShip(spaceShipLeft), &srcTextureRect, louisMergebuffer, &srcTextureRect);
 		SDL_BlitSurface(louisMergebuffer, &srcTextureRect, surfaceToDraw, &destTextureRect);
 	} else if (posX == 34.5) {
-		SDL_BlitSurface(Sprite::Instance().drawOnLouis(characterSpriteIndex, color, left, 0), &srcTextureRect, louisMergebuffer, &srcTextureRect);
+		spriteNumber = Sprite::Instance().drawOnLouis(characterSpriteIndex, color, left, 0);
+		spriteLouisNumber = -1;
+		spriteSpaceshipNumber = spaceShipRight;
+		SDL_BlitSurface(Sprite::Instance().getPlayerSprite(spriteNumber), &srcTextureRect, louisMergebuffer, &srcTextureRect);
 		SDL_BlitSurface(Sprite::Instance().getSpaceShip(spaceShipRight), &srcTextureRect, louisMergebuffer, &srcTextureRect);
 		SDL_BlitSurface(louisMergebuffer, &srcTextureRect, surfaceToDraw, &destTextureRect);
 	} else if (posY == 0.5) {
-		SDL_BlitSurface(Sprite::Instance().drawOnLouis(characterSpriteIndex, color, down, 0), &srcTextureRect, louisMergebuffer, &srcTextureRect);
+		spriteNumber = Sprite::Instance().drawOnLouis(characterSpriteIndex, color, down, 0);
+		spriteLouisNumber = -1;
+		spriteSpaceshipNumber = spaceShipFront;
+		SDL_BlitSurface(Sprite::Instance().getPlayerSprite(spriteNumber), &srcTextureRect, louisMergebuffer, &srcTextureRect);
 		SDL_BlitSurface(Sprite::Instance().getSpaceShip(spaceShipFront), &srcTextureRect, louisMergebuffer, &srcTextureRect);
 		SDL_BlitSurface(louisMergebuffer, &srcTextureRect, surfaceToDraw, &destTextureRect);
 	} else if (posY == 20.5) {
-		SDL_BlitSurface(Sprite::Instance().drawOnLouis(characterSpriteIndex, color, up, 0), &srcTextureRect, louisMergebuffer, &srcTextureRect);
+		spriteNumber = Sprite::Instance().drawOnLouis(characterSpriteIndex, color, up, 0);
+		spriteLouisNumber = -1;
+		spriteSpaceshipNumber = spaceShipBottom;
+		SDL_BlitSurface(Sprite::Instance().getPlayerSprite(spriteNumber), &srcTextureRect, louisMergebuffer, &srcTextureRect);
 		SDL_BlitSurface(Sprite::Instance().getSpaceShip(spaceShipBottom), &srcTextureRect, louisMergebuffer, &srcTextureRect);
 		SDL_BlitSurface(louisMergebuffer, &srcTextureRect, surfaceToDraw, &destTextureRect);
 	}
@@ -265,7 +285,10 @@ void Player::drawInsideTrolley(SDL_Surface * surfaceToDraw) {
 	srcTextureRect.y = 0;
 	srcTextureRect.w = sprite_sizeW;
 	srcTextureRect.h = sprite_sizeH;
-	SDL_BlitSurface(Sprite::Instance().playerDrawInsideTrolley(characterSpriteIndex, color, trolleyDirection), &srcTextureRect, surfaceToDraw, &destTextureRect);
+	spriteLouisNumber = -1;
+	spriteSpaceshipNumber = -1;
+	spriteNumber =Sprite::Instance().playerDrawInsideTrolley(characterSpriteIndex, color, trolleyDirection);
+	SDL_BlitSurface(Sprite::Instance().getPlayerSprite(spriteNumber), &srcTextureRect, surfaceToDraw, &destTextureRect);
 }
 
 void Player::drawGhostBombe(SDL_Surface * surface, float x, float y) {
@@ -325,7 +348,10 @@ void Player::drawWithBombe(SDL_Surface * surfaceToDraw, bool animate, int offset
 			offsetSpriteAnimation = 2;
 			break;
 	}
-	SDL_BlitSurface(Sprite::Instance().drawWithBombe(characterSpriteIndex, color, previousDirection, offsetSpriteAnimation, offsetUnderWater), &srcTextureRect, surfaceToDraw, &destTextureRect);
+	spriteLouisNumber = -1;
+	spriteSpaceshipNumber = -1;
+		spriteNumber =Sprite::Instance().drawWithBombe(characterSpriteIndex, color, previousDirection, offsetSpriteAnimation, offsetUnderWater);
+	SDL_BlitSurface(Sprite::Instance().getPlayerSprite(spriteNumber), &srcTextureRect, surfaceToDraw, &destTextureRect);
 }
 
 void Player::drawThrowBombe(SDL_Surface * surfaceToDraw, bool animate, int offsetUnderWater) {
@@ -352,7 +378,10 @@ void Player::drawThrowBombe(SDL_Surface * surfaceToDraw, bool animate, int offse
 	} else {
 		offsetSprite = 0;
 	}
-	SDL_BlitSurface(Sprite::Instance().drawThrowBombe(characterSpriteIndex, color, previousDirection, offsetSprite, offsetUnderWater), &srcTextureRect, surfaceToDraw, &destTextureRect);
+	spriteLouisNumber = -1;
+	spriteSpaceshipNumber = -1;
+		spriteNumber =Sprite::Instance().drawThrowBombe(characterSpriteIndex, color, previousDirection, offsetSprite, offsetUnderWater);
+	SDL_BlitSurface(Sprite::Instance().getPlayerSprite(spriteNumber), &srcTextureRect, surfaceToDraw, &destTextureRect);
 }
 
 void Player::drawBurning(SDL_Surface * surfaceToDraw, bool animate, int offsetUnderWater) {
@@ -387,7 +416,10 @@ void Player::drawBurning(SDL_Surface * surfaceToDraw, bool animate, int offsetUn
 	} else {
 		offsetSprite = 0;
 	}
-	SDL_BlitSurface(Sprite::Instance().drawBurning(characterSpriteIndex, color, offsetSprite, offsetUnderWater), &srcTextureRect, surfaceToDraw, &destTextureRect);
+	spriteLouisNumber = -1;
+	spriteSpaceshipNumber = -1;
+		spriteNumber =Sprite::Instance().drawBurning(characterSpriteIndex, color, offsetSprite, offsetUnderWater);
+	SDL_BlitSurface(Sprite::Instance().getPlayerSprite(spriteNumber), &srcTextureRect, surfaceToDraw, &destTextureRect);
 }
 
 void Player::drawVictory(SDL_Surface * surfaceToDraw, bool animate, int offsetUnderWater) {
@@ -429,7 +461,10 @@ void Player::drawVictory(SDL_Surface * surfaceToDraw, bool animate, int offsetUn
 			offsetSpriteAnimation = 2;
 			break;
 	}
-	SDL_BlitSurface(Sprite::Instance().drawVictory(characterSpriteIndex, color, offsetSpriteAnimation, offsetUnderWater), &srcTextureRect, surfaceToDraw, &destTextureRect);
+	spriteLouisNumber = -1;
+	spriteSpaceshipNumber = -1;
+		spriteNumber =Sprite::Instance().drawVictory(characterSpriteIndex, color, offsetSpriteAnimation, offsetUnderWater);
+	SDL_BlitSurface(Sprite::Instance().getPlayerSprite(spriteNumber), &srcTextureRect, surfaceToDraw, &destTextureRect);
 }
 
 void Player::drawVictoryOnLouis(SDL_Surface * surfaceToDraw, bool animate, int offsetUnderWater) {
@@ -476,9 +511,12 @@ void Player::drawVictoryOnLouis(SDL_Surface * surfaceToDraw, bool animate, int o
 			offsetSpriteAnimation = 2;
 			break;
 	}
+	spriteLouisNumber = Sprite::Instance().drawVictoryOnLouis(louisType, offsetSpriteAnimation, offsetUnderWater);
+	spriteNumber = Sprite::Instance().drawPlayerVictoryOnLouis(characterSpriteIndex, color, offsetUnderWater);
+	spriteSpaceshipNumber = -1;
 	louisMergebuffer = SDL_CreateRGBSurface(0, sprite_sizeW, sprite_sizeH, 32, rmask, gmask, bmask, amask);
-	SDL_BlitSurface(Sprite::Instance().drawPlayerVictoryOnLouis(characterSpriteIndex, color, offsetUnderWater), &srcTextureRect, louisMergebuffer, &srcTextureRect);
-	SDL_BlitSurface(Sprite::Instance().drawVictoryOnLouis(louisType, offsetSpriteAnimation, offsetUnderWater), &srcTextureRect, louisMergebuffer, &srcTextureRect);
+	SDL_BlitSurface(Sprite::Instance().getPlayerSprite(spriteNumber), &srcTextureRect, louisMergebuffer, &srcTextureRect);
+	SDL_BlitSurface(Sprite::Instance().getPlayerSprite(spriteLouisNumber), &srcTextureRect, louisMergebuffer, &srcTextureRect);
 	SDL_BlitSurface(louisMergebuffer, &srcTextureRect, surfaceToDraw, &destTextureRect);
 	SDL_FreeSurface(louisMergebuffer);
 }
@@ -523,7 +561,10 @@ void Player::drawCrying(SDL_Surface * surfaceToDraw, bool animate, int offsetUnd
 			offsetSpriteAnimation = 2;
 			break;
 	}
-	SDL_BlitSurface(Sprite::Instance().drawCrying(characterSpriteIndex, color, offsetSpriteAnimation, offsetUnderWater), &srcTextureRect, surfaceToDraw, &destTextureRect);
+	spriteLouisNumber = -1;
+	spriteSpaceshipNumber = -1;
+		spriteNumber = Sprite::Instance().drawCrying(characterSpriteIndex, color, offsetSpriteAnimation, offsetUnderWater);
+	SDL_BlitSurface(Sprite::Instance().getPlayerSprite(spriteNumber), &srcTextureRect, surfaceToDraw, &destTextureRect);
 }
 
 void Player::doSomething(SDL_Surface * surfaceToDraw) {
@@ -953,6 +994,10 @@ void Player::doSomething(SDL_Surface * surfaceToDraw) {
 //correct value for AStar
 	if (floor(GameConfig::Instance().getPlayerPosY(playerNumber)) > sizeY - 1) {
 		GameConfig::Instance().updatePlayerPosY(playerNumber, 0);
+	}
+
+	if (GameConfig::Instance().getGameModeType() == NET_SERVER) {
+		BomberNetServer::Instance().sendPlayer(posX, posY, spriteNumber, spriteLouisNumber, spriteSpaceshipNumber);
 	}
 }
 

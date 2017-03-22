@@ -367,7 +367,7 @@ void Game::mergeScreen(bool mergeResult) {
 	SDL_BlitSurface(grid->getGroundLayer(), &mergeRect, screenBuffer, &mergeRect);
 	SDL_BlitSurface(grid->getBricksLayer(), &mergeRect, screenBuffer, &mergeRect);
 	SDL_BlitSurface(playerBombeExplode, &mergeRect, screenBuffer, &mergeRect);
-	if(grid->somethingInSky()){
+	if (grid->somethingInSky()) {
 		SDL_BlitSurface(grid->getSkyLayer(), &mergeRect, screenBuffer, &mergeRect);
 	}
 	if (mergeResult) {
@@ -440,7 +440,8 @@ void Game::generateHeader() {
 
 		if (GameConfig::Instance().getPlayerType(i) != 2) {
 			//FOR HUMAN PLAYER OR CPU
-			SDL_BlitSurface(Sprite::Instance().getHappySprite(GameConfig::Instance().getPlayerSpriteType(i), GameConfig::Instance().getPlayerColor(i), 0), NULL, vout_buf, &rect);
+			int idx = Sprite::Instance().getHappySprite(GameConfig::Instance().getPlayerSpriteType(i), GameConfig::Instance().getPlayerColor(i), 0);
+			SDL_BlitSurface(Sprite::Instance().getPlayerSprite(idx), NULL, vout_buf, &rect);
 			//wrote number of victory
 			char score[3];
 			sprintf(score, "%i", GameConfig::Instance().getPlayerScore(i));
@@ -496,6 +497,10 @@ void Game::updateTimeDisplay() {
  * 			check if the player request to put a bombe
  */
 void Game::tick() {
+
+	if (GameConfig::Instance().getGameModeType() == NET_SERVER) {
+		BomberNetServer::Instance().initBuffer();
+	}
 
 	amask = 0xff000000;
 	rmask = 0x00ff0000;
@@ -1212,6 +1217,9 @@ void Game::tick() {
 			}
 			break;
 	}
+	if (GameConfig::Instance().getGameModeType() == NET_SERVER) {
+		BomberNetServer::Instance().sendBuffer();
+	}
 }
 
 void Game::updateHeaderPlayer(int i, int playerNumber) {
@@ -1239,7 +1247,8 @@ void Game::updateHeaderPlayer(int i, int playerNumber) {
 	rect.w = 20;
 	rect.h = 20;
 	//FOR HUMAN PLAYER OR CPU
-	SDL_BlitSurface(Sprite::Instance().getCryingSprite(GameConfig::Instance().getPlayerSpriteType(i), GameConfig::Instance().getPlayerColor(i), 0), NULL, vout_buf, &rect);
+	int idx = Sprite::Instance().getCryingSprite(GameConfig::Instance().getPlayerSpriteType(i), GameConfig::Instance().getPlayerColor(i), 0);
+	SDL_BlitSurface(Sprite::Instance().getPlayerSprite(idx), NULL, vout_buf, &rect);
 	//wrote number of victory
 	char score[3];
 	sprintf(score, "%i", GameConfig::Instance().getPlayerScore(playerNumber));

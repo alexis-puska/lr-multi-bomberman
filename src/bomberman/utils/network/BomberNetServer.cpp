@@ -91,6 +91,7 @@ bool BomberNetServer::createTcpServer() {
 
 void BomberNetServer::startServer() {
 	alive = true;
+	initBuffer();
 	net_thread = SDL_CreateThread(net_thread_main, "tcp server thread", servsock);
 	fprintf(stderr, "Starting server...\n");
 }
@@ -477,7 +478,6 @@ void BomberNetServer::sendLevelInfo() {
 	}
 }
 
-
 /**********************
  *
  *     GAME REQUEST
@@ -488,22 +488,24 @@ void BomberNetServer::sendLevelInfo() {
  *   concat buffer
  ********************/
 void BomberNetServer::concatBuffer(char * src, int length) {
-	strncpy(buffer + bufferPosition, src, length);
+	memcpy(buffer + bufferPosition, src, length);
 	bufferElement++;
-	bufferPosition += length;
+	bufferPosition += 10;
+	buffer[bufferPosition] = '\0';
 }
 
 /***********************
  *close buffer and send
  **********************/
-void BomberNetServer::sendBuffer(){
+void BomberNetServer::sendBuffer() {
 	buffer[5] = bufferElement;
 	buffer[bufferPosition] = '\0';
 	std::map<int, int>::iterator it;
 	for (it = connexionHuman.begin(); it != connexionHuman.end(); ++it) {
-		SDLNet_TCP_Send(bomber[it->first].sock, &buffer, 28);
+		SDLNet_TCP_Send(bomber[it->first].sock, &buffer, bufferPosition);
 		requestNumber++;
 	}
+	fprintf(stderr, "send buffer %i %i %s\n", bufferElement, bufferPosition, buffer);
 }
 /***********************
  *   init buffer
@@ -512,32 +514,178 @@ void BomberNetServer::initBuffer() {
 	memset(buffer, 0, sizeof buffer);
 	SDLNet_Write32(requestNumber, buffer);
 	buffer[4] = 0x02;
-	//buffer[5] = ???, change value when send the buffer
+	buffer[6] = '\0';
 	bufferPosition = 6;
 	bufferElement = 0;
 }
 
 
+/*********************
+ * game information
+ *********************/
 
-//tab
-//tabBonus
+void BomberNetServer::sendGameInfo(int time, bool newCycle, int gameState) {
+	char tmp[4];
+	tmp[0] = 3;
+	tmp[1] = time;
+	tmp[2] = newCycle ? 1 : 0;
+	tmp[3] = gameState;
+	concatBuffer(tmp, 4);
+}
 
-//time/new cycle/playerState/gameState(pause/in game/end)
-//player position
-//new empty element
+void BomberNetServer::sendTab(int * tab) {
+	char tmp[736];
+	tmp[0] = 4;
+	for (int i = 0; i < 735; i++) {
+		tmp[i + 1] = *(tab + i);
+	}
+	concatBuffer(tmp, 736);
+}
 
+void BomberNetServer::sendTabBonus(int * tabBonus) {
+	char tmp[736];
+	tmp[0] = 5;
+	for (int i = 0; i < 735; i++) {
+		tmp[i + 1] = *(tabBonus + i);
+	}
+	concatBuffer(tmp, 736);
+}
 
-//rail
-//trolley
-//button
-//burnlouis
-//burnbonus
-//burnwall
-//exposion
-//popbonus
-//suddentdeath
-//bombe
-//hole
-//mine
-//player
-//teleporter
+void BomberNetServer::sendPlayer(float posX, float posY, int sprite, int louis, int spaceship) {
+	char tmp[10];
+	tmp[0] = 6;
+	SDLNet_Write16((int) (posX * 100.0), tmp + 1);
+	SDLNet_Write16((int) (posY * 100.0), tmp + 3);
+	SDLNet_Write16(sprite, tmp + 5);
+	SDLNet_Write16(louis, tmp + 7);
+	tmp[9] = spaceship;
+	concatBuffer(tmp, 10);
+}
+
+void BomberNetServer::sendPlayerState() {
+	char tmp[17];
+	tmp[0] = 7;
+	for (int i = 0; i < 16; i++) {
+		tmp[i + 1] = GameConfig::Instance().isPlayerAlive(i) ? 1 : 0;
+	}
+	concatBuffer(tmp, 17);
+}
+
+void BomberNetServer::sendNewEmptyElement(int idx) {
+	char tmp[3];
+	tmp[0] = 8;
+	SDLNet_Write16(idx, tmp + 1);
+	concatBuffer(tmp, 3);
+}
+
+void BomberNetServer::sendRail(int idx, int sprite) {
+	char tmp[4];
+	tmp[0] = 9;
+	SDLNet_Write16(idx, tmp + 1);
+	tmp[3] = sprite;
+	concatBuffer(tmp, 4);
+}
+
+void BomberNetServer::sendTrolley(float posX, float posY, int sprite) {
+	char tmp[6];
+	tmp[0] = 10;
+	tmp[0] = 6;
+	SDLNet_Write16((int) (posX * 100.0), tmp + 1);
+	SDLNet_Write16((int) (posY * 100.0), tmp + 3);
+	tmp[5] = sprite;
+	concatBuffer(tmp, 6);
+}
+
+void BomberNetServer::sendButton(int idx, int sprite) {
+	char tmp[4];
+	tmp[0] = 11;
+	SDLNet_Write16(idx, tmp + 1);
+	tmp[3] = sprite;
+	concatBuffer(tmp, 4);
+}
+
+void BomberNetServer::sendBurnLouis(float posX, float posY, int sprite) {
+	char tmp[6];
+	tmp[0] = 12;
+	SDLNet_Write16((int) (posX * 100.0), tmp + 1);
+	SDLNet_Write16((int) (posY * 100.0), tmp + 3);
+	tmp[5] = sprite;
+	concatBuffer(tmp, 6);
+}
+
+void BomberNetServer::sendBurnBonus(int idx, int sprite) {
+	char tmp[4];
+	tmp[0] = 13;
+	SDLNet_Write16(idx, tmp + 1);
+	tmp[3] = sprite;
+	concatBuffer(tmp, 4);
+}
+
+void BomberNetServer::sendburnWall(int idx, int sprite) {
+	char tmp[4];
+	tmp[0] = 14;
+	SDLNet_Write16(idx, tmp + 1);
+	tmp[3] = sprite;
+	concatBuffer(tmp, 4);
+}
+
+void BomberNetServer::sendExplosion(int idx, int type, int sprite) {
+	char tmp[5];
+	tmp[0] = 15;
+	SDLNet_Write16(idx, tmp + 1);
+	tmp[3] = type;
+	tmp[4] = sprite;
+	concatBuffer(tmp, 5);
+}
+
+void BomberNetServer::sendPopBonus(int idx, int sprite) {
+	char tmp[4];
+	tmp[0] = 16;
+	SDLNet_Write16(idx, tmp + 1);
+	tmp[3] = sprite;
+	concatBuffer(tmp, 4);
+}
+
+void BomberNetServer::sendSuddenDeath(float posX, float posY, int sprite) {
+	char tmp[6];
+	tmp[0] = 17;
+	SDLNet_Write16((int) (posX * 100.0), tmp + 1);
+	SDLNet_Write16((int) (posY * 100.0), tmp + 3);
+	tmp[5] = sprite;
+	concatBuffer(tmp, 6);
+}
+
+void BomberNetServer::sendBombe(float posX, float posY, int type, int sprite) {
+	char tmp[7];
+	tmp[0] = 18;
+	SDLNet_Write16((int) (posX * 100.0), tmp + 1);
+	SDLNet_Write16((int) (posY * 100.0), tmp + 3);
+	tmp[5] = type;
+	tmp[6] = sprite;
+	concatBuffer(tmp, 7);
+}
+
+void BomberNetServer::sendHole(int idx, int sprite) {
+	char tmp[4];
+	tmp[0] = 19;
+	SDLNet_Write16(idx, tmp + 1);
+	tmp[3] = sprite;
+	concatBuffer(tmp, 4);
+}
+
+void BomberNetServer::sendMine(int idx, int sprite) {
+	char tmp[4];
+	tmp[0] = 21;
+	SDLNet_Write16(idx, tmp + 1);
+	tmp[3] = sprite;
+	concatBuffer(tmp, 4);
+}
+
+void BomberNetServer::sendTeleporter(int idx, int sprite) {
+	char tmp[4];
+	tmp[0] = 21;
+	SDLNet_Write16(idx, tmp + 1);
+	tmp[3] = sprite;
+	concatBuffer(tmp, 4);
+}
+

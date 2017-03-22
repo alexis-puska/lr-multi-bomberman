@@ -52,8 +52,6 @@ void ClientViewer::copySurfaceToBackRenderer(SDL_Surface * src, SDL_Surface * de
  ***********************************/
 
 void ClientViewer::decode(char data[512]) {
-	fprintf(stderr, "decode request\n");
-	fprintf(stderr, "%i %i %i\n", data[5], data[6], data[7]);
 	int positionObjectType = 6;
 	for (int i = 0; i < data[5]; i++) {
 		switch (data[positionObjectType]) {
@@ -120,6 +118,13 @@ void ClientViewer::decode(char data[512]) {
 						break;
 
 				}
+				break;
+
+			case 6:
+				fprintf(stderr, "%f %f %i %i %i\n", (float) SDLNet_Read16(data+positionObjectType + 1) / 100.0, (float) SDLNet_Read16(data+positionObjectType + 3) / 100.0,
+						SDLNet_Read16(data + positionObjectType + 5), (Sint16)SDLNet_Read16(data+positionObjectType + 7), data[positionObjectType + 9]);
+				positionObjectType += 10;
+				break;
 		}
 	}
 }
@@ -195,7 +200,7 @@ void ClientViewer::drawSpriteTypeScreen() {
 	Sprite::Instance().drawText(screenBuffer, (640 / 2), 335, "- - change with Left / Right - -", gold, true);
 	//add player sprite
 	for (int i = 0; i < 8; i++) {
-		copySurfaceToBackRenderer(Sprite::Instance().playerDrawNormal(i, 0, 0, 0, 0), screenBuffer, 54 + (i * 72), 174);
+		copySurfaceToBackRenderer(Sprite::Instance().getPlayerSprite(Sprite::Instance().playerDrawNormal(i, 0, 0, 0, 0)), screenBuffer, 54 + (i * 72), 174);
 	}
 
 	int list[8] = { 0, 0, 0, 0, 0, 0, 0, 0 };

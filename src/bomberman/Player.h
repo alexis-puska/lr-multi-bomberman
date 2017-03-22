@@ -3,6 +3,8 @@
 #else
 #include <SDL2_image/SDL_image.h>
 #endif
+#include "utils/network/BomberNetServer.h"
+
 
 #include <stdio.h>
 #include <time.h>
@@ -152,6 +154,11 @@ class Player {
 		bool closeBombe;
 		bool badBomberWantThrowBombe;
 		float closeBombeValue;
+
+		int spriteNumber;
+		int spriteLouisNumber;
+		int spriteSpaceshipNumber;
+
 
 };
 #endif
