@@ -576,6 +576,9 @@ void Game::tick() {
 				if (bombes[i]->isExplode()) {
 
 					Sound::Instance().playFireSound();
+					if (GameConfig::Instance().getGameModeType() == NET_SERVER) {
+						BomberNetServer::Instance().sendSound(5, -1, true);
+					}
 
 					players[bombes[i]->getPlayer()]->ABombeExplode();
 
@@ -1067,6 +1070,9 @@ void Game::tick() {
 			break;
 		case generateResult:
 			Sound::Instance().playEndSound();
+			if (GameConfig::Instance().getGameModeType() == NET_SERVER) {
+				BomberNetServer::Instance().sendSound(4, -1, true);
+			}
 			drawResultOfGame();
 			gameState = gameEnd;
 		case gameEnd:
@@ -1523,6 +1529,9 @@ void Game::InitElementOfGame() {
 
 void Game::GenerateMineExplosion(int index, int direction) {
 	Sound::Instance().playFireSound();
+	if (GameConfig::Instance().getGameModeType() == NET_SERVER) {
+		BomberNetServer::Instance().sendSound(5, -1, true);
+	}
 	int strenght = 20;
 	int posXMine = index % 35;
 	int posYMine = floor(index / 35);

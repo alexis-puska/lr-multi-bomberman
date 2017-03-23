@@ -125,6 +125,9 @@ void Trolley::drawHimself(SDL_Surface * surface) {
 	dstRect.w = smallSpriteLevelSizeWidth;
 	dstRect.h = smallSpriteLevelSizeHeight;
 	SDL_BlitSurface(Sprite::Instance().getTrolley(direction), NULL, surface, &dstRect);
+	if (GameConfig::Instance().getGameModeType() == NET_SERVER) {
+		BomberNetServer::Instance().sendTrolley(x, y, direction);
+	}
 }
 
 int Trolley::getCurrentIndex() {
@@ -135,7 +138,7 @@ bool Trolley::isMove() {
 	return move;
 }
 
-int Trolley::getPreviousIndex(){
+int Trolley::getPreviousIndex() {
 	return prv;
 }
 

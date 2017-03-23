@@ -5,6 +5,7 @@
 PopBonus::PopBonus(int posX, int posY) {
 	this->posX = posX;
 	this->posY = posY;
+	this->idx = posX + posY * 35;
 	frameCounter = 0;
 	offsetSprite = 0;
 	nbFrameForAnimation = 4;
@@ -43,4 +44,7 @@ void PopBonus::tick(SDL_Surface * surfaceToDraw) {
 	}
 	frameCounter++;
 	SDL_BlitSurface(Sprite::Instance().getPopBonus(offsetSprite), NULL, surfaceToDraw, &dstRect);
+	if (GameConfig::Instance().getGameModeType() == NET_SERVER) {
+		BomberNetServer::Instance().sendPopBonus(idx, offsetSprite);
+	}
 }

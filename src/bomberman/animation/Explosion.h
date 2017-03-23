@@ -7,6 +7,7 @@
 #include <stdio.h>
 #include "../Grid.h"
 #include "../utils/Sprite.h"
+#include "../utils/network/BomberNetServer.h"
 
 #ifndef __MYCLASS_EXPLOSION
 #define __MYCLASS_EXPLOSION
@@ -27,6 +28,7 @@ class Explosion {
 		int * tabBonus;
 		int posX;
 		int posY;
+		int idx;
 		int indexExplosion;
 		bool deleteAnimation;
 

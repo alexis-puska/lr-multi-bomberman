@@ -8,6 +8,7 @@
 
 #include "../Grid.h"
 #include "../utils/Sprite.h"
+#include "../utils/network/BomberNetServer.h"
 
 #ifndef __MYCLASS_BURNWALL
 #define __MYCLASS_BURNWALL
@@ -29,6 +30,7 @@ class BurnWall {
 		int levelIndex;
 		int posX;
 		int posY;
+		int idx;
 		int indexBurnWall;
 		bool deleteAnimation;
 

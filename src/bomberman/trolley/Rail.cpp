@@ -96,13 +96,15 @@ void Rail::drawHimself(SDL_Surface * surfaceToDraw) {
 	dstRect.h = smallSpriteLevelSizeHeight;
 	SDL_FillRect(surfaceToDraw, &dstRect, 0x000000);
 
+	int spriteIndex = 0;
+
 	//Bumper
 	if (nextIndex == -1) {
 		if ((index - prevIndex) == -1) {
-			SDL_BlitSurface(Sprite::Instance().getRail(RailBumperLeft), NULL, surfaceToDraw, &dstRect);
+			spriteIndex = RailBumperLeft;
 			return;
 		} else {
-			SDL_BlitSurface(Sprite::Instance().getRail(RailBumperRight), NULL, surfaceToDraw, &dstRect);
+			spriteIndex = RailBumperRight;
 			return;
 		}
 	} else {
@@ -110,45 +112,49 @@ void Rail::drawHimself(SDL_Surface * surfaceToDraw) {
 		switch (res) {
 			case 2:
 			case -2:
-				SDL_BlitSurface(Sprite::Instance().getRail(RailHorizontal), NULL, surfaceToDraw, &dstRect);
+				spriteIndex = RailHorizontal;
 				break;
 			case 70:
 			case -70:
-				SDL_BlitSurface(Sprite::Instance().getRail(RailVertical), NULL, surfaceToDraw, &dstRect);
+				spriteIndex = RailVertical;
 				break;
 			case 34:
 				if (prevIndex - index == -1) {
-					SDL_BlitSurface(Sprite::Instance().getRail(RailLeftToTop), NULL, surfaceToDraw, &dstRect);
+					spriteIndex = RailLeftToTop;
 					break;
 				} else {
-					SDL_BlitSurface(Sprite::Instance().getRail(RailRightToBottom), NULL, surfaceToDraw, &dstRect);
+					spriteIndex = RailRightToBottom;
 					break;
 				}
 			case -34:
 				if (prevIndex - index == -35) {
-					SDL_BlitSurface(Sprite::Instance().getRail(RailLeftToTop), NULL, surfaceToDraw, &dstRect);
+					spriteIndex = RailLeftToTop;
 					break;
 				} else {
-					SDL_BlitSurface(Sprite::Instance().getRail(RailRightToBottom), NULL, surfaceToDraw, &dstRect);
+					spriteIndex = RailRightToBottom;
 					break;
 				}
 			case 36:
 				if (prevIndex - index == 35) {
-					SDL_BlitSurface(Sprite::Instance().getRail(RailLeftToBottom), NULL, surfaceToDraw, &dstRect);
+					spriteIndex = RailLeftToBottom;
 					break;
 				} else {
-					SDL_BlitSurface(Sprite::Instance().getRail(RailRightToTop), NULL, surfaceToDraw, &dstRect);
+					spriteIndex = RailRightToTop;
 					break;
 				}
 			case -36:
 				if (prevIndex - index == -1) {
-					SDL_BlitSurface(Sprite::Instance().getRail(RailLeftToBottom), NULL, surfaceToDraw, &dstRect);
+					spriteIndex = RailLeftToBottom;
 					break;
 				} else {
-					SDL_BlitSurface(Sprite::Instance().getRail(RailRightToTop), NULL, surfaceToDraw, &dstRect);
+					spriteIndex = RailRightToTop;
 					break;
 				}
 		}
+	}
+	SDL_BlitSurface(Sprite::Instance().getRail(spriteIndex), NULL, surfaceToDraw, &dstRect);
+	if (GameConfig::Instance().getGameModeType() == NET_SERVER) {
+		BomberNetServer::Instance().sendRail(index, spriteIndex);
 	}
 }
 

@@ -28,6 +28,7 @@ ClientViewer::ClientViewer(SDL_Surface * vout_bufLibretro) {
 ClientViewer::~ClientViewer() {
 	fprintf(stderr, "DESTROY VIEWER\n");
 	this->vout_buf = NULL;
+	Sound::Instance().stopAllChannels();
 	SDL_FreeSurface(screenBuffer);
 }
 
@@ -51,7 +52,7 @@ void ClientViewer::copySurfaceToBackRenderer(SDL_Surface * src, SDL_Surface * de
  *
  ***********************************/
 
-void ClientViewer::decode(char data[512]) {
+void ClientViewer::decode(char data[2048]) {
 	int positionObjectType = 6;
 	for (int i = 0; i < data[5]; i++) {
 		switch (data[positionObjectType]) {
@@ -116,14 +117,77 @@ void ClientViewer::decode(char data[512]) {
 						drawLevelInfoScreen();
 						positionObjectType += levelInfoRequest;
 						break;
-
 				}
 				break;
-
+			case 3:
+				positionObjectType += 4;
+				break;
+			case 4:
+				positionObjectType += 736;
+				break;
+			case 5:
+				positionObjectType += 736;
+				break;
 			case 6:
-				fprintf(stderr, "%f %f %i %i %i\n", (float) SDLNet_Read16(data+positionObjectType + 1) / 100.0, (float) SDLNet_Read16(data+positionObjectType + 3) / 100.0,
-						SDLNet_Read16(data + positionObjectType + 5), (Sint16)SDLNet_Read16(data+positionObjectType + 7), data[positionObjectType + 9]);
+//				fprintf(stderr, "%f %f %i %i %i\n", (float) SDLNet_Read16(data + positionObjectType + 1) / 100.0, (float) SDLNet_Read16(data + positionObjectType + 3) / 100.0,
+//						SDLNet_Read16(data + positionObjectType + 5), (Sint16) SDLNet_Read16(data + positionObjectType + 7), data[positionObjectType + 9]);
 				positionObjectType += 10;
+				break;
+
+			case 7:
+				positionObjectType += 17;
+				break;
+			case 8:
+				positionObjectType += 3;
+				break;
+			case 9:
+				positionObjectType += 4;
+				break;
+			case 10:
+				positionObjectType += 6;
+				break;
+			case 11:
+				positionObjectType += 4;
+				break;
+			case 12:
+				positionObjectType += 6;
+				break;
+			case 13:
+				positionObjectType += 4;
+				break;
+			case 14:
+				positionObjectType += 4;
+				break;
+			case 15:
+				positionObjectType += 5;
+				break;
+			case 16:
+				positionObjectType += 4;
+				break;
+			case 17:
+				positionObjectType += 6;
+				break;
+			case 18:
+				positionObjectType += 7;
+				break;
+			case 19:
+				positionObjectType += 4;
+				break;
+			case 20:
+				positionObjectType += 4;
+				break;
+			case 21:
+				positionObjectType += 4;
+				break;
+			case 22:
+				positionObjectType += 5;
+				break;
+			case 23:
+				positionObjectType += 3;
+				break;
+			case 24:
+				playSound(data[positionObjectType + 1], data[positionObjectType + 2], data[positionObjectType + 3]);
+				positionObjectType += 4;
 				break;
 		}
 	}
@@ -154,7 +218,6 @@ void ClientViewer::drawServerWaitForClient() {
 }
 
 void ClientViewer::drawPlayerTypeScreen() {
-	Sound::Instance().playBipSound();
 	SDL_BlitSurface(Sprite::Instance().getMenuBackground(), NULL, screenBuffer, NULL);
 	copySurfaceToBackRenderer(Sprite::Instance().getShadowArea(0), screenBuffer, 33, 150);
 	copySurfaceToBackRenderer(Sprite::Instance().getShadowArea(2), screenBuffer, 33, 183);
@@ -192,7 +255,6 @@ void ClientViewer::drawPlayerTypeScreen() {
 }
 
 void ClientViewer::drawSpriteTypeScreen() {
-	Sound::Instance().playBipSound();
 	SDL_BlitSurface(Sprite::Instance().getMenuBackground(), NULL, screenBuffer, NULL);
 	copySurfaceToBackRenderer(Sprite::Instance().getShadowArea(0), screenBuffer, 33, 150);
 	copySurfaceToBackRenderer(Sprite::Instance().getShadowArea(2), screenBuffer, 33, 183);
@@ -304,6 +366,9 @@ void ClientViewer::drawLevelInfoScreen() {
 		Sprite::Instance().drawText(screenBuffer, 232 + i * 26, 306, num, green, true);
 	}
 	level = NULL;
+	for (int i = startMineOffsetChannel; i < nbChannelSound; i++) {
+		Sound::Instance().stopMineSound(i);
+	}
 
 	copySurfaceToBackRenderer(screenBuffer, vout_buf, 0, 0);
 
@@ -389,6 +454,60 @@ void ClientViewer::generateGround() {
 				}
 			}
 		}
+	}
+}
+
+void ClientViewer::playSound(int sound, int channel, int active) {
+	switch (sound) {
+		case 0:
+			Sound::Instance().playBipSound();
+			break;
+		case 1:
+			Sound::Instance().playBombeBounceSound();
+			break;
+		case 2:
+			Sound::Instance().playPlayerBurnSound();
+			break;
+		case 3:
+			Sound::Instance().playCancelSound();
+			break;
+		case 4:
+			Sound::Instance().playEndSound();
+			break;
+		case 5:
+			Sound::Instance().playFireSound();
+			break;
+		case 6:
+			Sound::Instance().playHole1Sound();
+			break;
+		case 7:
+			Sound::Instance().playHole2Sound();
+			break;
+		case 8:
+			Sound::Instance().playHole3Sound();
+			break;
+		case 9:
+			Sound::Instance().playPlayerKickSound();
+			break;
+		case 10:
+			Sound::Instance().playLouisSound();
+			break;
+		case 11:
+			if (active == 1) {
+				Sound::Instance().startMineSound(channel);
+			} else {
+				Sound::Instance().stopMineSound(channel);
+			}
+			break;
+		case 12:
+			Sound::Instance().playTeleporterCloseSound();
+			break;
+		case 13:
+			Sound::Instance().playTeleporterOpenSound();
+			break;
+		case 14:
+			Sound::Instance().playValidSound();
+			break;
 	}
 }
 

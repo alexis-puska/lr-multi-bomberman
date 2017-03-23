@@ -5,6 +5,7 @@
 BurnBonus::BurnBonus(int posX, int posY) {
 	this->posX = posX;
 	this->posY = posY;
+	this->index = posX + posY * 35;
 	frameCounter = 0;
 	offsetSprite = 0;
 	nbFrameForAnimation = 6;
@@ -19,8 +20,8 @@ bool BurnBonus::canBeDelete() {
 }
 
 void BurnBonus::tick(SDL_Surface * surfaceToDraw) {
-	SDL_Rect dstRect;	
-	dstRect.x = posX * smallSpriteLevelSizeWidth - ((burnBonusSpritewidth - smallSpriteLevelSizeWidth)/2);
+	SDL_Rect dstRect;
+	dstRect.x = posX * smallSpriteLevelSizeWidth - ((burnBonusSpritewidth - smallSpriteLevelSizeWidth) / 2);
 	dstRect.y = posY * smallSpriteLevelSizeHeight - (burnBonusSpriteHeight - smallSpriteLevelSizeHeight);
 	dstRect.w = burnBonusSpritewidth;
 	dstRect.h = burnBonusSpriteHeight;
@@ -34,4 +35,7 @@ void BurnBonus::tick(SDL_Surface * surfaceToDraw) {
 	}
 	frameCounter++;
 	SDL_BlitSurface(Sprite::Instance().getBurnBonus(offsetSprite), NULL, surfaceToDraw, &dstRect);
+	if (GameConfig::Instance().getGameModeType() == NET_SERVER) {
+		BomberNetServer::Instance().sendBurnBonus(index, offsetSprite);
+	}
 }

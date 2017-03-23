@@ -169,3 +169,7 @@ void Sound::startMineSound(int channel) {
 void Sound::stopMineSound(int channel) {
 	Mix_HaltChannel(channel);
 }
+
+void Sound::stopAllChannels() {
+	Mix_HaltChannel(-1);
+}

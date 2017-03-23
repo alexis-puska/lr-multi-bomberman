@@ -7,6 +7,7 @@
 #include "utils/Sprite.h"
 #include "utils/Sound.h"
 #include "utils/GameConfig.h"
+#include "utils/network/BomberNetServer.h"
 
 #include <time.h>
 

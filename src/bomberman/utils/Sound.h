@@ -10,6 +10,7 @@
 #define __MYCLASS_Sound
 
 #define nbChannelSound 20
+#define startMineOffsetChannel 14
 
 class Sound {
 	public:
@@ -37,6 +38,7 @@ class Sound {
 		void playTeleporterCloseSound();
 		void playTeleporterOpenSound();
 		int getNextMineOffsetChannel();
+		void stopAllChannels();
 
 	private:
 		Sound& operator=(const Sound&);

@@ -6,6 +6,7 @@ Explosion::Explosion(int posX, int posY, int index, int tab[sizeX * sizeY], int 
 	this->indexExplosion = index;
 	this->posX = posX;
 	this->posY = posY;
+	this->idx = posX + posY * 35;
 	this->tab = tab;
 	this->tabBonus = tabBonus;
 	frameCounter = 0;
@@ -70,4 +71,7 @@ void Explosion::tick(SDL_Surface * surfaceToDraw) {
 			break;
 	}
 	SDL_BlitSurface(Sprite::Instance().getFire(offsetSpriteAnimation, indexExplosion), NULL, surfaceToDraw, &dstRect);
+	if (GameConfig::Instance().getGameModeType() == NET_SERVER) {
+		BomberNetServer::Instance().sendExplosion(idx, indexExplosion, offsetSpriteAnimation);
+	}
 }

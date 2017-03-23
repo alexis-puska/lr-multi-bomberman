@@ -10,6 +10,7 @@
 #include "../utils/GameConfig.h"
 #include "../Player.h"
 #include "Rail.h"
+#include "../utils/network/BomberNetServer.h"
 
 #ifndef __MYCLASS_TROLLEY
 #define __MYCLASS_TROLLEY

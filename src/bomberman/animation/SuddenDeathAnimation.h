@@ -7,6 +7,7 @@
 #include <stdio.h>
 #include "../Grid.h"
 #include "../utils/Sprite.h"
+#include "../utils/network/BomberNetServer.h"
 
 #ifndef __MYCLASS_SUDDEN_DEATH_ANIMATION
 #define __MYCLASS_SUDDEN_DEATH_ANIMATION

@@ -183,7 +183,7 @@ void BomberNetClient::sendKeystate() {
 }
 
 int BomberNetClient::handleNet() {
-	char data[1024];
+	char data[2048];
 	int len;
 
 	int active = SDLNet_CheckSockets(BomberNetClient::socketset, 0);
@@ -191,8 +191,8 @@ int BomberNetClient::handleNet() {
 	if (active > 0) {
 		if (SDLNet_SocketReady(BomberNetClient::tcpsock)) {
 			memset(data, 0, sizeof data);
-			len = SDLNet_TCP_Recv(tcpsock, (char *) data, 1024);
-			fprintf(stderr,"longueur : %i\n",len);
+			len = SDLNet_TCP_Recv(tcpsock, (char *) data, 2048);
+			//fprintf(stderr,"longueur : %i",len);
 			if (len <= 0) {
 				SDLNet_TCP_Close(tcpsock);
 				BomberNetClient::tcpsock = NULL;
@@ -244,7 +244,7 @@ int BomberNetClient::handleNet() {
 						}
 						break;
 					case 2:
-						fprintf(stderr, "Nombre d'element dans la requette : %i", data[5]);
+						//fprintf(stderr, "Nombre d'element dans la requette : %i", data[5]);
 						BomberNetClient::viewer->decode(data);
 						return 0;
 						break;

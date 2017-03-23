@@ -8,19 +8,22 @@ Mine::Mine(int index) {
 	srand (time(NULL));
 
 	//for animation
-	frameCounter = 0;
+frameCounter	= 0;
 	offsetSprite = 0;
 	nbFrameForAnimation = 8;
 	work = false;
 	channelSound = 0;
 	count = 0;
-	for(int i = 0; i < nbPlayer; i++){
+	for (int i = 0; i < nbPlayer; i++) {
 		activate[i] = false;
 	}
 }
 
 Mine::~Mine() {
 	Sound::Instance().stopMineSound(channelSound);
+	if (GameConfig::Instance().getGameModeType() == NET_SERVER) {
+		BomberNetServer::Instance().sendSound(11, channelSound, false);
+	}
 }
 
 int Mine::getFirstDirection() {
@@ -51,6 +54,9 @@ bool Mine::doSomething(SDL_Surface * surface) {
 		//freeze animation avant explostion
 		if (count == nbCycle) {
 			Sound::Instance().stopMineSound(channelSound);
+			if (GameConfig::Instance().getGameModeType() == NET_SERVER) {
+				BomberNetServer::Instance().sendSound(11, channelSound, false);
+			}
 			if (type == straight) {
 				switch (offsetSprite) {
 					case 0:
@@ -104,7 +110,7 @@ bool Mine::doSomething(SDL_Surface * surface) {
 			offsetSprite = 0;
 			nbFrameForAnimation = 8;
 			channelSound = 0;
-			for(int i = 0; i < nbPlayer; i++){
+			for (int i = 0; i < nbPlayer; i++) {
 				activate[i] = false;
 			}
 			drawHimself(surface, 12);
@@ -115,12 +121,15 @@ bool Mine::doSomething(SDL_Surface * surface) {
 			if (index == GameConfig::Instance().getPlayerIndex(i) && activate[i] == false) {
 				channelSound = Sound::Instance().getNextMineOffsetChannel();
 				Sound::Instance().startMineSound(channelSound);
+				if (GameConfig::Instance().getGameModeType() == NET_SERVER) {
+					BomberNetServer::Instance().sendSound(11, channelSound, true);
+				}
 				activate[i] = true;
 				if (!work) {
 					type = rand() % 2;
-					if(type == straight){
+					if (type == straight) {
 						offsetSprite = rand() % 4;
-					}else{
+					} else {
 						offsetSprite = rand() % 8;
 					}
 					work = true;
@@ -141,4 +150,7 @@ void Mine::drawHimself(SDL_Surface * surfaceToDraw, int offsetSpriteAnimation) {
 	dstRect.h = smallSpriteLevelSizeHeight;
 	SDL_FillRect(surfaceToDraw, &dstRect, 0x000000);
 	SDL_BlitSurface(Sprite::Instance().getMine(offsetSpriteAnimation), NULL, surfaceToDraw, &dstRect);
+	if (GameConfig::Instance().getGameModeType() == NET_SERVER) {
+		BomberNetServer::Instance().sendMine(index, offsetSpriteAnimation);
+	}
 }

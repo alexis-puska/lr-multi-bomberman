@@ -8,6 +8,7 @@
 #include "../utils/Sprite.h"
 #include "../utils/GameConfig.h"
 #include "Trolley.h"
+#include "../utils/network/BomberNetServer.h"
 
 #ifndef __MYCLASS_BUTTON
 #define __MYCLASS_BUTTON

@@ -490,7 +490,7 @@ void BomberNetServer::sendLevelInfo() {
 void BomberNetServer::concatBuffer(char * src, int length) {
 	memcpy(buffer + bufferPosition, src, length);
 	bufferElement++;
-	bufferPosition += 10;
+	bufferPosition += length;
 	buffer[bufferPosition] = '\0';
 }
 
@@ -518,7 +518,6 @@ void BomberNetServer::initBuffer() {
 	bufferPosition = 6;
 	bufferElement = 0;
 }
-
 
 /*********************
  * game information
@@ -589,7 +588,6 @@ void BomberNetServer::sendRail(int idx, int sprite) {
 void BomberNetServer::sendTrolley(float posX, float posY, int sprite) {
 	char tmp[6];
 	tmp[0] = 10;
-	tmp[0] = 6;
 	SDLNet_Write16((int) (posX * 100.0), tmp + 1);
 	SDLNet_Write16((int) (posY * 100.0), tmp + 3);
 	tmp[5] = sprite;
@@ -675,7 +673,7 @@ void BomberNetServer::sendHole(int idx, int sprite) {
 
 void BomberNetServer::sendMine(int idx, int sprite) {
 	char tmp[4];
-	tmp[0] = 21;
+	tmp[0] = 20;
 	SDLNet_Write16(idx, tmp + 1);
 	tmp[3] = sprite;
 	concatBuffer(tmp, 4);
@@ -689,3 +687,31 @@ void BomberNetServer::sendTeleporter(int idx, int sprite) {
 	concatBuffer(tmp, 4);
 }
 
+void BomberNetServer::sendGhost(float posX, float posY) {
+	char tmp[5];
+	tmp[0] = 22;
+	SDLNet_Write16((int) (posX * 100.0), tmp + 1);
+	SDLNet_Write16((int) (posY * 100.0), tmp + 3);
+	concatBuffer(tmp, 5);
+}
+
+/**********************
+ * audio
+ *********************/
+
+void BomberNetServer::sendMusique(int idx, bool lect) {
+	char tmp[3];
+	tmp[0] = 23;
+	tmp[1] = idx;
+	tmp[2] = lect ? 1 : 0;
+	concatBuffer(tmp, 3);
+}
+
+void BomberNetServer::sendSound(int sound, int channel, bool lect) {
+	char tmp[4];
+	tmp[0] = 24;
+	tmp[1] = sound;
+	tmp[2] = channel;
+	tmp[3] = lect ? 1 : 0;
+	concatBuffer(tmp, 4);
+}

@@ -4,6 +4,7 @@
 #include <SDL2_image/SDL_image.h>
 #endif
 
+#include "utils/network/BomberNetServer.h"
 #include "utils/Sprite.h"
 #include "utils/GameConfig.h"
 #include "utils/Sound.h"

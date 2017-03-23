@@ -7,6 +7,7 @@
 #include <stdio.h>
 
 #include "../utils/Sprite.h"
+#include "../utils/network/BomberNetServer.h"
 
 #ifndef __MYCLASS_BURNLOUIS
 #define __MYCLASS_BURNLOUIS

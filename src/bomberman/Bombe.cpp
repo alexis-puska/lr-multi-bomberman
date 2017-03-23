@@ -19,7 +19,7 @@ Bombe::Bombe(int strenght, float posX, float posY, int bombeType, int player, in
 	if (tab[(int) floor(posX) + (int) floor(posY) * sizeX] == explosionElement) {
 		explode();
 		tab[(int) floor(posX) + ((int) floor(posY) * sizeX)] = bombeElement;
-	}else{
+	} else {
 		tab[(int) floor(posX) + ((int) floor(posY) * sizeX)] = bombeElement;
 	}
 
@@ -67,7 +67,7 @@ bool Bombe::isPowerBombe() {
 }
 
 void Bombe::explodeNow() {
-	if(bombeType == radioBombeType){
+	if (bombeType == radioBombeType) {
 		tab[(int) floor(posX) + (int) floor(posY) * sizeX] = emptyElement;
 		nbTickExplode = 0;
 	}
@@ -102,7 +102,7 @@ void Bombe::tick(SDL_Surface * surfaceToDraw) {
 		posY = (float) floor(posY) + 0.5;
 	}
 
-	if (posY == (float) sizeY-1 + 0.5) {
+	if (posY == (float) sizeY - 1 + 0.5) {
 		if (bombeType == bubbleBombeType) {
 			direction = kickOnUp;
 		} else {
@@ -138,6 +138,9 @@ void Bombe::tick(SDL_Surface * surfaceToDraw) {
 						} else {
 							if (bombeType == bubbleBombeType) {
 								Sound::Instance().playBombeBounceSound();
+								if (GameConfig::Instance().getGameModeType() == NET_SERVER) {
+									BomberNetServer::Instance().sendSound(1, -1, true);
+								}
 								direction = kickOnLeft;
 							} else {
 								direction = -1;
@@ -159,6 +162,9 @@ void Bombe::tick(SDL_Surface * surfaceToDraw) {
 						} else {
 							if (bombeType == bubbleBombeType) {
 								Sound::Instance().playBombeBounceSound();
+								if (GameConfig::Instance().getGameModeType() == NET_SERVER) {
+									BomberNetServer::Instance().sendSound(1, -1, true);
+								}
 								direction = kickOnRight;
 							} else {
 								direction = -1;
@@ -180,6 +186,9 @@ void Bombe::tick(SDL_Surface * surfaceToDraw) {
 						} else {
 							if (bombeType == bubbleBombeType) {
 								Sound::Instance().playBombeBounceSound();
+								if (GameConfig::Instance().getGameModeType() == NET_SERVER) {
+									BomberNetServer::Instance().sendSound(1, -1, true);
+								}
 								direction = kickOnDown;
 							} else {
 								direction = -1;
@@ -201,6 +210,9 @@ void Bombe::tick(SDL_Surface * surfaceToDraw) {
 						} else {
 							if (bombeType == bubbleBombeType) {
 								Sound::Instance().playBombeBounceSound();
+								if (GameConfig::Instance().getGameModeType() == NET_SERVER) {
+									BomberNetServer::Instance().sendSound(1, -1, true);
+								}
 								direction = kickOnUp;
 							} else {
 								direction = -1;
@@ -259,4 +271,7 @@ void Bombe::tick(SDL_Surface * surfaceToDraw) {
 			break;
 	}
 	SDL_BlitSurface(Sprite::Instance().getBombe(offsetSpriteAnimation, bombeType), NULL, surfaceToDraw, &dstRect);
+	if (GameConfig::Instance().getGameModeType() == NET_SERVER) {
+		BomberNetServer::Instance().sendBombe(posX, posY, bombeType, offsetSpriteAnimation);
+	}
 }

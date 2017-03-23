@@ -5,6 +5,7 @@
 #endif
 #include <map>
 #include "../utils/Sprite.h"
+#include "../utils/network/BomberNetServer.h"
 
 #ifndef __MYCLASS_RAIL
 #define __MYCLASS_RAIL

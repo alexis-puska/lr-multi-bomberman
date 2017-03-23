@@ -7,6 +7,7 @@
 #include <stdio.h>
 
 #include "animation/Explosion.h"
+#include "utils/network/BomberNetServer.h"
 #include "Grid.h"
 #include "utils/Sound.h"
 

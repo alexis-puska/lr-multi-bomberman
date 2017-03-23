@@ -156,8 +156,8 @@ void Player::drawNormal(SDL_Surface * surfaceToDraw, bool animate, int offsetUnd
 			break;
 	}
 	spriteNumber = Sprite::Instance().playerDrawNormal(characterSpriteIndex, color, previousDirection, offsetSpriteAnimation, offsetUnderWater);
-			spriteLouisNumber = -1;
-			spriteSpaceshipNumber = -1;
+	spriteLouisNumber = -1;
+	spriteSpaceshipNumber = -1;
 	SDL_BlitSurface(Sprite::Instance().getPlayerSprite(spriteNumber), &srcTextureRect, surfaceToDraw, &destTextureRect);
 }
 
@@ -287,7 +287,7 @@ void Player::drawInsideTrolley(SDL_Surface * surfaceToDraw) {
 	srcTextureRect.h = sprite_sizeH;
 	spriteLouisNumber = -1;
 	spriteSpaceshipNumber = -1;
-	spriteNumber =Sprite::Instance().playerDrawInsideTrolley(characterSpriteIndex, color, trolleyDirection);
+	spriteNumber = Sprite::Instance().playerDrawInsideTrolley(characterSpriteIndex, color, trolleyDirection);
 	SDL_BlitSurface(Sprite::Instance().getPlayerSprite(spriteNumber), &srcTextureRect, surfaceToDraw, &destTextureRect);
 }
 
@@ -307,6 +307,7 @@ void Player::drawGhostBombe(SDL_Surface * surface, float x, float y) {
 	SDL_SetSurfaceAlphaMod(bombeGhost, 60);
 	SDL_BlitSurface(bombeGhost, NULL, surface, &dstRect);
 	SDL_FreeSurface(bombeGhost);
+	BomberNetServer::Instance().sendGhost(x, y);
 }
 
 void Player::drawWithBombe(SDL_Surface * surfaceToDraw, bool animate, int offsetUnderWater) {
@@ -350,7 +351,7 @@ void Player::drawWithBombe(SDL_Surface * surfaceToDraw, bool animate, int offset
 	}
 	spriteLouisNumber = -1;
 	spriteSpaceshipNumber = -1;
-		spriteNumber =Sprite::Instance().drawWithBombe(characterSpriteIndex, color, previousDirection, offsetSpriteAnimation, offsetUnderWater);
+	spriteNumber = Sprite::Instance().drawWithBombe(characterSpriteIndex, color, previousDirection, offsetSpriteAnimation, offsetUnderWater);
 	SDL_BlitSurface(Sprite::Instance().getPlayerSprite(spriteNumber), &srcTextureRect, surfaceToDraw, &destTextureRect);
 }
 
@@ -380,7 +381,7 @@ void Player::drawThrowBombe(SDL_Surface * surfaceToDraw, bool animate, int offse
 	}
 	spriteLouisNumber = -1;
 	spriteSpaceshipNumber = -1;
-		spriteNumber =Sprite::Instance().drawThrowBombe(characterSpriteIndex, color, previousDirection, offsetSprite, offsetUnderWater);
+	spriteNumber = Sprite::Instance().drawThrowBombe(characterSpriteIndex, color, previousDirection, offsetSprite, offsetUnderWater);
 	SDL_BlitSurface(Sprite::Instance().getPlayerSprite(spriteNumber), &srcTextureRect, surfaceToDraw, &destTextureRect);
 }
 
@@ -418,7 +419,7 @@ void Player::drawBurning(SDL_Surface * surfaceToDraw, bool animate, int offsetUn
 	}
 	spriteLouisNumber = -1;
 	spriteSpaceshipNumber = -1;
-		spriteNumber =Sprite::Instance().drawBurning(characterSpriteIndex, color, offsetSprite, offsetUnderWater);
+	spriteNumber = Sprite::Instance().drawBurning(characterSpriteIndex, color, offsetSprite, offsetUnderWater);
 	SDL_BlitSurface(Sprite::Instance().getPlayerSprite(spriteNumber), &srcTextureRect, surfaceToDraw, &destTextureRect);
 }
 
@@ -463,7 +464,7 @@ void Player::drawVictory(SDL_Surface * surfaceToDraw, bool animate, int offsetUn
 	}
 	spriteLouisNumber = -1;
 	spriteSpaceshipNumber = -1;
-		spriteNumber =Sprite::Instance().drawVictory(characterSpriteIndex, color, offsetSpriteAnimation, offsetUnderWater);
+	spriteNumber = Sprite::Instance().drawVictory(characterSpriteIndex, color, offsetSpriteAnimation, offsetUnderWater);
 	SDL_BlitSurface(Sprite::Instance().getPlayerSprite(spriteNumber), &srcTextureRect, surfaceToDraw, &destTextureRect);
 }
 
@@ -516,7 +517,7 @@ void Player::drawVictoryOnLouis(SDL_Surface * surfaceToDraw, bool animate, int o
 	spriteSpaceshipNumber = -1;
 	louisMergebuffer = SDL_CreateRGBSurface(0, sprite_sizeW, sprite_sizeH, 32, rmask, gmask, bmask, amask);
 	SDL_BlitSurface(Sprite::Instance().getPlayerSprite(spriteNumber), &srcTextureRect, louisMergebuffer, &srcTextureRect);
-	SDL_BlitSurface(Sprite::Instance().getPlayerSprite(spriteLouisNumber), &srcTextureRect, louisMergebuffer, &srcTextureRect);
+	SDL_BlitSurface(Sprite::Instance().getLouisSprite(spriteLouisNumber), &srcTextureRect, louisMergebuffer, &srcTextureRect);
 	SDL_BlitSurface(louisMergebuffer, &srcTextureRect, surfaceToDraw, &destTextureRect);
 	SDL_FreeSurface(louisMergebuffer);
 }
@@ -563,7 +564,7 @@ void Player::drawCrying(SDL_Surface * surfaceToDraw, bool animate, int offsetUnd
 	}
 	spriteLouisNumber = -1;
 	spriteSpaceshipNumber = -1;
-		spriteNumber = Sprite::Instance().drawCrying(characterSpriteIndex, color, offsetSpriteAnimation, offsetUnderWater);
+	spriteNumber = Sprite::Instance().drawCrying(characterSpriteIndex, color, offsetSpriteAnimation, offsetUnderWater);
 	SDL_BlitSurface(Sprite::Instance().getPlayerSprite(spriteNumber), &srcTextureRect, surfaceToDraw, &destTextureRect);
 }
 
@@ -591,9 +592,15 @@ void Player::doSomething(SDL_Surface * surfaceToDraw) {
 							playerState = normal;
 							louisBurn = true;
 							Sound::Instance().playPlayerBurnSound();
+							if (GameConfig::Instance().getGameModeType() == NET_SERVER) {
+								BomberNetServer::Instance().sendSound(2, -1, true);
+							}
 						} else {
 							playerState = burning;
 							Sound::Instance().playPlayerBurnSound();
+							if (GameConfig::Instance().getGameModeType() == NET_SERVER) {
+								BomberNetServer::Instance().sendSound(2, -1, true);
+							}
 							animate = true;
 						}
 					}
@@ -604,9 +611,15 @@ void Player::doSomething(SDL_Surface * surfaceToDraw) {
 							playerState = normal;
 							louisBurn = true;
 							Sound::Instance().playPlayerBurnSound();
+							if (GameConfig::Instance().getGameModeType() == NET_SERVER) {
+								BomberNetServer::Instance().sendSound(2, -1, true);
+							}
 						} else {
 							playerState = burning;
 							Sound::Instance().playPlayerBurnSound();
+							if (GameConfig::Instance().getGameModeType() == NET_SERVER) {
+								BomberNetServer::Instance().sendSound(2, -1, true);
+							}
 							animate = true;
 						}
 					}
@@ -660,6 +673,9 @@ void Player::doSomething(SDL_Surface * surfaceToDraw) {
 						if (tab[(roundX - 1) + (roundY * sizeX)] == bombeElement) {
 							kickIndex = (roundX - 1) + (roundY * sizeX);
 							Sound::Instance().playPlayerKickSound();
+							if (GameConfig::Instance().getGameModeType() == NET_SERVER) {
+								BomberNetServer::Instance().sendSound(9, -1, true);
+							}
 							kickDirection = kickOnLeft;
 						}
 					}
@@ -685,6 +701,9 @@ void Player::doSomething(SDL_Surface * surfaceToDraw) {
 						if (tab[(roundX + 1) + (roundY * sizeX)] == bombeElement) {
 							kickIndex = (roundX + 1) + (roundY * sizeX);
 							Sound::Instance().playPlayerKickSound();
+							if (GameConfig::Instance().getGameModeType() == NET_SERVER) {
+								BomberNetServer::Instance().sendSound(9, -1, true);
+							}
 							kickDirection = kickOnRight;
 						}
 					}
@@ -713,6 +732,9 @@ void Player::doSomething(SDL_Surface * surfaceToDraw) {
 							if (tab[roundX + ((roundY + 1) * sizeX)] == bombeElement) {
 								kickIndex = roundX + ((roundY + 1) * sizeX);
 								Sound::Instance().playPlayerKickSound();
+								if (GameConfig::Instance().getGameModeType() == NET_SERVER) {
+									BomberNetServer::Instance().sendSound(9, -1, true);
+								}
 								kickDirection = kickOnDown;
 							}
 						}
@@ -742,6 +764,9 @@ void Player::doSomething(SDL_Surface * surfaceToDraw) {
 							if (tab[roundX + ((roundY - 1) * sizeX)] == bombeElement) {
 								kickIndex = roundX + ((roundY - 1) * sizeX);
 								Sound::Instance().playPlayerKickSound();
+								if (GameConfig::Instance().getGameModeType() == NET_SERVER) {
+									BomberNetServer::Instance().sendSound(9, -1, true);
+								}
 								kickDirection = kickOnUp;
 							}
 						}
@@ -1190,6 +1215,9 @@ int Player::foundABonus() {
 				louisType = rand() % nbTypeLouis;
 				playerState = onLouis;
 				Sound::Instance().playLouisSound();
+				if (GameConfig::Instance().getGameModeType() == NET_SERVER) {
+					BomberNetServer::Instance().sendSound(10, -1, true);
+				}
 				break;
 			case shieldBonus:
 				invincibleTime = 15 * 50;

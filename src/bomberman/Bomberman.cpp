@@ -115,6 +115,12 @@ void Bomberman::tick(unsigned short in_keystateLibretro[16]) {
 		if (previousPlayerKeystate[0] & keyPadStart && keychange[0]) {
 			refreshBuffer = true;
 			Sound::Instance().playValidSound();
+			if (GameConfig::Instance().getGameModeType() == NET_SERVER) {
+
+				BomberNetServer::Instance().initBuffer();
+				BomberNetServer::Instance().sendSound(14, -1, true);
+				BomberNetServer::Instance().sendBuffer();
+			}
 			switch (currentStep) {
 				case home:
 					cursorPosition = 0;
@@ -236,6 +242,11 @@ void Bomberman::tick(unsigned short in_keystateLibretro[16]) {
 			}
 		} else if (previousPlayerKeystate[0] & keyPadSelect && keychange[0]) {
 			Sound::Instance().playCancelSound();
+			if (GameConfig::Instance().getGameModeType() == NET_SERVER) {
+				BomberNetServer::Instance().initBuffer();
+				BomberNetServer::Instance().sendSound(3, -1, true);
+				BomberNetServer::Instance().sendBuffer();
+			}
 			refreshBuffer = true;
 			error = false;
 			switch (currentStep) {
@@ -410,6 +421,11 @@ void Bomberman::drawPlayerTypeMenu() {
 		if (previousPlayerKeystate[0] & keyPadRight && keychange[0]) {
 			cursorPosition += 4;
 			Sound::Instance().playBipSound();
+			if (GameConfig::Instance().getGameModeType() == NET_SERVER) {
+				BomberNetServer::Instance().initBuffer();
+				BomberNetServer::Instance().sendSound(0, -1, true);
+				BomberNetServer::Instance().sendBuffer();
+			}
 			if (cursorPosition > 15) {
 				cursorPosition = cursorPosition % 4;
 			}
@@ -417,6 +433,11 @@ void Bomberman::drawPlayerTypeMenu() {
 		if (previousPlayerKeystate[0] & keyPadLeft && keychange[0]) {
 			cursorPosition -= 4;
 			Sound::Instance().playBipSound();
+			if (GameConfig::Instance().getGameModeType() == NET_SERVER) {
+				BomberNetServer::Instance().initBuffer();
+				BomberNetServer::Instance().sendSound(0, -1, true);
+				BomberNetServer::Instance().sendBuffer();
+			}
 			if (cursorPosition < 0) {
 				cursorPosition += 16;
 			}
@@ -424,6 +445,11 @@ void Bomberman::drawPlayerTypeMenu() {
 		if (previousPlayerKeystate[0] & keyPadDown && keychange[0]) {
 			cursorPosition++;
 			Sound::Instance().playBipSound();
+			if (GameConfig::Instance().getGameModeType() == NET_SERVER) {
+				BomberNetServer::Instance().initBuffer();
+				BomberNetServer::Instance().sendSound(0, -1, true);
+				BomberNetServer::Instance().sendBuffer();
+			}
 			if (cursorPosition > 15) {
 				cursorPosition = 0;
 			}
@@ -431,16 +457,31 @@ void Bomberman::drawPlayerTypeMenu() {
 		if (previousPlayerKeystate[0] & keyPadUp && keychange[0]) {
 			cursorPosition--;
 			Sound::Instance().playBipSound();
+			if (GameConfig::Instance().getGameModeType() == NET_SERVER) {
+				BomberNetServer::Instance().initBuffer();
+				BomberNetServer::Instance().sendSound(0, -1, true);
+				BomberNetServer::Instance().sendBuffer();
+			}
 			if (cursorPosition < 0) {
 				cursorPosition = 15;
 			}
 		}
 		if (previousPlayerKeystate[0] & keyPadA && keychange[0]) {
 			Sound::Instance().playBipSound();
+			if (GameConfig::Instance().getGameModeType() == NET_SERVER) {
+				BomberNetServer::Instance().initBuffer();
+				BomberNetServer::Instance().sendSound(0, -1, true);
+				BomberNetServer::Instance().sendBuffer();
+			}
 			GameConfig::Instance().incPlayerType(cursorPosition);
 		}
 		if (previousPlayerKeystate[0] & keyPadB && keychange[0]) {
 			Sound::Instance().playBipSound();
+			if (GameConfig::Instance().getGameModeType() == NET_SERVER) {
+				BomberNetServer::Instance().initBuffer();
+				BomberNetServer::Instance().sendSound(0, -1, true);
+				BomberNetServer::Instance().sendBuffer();
+			}
 			GameConfig::Instance().decPlayerType(cursorPosition);
 		}
 
@@ -512,10 +553,20 @@ void Bomberman::drawPlayerSpriteMenu() {
 			if (previousPlayerKeystate[i] & keyPadRight && keychange[i]) {
 				GameConfig::Instance().incPlayerSpriteType(i);
 				Sound::Instance().playBipSound();
+				if (GameConfig::Instance().getGameModeType() == NET_SERVER) {
+					BomberNetServer::Instance().initBuffer();
+					BomberNetServer::Instance().sendSound(0, -1, true);
+					BomberNetServer::Instance().sendBuffer();
+				}
 			}
 			if (previousPlayerKeystate[i] & keyPadLeft && keychange[i]) {
 				GameConfig::Instance().decPlayerSpriteType(i);
 				Sound::Instance().playBipSound();
+				if (GameConfig::Instance().getGameModeType() == NET_SERVER) {
+					BomberNetServer::Instance().initBuffer();
+					BomberNetServer::Instance().sendSound(0, -1, true);
+					BomberNetServer::Instance().sendBuffer();
+				}
 			}
 		}
 
@@ -562,6 +613,11 @@ void Bomberman::drawGameOptionMenu() {
 	if (refreshBuffer || keychange[0]) {
 		if (previousPlayerKeystate[0] & keyPadA && keychange[0]) {
 			Sound::Instance().playBipSound();
+			if (GameConfig::Instance().getGameModeType() == NET_SERVER) {
+				BomberNetServer::Instance().initBuffer();
+				BomberNetServer::Instance().sendSound(0, -1, true);
+				BomberNetServer::Instance().sendBuffer();
+			}
 			switch (cursorPosition) {
 				case suddenDeathOption:
 					GameConfig::Instance().switchSuddenDeathMode();
@@ -579,6 +635,11 @@ void Bomberman::drawGameOptionMenu() {
 		}
 		if (previousPlayerKeystate[0] & keyPadB && keychange[0]) {
 			Sound::Instance().playBipSound();
+			if (GameConfig::Instance().getGameModeType() == NET_SERVER) {
+				BomberNetServer::Instance().initBuffer();
+				BomberNetServer::Instance().sendSound(0, -1, true);
+				BomberNetServer::Instance().sendBuffer();
+			}
 			switch (cursorPosition) {
 				case suddenDeathOption:
 					GameConfig::Instance().switchSuddenDeathMode();
@@ -597,6 +658,11 @@ void Bomberman::drawGameOptionMenu() {
 		}
 		if (previousPlayerKeystate[0] & keyPadDown && keychange[0]) {
 			Sound::Instance().playBipSound();
+			if (GameConfig::Instance().getGameModeType() == NET_SERVER) {
+				BomberNetServer::Instance().initBuffer();
+				BomberNetServer::Instance().sendSound(0, -1, true);
+				BomberNetServer::Instance().sendBuffer();
+			}
 			cursorPosition++;
 			if (cursorPosition > 3) {
 				cursorPosition = 0;
@@ -604,6 +670,11 @@ void Bomberman::drawGameOptionMenu() {
 		}
 		if (previousPlayerKeystate[0] & keyPadUp && keychange[0]) {
 			Sound::Instance().playBipSound();
+			if (GameConfig::Instance().getGameModeType() == NET_SERVER) {
+				BomberNetServer::Instance().initBuffer();
+				BomberNetServer::Instance().sendSound(0, -1, true);
+				BomberNetServer::Instance().sendBuffer();
+			}
 			cursorPosition--;
 			if (cursorPosition < 0) {
 				cursorPosition = 3;
@@ -666,6 +737,11 @@ void Bomberman::drawLevelSelectionMenu() {
 
 		if (previousPlayerKeystate[0] & keyPadDown && keychange[0]) {
 			Sound::Instance().playBipSound();
+			if (GameConfig::Instance().getGameModeType() == NET_SERVER) {
+				BomberNetServer::Instance().initBuffer();
+				BomberNetServer::Instance().sendSound(0, -1, true);
+				BomberNetServer::Instance().sendBuffer();
+			}
 			switch (cursorPosition) {
 				case 0:
 				case 1:
@@ -701,6 +777,11 @@ void Bomberman::drawLevelSelectionMenu() {
 
 		if (previousPlayerKeystate[0] & keyPadRight && keychange[0]) {
 			Sound::Instance().playBipSound();
+			if (GameConfig::Instance().getGameModeType() == NET_SERVER) {
+				BomberNetServer::Instance().initBuffer();
+				BomberNetServer::Instance().sendSound(0, -1, true);
+				BomberNetServer::Instance().sendBuffer();
+			}
 			cursorPosition++;
 			if (cursorPosition > 19) {
 				cursorPosition = 0;
@@ -708,6 +789,11 @@ void Bomberman::drawLevelSelectionMenu() {
 		}
 		if (previousPlayerKeystate[0] & keyPadUp && keychange[0]) {
 			Sound::Instance().playBipSound();
+			if (GameConfig::Instance().getGameModeType() == NET_SERVER) {
+				BomberNetServer::Instance().initBuffer();
+				BomberNetServer::Instance().sendSound(0, -1, true);
+				BomberNetServer::Instance().sendBuffer();
+			}
 			switch (cursorPosition) {
 				case 0:
 				case 1:
@@ -741,6 +827,11 @@ void Bomberman::drawLevelSelectionMenu() {
 		}
 		if (previousPlayerKeystate[0] & keyPadLeft && keychange[0]) {
 			Sound::Instance().playBipSound();
+			if (GameConfig::Instance().getGameModeType() == NET_SERVER) {
+				BomberNetServer::Instance().initBuffer();
+				BomberNetServer::Instance().sendSound(0, -1, true);
+				BomberNetServer::Instance().sendBuffer();
+			}
 			cursorPosition--;
 			if (cursorPosition < 0) {
 				cursorPosition = 19;
@@ -749,6 +840,11 @@ void Bomberman::drawLevelSelectionMenu() {
 
 		if (previousPlayerKeystate[0] & keyPadA && keychange[0]) {
 			Sound::Instance().playBipSound();
+			if (GameConfig::Instance().getGameModeType() == NET_SERVER) {
+				BomberNetServer::Instance().initBuffer();
+				BomberNetServer::Instance().sendSound(0, -1, true);
+				BomberNetServer::Instance().sendBuffer();
+			}
 			switch (cursorPosition) {
 				case 0:
 					GameConfig::Instance().incLevel();
@@ -786,6 +882,11 @@ void Bomberman::drawLevelSelectionMenu() {
 		}
 		if (previousPlayerKeystate[0] & keyPadB && keychange[0]) {
 			Sound::Instance().playBipSound();
+			if (GameConfig::Instance().getGameModeType() == NET_SERVER) {
+				BomberNetServer::Instance().initBuffer();
+				BomberNetServer::Instance().sendSound(0, -1, true);
+				BomberNetServer::Instance().sendBuffer();
+			}
 			switch (cursorPosition) {
 				case 0:
 					GameConfig::Instance().decLevel();
@@ -824,6 +925,11 @@ void Bomberman::drawLevelSelectionMenu() {
 
 		if (previousPlayerKeystate[0] & keyPadX && keychange[0]) {
 			Sound::Instance().playBipSound();
+			if (GameConfig::Instance().getGameModeType() == NET_SERVER) {
+				BomberNetServer::Instance().initBuffer();
+				BomberNetServer::Instance().sendSound(0, -1, true);
+				BomberNetServer::Instance().sendBuffer();
+			}
 			switch (cursorPosition) {
 				case 5:
 				case 6:
@@ -846,6 +952,11 @@ void Bomberman::drawLevelSelectionMenu() {
 		}
 		if (previousPlayerKeystate[0] & keyPadY && keychange[0]) {
 			Sound::Instance().playBipSound();
+			if (GameConfig::Instance().getGameModeType() == NET_SERVER) {
+				BomberNetServer::Instance().initBuffer();
+				BomberNetServer::Instance().sendSound(0, -1, true);
+				BomberNetServer::Instance().sendBuffer();
+			}
 			switch (cursorPosition) {
 				case 5:
 				case 6:

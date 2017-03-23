@@ -8,6 +8,7 @@
 
 #include "../Grid.h"
 #include "../utils/Sprite.h"
+#include "../utils/network/BomberNetServer.h"
 
 #ifndef __MYCLASS_PopBonus
 #define __MYCLASS_PopBonus
@@ -27,6 +28,7 @@ class PopBonus {
 	private:
 		int posX;
 		int posY;
+		int idx;
 		bool deleteAnimation;
 
 		//for animation

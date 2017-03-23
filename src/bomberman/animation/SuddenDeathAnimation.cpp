@@ -34,6 +34,9 @@ void SuddenDeathAnimation::tick(SDL_Surface * surfaceToDraw) {
 	dstRect.w = 18;
 	dstRect.h = 16;
 	SDL_BlitSurface(Sprite::Instance().getLevel(suddenDeathWallSpriteIndex, levelIndex), NULL, surfaceToDraw, &dstRect);
+	if (GameConfig::Instance().getGameModeType() == NET_SERVER) {
+		BomberNetServer::Instance().sendSuddenDeath(posX, posY, suddenDeathWallSpriteIndex);
+	}
 }
 
 bool SuddenDeathAnimation::canBeDeleted() {

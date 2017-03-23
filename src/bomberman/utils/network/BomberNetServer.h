@@ -66,13 +66,16 @@ class BomberNetServer {
 		void sendHole(int idx, int sprite);
 		void sendMine(int idx, int sprite);
 		void sendTeleporter(int idx, int sprite);
+		void sendGhost(float posX, float posY);
+		void sendMusique(int idx, bool lect);
+		void sendSound(int sound, int channel, bool lect);
 
 
 	private:
 		static BomberNetServer m_instance;
 
 		//DRAW REQUEST BUFFER
-		char buffer[1024];
+		char buffer[2048];
 		int bufferLenght;
 		int bufferPosition;
 		int bufferElement;

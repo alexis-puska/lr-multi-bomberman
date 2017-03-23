@@ -8,6 +8,7 @@
 
 #include "../Grid.h"
 #include "../utils/Sprite.h"
+#include "../utils/network/BomberNetServer.h"
 
 #ifndef __MYCLASS_BURNBonus
 #define __MYCLASS_BURNBonus
@@ -26,6 +27,7 @@ class BurnBonus {
 	private:
 		int posX;
 		int posY;
+		int index;
 		bool deleteAnimation;
 
 		//for animation

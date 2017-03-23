@@ -6,6 +6,7 @@ BurnWall::BurnWall(int posX, int posY, int index, int tab[sizeX * sizeY], int ta
 	this->indexBurnWall = index;
 	this->posX = posX;
 	this->posY = posY;
+	this->idx = posX + posY * 35;
 	this->tab = tab;
 	this->tabBonus = tabBonus;
 	this->levelIndex = GameConfig::Instance().getLevel();
@@ -47,4 +48,8 @@ void BurnWall::tick(SDL_Surface * surfaceToDraw) {
 	}
 	frameCounter++;
 	SDL_BlitSurface(Sprite::Instance().getBurnWall(offsetSprite, levelIndex), NULL, surfaceToDraw, &dstRect);
+	if (GameConfig::Instance().getGameModeType() == NET_SERVER) {
+		BomberNetServer::Instance().sendNewEmptyElement(idx);
+		BomberNetServer::Instance().sendBurnBonus(idx, offsetSprite);
+	}
 }

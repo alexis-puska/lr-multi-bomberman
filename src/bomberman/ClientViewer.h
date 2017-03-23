@@ -27,7 +27,7 @@ class ClientViewer {
 	public:
 		ClientViewer(SDL_Surface * vout_bufLibretro);
 		~ClientViewer();
-		void decode(char data[512]);
+		void decode(char data[2048]);
 
 	private:
 		SDL_Surface * vout_buf;
@@ -40,6 +40,7 @@ class ClientViewer {
 		void drawLevelInfoScreen();
 
 		void copySurfaceToBackRenderer(SDL_Surface * src, SDL_Surface * dest, int x, int y);
+		void playSound(int sound, int channel, int active);
 
 
 		void generateGround();

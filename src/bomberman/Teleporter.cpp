@@ -20,6 +20,9 @@ bool Teleporter::doSomething(SDL_Surface * surface) {
 		for (int i = 0; i < nbPlayer; i++) {
 			if (index == GameConfig::Instance().getPlayerIndex(i) && activate[i] == false) {
 				Sound::Instance().playTeleporterOpenSound();
+				if (GameConfig::Instance().getGameModeType() == NET_SERVER) {
+					BomberNetServer::Instance().sendSound(13, -1, true);
+				}
 				activate[i] = true;
 				animate = true;
 				playerToTeleporte = i;
@@ -87,6 +90,9 @@ void Teleporter::teleporte() {
 			indexDestination = -1;
 		}
 		Sound::Instance().playTeleporterCloseSound();
+		if (GameConfig::Instance().getGameModeType() == NET_SERVER) {
+			BomberNetServer::Instance().sendSound(12, -1, true);
+		}
 	}
 }
 
@@ -98,6 +104,10 @@ void Teleporter::drawHimself(SDL_Surface * surfaceToDraw, int frame) {
 	dstRect.w = smallSpriteLevelSizeWidth;
 	dstRect.h = smallSpriteLevelSizeHeight;
 	SDL_BlitSurface(Sprite::Instance().getTeleporter(frame), NULL, surfaceToDraw, &dstRect);
+	if (GameConfig::Instance().getGameModeType() == NET_SERVER) {
+		BomberNetServer::Instance().sendTeleporter(index, frame);
+	}
+
 }
 
 //add teleporter destination for choose the destination teleporter
