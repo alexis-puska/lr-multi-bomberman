@@ -120,7 +120,7 @@ void ClientViewer::decode(char data[2048]) {
 				}
 				break;
 			case 3:
-				positionObjectType += 4;
+				positionObjectType += 5;
 				break;
 			case 4:
 				positionObjectType += 736;

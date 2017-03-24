@@ -488,6 +488,10 @@ void BomberNetServer::sendLevelInfo() {
  *   concat buffer
  ********************/
 void BomberNetServer::concatBuffer(char * src, int length) {
+	if(bufferPosition + length > sizeof buffer){
+		sendBuffer();
+		initBuffer();
+	}
 	memcpy(buffer + bufferPosition, src, length);
 	bufferElement++;
 	bufferPosition += length;
@@ -524,12 +528,12 @@ void BomberNetServer::initBuffer() {
  *********************/
 
 void BomberNetServer::sendGameInfo(int time, bool newCycle, int gameState) {
-	char tmp[4];
+	char tmp[5];
 	tmp[0] = 3;
-	tmp[1] = time;
-	tmp[2] = newCycle ? 1 : 0;
-	tmp[3] = gameState;
-	concatBuffer(tmp, 4);
+	SDLNet_Write16(time, tmp + 1);
+	tmp[3] = newCycle ? 1 : 0;
+	tmp[4] = gameState;
+	concatBuffer(tmp, 5);
 }
 
 void BomberNetServer::sendTab(int * tab) {

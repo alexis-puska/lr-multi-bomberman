@@ -500,6 +500,7 @@ void Game::tick() {
 
 	if (GameConfig::Instance().getGameModeType() == NET_SERVER) {
 		BomberNetServer::Instance().initBuffer();
+		BomberNetServer::Instance().sendGameInfo(nbTickForGame, true, gameState);
 	}
 
 	amask = 0xff000000;
@@ -533,6 +534,18 @@ void Game::tick() {
 				}
 				gameState = generateResult;
 				break;
+			}
+
+			if (GameConfig::Instance().getGameModeType() == NET_SERVER) {
+				BomberNetServer::Instance().sendPlayerState();
+				if (nbTickForGame % 500 == 0) {
+					BomberNetServer::Instance().sendBuffer();
+					BomberNetServer::Instance().initBuffer();
+					BomberNetServer::Instance().sendTab(tab);
+					BomberNetServer::Instance().sendTabBonus(tabBonus);
+					BomberNetServer::Instance().sendBuffer();
+					BomberNetServer::Instance().initBuffer();
+				}
 			}
 
 			/*
