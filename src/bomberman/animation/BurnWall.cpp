@@ -14,6 +14,9 @@ BurnWall::BurnWall(int posX, int posY, int index, int tab[sizeX * sizeY], int ta
 	offsetSprite = 0;
 	nbFrameForAnimation = 6;
 	deleteAnimation = false;
+	if (GameConfig::Instance().getGameModeType() == NET_SERVER) {
+		BomberNetServer::Instance().sendNewEmptyElement(idx);
+	}
 }
 
 BurnWall::~BurnWall() {
@@ -49,7 +52,6 @@ void BurnWall::tick(SDL_Surface * surfaceToDraw) {
 	frameCounter++;
 	SDL_BlitSurface(Sprite::Instance().getBurnWall(offsetSprite, levelIndex), NULL, surfaceToDraw, &dstRect);
 	if (GameConfig::Instance().getGameModeType() == NET_SERVER) {
-		BomberNetServer::Instance().sendNewEmptyElement(idx);
-		BomberNetServer::Instance().sendBurnBonus(idx, offsetSprite);
+		BomberNetServer::Instance().sendburnWall(idx, offsetSprite);
 	}
 }

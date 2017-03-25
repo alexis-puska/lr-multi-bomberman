@@ -1022,7 +1022,13 @@ void Player::doSomething(SDL_Surface * surfaceToDraw) {
 	}
 
 	if (GameConfig::Instance().getGameModeType() == NET_SERVER) {
-		BomberNetServer::Instance().sendPlayer(posX, posY, spriteNumber, spriteLouisNumber, spriteSpaceshipNumber);
+
+		if (GameConfig::Instance().isBadBomberMode() && !inSuddenDeathTime) {
+			BomberNetServer::Instance().sendPlayer(posX, posY, spriteNumber, spriteLouisNumber, spriteSpaceshipNumber, previousDirection == down ? true : false);
+		} else {
+			BomberNetServer::Instance().sendPlayer(posX, posY, playerState != dead ? spriteNumber : -1, spriteLouisNumber, spriteSpaceshipNumber, previousDirection == down ? true : false);
+		}
+
 	}
 }
 
@@ -1168,6 +1174,10 @@ int Player::foundABonus() {
 		} else if (tabBonus[roundX + roundY * sizeX] != noBonus && tab[roundX + roundY * sizeX] == bombeElement) {
 			bonusIndex = tabBonus[roundX + roundY * sizeX];
 		}
+	}
+
+	if (GameConfig::Instance().getGameModeType() == NET_SERVER) {
+		BomberNetServer::Instance().sendBonusDisapear(roundX + roundY * sizeX);
 	}
 	if (bonusIndex != -1) {
 		switch (bonusIndex) {

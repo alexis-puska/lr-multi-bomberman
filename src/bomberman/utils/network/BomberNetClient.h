@@ -50,7 +50,7 @@ class BomberNetClient {
 		static unsigned short * keystate;
 		static unsigned short previousPlayerKeystate[16];
 		static int keystateThread(void *data);
-		static bool checkKeystate();
+		static void checkKeystate();
 		void startKeystateThread();
 		void stopKeystateThread();
 

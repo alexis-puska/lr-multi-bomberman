@@ -488,7 +488,7 @@ void BomberNetServer::sendLevelInfo() {
  *   concat buffer
  ********************/
 void BomberNetServer::concatBuffer(char * src, int length) {
-	if(bufferPosition + length > sizeof buffer){
+	if (bufferPosition + length > sizeof buffer) {
 		sendBuffer();
 		initBuffer();
 	}
@@ -554,15 +554,16 @@ void BomberNetServer::sendTabBonus(int * tabBonus) {
 	concatBuffer(tmp, 736);
 }
 
-void BomberNetServer::sendPlayer(float posX, float posY, int sprite, int louis, int spaceship) {
-	char tmp[10];
+void BomberNetServer::sendPlayer(float posX, float posY, int sprite, int louis, int spaceship, bool inverse) {
+	char tmp[11];
 	tmp[0] = 6;
 	SDLNet_Write16((int) (posX * 100.0), tmp + 1);
 	SDLNet_Write16((int) (posY * 100.0), tmp + 3);
 	SDLNet_Write16(sprite, tmp + 5);
 	SDLNet_Write16(louis, tmp + 7);
 	tmp[9] = spaceship;
-	concatBuffer(tmp, 10);
+	tmp[10] = inverse ? 1 : 0;
+	concatBuffer(tmp, 11);
 }
 
 void BomberNetServer::sendPlayerState() {
@@ -624,6 +625,7 @@ void BomberNetServer::sendBurnBonus(int idx, int sprite) {
 }
 
 void BomberNetServer::sendburnWall(int idx, int sprite) {
+	fprintf(stderr, "send burn wall %i %i \n", idx, sprite);
 	char tmp[4];
 	tmp[0] = 14;
 	SDLNet_Write16(idx, tmp + 1);
@@ -718,4 +720,23 @@ void BomberNetServer::sendSound(int sound, int channel, bool lect) {
 	tmp[2] = channel;
 	tmp[3] = lect ? 1 : 0;
 	concatBuffer(tmp, 4);
+}
+
+/**********************
+ * bonus
+ *********************/
+
+void BomberNetServer::sendBonusAppear(int idx, int type) {
+	char tmp[4];
+	tmp[0] = 25;
+	SDLNet_Write16(idx, tmp + 1);
+	tmp[3] = type;
+	concatBuffer(tmp, 4);
+
+}
+void BomberNetServer::sendBonusDisapear(int idx) {
+	char tmp[3];
+	tmp[0] = 26;
+	SDLNet_Write16(idx, tmp + 1);
+	concatBuffer(tmp, 3);
 }

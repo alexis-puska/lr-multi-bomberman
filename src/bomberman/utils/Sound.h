@@ -38,7 +38,7 @@ class Sound {
 		void playTeleporterCloseSound();
 		void playTeleporterOpenSound();
 		int getNextMineOffsetChannel();
-		void stopAllChannels();
+		void stopAllMineChannel();
 
 	private:
 		Sound& operator=(const Sound&);
@@ -46,6 +46,7 @@ class Sound {
 		static Sound m_instance;
 
 		int mineOffsetChannel;
+		bool activeChannel[nbChannelSound];
 
 		//musique
 		Mix_Music *menu;

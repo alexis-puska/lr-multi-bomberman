@@ -11,6 +11,7 @@
 #include "utils/Sprite.h"
 #include "utils/LevelService.h"
 #include "utils/GameConfig.h"
+#include "utils/network/BomberNetServer.h"
 
 
 #ifndef __MYCLASS_GRID

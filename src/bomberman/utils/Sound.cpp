@@ -27,6 +27,9 @@ Sound::Sound() {
 	if (Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, MIX_DEFAULT_CHANNELS, 1024) == -1) {
 		printf("%s", Mix_GetError());
 	}
+	for(int i = 0; i < nbChannelSound; i++){
+		activeChannel[i] = false;
+	}
 
 
 	menu = Mix_LoadMUSType_RW(SDL_RWFromMem(music_menu_mp3, music_menu_mp3_len), MUS_MP3, 0);
@@ -162,14 +165,19 @@ int Sound::getNextMineOffsetChannel(){
 }
 
 void Sound::startMineSound(int channel) {
-
+	activeChannel[channel] = true;
 	Mix_PlayChannel(channel, mineSound, -1);
 }
 
 void Sound::stopMineSound(int channel) {
+	activeChannel[channel] = false;
 	Mix_HaltChannel(channel);
 }
 
-void Sound::stopAllChannels() {
-	Mix_HaltChannel(-1);
+void Sound::stopAllMineChannel() {
+	for(int i = 14;i < nbChannelSound; i++){
+		if(activeChannel[i]){
+			Mix_HaltChannel(i);
+		}
+	}
 }

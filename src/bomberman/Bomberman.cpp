@@ -233,9 +233,6 @@ void Bomberman::tick(unsigned short in_keystateLibretro[16]) {
 
 					break;
 				case gameStep:
-					if (GameConfig::Instance().getGameModeType() == NET_SERVER) {
-						BomberNetServer::Instance().sendChangeScreenCommand(6);
-					}
 					break;
 				case clientViewStep:
 					break;

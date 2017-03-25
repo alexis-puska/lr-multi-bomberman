@@ -20,7 +20,7 @@ GameConfig::GameConfig() {
 	ipTab[0]=192;
 	ipTab[1]=168;
 	ipTab[2]=147;
-	ipTab[3]=133;
+	ipTab[3]=134;
 	port = 7000;
 	nbPlayerOfClient = 1;
 	nbClientServer = nbClientMax;

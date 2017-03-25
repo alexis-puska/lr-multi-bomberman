@@ -56,8 +56,8 @@ void Grid::reset() {
 	notEmptyCase.clear();
 	for (int j = 0; j < sizeY; j++) {
 		for (int i = 0; i < sizeX; i++) {
-			tab[i+j*sizeX] = emptyElement;
-			tabBonus[i+j*sizeX] = noBonus;
+			tab[i + j * sizeX] = emptyElement;
+			tabBonus[i + j * sizeX] = noBonus;
 		}
 	}
 }
@@ -76,13 +76,14 @@ void Grid::resetSurface() {
 	skyFixe = SDL_CreateRGBSurface(0, 630, 336, 32, rmask, gmask, bmask, amask);
 }
 
-bool Grid::somethingInSky(){
+bool Grid::somethingInSky() {
 	return somethingDrawInSky;
 }
 
 void Grid::generateGrid() {
 	somethingDrawInSky = false;
-	srand (time(NULL));SDL_Rect dstrect;
+	srand (time(NULL));SDL_Rect
+	dstrect;
 	SDL_Rect srcrect;
 	SDL_Rect skyRect;
 	srcrect.x = 0;
@@ -95,21 +96,21 @@ void Grid::generateGrid() {
 	skyRect.w = largeSpriteLevelSizeWidth;
 	skyRect.h = largeSpriteLevelSizeHeight;
 
-	for(int j=0;j<sizeY;j++) {
-		for(int i=0;i<sizeX;i++) {
-			tab[i+j*sizeX] = emptyElement;
-			tabBonus[i+j*sizeX] = noBonus;
+	for (int j = 0; j < sizeY; j++) {
+		for (int i = 0; i < sizeX; i++) {
+			tab[i + j * sizeX] = emptyElement;
+			tabBonus[i + j * sizeX] = noBonus;
 			dstrect.x = i * smallSpriteLevelSizeWidth;
 			dstrect.y = j * smallSpriteLevelSizeHeight;
 			dstrect.w = smallSpriteLevelSizeWidth;
 			dstrect.h = smallSpriteLevelSizeHeight;
 			SDL_BlitSurface(Sprite::Instance().getLevel(18, lvl), &srcrect, ground, &dstrect);
-			if(LevelService::Instance().getLevel(lvl)->getVariantes(var)->isAWall(LevelService::Instance().getLevel(lvl)->getVariantes(var)->getDefinition(j*sizeX+i))) {
-				tab[i+(j*sizeX)] = wallElement;
+			if (LevelService::Instance().getLevel(lvl)->getVariantes(var)->isAWall(LevelService::Instance().getLevel(lvl)->getVariantes(var)->getDefinition(j * sizeX + i))) {
+				tab[i + (j * sizeX)] = wallElement;
 
-				int textureIndex = LevelService::Instance().getLevel(lvl)->getVariantes(var)->getDefinition(j*sizeX+i);
-				if(textureIndex != 'W') {
-					if(textureIndex < 40) {
+				int textureIndex = LevelService::Instance().getLevel(lvl)->getVariantes(var)->getDefinition(j * sizeX + i);
+				if (textureIndex != 'W') {
+					if (textureIndex < 40) {
 						dstrect.x = i * smallSpriteLevelSizeWidth;
 						dstrect.y = j * smallSpriteLevelSizeHeight;
 						dstrect.w = smallSpriteLevelSizeWidth;
@@ -117,32 +118,32 @@ void Grid::generateGrid() {
 						SDL_BlitSurface(Sprite::Instance().getLevel(textureIndex, lvl), &srcrect, ground, &dstrect);
 					}
 				}
-			} else if(LevelService::Instance().getLevel(lvl)->getVariantes(var)->isDrawInSky(LevelService::Instance().getLevel(lvl)->getVariantes(var)->getDefinition(j*sizeX+i))) {
-				tab[i+(j*sizeX)] = emptyElement;
+			} else if (LevelService::Instance().getLevel(lvl)->getVariantes(var)->isDrawInSky(LevelService::Instance().getLevel(lvl)->getVariantes(var)->getDefinition(j * sizeX + i))) {
+				tab[i + (j * sizeX)] = emptyElement;
 				emptyCase[i] = i;
-				dstrect.x = (i-1) * smallSpriteLevelSizeWidth;
-				dstrect.y = (j-1) * smallSpriteLevelSizeHeight;
+				dstrect.x = (i - 1) * smallSpriteLevelSizeWidth;
+				dstrect.y = (j - 1) * smallSpriteLevelSizeHeight;
 				dstrect.w = largeSpriteLevelSizeWidth;
 				dstrect.h = largeSpriteLevelSizeHeight;
 				SDL_BlitSurface(Sprite::Instance().getLevel(skyStartSpriteIndex, lvl), &skyRect, skyFixe, &dstrect);
 				somethingDrawInSky = true;
 			} else {
-				tab[i+(j*sizeX)] = emptyElement;
+				tab[i + (j * sizeX)] = emptyElement;
 				dstrect.x = i * smallSpriteLevelSizeWidth;
 				dstrect.y = j * smallSpriteLevelSizeHeight;
 				dstrect.w = smallSpriteLevelSizeWidth;
 				dstrect.h = smallSpriteLevelSizeHeight;
-				int textureIndex = LevelService::Instance().getLevel(lvl)->getVariantes(var)->getDefinition(j*sizeX+i);
-				if(textureIndex == 'S' || textureIndex == 'T' || textureIndex == 'U') {
-					textureIndex -=65;
+				int textureIndex = LevelService::Instance().getLevel(lvl)->getVariantes(var)->getDefinition(j * sizeX + i);
+				if (textureIndex == 'S' || textureIndex == 'T' || textureIndex == 'U') {
+					textureIndex -= 65;
 				}
 				SDL_BlitSurface(Sprite::Instance().getLevel(textureIndex, lvl), &srcrect, ground, &dstrect);
-				if(LevelService::Instance().getLevel(lvl)->getVariantes(var)->isFillWithBricks()) {
-					if(j>0 && j<sizeY-1) {
-						if((rand() % 9 + 1)>=2) {
-							if(LevelService::Instance().getLevel(lvl)->getVariantes(var)->isReserved(j*sizeX+i) == 0) {
-								tab[i+(j*sizeX)] = brickElement;
-								notEmptyCase[i+(j*sizeX)] = i+(j*sizeX);
+				if (LevelService::Instance().getLevel(lvl)->getVariantes(var)->isFillWithBricks()) {
+					if (j > 0 && j < sizeY - 1) {
+						if ((rand() % 9 + 1) >= 2) {
+							if (LevelService::Instance().getLevel(lvl)->getVariantes(var)->isReserved(j * sizeX + i) == 0) {
+								tab[i + (j * sizeX)] = brickElement;
+								notEmptyCase[i + (j * sizeX)] = i + (j * sizeX);
 								dstrect.x = i * smallSpriteLevelSizeWidth;
 								dstrect.y = j * smallSpriteLevelSizeHeight;
 								dstrect.w = smallSpriteLevelSizeWidth;
@@ -150,24 +151,24 @@ void Grid::generateGrid() {
 								SDL_BlitSurface(Sprite::Instance().getLevel(21, lvl), &srcrect, brickShadow, &dstrect);
 							}
 						} else {
-							emptyCase[i+(j*sizeX)] = i+(j*sizeX);
+							emptyCase[i + (j * sizeX)] = i + (j * sizeX);
 						}
 					}
 				} else {
-					emptyCase[i+(j*sizeX)];
+					emptyCase[i + (j * sizeX)];
 				}
 			}
 		}
 	}
-	for(int j=0;j<sizeY;j++) {
-		for(int i=0;i<sizeX;i++) {
-			if(LevelService::Instance().getLevel(lvl)->getVariantes(var)->isAWall(LevelService::Instance().getLevel(lvl)->getVariantes(var)->getDefinition(j*sizeX+i))) {
-				tab[i+(j*sizeX)] = wallElement;
-				int textureIndex = LevelService::Instance().getLevel(lvl)->getVariantes(var)->getDefinition(j*sizeX+i);
-				if(textureIndex != 'W') {
-					if(textureIndex >= 40) {
-						dstrect.x = (i-1) * smallSpriteLevelSizeWidth;
-						dstrect.y = (j-1) * smallSpriteLevelSizeHeight;
+	for (int j = 0; j < sizeY; j++) {
+		for (int i = 0; i < sizeX; i++) {
+			if (LevelService::Instance().getLevel(lvl)->getVariantes(var)->isAWall(LevelService::Instance().getLevel(lvl)->getVariantes(var)->getDefinition(j * sizeX + i))) {
+				tab[i + (j * sizeX)] = wallElement;
+				int textureIndex = LevelService::Instance().getLevel(lvl)->getVariantes(var)->getDefinition(j * sizeX + i);
+				if (textureIndex != 'W') {
+					if (textureIndex >= 40) {
+						dstrect.x = (i - 1) * smallSpriteLevelSizeWidth;
+						dstrect.y = (j - 1) * smallSpriteLevelSizeHeight;
 						dstrect.w = largeSpriteLevelSizeWidth;
 						dstrect.h = largeSpriteLevelSizeHeight;
 						SDL_BlitSurface(Sprite::Instance().getLevel(textureIndex, lvl), &skyRect, ground, &dstrect);
@@ -178,14 +179,14 @@ void Grid::generateGrid() {
 	}
 
 	int nbDeathBonus = 0;
-	if(GameConfig::Instance().isCustomBonus()) {
+	if (GameConfig::Instance().isCustomBonus()) {
 		nbDeathBonus = GameConfig::Instance().getBonus(0);
 	} else {
 		nbDeathBonus = LevelService::Instance().getLevel(lvl)->getVariantes(var)->getBonus(0);
 	}
 
 	//draw Death bonus for a level
-	for(int i = 0; i < nbDeathBonus; i++) {
+	for (int i = 0; i < nbDeathBonus; i++) {
 		int ind = getEmptyCaseAlea();
 		tabBonus[ind] = deathBonus;
 		SDL_Rect dstrect;
@@ -196,17 +197,17 @@ void Grid::generateGrid() {
 		SDL_BlitSurface(Sprite::Instance().getBonus(0), NULL, brickShadow, &dstrect);
 	}
 
-	if(LevelService::Instance().getLevel(lvl)->getVariantes(var)->isFillWithBricks()) {
+	if (LevelService::Instance().getLevel(lvl)->getVariantes(var)->isFillWithBricks()) {
 		//draw Death bonus for a level
-		for(int y = 1; y < 15; y++) {
+		for (int y = 1; y < 15; y++) {
 			int nbBonusType = 0;
-			if(GameConfig::Instance().isCustomBonus()) {
+			if (GameConfig::Instance().isCustomBonus()) {
 				nbBonusType = GameConfig::Instance().getBonus(y);
 			} else {
 				nbBonusType = LevelService::Instance().getLevel(lvl)->getVariantes(var)->getBonus(y);
 			}
 
-			for(int i = 0; i < nbBonusType; i++) {
+			for (int i = 0; i < nbBonusType; i++) {
 				int ind = getNotEmptyCaseAlea();
 				tabBonus[ind] = y;
 			}
@@ -261,6 +262,9 @@ void Grid::placeNewDeathMalus() {
 	int posX = (ind % sizeX);
 	int posY = floor(ind / sizeX);
 	drawBonus(posX, posY);
+	if (GameConfig::Instance().getGameModeType() == NET_SERVER) {
+		BomberNetServer::Instance().sendBonusAppear(ind, deathBonus);
+	}
 }
 
 void Grid::placeSuddenDeathWall(int x, int y) {
@@ -287,6 +291,9 @@ int Grid::playerDeadNeedBonus(int bonusIndex) {
 	int posX = (ind % sizeX);
 	int posY = floor(ind / sizeX);
 	drawBonus(posX, posY);
+	if (GameConfig::Instance().getGameModeType() == NET_SERVER) {
+		BomberNetServer::Instance().sendBonusAppear(ind, bonusIndex);
+	}
 	return ind;
 }
 

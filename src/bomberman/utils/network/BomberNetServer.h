@@ -50,7 +50,7 @@ class BomberNetServer {
 		void sendGameInfo(int time, bool newCycle, int gameState);
 		void sendTab(int * tab);
 		void sendTabBonus(int * tabBonus);
-		void sendPlayer(float posX, float posY, int sprite, int louis, int spaceship);
+		void sendPlayer(float posX, float posY, int sprite, int louis, int spaceship, bool inverse);
 		void sendPlayerState();
 		void sendNewEmptyElement(int idx);
 		void sendRail(int idx, int sprite);
@@ -69,6 +69,8 @@ class BomberNetServer {
 		void sendGhost(float posX, float posY);
 		void sendMusique(int idx, bool lect);
 		void sendSound(int sound, int channel, bool lect);
+		void sendBonusAppear(int idx, int type);
+		void sendBonusDisapear(int idx);
 
 
 	private:

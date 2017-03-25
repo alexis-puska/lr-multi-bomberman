@@ -73,6 +73,7 @@ void BomberNetClient::cleanup() {
 	}
 	if (viewer != NULL) {
 		delete viewer;
+		Sound::Instance().stopAllMineChannel();
 		viewer = NULL;
 	}
 	stopKeystateThread();
@@ -265,7 +266,7 @@ int BomberNetClient::keystateThread(void *data) {
 	nbPlayerOnThisClient = GameConfig::Instance().getNbPlayerOfClient();
 	keystate = GameConfig::Instance().getKeystate(0);
 	while (BomberNetClient::keystateThreadAlive) {
-		SDL_Delay(1);
+		SDL_Delay(10);
 		checkKeystate();
 	}
 	fprintf(stderr,"je meurs\n");
@@ -288,7 +289,7 @@ void BomberNetClient::stopKeystateThread() {
 	}
 }
 
-bool BomberNetClient::checkKeystate() {
+void BomberNetClient::checkKeystate() {
 	bool found = false;
 	for (int i = 0; i < nbPlayerOnThisClient; i++) {
 		if (previousPlayerKeystate[i] != keystate[i]) {

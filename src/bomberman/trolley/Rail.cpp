@@ -102,10 +102,8 @@ void Rail::drawHimself(SDL_Surface * surfaceToDraw) {
 	if (nextIndex == -1) {
 		if ((index - prevIndex) == -1) {
 			spriteIndex = RailBumperLeft;
-			return;
 		} else {
 			spriteIndex = RailBumperRight;
-			return;
 		}
 	} else {
 		int res = prevIndex - nextIndex;

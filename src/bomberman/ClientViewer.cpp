@@ -2,7 +2,6 @@
 
 ClientViewer::ClientViewer(SDL_Surface * vout_bufLibretro) {
 	fprintf(stderr, "INIT VIEWER\n");
-	Uint32 rmask, gmask, bmask, amask;
 	rmask = 0x00ff0000;
 	gmask = 0x0000ff00;
 	bmask = 0x000000ff;
@@ -21,15 +20,29 @@ ClientViewer::ClientViewer(SDL_Surface * vout_bufLibretro) {
 	}
 	nbConnected[0] = 0;
 	nbConnected[1] = 0;
+	somethingDrawInSky = false;
+	overlayResult = SDL_CreateRGBSurface(0, 250, 200, 32, rmask, gmask, bmask, amask);
+	overlay = SDL_CreateRGBSurface(0, 630, 336, 32, rmask, gmask, bmask, amask);
 	screenBuffer = SDL_CreateRGBSurface(0, 640, 360, 32, rmask, gmask, bmask, amask);
+	playerBombeExplode = SDL_CreateRGBSurface(0, 630, 336, 32, rmask, gmask, bmask, amask);
+	ground = SDL_CreateRGBSurface(0, 630, 336, 32, rmask, gmask, bmask, amask);
+	brickShadow = SDL_CreateRGBSurface(0, 630, 336, 32, rmask, gmask, bmask, amask);
+	skyFixe = SDL_CreateRGBSurface(0, 630, 336, 32, rmask, gmask, bmask, amask);
+	gameState = menu;
 	drawServerWaitForClient();
+
 }
 
 ClientViewer::~ClientViewer() {
 	fprintf(stderr, "DESTROY VIEWER\n");
 	this->vout_buf = NULL;
-	Sound::Instance().stopAllChannels();
+	SDL_FreeSurface(overlayResult);
+	SDL_FreeSurface(overlay);
 	SDL_FreeSurface(screenBuffer);
+	SDL_FreeSurface(playerBombeExplode);
+	SDL_FreeSurface(ground);
+	SDL_FreeSurface(brickShadow);
+	SDL_FreeSurface(skyFixe);
 }
 
 void ClientViewer::copySurfaceToBackRenderer(SDL_Surface * src, SDL_Surface * dest, int x, int y) {
@@ -54,6 +67,7 @@ void ClientViewer::copySurfaceToBackRenderer(SDL_Surface * src, SDL_Surface * de
 
 void ClientViewer::decode(char data[2048]) {
 	int positionObjectType = 6;
+	SDL_FillRect(playerBombeExplode, NULL, SDL_MapRGBA(playerBombeExplode->format, 0, 0, 0, 0));
 	for (int i = 0; i < data[5]; i++) {
 		switch (data[positionObjectType]) {
 			//draw screen command
@@ -76,7 +90,8 @@ void ClientViewer::decode(char data[2048]) {
 						drawLevelInfoScreen();
 						break;
 					case gameScreen:
-						positionObjectType += levelInfoRequest;
+						drawGameScreen();
+						//positionObjectType += levelInfoRequest;
 						break;
 				}
 				positionObjectType += drawScreenRequest;
@@ -120,77 +135,130 @@ void ClientViewer::decode(char data[2048]) {
 				}
 				break;
 			case 3:
+				updateGameInfo(SDLNet_Read16(data + positionObjectType + 1), data[positionObjectType + 3] == 1 ? true : false, data[positionObjectType + 4]);
 				positionObjectType += 5;
 				break;
 			case 4:
+				//SDL_FillRect(brickShadow, NULL, SDL_MapRGBA(brickShadow->format, 0, 0, 0, 0));
+				for (int i = 0; i < 735; i++) {
+					updateTab(i, data[i + positionObjectType + 1]);
+				}
 				positionObjectType += 736;
 				break;
 			case 5:
+				for (int i = 0; i < 735; i++) {
+					updateTabBonus(i, data[i + positionObjectType + 1]);
+				}
 				positionObjectType += 736;
 				break;
 			case 6:
 //				fprintf(stderr, "%f %f %i %i %i\n", (float) SDLNet_Read16(data + positionObjectType + 1) / 100.0, (float) SDLNet_Read16(data + positionObjectType + 3) / 100.0,
 //						SDLNet_Read16(data + positionObjectType + 5), (Sint16) SDLNet_Read16(data + positionObjectType + 7), data[positionObjectType + 9]);
-				positionObjectType += 10;
+				drawPlayer((float) SDLNet_Read16(data + positionObjectType + 1) / 100.0, (float) SDLNet_Read16(data + positionObjectType + 3) / 100.0,
+						SDLNet_Read16(data + positionObjectType + 5), (Sint16) SDLNet_Read16(data + positionObjectType + 7), data[positionObjectType + 9],
+						data[positionObjectType + 10] == 1 ? true : false);
+				positionObjectType += 11;
 				break;
 
 			case 7:
+				for (int i = 0; i < 16; i++) {
+					updatePlayerState(i, SDLNet_Read16(data + positionObjectType + (i * 2) + 1));
+				}
 				positionObjectType += 17;
 				break;
 			case 8:
+				clearArea(SDLNet_Read16(data + positionObjectType + 1));
 				positionObjectType += 3;
 				break;
 			case 9:
+				drawRail(SDLNet_Read16(data + positionObjectType + 1), data[positionObjectType + 3]);
 				positionObjectType += 4;
 				break;
 			case 10:
+				drawTrolley((float) SDLNet_Read16(data + positionObjectType + 1) / 100.0, (float) SDLNet_Read16(data + positionObjectType + 3) / 100.0, data[positionObjectType + 5]);
 				positionObjectType += 6;
 				break;
 			case 11:
+				drawButton(SDLNet_Read16(data + positionObjectType + 1), data[positionObjectType + 3]);
 				positionObjectType += 4;
 				break;
 			case 12:
+				drawBurnLouis((float) SDLNet_Read16(data + positionObjectType + 1) / 100.0, (float) SDLNet_Read16(data + positionObjectType + 3) / 100.0, data[positionObjectType + 5]);
 				positionObjectType += 6;
 				break;
 			case 13:
+				drawBurnBonus(SDLNet_Read16(data + positionObjectType + 1), data[positionObjectType + 3]);
 				positionObjectType += 4;
 				break;
 			case 14:
+				drawBurnWall(SDLNet_Read16(data + positionObjectType + 1), data[positionObjectType + 3]);
 				positionObjectType += 4;
 				break;
 			case 15:
+				drawExplosion(SDLNet_Read16(data + positionObjectType + 1), data[positionObjectType + 3], data[positionObjectType + 4]);
 				positionObjectType += 5;
 				break;
 			case 16:
+				drawPopBonus(SDLNet_Read16(data + positionObjectType + 1), data[positionObjectType + 3]);
 				positionObjectType += 4;
 				break;
 			case 17:
+				drawSuddentDeath(SDLNet_Read16(data + positionObjectType + 1), SDLNet_Read16(data + positionObjectType + 3), data[positionObjectType + 5]);
 				positionObjectType += 6;
 				break;
 			case 18:
+				drawBombe((float) SDLNet_Read16(data + positionObjectType + 1) / 100.0, (float) SDLNet_Read16(data + positionObjectType + 3) / 100.0, data[positionObjectType + 5],
+						data[positionObjectType + 6]);
 				positionObjectType += 7;
 				break;
 			case 19:
+				drawHole(SDLNet_Read16(data + positionObjectType + 1), data[positionObjectType + 3]);
 				positionObjectType += 4;
 				break;
 			case 20:
+				drawMine(SDLNet_Read16(data + positionObjectType + 1), data[positionObjectType + 3]);
 				positionObjectType += 4;
 				break;
 			case 21:
+				drawTeleporter(SDLNet_Read16(data + positionObjectType + 1), data[positionObjectType + 3]);
 				positionObjectType += 4;
 				break;
 			case 22:
+				drawGhost((float) SDLNet_Read16(data + positionObjectType + 1) / 100.0, (float) SDLNet_Read16(data + positionObjectType + 3) / 100.0);
 				positionObjectType += 5;
 				break;
 			case 23:
+				playMusique(data[positionObjectType + 1], data[positionObjectType + 2] == 1 ? true : false);
 				positionObjectType += 3;
 				break;
 			case 24:
 				playSound(data[positionObjectType + 1], data[positionObjectType + 2], data[positionObjectType + 3]);
 				positionObjectType += 4;
 				break;
+			case 25:
+				drawBonus(SDLNet_Read16(data + positionObjectType + 1), data[positionObjectType + 3]);
+				positionObjectType += 4;
+				break;
+			case 26:
+				eraseBonus(SDLNet_Read16(data + positionObjectType + 1));
+				positionObjectType += 3;
+				break;
 		}
 	}
+	switch (gameState) {
+		case menu:
+			break;
+		case gameViewerStart:
+		case gameViewerPause:
+		case gameViewerWait:
+		case gameViewerEnd:
+			mergeScreen(false);
+			break;
+		case generateViewerResult:
+			mergeScreen(true);
+			break;
+	}
+
 }
 
 /***********************************
@@ -200,7 +268,7 @@ void ClientViewer::decode(char data[2048]) {
  ***********************************/
 
 void ClientViewer::drawServerWaitForClient() {
-
+	this->gameState = -1;
 	SDL_BlitSurface(Sprite::Instance().getMenuBackground(), NULL, screenBuffer, NULL);
 	copySurfaceToBackRenderer(Sprite::Instance().getShadowArea(0), screenBuffer, 33, 150);
 	copySurfaceToBackRenderer(Sprite::Instance().getShadowArea(2), screenBuffer, 33, 183);
@@ -218,6 +286,7 @@ void ClientViewer::drawServerWaitForClient() {
 }
 
 void ClientViewer::drawPlayerTypeScreen() {
+	this->gameState = -1;
 	SDL_BlitSurface(Sprite::Instance().getMenuBackground(), NULL, screenBuffer, NULL);
 	copySurfaceToBackRenderer(Sprite::Instance().getShadowArea(0), screenBuffer, 33, 150);
 	copySurfaceToBackRenderer(Sprite::Instance().getShadowArea(2), screenBuffer, 33, 183);
@@ -255,6 +324,7 @@ void ClientViewer::drawPlayerTypeScreen() {
 }
 
 void ClientViewer::drawSpriteTypeScreen() {
+	this->gameState = -1;
 	SDL_BlitSurface(Sprite::Instance().getMenuBackground(), NULL, screenBuffer, NULL);
 	copySurfaceToBackRenderer(Sprite::Instance().getShadowArea(0), screenBuffer, 33, 150);
 	copySurfaceToBackRenderer(Sprite::Instance().getShadowArea(2), screenBuffer, 33, 183);
@@ -295,7 +365,7 @@ void ClientViewer::drawSpriteTypeScreen() {
 }
 
 void ClientViewer::drawGameOptionScreen() {
-
+	this->gameState = -1;
 	SDL_BlitSurface(Sprite::Instance().getMenuBackground(), NULL, screenBuffer, NULL);
 	char CPULevel[2];
 	sprintf(CPULevel, "%i", gameOption[2]);
@@ -329,6 +399,7 @@ void ClientViewer::drawGameOptionScreen() {
 }
 
 void ClientViewer::drawLevelInfoScreen() {
+	this->gameState = -1;
 	SDL_BlitSurface(Sprite::Instance().getMenuBackground(), NULL, screenBuffer, NULL);
 	copySurfaceToBackRenderer(Sprite::Instance().getShadowArea(0), screenBuffer, 33, 150);
 	copySurfaceToBackRenderer(Sprite::Instance().getShadowArea(2), screenBuffer, 33, 183);
@@ -374,6 +445,12 @@ void ClientViewer::drawLevelInfoScreen() {
 
 }
 
+void ClientViewer::drawGameScreen() {
+	fprintf(stderr, "draw game screen");
+	SDL_BlitSurface(Sprite::Instance().getBackground(), NULL, vout_buf, NULL);
+	generateGround();
+}
+
 /***********************************
  *
  * GAME PART DRAW
@@ -381,6 +458,7 @@ void ClientViewer::drawLevelInfoScreen() {
  ***********************************/
 
 void ClientViewer::generateGround() {
+	somethingDrawInSky = false;
 	int lvl = levelInfo[0];
 	int var = levelInfo[1];
 	SDL_Rect dstrect;
@@ -425,6 +503,7 @@ void ClientViewer::generateGround() {
 				dstrect.h = largeSpriteLevelSizeHeight;
 				SDL_BlitSurface(Sprite::Instance().getLevel(skyStartSpriteIndex, lvl), &skyRect, skyFixe, &dstrect);
 			} else {
+				somethingDrawInSky = true;
 				tab[i + (j * sizeX)] = emptyElement;
 				dstrect.x = i * smallSpriteLevelSizeWidth;
 				dstrect.y = j * smallSpriteLevelSizeHeight;
@@ -455,6 +534,205 @@ void ClientViewer::generateGround() {
 			}
 		}
 	}
+}
+
+/*
+ *
+ * merge the different layers to generate the game frame
+ *
+ */
+void ClientViewer::mergeScreen(bool mergeResult) {
+	SDL_Rect mergeRect;
+	mergeRect.x = 0;
+	mergeRect.y = 0;
+	mergeRect.w = 630;
+	mergeRect.h = 336;
+	SDL_BlitSurface(ground, &mergeRect, screenBuffer, &mergeRect);
+	SDL_BlitSurface(brickShadow, &mergeRect, screenBuffer, &mergeRect);
+	SDL_BlitSurface(playerBombeExplode, &mergeRect, screenBuffer, &mergeRect);
+	if (somethingDrawInSky) {
+		SDL_BlitSurface(skyFixe, &mergeRect, screenBuffer, &mergeRect);
+	}
+	if (mergeResult) {
+		mergeRect.x = (630 / 2) - (overlayResult->w / 2);
+		mergeRect.y = (360 / 2) - (overlayResult->h / 2);
+		mergeRect.w = overlayResult->w;
+		mergeRect.h = overlayResult->h;
+		SDL_BlitSurface(overlayResult, NULL, screenBuffer, &mergeRect);
+	}
+	copySurfaceToBackRenderer(screenBuffer, vout_buf, 5, 24);
+}
+
+void ClientViewer::updateGameInfo(int tickRemaining, bool newCycle, int gameState) {
+	this->gameState = gameState;
+	this->tickRemaining = tickRemaining;
+	this->newCycle = newCycle;
+}
+
+void ClientViewer::updateTab(int idx, int val) {
+	SDL_Rect dstrect;
+	SDL_Rect srcrect;
+	srcrect.x = 0;
+	srcrect.y = 0;
+	srcrect.w = smallSpriteLevelSizeWidth;
+	srcrect.h = smallSpriteLevelSizeHeight;
+	if (tab[idx] != val) {
+		tab[idx] = val;
+		if (tab[idx] == brickElement) {
+			dstrect.x = idx % 35 * smallSpriteLevelSizeWidth;
+			dstrect.y = ((int) floor(idx / 35)) * smallSpriteLevelSizeHeight;
+			dstrect.w = smallSpriteLevelSizeWidth;
+			dstrect.h = smallSpriteLevelSizeHeight;
+			SDL_BlitSurface(Sprite::Instance().getLevel(21, levelInfo[0]), &srcrect, brickShadow, &dstrect);
+		}else if (tab[idx] == emptyElement) {
+			SDL_FillRect(brickShadow, &dstrect, SDL_MapRGBA(brickShadow->format, 0, 0, 0, 0));
+		}
+	}
+}
+
+void ClientViewer::updateTabBonus(int idx, int val) {
+	if (tabBonus[idx] != val) {
+		tabBonus[idx] = val;
+		if (tab[idx] != emptyElement) {
+
+		}
+	}
+
+}
+
+void ClientViewer::drawPlayer(float posX, float posY, int sprite, int louisSprite, int spaceShipSprite, bool inverse) {
+	if (sprite != -1) {
+		int sprite_sizeW = 30;
+		int sprite_sizeH = 42;
+		int blockSizeX = 18;
+		int blockSizeY = 16;
+		SDL_Rect srcTextureRect;
+		SDL_Rect destTextureRect;
+		destTextureRect.x = (posX * blockSizeX) - (sprite_sizeW / 2);
+		destTextureRect.y = (posY * blockSizeY) - (sprite_sizeH - 7);
+		destTextureRect.w = sprite_sizeW;
+		destTextureRect.h = sprite_sizeH;
+		srcTextureRect.x = 0;
+		srcTextureRect.y = 0;
+		srcTextureRect.w = sprite_sizeW;
+		srcTextureRect.h = sprite_sizeH;
+		if (louisSprite != -1) {
+			if (inverse) {
+				louisMergebuffer = SDL_CreateRGBSurface(0, sprite_sizeW, sprite_sizeH, 32, rmask, gmask, bmask, amask);
+				SDL_BlitSurface(Sprite::Instance().getPlayerSprite(sprite), &srcTextureRect, louisMergebuffer, &srcTextureRect);
+				SDL_BlitSurface(Sprite::Instance().getLouisSprite(louisSprite), &srcTextureRect, louisMergebuffer, &srcTextureRect);
+				SDL_BlitSurface(louisMergebuffer, &srcTextureRect, playerBombeExplode, &destTextureRect);
+				SDL_FreeSurface(louisMergebuffer);
+			} else {
+				louisMergebuffer = SDL_CreateRGBSurface(0, sprite_sizeW, sprite_sizeH, 32, rmask, gmask, bmask, amask);
+				SDL_BlitSurface(Sprite::Instance().getLouisSprite(louisSprite), &srcTextureRect, louisMergebuffer, &srcTextureRect);
+				SDL_BlitSurface(Sprite::Instance().getPlayerSprite(sprite), &srcTextureRect, louisMergebuffer, &srcTextureRect);
+				SDL_BlitSurface(louisMergebuffer, &srcTextureRect, playerBombeExplode, &destTextureRect);
+				SDL_FreeSurface(louisMergebuffer);
+			}
+		} else if (spaceShipSprite != -1) {
+			destTextureRect.x = (posX * blockSizeX) - (sprite_sizeW / 2);
+			destTextureRect.y = (posY * blockSizeY) - 20;
+			louisMergebuffer = SDL_CreateRGBSurface(0, sprite_sizeW, sprite_sizeH, 32, rmask, gmask, bmask, amask);
+			SDL_BlitSurface(Sprite::Instance().getPlayerSprite(sprite), &srcTextureRect, louisMergebuffer, &srcTextureRect);
+			SDL_BlitSurface(Sprite::Instance().getSpaceShip(spaceShipSprite), &srcTextureRect, louisMergebuffer, &srcTextureRect);
+			SDL_BlitSurface(louisMergebuffer, &srcTextureRect, playerBombeExplode, &destTextureRect);
+			SDL_FreeSurface(louisMergebuffer);
+		} else {
+			SDL_BlitSurface(Sprite::Instance().getPlayerSprite(sprite), &srcTextureRect, playerBombeExplode, &destTextureRect);
+		}
+	}
+}
+
+void ClientViewer::updatePlayerState(int idx, int val) {
+	playerState[idx] = val;
+}
+
+void ClientViewer::clearArea(int idx) {
+	SDL_Rect destTextureRect;
+	destTextureRect.x = idx % 35 * 18;
+	destTextureRect.y = ((int) floor(idx / 35)) * 16;
+	destTextureRect.w = 18;
+	destTextureRect.h = 16;
+	SDL_FillRect(brickShadow, &destTextureRect, SDL_MapRGBA(brickShadow->format, 0, 0, 0, 0));
+}
+
+void ClientViewer::drawRail(int idx, int sprite) {
+	SDL_Rect dstRect;
+	dstRect.x = (idx % 35) * 18;
+	dstRect.y = ((int) floor(idx / 35)) * 16;
+	dstRect.w = 18;
+	dstRect.h = 16;
+	SDL_FillRect(brickShadow, &dstRect, 0x000000);
+	SDL_BlitSurface(Sprite::Instance().getRail(sprite), NULL, brickShadow, &dstRect);
+}
+
+void ClientViewer::drawTrolley(float posX, float posY, int sprite) {
+	SDL_Rect dstRect;
+	dstRect.x = (posX * 18) - (30 / 2);
+	dstRect.y = (posY * 16) - (42 - 10);
+	dstRect.w = 18;
+	dstRect.h = 16;
+	SDL_BlitSurface(Sprite::Instance().getTrolley(sprite), NULL, playerBombeExplode, &dstRect);
+}
+
+void ClientViewer::drawButton(int idx, int sprite) {
+}
+
+void ClientViewer::drawBurnLouis(float posX, float posY, int sprite) {
+}
+
+void ClientViewer::drawBurnBonus(int idx, int sprite) {
+}
+
+void ClientViewer::drawBurnWall(int idx, int sprite) {
+	int lvl = levelInfo[0];
+	SDL_Rect dstRect;
+	dstRect.x = idx % 35 * 18;
+	dstRect.y = ((int) floor(idx / 35)) * 16;
+	dstRect.w = 18;
+	dstRect.h = 16;
+	SDL_BlitSurface(Sprite::Instance().getBurnWall(sprite, lvl), NULL, playerBombeExplode, &dstRect);
+}
+
+void ClientViewer::drawExplosion(int idx, int type, int sprite) {
+	SDL_Rect dstRect;
+	dstRect.x = idx % 35 * 18;
+	dstRect.y = ((int) floor(idx / 35)) * 16;
+	dstRect.w = 18;
+	dstRect.h = 16;
+	SDL_BlitSurface(Sprite::Instance().getFire(sprite, type), NULL, playerBombeExplode, &dstRect);
+
+}
+
+void ClientViewer::drawPopBonus(int idx, int sprite) {
+}
+
+void ClientViewer::drawSuddentDeath(float posX, float posY, int sprite) {
+}
+
+void ClientViewer::drawBombe(float posX, float posY, int type, int sprite) {
+	SDL_Rect dstRect;
+	dstRect.x = (posX * 18) - 8;
+	dstRect.y = (posY * 16) - 8;
+	dstRect.w = 16;
+	dstRect.h = 16;
+	SDL_BlitSurface(Sprite::Instance().getBombe(sprite, type), NULL, playerBombeExplode, &dstRect);
+}
+
+void ClientViewer::drawHole(int idx, int sprite) {
+}
+
+void ClientViewer::drawMine(int idx, int sprite) {
+}
+
+void ClientViewer::drawTeleporter(int idx, int sprite) {
+}
+
+void ClientViewer::drawGhost(float posX, float posY) {
+}
+
+void ClientViewer::playMusique(int musique, bool start) {
 }
 
 void ClientViewer::playSound(int sound, int channel, int active) {
@@ -511,3 +789,10 @@ void ClientViewer::playSound(int sound, int channel, int active) {
 	}
 }
 
+void ClientViewer::drawBonus(int idx, int type) {
+
+}
+
+void ClientViewer::eraseBonus(int idx) {
+
+}

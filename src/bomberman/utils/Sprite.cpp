@@ -3,7 +3,6 @@
 
 //include ressource memory area
 
-
 //image
 #include "resources/img_empty_background.h"
 #include "resources/img_menu_background.h"

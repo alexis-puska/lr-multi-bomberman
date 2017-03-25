@@ -294,6 +294,9 @@ void Game::startGame() {
 	if (!isThreadAlive) {
 		isThreadAlive = true;
 		mainThread = SDL_CreateThread(metronome, "mainThread", this);
+		if (GameConfig::Instance().getGameModeType() == NET_SERVER) {
+			BomberNetServer::Instance().sendChangeScreenCommand(6);
+		}
 	}
 }
 
