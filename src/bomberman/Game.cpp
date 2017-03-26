@@ -298,6 +298,11 @@ void Game::startGame() {
 			BomberNetServer::Instance().sendTab(tab);
 			BomberNetServer::Instance().sendBuffer();
 			BomberNetServer::Instance().sendTabBonus(tabBonus);
+			for (std::map<int, Rail*>::iterator it1 = rails.begin(); it1 != rails.end(); ++it1) {
+				if (tab[it1->second->getIndex()] != brickElement) {
+					redrawRail(it1->second->getIndex());
+				}
+			}
 			BomberNetServer::Instance().sendBuffer();
 		}
 		isThreadAlive = true;

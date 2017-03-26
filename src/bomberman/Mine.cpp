@@ -17,6 +17,9 @@ frameCounter	= 0;
 	for (int i = 0; i < nbPlayer; i++) {
 		activate[i] = false;
 	}
+	if (GameConfig::Instance().getGameModeType() == NET_SERVER) {
+			BomberNetServer::Instance().sendMine(index, 0);
+		}
 }
 
 Mine::~Mine() {

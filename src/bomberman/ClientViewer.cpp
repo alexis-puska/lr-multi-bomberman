@@ -1,7 +1,7 @@
 #include "ClientViewer.h"
 
 ClientViewer::ClientViewer(SDL_Surface * vout_bufLibretro) {
-	fprintf(stderr, "INIT VIEWER\n");
+	//fprintf(stderr, "INIT VIEWER\n");
 	rmask = 0x00ff0000;
 	gmask = 0x0000ff00;
 	bmask = 0x000000ff;
@@ -34,7 +34,7 @@ ClientViewer::ClientViewer(SDL_Surface * vout_bufLibretro) {
 }
 
 ClientViewer::~ClientViewer() {
-	fprintf(stderr, "DESTROY VIEWER\n");
+	//fprintf(stderr, "DESTROY VIEWER\n");
 	this->vout_buf = NULL;
 	for (unsigned int i = 0; i < explosions.size(); i++) {
 		delete explosions[i];
@@ -94,12 +94,12 @@ void ClientViewer::decode(char data[1024], int len) {
 	int positionObjectType = 6;
 	SDL_FillRect(playerBombeExplode, NULL, SDL_MapRGBA(playerBombeExplode->format, 0, 0, 0, 0));
 	if (data[5] < 5) {
-		fprintf(stderr, "nb element dans la requete : %i %i\n", data[5], len);
+		//fprintf(stderr, "nb element dans la requete : %i %i\n", data[5], len);
 	}
 	int id = 0;
 	for (int i = 0; i < data[5]; i++) {
 		if (data[5] < 5) {
-			fprintf(stderr, "element %i pos : %i \n", id, positionObjectType);
+			//fprintf(stderr, "element %i pos : %i \n", id, positionObjectType);
 		}
 		id++;
 		switch (data[positionObjectType]) {
@@ -175,7 +175,7 @@ void ClientViewer::decode(char data[1024], int len) {
 				break;
 			case 4:
 				//SDL_FillRect(brickShadow, NULL, SDL_MapRGBA(brickShadow->format, 0, 0, 0, 0));
-				fprintf(stderr, "update tab commande\n");
+				//fprintf(stderr, "update tab commande\n");
 				for (int i = 0; i < 735; i++) {
 					updateTab(i, data[i + positionObjectType + 1]);
 				}
@@ -188,7 +188,7 @@ void ClientViewer::decode(char data[1024], int len) {
 				positionObjectType += 736;
 				break;
 			case 6:
-//				fprintf(stderr, "%f %f %i %i %i\n", (float) SDLNet_Read16(data + positionObjectType + 1) / 100.0, (float) SDLNet_Read16(data + positionObjectType + 3) / 100.0,
+//				//fprintf(stderr, "%f %f %i %i %i\n", (float) SDLNet_Read16(data + positionObjectType + 1) / 100.0, (float) SDLNet_Read16(data + positionObjectType + 3) / 100.0,
 //						SDLNet_Read16(data + positionObjectType + 5), (Sint16) SDLNet_Read16(data + positionObjectType + 7), data[positionObjectType + 9]);
 				drawPlayer((float) SDLNet_Read16(data + positionObjectType + 1) / 100.0, (float) SDLNet_Read16(data + positionObjectType + 3) / 100.0,
 						(Sint16) SDLNet_Read16(data + positionObjectType + 5), (Sint16) SDLNet_Read16(data + positionObjectType + 7), (Sint16) SDLNet_Read16(data + positionObjectType + 9),
@@ -540,7 +540,7 @@ void ClientViewer::drawLevelInfoScreen() {
 }
 
 void ClientViewer::resetAll() {
-	fprintf(stderr, "reset ALL\n");
+	//fprintf(stderr, "reset ALL\n");
 
 	memset(tab, 0, sizeof tab);
 	memset(tabBonus, noBonus, sizeof tabBonus);
@@ -548,7 +548,7 @@ void ClientViewer::resetAll() {
 }
 
 void ClientViewer::drawGameScreen() {
-	fprintf(stderr, "draw game screen 6\n");
+	//fprintf(stderr, "draw game screen 6\n");
 	SDL_BlitSurface(Sprite::Instance().getBackground(), NULL, vout_buf, NULL);
 	generateGround();
 }
@@ -560,7 +560,7 @@ void ClientViewer::drawGameScreen() {
  ***********************************/
 
 void ClientViewer::generateGround() {
-	fprintf(stderr, "generate ground 6\n");
+	//fprintf(stderr, "generate ground 6\n");
 	SDL_FillRect(brickShadow, NULL, SDL_MapRGBA(brickShadow->format, 0, 0, 0, 0));
 	SDL_FillRect(ground, NULL, SDL_MapRGBA(ground->format, 0, 0, 0, 0));
 	SDL_FillRect(skyFixe, NULL, SDL_MapRGBA(skyFixe->format, 0, 0, 0, 0));
@@ -670,7 +670,7 @@ void ClientViewer::mergeScreen(bool mergeResult) {
 }
 
 void ClientViewer::updateGameInfo(int tickRemaining, bool newCycle, int gameState) {
-	fprintf(stderr, "game info %i %i %i\n", tickRemaining, newCycle, gameState);
+	//fprintf(stderr, "game info %i %i %i\n", tickRemaining, newCycle, gameState);
 	this->gameState = gameState;
 	this->tickRemaining = tickRemaining;
 	this->newCycle = newCycle;
@@ -690,13 +690,13 @@ void ClientViewer::updateTab(int idx, int val) {
 	if (tab[idx] != val) {
 		tab[idx] = val;
 		if (tab[idx] == brickElement) {
-			fprintf(stderr, "+%i", idx);
+			//fprintf(stderr, "+%i", idx);
 			SDL_BlitSurface(Sprite::Instance().getLevel(21, levelInfo[0]), &srcrect, brickShadow, &dstrect);
 		} else if (tab[idx] == emptyElement) {
 			SDL_FillRect(brickShadow, &dstrect, SDL_MapRGBA(brickShadow->format, 0, 0, 0, 0));
-			if(tabBonus[idx] != noBonus) {
-				fprintf(stderr, "draw bonus when refresh tab bonus \n");
-				dstrect.x = idx % 35 * smallSpriteLevelSizeWidth +1;
+			if (tabBonus[idx] != noBonus) {
+				//fprintf(stderr, "draw bonus when refresh tab bonus \n");
+				dstrect.x = idx % 35 * smallSpriteLevelSizeWidth + 1;
 				SDL_BlitSurface(Sprite::Instance().getBonus(tabBonus[idx]), NULL, brickShadow, &dstrect);
 			}
 		}
@@ -704,7 +704,7 @@ void ClientViewer::updateTab(int idx, int val) {
 }
 
 void ClientViewer::updateTabBonus(int idx, int val) {
-	fprintf(stderr, "update tabbonus %i %i", idx, val);
+	//fprintf(stderr, "update tabbonus %i %i", idx, val);
 	if (tabBonus[idx] != val) {
 		tabBonus[idx] = val;
 		if (tab[idx] == emptyElement && tabBonus[idx] != noBonus) {
@@ -713,7 +713,7 @@ void ClientViewer::updateTabBonus(int idx, int val) {
 			dstrect.y = ((int) floor(idx / 35)) * 16;
 			dstrect.w = 16;
 			dstrect.h = 16;
-			fprintf(stderr, "draw bonus idx %i", val);
+			//fprintf(stderr, "draw bonus idx %i", val);
 			SDL_BlitSurface(Sprite::Instance().getBonus(val), NULL, brickShadow, &dstrect);
 		}
 	}
@@ -721,7 +721,7 @@ void ClientViewer::updateTabBonus(int idx, int val) {
 }
 
 void ClientViewer::drawPlayer(float posX, float posY, int sprite, int louisSprite, int spaceShipSprite, bool inverse) {
-	fprintf(stderr, "player %f %f %i %i %i %i\n", posX, posY, sprite, louisSprite, spaceShipSprite, inverse ? 1 : 0);
+	//fprintf(stderr, "player %f %f %i %i %i %i\n", posX, posY, sprite, louisSprite, spaceShipSprite, inverse ? 1 : 0);
 	if (sprite != -1) {
 		int sprite_sizeW = 30;
 		int sprite_sizeH = 42;
@@ -766,18 +766,19 @@ void ClientViewer::drawPlayer(float posX, float posY, int sprite, int louisSprit
 }
 
 void ClientViewer::updatePlayerState(int idx, int val) {
-	fprintf(stderr, "player state %i %i\n", idx, val);
+	//fprintf(stderr, "player state %i %i\n", idx, val);
 	playerState[idx] = val;
 }
 
 void ClientViewer::clearArea(int idx) {
-	fprintf(stderr, "clear area %i\n",idx);
+	//fprintf(stderr, "clear area %i\n",idx);
 	SDL_Rect destTextureRect;
 	destTextureRect.x = idx % 35 * 18;
 	destTextureRect.y = ((int) floor(idx / 35)) * 16;
 	destTextureRect.w = 18;
 	destTextureRect.h = 16;
 	SDL_FillRect(brickShadow, &destTextureRect, SDL_MapRGBA(brickShadow->format, 0, 0, 0, 0));
+	tab[idx] = emptyElement;
 	if (tabBonus[idx] != noBonus) {
 		destTextureRect.x = idx % 35 * 18 + 1;
 		SDL_BlitSurface(Sprite::Instance().getBonus(tabBonus[idx]), NULL, brickShadow, &destTextureRect);
@@ -786,18 +787,23 @@ void ClientViewer::clearArea(int idx) {
 }
 
 void ClientViewer::drawRail(int idx, int sprite) {
-	fprintf(stderr, "rail %i %i\n", idx, sprite);
+	//fprintf(stderr, "rail %i %i\n", idx, sprite);
 	SDL_Rect dstRect;
 	dstRect.x = (idx % 35) * 18;
 	dstRect.y = ((int) floor(idx / 35)) * 16;
 	dstRect.w = 18;
 	dstRect.h = 16;
-	SDL_FillRect(brickShadow, &dstRect, 0x000000);
-	SDL_BlitSurface(Sprite::Instance().getRail(sprite), NULL, brickShadow, &dstRect);
+	SDL_FillRect(ground, &dstRect, 0x000000);
+	int textureIndex = LevelService::Instance().getLevel(levelInfo[0])->getVariantes(levelInfo[1])->getDefinition(idx);
+	if (textureIndex == 'S' || textureIndex == 'T' || textureIndex == 'U') {
+		textureIndex -= 65;
+	}
+	SDL_BlitSurface(Sprite::Instance().getLevel(textureIndex, levelInfo[0]), NULL, ground, &dstRect);
+	SDL_BlitSurface(Sprite::Instance().getRail(sprite), NULL, ground, &dstRect);
 }
 
 void ClientViewer::drawTrolley(float posX, float posY, int sprite) {
-	fprintf(stderr, "trolley %f %f %i\n", posX, posY, sprite);
+	//fprintf(stderr, "trolley %f %f %i\n", posX, posY, sprite);
 	SDL_Rect dstRect;
 	dstRect.x = (posX * 18) - (30 / 2);
 	dstRect.y = (posY * 16) - (42 - 10);
@@ -807,7 +813,7 @@ void ClientViewer::drawTrolley(float posX, float posY, int sprite) {
 }
 
 void ClientViewer::drawButton(int idx, int sprite) {
-	fprintf(stderr, "button %i %i\n",idx, sprite);
+	//fprintf(stderr, "button %i %i\n",idx, sprite);
 	SDL_Rect dstRect;
 	dstRect.x = (idx % 35) * 18;
 	dstRect.y = ((int) floor(idx / 35)) * 16;
@@ -817,37 +823,37 @@ void ClientViewer::drawButton(int idx, int sprite) {
 }
 
 void ClientViewer::drawBurnLouis(float posX, float posY) {
-	fprintf(stderr, "burn louis %f %f\n", posX, posY);
+	//fprintf(stderr, "burn louis %f %f\n", posX, posY);
 	louisBurns.push_back(new BurnLouis(posX, posY));
 }
 
 void ClientViewer::drawBurnBonus(int idx) {
-	fprintf(stderr, "burn bonus %i\n", idx);
+	//fprintf(stderr, "burn bonus %i\n", idx);
 	BurnBonusList.push_back(new BurnBonus(idx % 35, ((int) floor(idx / 35))));
 }
 
 void ClientViewer::drawBurnWall(int idx) {
-	fprintf(stderr, "burn wall %i\n", idx);
+	//fprintf(stderr, "burn wall %i\n", idx);
 	burnWalls.push_back(new BurnWall(idx % 35, ((int) floor(idx / 35)), levelInfo[0]));
 }
 
 void ClientViewer::drawExplosion(int idx, int type) {
-	fprintf(stderr, "explosion %i %i\n", idx, type);
+	//fprintf(stderr, "explosion %i %i\n", idx, type);
 	explosions.push_back(new Explosion(idx % 35, ((int) floor(idx / 35)), type));
 }
 
 void ClientViewer::drawPopBonus(int idx) {
-	fprintf(stderr, "pop %i\n", idx);
+	//fprintf(stderr, "pop %i\n", idx);
 	PopBonusList.push_back(new PopBonus(idx));
 }
 
 void ClientViewer::drawSuddentDeath(int idx) {
-	fprintf(stderr, "sudden deaht %i \n", idx);
+	//fprintf(stderr, "sudden deaht %i \n", idx);
 	suddenDeathAnimations.push_back(new SuddenDeathAnimation(idx, levelInfo[0]));
 }
 
 void ClientViewer::drawBombe(float posX, float posY, int type, int sprite) {
-	fprintf(stderr, "bombe %f %f %i %i \n", posX, posY, type, sprite);
+	//fprintf(stderr, "bombe %f %f %i %i \n", posX, posY, type, sprite);
 	SDL_Rect dstRect;
 	dstRect.x = (posX * 18) - 8;
 	dstRect.y = (posY * 16) - 8;
@@ -857,7 +863,7 @@ void ClientViewer::drawBombe(float posX, float posY, int type, int sprite) {
 }
 
 void ClientViewer::drawHole(int idx, int sprite) {
-	fprintf(stderr, "hole %i %i\n",idx, sprite);
+	//fprintf(stderr, "hole %i %i\n",idx, sprite);
 	SDL_Rect dstRect;
 	dstRect.x = (idx % 35) * 18;
 	dstRect.y = ((int) floor(idx / 35)) * 16;
@@ -867,7 +873,7 @@ void ClientViewer::drawHole(int idx, int sprite) {
 }
 
 void ClientViewer::drawMine(int idx, int sprite) {
-	fprintf(stderr, "mine %i %i\n",idx, sprite);
+	//fprintf(stderr, "mine %i %i\n",idx, sprite);
 	SDL_Rect dstRect;
 	dstRect.x = (idx % 35) * 18;
 	dstRect.y = ((int) floor(idx / 35)) * 16;
@@ -878,7 +884,7 @@ void ClientViewer::drawMine(int idx, int sprite) {
 }
 
 void ClientViewer::drawTeleporter(int idx, int sprite) {
-	fprintf(stderr, "teleporter %i %i\n",idx, sprite);
+	//fprintf(stderr, "teleporter %i %i\n",idx, sprite);
 	SDL_Rect dstRect;
 	dstRect.x = (idx % 35) * 18;
 	dstRect.y = ((int) floor(idx / 35)) * 16;
@@ -888,7 +894,7 @@ void ClientViewer::drawTeleporter(int idx, int sprite) {
 }
 
 void ClientViewer::drawGhost(float posX, float posY) {
-	fprintf(stderr, "ghost %f %f\n",posX, posY);
+	//fprintf(stderr, "ghost %f %f\n",posX, posY);
 	Uint32 rmask, gmask, bmask, amask;
 	amask = 0xff000000;
 	rmask = 0x00ff0000;
@@ -965,7 +971,7 @@ void ClientViewer::playSound(int sound, int channel, int active) {
 }
 
 void ClientViewer::drawBonus(int idx, int type) {
-	fprintf(stderr, "draw bonus %i %i\n",idx, type);
+	//fprintf(stderr, "draw bonus %i %i\n",idx, type);
 	SDL_Rect dstrect;
 	dstrect.x = idx % 35 * 18 + 1;
 	dstrect.y = ((int) floor(idx / 35)) * 16;
@@ -975,7 +981,7 @@ void ClientViewer::drawBonus(int idx, int type) {
 }
 
 void ClientViewer::eraseBonus(int idx) {
-	fprintf(stderr, "eraseBonus %i\n",idx);
+	//fprintf(stderr, "eraseBonus %i\n",idx);
 	SDL_Rect destTextureRect;
 	destTextureRect.x = idx % 35 * 18;
 	destTextureRect.y = ((int) floor(idx / 35)) * 16;

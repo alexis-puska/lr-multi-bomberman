@@ -7,6 +7,9 @@ Button::Button(int index, std::map<int, Trolley *> * trolleys) {
 	for (int i = 0; i < nbPlayer; i++) {
 		activate[i] = false;
 	}
+	if (GameConfig::Instance().getGameModeType() == NET_SERVER) {
+		BomberNetServer::Instance().sendButton(index, 0);
+	}
 }
 
 Button::~Button() {
