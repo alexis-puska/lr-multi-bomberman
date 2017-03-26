@@ -353,7 +353,7 @@ void BomberNetServer::decode(char data[1024], int which) {
  *********************/
 
 void BomberNetServer::sendChangeScreenCommand(int screen) {
-	//fprintf(stderr, "send screen change command %i\n", screen);
+	fprintf(stderr, "send screen change command %i\n", screen);
 	char data[9];
 	memset(data, 0, sizeof data);
 	SDLNet_Write32(requestNumber, data);
@@ -388,7 +388,7 @@ void BomberNetServer::sendNbConnected() {
 }
 
 void BomberNetServer::sendPlayerType() {
-	char data[24];
+	char data[25];
 	memset(data, 0, sizeof data);
 	SDLNet_Write32(requestNumber, data);
 	data[4] = 0x02;
@@ -403,13 +403,13 @@ void BomberNetServer::sendPlayerType() {
 	data[pos] = '\0';
 	std::map<int, int>::iterator it;
 	for (it = connexionHuman.begin(); it != connexionHuman.end(); ++it) {
-		SDLNet_TCP_Send(bomber[it->first].sock, &data, 24);
+		SDLNet_TCP_Send(bomber[it->first].sock, &data, 25);
 		requestNumber++;
 	}
 }
 
 void BomberNetServer::sendSpriteType() {
-	char data[24];
+	char data[25];
 	memset(data, 0, sizeof data);
 	SDLNet_Write32(requestNumber, data);
 	data[4] = 0x02;
@@ -424,7 +424,7 @@ void BomberNetServer::sendSpriteType() {
 	data[pos] = '\0';
 	std::map<int, int>::iterator it;
 	for (it = connexionHuman.begin(); it != connexionHuman.end(); ++it) {
-		SDLNet_TCP_Send(bomber[it->first].sock, &data, 24);
+		SDLNet_TCP_Send(bomber[it->first].sock, &data, 25);
 		requestNumber++;
 	}
 }
@@ -451,7 +451,7 @@ void BomberNetServer::sendGameOption() {
 }
 
 void BomberNetServer::sendLevelInfo() {
-	char data[28];
+	char data[29];
 	memset(data, 0, sizeof data);
 	SDLNet_Write32(requestNumber, data);
 	data[4] = 0x02;
@@ -473,7 +473,7 @@ void BomberNetServer::sendLevelInfo() {
 	data[pos] = '\0';
 	std::map<int, int>::iterator it;
 	for (it = connexionHuman.begin(); it != connexionHuman.end(); ++it) {
-		SDLNet_TCP_Send(bomber[it->first].sock, &data, 28);
+		SDLNet_TCP_Send(bomber[it->first].sock, &data, 29);
 		requestNumber++;
 	}
 }

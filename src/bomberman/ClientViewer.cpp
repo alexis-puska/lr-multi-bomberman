@@ -157,6 +157,10 @@ void ClientViewer::decode(char data[2048]) {
 						drawLevelInfoScreen();
 						positionObjectType += levelInfoRequest;
 						break;
+					case 6:
+						drawGameScreen();
+						positionObjectType += levelInfoRequest;
+						break;
 				}
 				break;
 			case 3:
@@ -862,7 +866,7 @@ void ClientViewer::drawGhost(float posX, float posY) {
 	SDL_BlitSurface(Sprite::Instance().getBombe(0, 0), NULL, bombeGhost, NULL);
 	SDL_SetSurfaceAlphaMod(bombeGhost, 60);
 	SDL_BlitSurface(bombeGhost, NULL, playerBombeExplode, &dstRect);
-	SDL_FreeSurface (bombeGhost);
+	SDL_FreeSurface(bombeGhost);
 }
 
 void ClientViewer::playMusique(int musique, bool start) {

@@ -20,7 +20,7 @@
 #define __MYCLASS_CLIENT_VIEWER
 
 enum objectLenght {
-	nbConnectedRequest = 4, drawScreenRequest = 2, playerTypeRequest = 18, spriteTypeRequest = 18, gameOptionRequest = 6, levelInfoRequest = 22,
+	nbConnectedRequest = 11, drawScreenRequest = 9, playerTypeRequest = 25, spriteTypeRequest = 25, gameOptionRequest = 13, levelInfoRequest = 29,
 };
 
 enum screenToDrawEnum {
