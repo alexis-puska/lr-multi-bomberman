@@ -97,6 +97,7 @@ void ClientViewer::decode(char data[1024], int len) {
 		//fprintf(stderr, "nb element dans la requete : %i %i\n", data[5], len);
 	}
 	int id = 0;
+	tick();
 	for (int i = 0; i < data[5]; i++) {
 		if (data[5] < 5) {
 			//fprintf(stderr, "element %i pos : %i \n", id, positionObjectType);
@@ -285,7 +286,7 @@ void ClientViewer::decode(char data[1024], int len) {
 		case menu:
 
 		case gameViewerStart:
-			tick();
+
 		case gameViewerPause:
 		case gameViewerWait:
 		case gameViewerEnd:
