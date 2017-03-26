@@ -191,7 +191,7 @@ void ClientViewer::decode(char data[1024], int len) {
 //				fprintf(stderr, "%f %f %i %i %i\n", (float) SDLNet_Read16(data + positionObjectType + 1) / 100.0, (float) SDLNet_Read16(data + positionObjectType + 3) / 100.0,
 //						SDLNet_Read16(data + positionObjectType + 5), (Sint16) SDLNet_Read16(data + positionObjectType + 7), data[positionObjectType + 9]);
 				drawPlayer((float) SDLNet_Read16(data + positionObjectType + 1) / 100.0, (float) SDLNet_Read16(data + positionObjectType + 3) / 100.0,
-						(Sint16) SDLNet_Read16(data + positionObjectType + 5), (Sint16) SDLNet_Read16(data + positionObjectType + 7), (Sint16)data[positionObjectType + 9],
+						(Sint16) SDLNet_Read16(data + positionObjectType + 5), (Sint16) SDLNet_Read16(data + positionObjectType + 7), (Sint16) SDLNet_Read16(data + positionObjectType + 9),
 						data[positionObjectType + 11] == 1 ? true : false);
 				positionObjectType += 12;
 				break;
