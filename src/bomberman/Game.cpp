@@ -1191,6 +1191,20 @@ void Game::tick() {
 				int indexPlayerForGame = 0;
 				SDL_FillRect(playerBombeExplode, NULL, SDL_MapRGBA(playerBombeExplode->format, 0, 0, 0, 0));
 
+				if (GameConfig::Instance().getGameModeType() == NET_SERVER) {
+					BomberNetServer::Instance().sendChangeScreenCommand(7);
+					BomberNetServer::Instance().sendChangeScreenCommand(6);
+					BomberNetServer::Instance().sendTab(tab);
+					BomberNetServer::Instance().sendBuffer();
+					BomberNetServer::Instance().sendTabBonus(tabBonus);
+					for (std::map<int, Rail*>::iterator it1 = rails.begin(); it1 != rails.end(); ++it1) {
+						if (tab[it1->second->getIndex()] != brickElement) {
+							redrawRail(it1->second->getIndex());
+						}
+					}
+					BomberNetServer::Instance().sendBuffer();
+				}
+
 				Player * player;
 				Brain * brain;
 
