@@ -509,6 +509,7 @@ void BomberNetServer::sendBuffer() {
 		SDLNet_TCP_Send(bomber[it->first].sock, &buffer, bufferPosition);
 		requestNumber++;
 	}
+	initBuffer();
 	//fprintf(stderr, "send buffer %i %i\n", bufferElement, bufferPosition);
 }
 /***********************

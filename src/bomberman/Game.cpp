@@ -502,7 +502,7 @@ void Game::updateTimeDisplay() {
 void Game::tick() {
 
 	if (GameConfig::Instance().getGameModeType() == NET_SERVER) {
-		BomberNetServer::Instance().initBuffer();
+
 		BomberNetServer::Instance().sendGameInfo(nbTickForGame, true, gameState);
 	}
 
@@ -543,13 +543,13 @@ void Game::tick() {
 				BomberNetServer::Instance().sendPlayerState();
 				if (nbTickForGame % 500 == 0) {
 					BomberNetServer::Instance().sendBuffer();
-					BomberNetServer::Instance().initBuffer();
+
 					BomberNetServer::Instance().sendTab(tab);
 					BomberNetServer::Instance().sendBuffer();
-					BomberNetServer::Instance().initBuffer();
+
 					BomberNetServer::Instance().sendTabBonus(tabBonus);
 					BomberNetServer::Instance().sendBuffer();
-					BomberNetServer::Instance().initBuffer();
+
 				}
 			}
 
