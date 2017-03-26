@@ -98,7 +98,7 @@ this	->vout_buf = vout_buf;
 	tabBonus = new int[sizeX * sizeY];
 	for (int i = 0; i < sizeX * sizeY; i++) {
 		tab[i] = emptyElement;
-		tabBonus[i] = -1;
+		tabBonus[i] = noBonus;
 	}
 	GameConfig::Instance().resetPlayerCord();
 
@@ -624,7 +624,7 @@ void Game::tick() {
 
 					//CENTER
 					explosions.push_back(new Explosion(posXBombe, posYBombe, 0, tab));
-					if (tabBonus[posXBombe + posYBombe * sizeX] != -1) {
+					if (tabBonus[posXBombe + posYBombe * sizeX] != noBonus) {
 						grid->burnBonus(posXBombe, posYBombe);
 						redrawElement(posXBombe, posYBombe);
 						BurnBonusList.push_back(new BurnBonus(posXBombe, posYBombe));
@@ -677,7 +677,7 @@ void Game::tick() {
 						}
 						if (!aWallHasBurn) {
 							// if we don't have burn a wall, we can have a bonus in the case of table. we remove it !
-							if (tabBonus[posXBombe + posYcalc * sizeX] != -1) {
+							if (tabBonus[posXBombe + posYcalc * sizeX] != noBonus) {
 								grid->burnBonus(posXBombe, posYcalc);
 								redrawElement(posXBombe, posYBombe);
 								BurnBonusList.push_back(new BurnBonus(posXBombe, posYcalc));
@@ -729,7 +729,7 @@ void Game::tick() {
 						}
 						if (!aWallHasBurn) {
 							// if we don't have burn a wall, we can have a bonus in the case of table. we remove it !
-							if (tabBonus[(posXBombe + j) + posYBombe * sizeX] != -1) {
+							if (tabBonus[(posXBombe + j) + posYBombe * sizeX] != noBonus) {
 								grid->burnBonus((posXBombe + j), posYBombe);
 								redrawElement((posXBombe + j), posYBombe);
 								BurnBonusList.push_back(new BurnBonus(posXBombe + j, posYBombe));
@@ -786,7 +786,7 @@ void Game::tick() {
 						}
 						if (!aWallHasBurn) {
 							// if we don't have burn a wall, we can have a bonus in the case of table. we remove it !
-							if (tabBonus[posXBombe + posYcalc * sizeX] != -1) {
+							if (tabBonus[posXBombe + posYcalc * sizeX] != noBonus) {
 								grid->burnBonus(posXBombe, posYcalc);
 								redrawElement(posXBombe, posYcalc);
 								BurnBonusList.push_back(new BurnBonus(posXBombe, posYcalc));
@@ -839,7 +839,7 @@ void Game::tick() {
 						}
 						if (!aWallHasBurn) {
 							// if we don't have burn a wall, we can have a bonus in the case of table. we remove it !
-							if (tabBonus[(posXBombe - j) + posYBombe * sizeX] != -1) {
+							if (tabBonus[(posXBombe - j) + posYBombe * sizeX] != noBonus) {
 								grid->burnBonus((posXBombe - j), posYBombe);
 								redrawElement((posXBombe - j), posYBombe);
 								BurnBonusList.push_back(new BurnBonus(posXBombe - j, posYBombe));
@@ -1613,7 +1613,7 @@ void Game::GenerateMineExplosion(int index, int direction) {
 			}
 			if (!aWallHasBurn) {
 				// if we don't have burn a wall, we can have a bonus in the case of table. we remove it !
-				if (tabBonus[posXMine + posYcalc * sizeX] != -1) {
+				if (tabBonus[posXMine + posYcalc * sizeX] != noBonus) {
 					grid->burnBonus(posXMine, posYcalc);
 					redrawElement(posXMine, posYMine);
 					BurnBonusList.push_back(new BurnBonus(posXMine, posYcalc));
@@ -1668,7 +1668,7 @@ void Game::GenerateMineExplosion(int index, int direction) {
 			}
 			if (!aWallHasBurn) {
 				// if we don't have burn a wall, we can have a bonus in the case of table. we remove it !
-				if (tabBonus[(posXMine + j) + posYMine * sizeX] != -1) {
+				if (tabBonus[(posXMine + j) + posYMine * sizeX] != noBonus) {
 					grid->burnBonus((posXMine + j), posYMine);
 					redrawElement((posXMine + j), posYMine);
 					BurnBonusList.push_back(new BurnBonus(posXMine + j, posYMine));
@@ -1728,7 +1728,7 @@ void Game::GenerateMineExplosion(int index, int direction) {
 			}
 			if (!aWallHasBurn) {
 				// if we don't have burn a wall, we can have a bonus in the case of table. we remove it !
-				if (tabBonus[posXMine + posYcalc * sizeX] != -1) {
+				if (tabBonus[posXMine + posYcalc * sizeX] != noBonus) {
 					grid->burnBonus(posXMine, posYcalc);
 					redrawElement(posXMine, posYcalc);
 					BurnBonusList.push_back(new BurnBonus(posXMine, posYcalc));
@@ -1780,7 +1780,7 @@ void Game::GenerateMineExplosion(int index, int direction) {
 			}
 			if (!aWallHasBurn) {
 				// if we don't have burn a wall, we can have a bonus in the case of table. we remove it !
-				if (tabBonus[(posXMine - j) + posYMine * sizeX] != -1) {
+				if (tabBonus[(posXMine - j) + posYMine * sizeX] != noBonus) {
 					grid->burnBonus((posXMine - j), posYMine);
 					redrawElement((posXMine - j), posYMine);
 					BurnBonusList.push_back(new BurnBonus(posXMine - j, posYMine));
