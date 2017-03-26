@@ -56,12 +56,12 @@ class BomberNetServer {
 		void sendRail(int idx, int sprite);
 		void sendTrolley(float posX, float posY, int sprite);
 		void sendButton(int idx, int sprite);
-		void sendBurnLouis(float posX, float posY, int sprite);
-		void sendBurnBonus(int idx, int sprite);
-		void sendburnWall(int idx, int sprite);
-		void sendExplosion(int idx, int type, int sprite);
-		void sendPopBonus(int idx, int sprite);
-		void sendSuddenDeath(float posX, float posY, int sprite);
+		void sendBurnLouis(float posX, float posY);
+		void sendBurnBonus(int idx);
+		void sendburnWall(int idx);
+		void sendExplosion(int idx, int type);
+		void sendPopBonus(int idx);
+		void sendSuddenDeath(int idx);
 		void sendBombe(float posX, float posY, int type, int sprite);
 		void sendHole(int idx, int sprite);
 		void sendMine(int idx, int sprite);
@@ -82,8 +82,6 @@ class BomberNetServer {
 		int bufferPosition;
 		int bufferElement;
 		void concatBuffer(char * src, int length);
-
-
 
 		//server thread
 		static bool alive;

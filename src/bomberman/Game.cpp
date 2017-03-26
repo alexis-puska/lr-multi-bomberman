@@ -545,6 +545,8 @@ void Game::tick() {
 					BomberNetServer::Instance().sendBuffer();
 					BomberNetServer::Instance().initBuffer();
 					BomberNetServer::Instance().sendTab(tab);
+					BomberNetServer::Instance().sendBuffer();
+					BomberNetServer::Instance().initBuffer();
 					BomberNetServer::Instance().sendTabBonus(tabBonus);
 					BomberNetServer::Instance().sendBuffer();
 					BomberNetServer::Instance().initBuffer();
@@ -616,7 +618,7 @@ void Game::tick() {
 					int ind = 0;
 
 					//CENTER
-					explosions.push_back(new Explosion(posXBombe, posYBombe, 0, tab, tabBonus));
+					explosions.push_back(new Explosion(posXBombe, posYBombe, 0, tab));
 					if (tabBonus[posXBombe + posYBombe * sizeX] != -1) {
 						grid->burnBonus(posXBombe, posYBombe);
 						redrawElement(posXBombe, posYBombe);
@@ -642,10 +644,10 @@ void Game::tick() {
 								} else {
 									ind = 2;
 								}
-								explosions.push_back(new Explosion(posXBombe, posYcalc, ind, tab, tabBonus));
+								explosions.push_back(new Explosion(posXBombe, posYcalc, ind, tab));
 								break;
 							case brickElement:
-								burnWalls.push_back(new BurnWall(posXBombe, posYcalc, ind, tab, tabBonus));
+								burnWalls.push_back(new BurnWall(posXBombe, posYcalc, ind, tab));
 								grid->burnABrick(posXBombe, posYcalc);
 								redrawElement(posXBombe, posYcalc);
 								if (!isAPowerBombe) {
@@ -694,10 +696,10 @@ void Game::tick() {
 								} else {
 									ind = 8;
 								}
-								explosions.push_back(new Explosion((posXBombe + j), posYBombe, ind, tab, tabBonus));
+								explosions.push_back(new Explosion((posXBombe + j), posYBombe, ind, tab));
 								break;
 							case brickElement:
-								burnWalls.push_back(new BurnWall((posXBombe + j), posYBombe, ind, tab, tabBonus));
+								burnWalls.push_back(new BurnWall((posXBombe + j), posYBombe, ind, tab));
 								grid->burnABrick((posXBombe + j), posYBombe);
 								redrawElement((posXBombe + j), posYBombe);
 								if (!isAPowerBombe) {
@@ -751,10 +753,10 @@ void Game::tick() {
 								} else {
 									ind = 6;
 								}
-								explosions.push_back(new Explosion(posXBombe, posYcalc, ind, tab, tabBonus));
+								explosions.push_back(new Explosion(posXBombe, posYcalc, ind, tab));
 								break;
 							case brickElement:
-								burnWalls.push_back(new BurnWall(posXBombe, posYcalc, ind, tab, tabBonus));
+								burnWalls.push_back(new BurnWall(posXBombe, posYcalc, ind, tab));
 								grid->burnABrick(posXBombe, posYcalc);
 								redrawElement(posXBombe, posYcalc);
 								if (!isAPowerBombe) {
@@ -804,10 +806,10 @@ void Game::tick() {
 								} else {
 									ind = 4;
 								}
-								explosions.push_back(new Explosion((posXBombe - j), posYBombe, ind, tab, tabBonus));
+								explosions.push_back(new Explosion((posXBombe - j), posYBombe, ind, tab));
 								break;
 							case brickElement:
-								burnWalls.push_back(new BurnWall((posXBombe - j), posYBombe, ind, tab, tabBonus));
+								burnWalls.push_back(new BurnWall((posXBombe - j), posYBombe, ind, tab));
 								grid->burnABrick((posXBombe - j), posYBombe);
 								redrawElement((posXBombe - j), posYBombe);
 								if (!isAPowerBombe) {
@@ -1416,7 +1418,7 @@ void Game::trolleyDoSomething() {
 				grid->burnABrick(curX, curY);
 				redrawRail(cur);
 				redrawRail(prv);
-				burnWalls.push_back(new BurnWall(curX, curY, 0, tab, tabBonus));
+				burnWalls.push_back(new BurnWall(curX, curY, 0, tab));
 			}
 			for (unsigned int k = 0; k < bombes.size(); k++) {
 				if (bombes[k]->getCase() == cur) {
@@ -1578,10 +1580,10 @@ void Game::GenerateMineExplosion(int index, int direction) {
 					} else {
 						ind = 2;
 					}
-					explosions.push_back(new Explosion(posXMine, posYcalc, ind, tab, tabBonus));
+					explosions.push_back(new Explosion(posXMine, posYcalc, ind, tab));
 					break;
 				case brickElement:
-					burnWalls.push_back(new BurnWall(posXMine, posYcalc, ind, tab, tabBonus));
+					burnWalls.push_back(new BurnWall(posXMine, posYcalc, ind, tab));
 					grid->burnABrick(posXMine, posYcalc);
 					redrawElement(posXMine, posYcalc);
 
@@ -1633,10 +1635,10 @@ void Game::GenerateMineExplosion(int index, int direction) {
 					} else {
 						ind = 8;
 					}
-					explosions.push_back(new Explosion((posXMine + j), posYMine, ind, tab, tabBonus));
+					explosions.push_back(new Explosion((posXMine + j), posYMine, ind, tab));
 					break;
 				case brickElement:
-					burnWalls.push_back(new BurnWall((posXMine + j), posYMine, ind, tab, tabBonus));
+					burnWalls.push_back(new BurnWall((posXMine + j), posYMine, ind, tab));
 					grid->burnABrick((posXMine + j), posYMine);
 					redrawElement((posXMine + j), posYMine);
 
@@ -1693,10 +1695,10 @@ void Game::GenerateMineExplosion(int index, int direction) {
 					} else {
 						ind = 6;
 					}
-					explosions.push_back(new Explosion(posXMine, posYcalc, ind, tab, tabBonus));
+					explosions.push_back(new Explosion(posXMine, posYcalc, ind, tab));
 					break;
 				case brickElement:
-					burnWalls.push_back(new BurnWall(posXMine, posYcalc, ind, tab, tabBonus));
+					burnWalls.push_back(new BurnWall(posXMine, posYcalc, ind, tab));
 					grid->burnABrick(posXMine, posYcalc);
 					redrawElement(posXMine, posYcalc);
 
@@ -1749,10 +1751,10 @@ void Game::GenerateMineExplosion(int index, int direction) {
 					} else {
 						ind = 4;
 					}
-					explosions.push_back(new Explosion((posXMine - j), posYMine, ind, tab, tabBonus));
+					explosions.push_back(new Explosion((posXMine - j), posYMine, ind, tab));
 					break;
 				case brickElement:
-					burnWalls.push_back(new BurnWall((posXMine - j), posYMine, ind, tab, tabBonus));
+					burnWalls.push_back(new BurnWall((posXMine - j), posYMine, ind, tab));
 					grid->burnABrick((posXMine - j), posYMine);
 					redrawElement((posXMine - j), posYMine);
 					exitLoop = true;

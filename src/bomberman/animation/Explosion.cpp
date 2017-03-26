@@ -2,31 +2,44 @@
 
 #define nbFrame 4
 
-Explosion::Explosion(int posX, int posY, int index, int tab[sizeX * sizeY], int tabBonus[sizeX * sizeY]) {
+Explosion::Explosion(int posX, int posY, int index, int tab[sizeX * sizeY]) {
 	this->indexExplosion = index;
 	this->posX = posX;
 	this->posY = posY;
 	this->idx = posX + posY * 35;
 	this->tab = tab;
-	this->tabBonus = tabBonus;
 	frameCounter = 0;
 	offsetSprite = 0;
 	nbFrameForAnimation = 7;
 	deleteAnimation = false;
 	//set explosion in the grid
 	tab[posX + posY * sizeX] = explosionElement;
+	if (GameConfig::Instance().getGameModeType() == NET_SERVER) {
+		BomberNetServer::Instance().sendExplosion(idx, indexExplosion);
+	}
+}
+
+Explosion::Explosion(int posX, int posY, int index) {
+	this->indexExplosion = index;
+	this->posX = posX;
+	this->posY = posY;
+	this->idx = posX + posY * 35;
+	frameCounter = 0;
+	offsetSprite = 0;
+	nbFrameForAnimation = 7;
+	deleteAnimation = false;
 }
 
 Explosion::~Explosion() {
 	tab = NULL;
-	tabBonus = NULL;
 }
 
 bool Explosion::canBeDelete() {
-
-	if (deleteAnimation) {
-		//remove grid status explosion
-		tab[posX + posY * sizeX] = emptyElement;
+	if (GameConfig::Instance().getGameModeType() != NET_CLIENT) {
+		if (deleteAnimation) {
+			//remove grid status explosion
+			tab[posX + posY * sizeX] = emptyElement;
+		}
 	}
 	return deleteAnimation;
 }
@@ -71,7 +84,5 @@ void Explosion::tick(SDL_Surface * surfaceToDraw) {
 			break;
 	}
 	SDL_BlitSurface(Sprite::Instance().getFire(offsetSpriteAnimation, indexExplosion), NULL, surfaceToDraw, &dstRect);
-	if (GameConfig::Instance().getGameModeType() == NET_SERVER) {
-		BomberNetServer::Instance().sendExplosion(idx, indexExplosion, offsetSpriteAnimation);
-	}
+
 }

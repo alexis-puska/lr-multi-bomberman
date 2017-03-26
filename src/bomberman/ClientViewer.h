@@ -8,6 +8,12 @@
 #include "utils/Sound.h"
 #include "utils/Sprite.h"
 #include "utils/GameConfig.h"
+#include "animation/BurnWall.h"
+#include "animation/BurnLouis.h"
+#include "animation/SuddenDeathAnimation.h"
+#include "animation/PopBonus.h"
+#include "animation/BurnBonus.h"
+#include "animation/Explosion.h"
 #include "Grid.h"
 
 #ifndef __MYCLASS_CLIENT_VIEWER
@@ -56,6 +62,7 @@ class ClientViewer {
 		int tickRemaining;
 		bool newCycle;
 
+		SDL_Surface * bombeGhost;
 		SDL_Surface *louisMergebuffer;
 		Uint32 rmask, gmask, bmask, amask;
 
@@ -71,6 +78,15 @@ class ClientViewer {
 		SDL_Surface * overlay;
 		SDL_Surface * overlayResult;
 
+		std::vector<Explosion *> explosions;
+		std::vector<BurnWall *> burnWalls;
+		std::vector<SuddenDeathAnimation *> suddenDeathAnimations;
+		std::vector<BurnLouis *> louisBurns;
+		std::vector<PopBonus *> PopBonusList;
+		std::vector<BurnBonus *> BurnBonusList;
+
+		void tick();
+		void clearAnimation();
 		void mergeScreen(bool mergeResult);
 
 		void updateGameInfo(int tickRemaining, bool newCycle, int gameState);
@@ -82,12 +98,12 @@ class ClientViewer {
 		void drawRail(int idx, int sprite);
 		void drawTrolley(float posX, float posY, int sprite);
 		void drawButton(int idx, int sprite);
-		void drawBurnLouis(float posX, float posY, int sprite);
-		void drawBurnBonus(int idx, int sprite);
-		void drawBurnWall(int idx, int sprite);
-		void drawExplosion(int idx, int type, int sprite);
-		void drawPopBonus(int idx, int sprite);
-		void drawSuddentDeath(float posX, float posY, int sprite);
+		void drawBurnLouis(float posX, float posY);
+		void drawBurnBonus(int idx);
+		void drawBurnWall(int idx);
+		void drawExplosion(int idx, int type);
+		void drawPopBonus(int idx);
+		void drawSuddentDeath(int idx);
 		void drawBombe(float posX, float posY, int type, int sprite);
 		void drawHole(int idx, int sprite);
 		void drawMine(int idx, int sprite);

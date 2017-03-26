@@ -9,6 +9,9 @@ BurnLouis::BurnLouis(float posX, float posY) {
 	offsetSprite = 0;
 	nbFrameForAnimation = 4;
 	deleteAnimation = false;
+	if (GameConfig::Instance().getGameModeType() == NET_SERVER) {
+		BomberNetServer::Instance().sendBurnLouis(posX, posY);
+	}
 }
 
 BurnLouis::~BurnLouis() {
@@ -35,7 +38,4 @@ void BurnLouis::tick(SDL_Surface * surfaceToDraw) {
 	frameCounter++;
 	int idx = Sprite::Instance().drawLouisBurning(0, offsetSprite, 0);
 	SDL_BlitSurface(Sprite::Instance().getLouisSprite(idx), NULL, surfaceToDraw, &destTextureRect);
-	if (GameConfig::Instance().getGameModeType() == NET_SERVER) {
-		BomberNetServer::Instance().sendBurnLouis(posX, posY, offsetSprite);
-	}
 }

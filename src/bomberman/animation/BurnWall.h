@@ -19,19 +19,18 @@
 class BurnWall {
 
 	public:
-		BurnWall(int posX, int posY, int index, int tab[sizeX * sizeY], int tabBonus[sizeX * sizeY]);
+		BurnWall(int posX, int posY, int index, int tab[sizeX * sizeY]);
+		BurnWall(int posX, int posY, int index);
 		~BurnWall();
 		void tick(SDL_Surface * surfaceToDraw);
 		bool canBeDelete();
 
 	private:
 		int * tab;
-		int * tabBonus;
 		int levelIndex;
 		int posX;
 		int posY;
 		int idx;
-		int indexBurnWall;
 		bool deleteAnimation;
 
 		//for animation

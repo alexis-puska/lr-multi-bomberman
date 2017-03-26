@@ -18,14 +18,14 @@
 class Explosion {
 
 	public:
-		Explosion(int posX, int posY, int index, int tab[sizeX * sizeY], int tabBonus[sizeX * sizeY]);
+		Explosion(int posX, int posY, int index, int tab[sizeX * sizeY]);
+		Explosion(int posX, int posY, int index);
 		~Explosion();
 		void tick(SDL_Surface * surfaceToDraw);
 		bool canBeDelete();
 
 	private:
 		int * tab;
-		int * tabBonus;
 		int posX;
 		int posY;
 		int idx;

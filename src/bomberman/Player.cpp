@@ -1076,13 +1076,11 @@ Bombe * Player::addBombeBadBomber() {
 			x = floor(posX + closeBombeValue);
 		}
 	}
-	fprintf(stderr, "abb %i %i\n", x, y);
 	int time = 100;
 	int strenght = flameStrengh;
 	int bombeType = normalBombeType;
 
 	if (tab[x + y * sizeX] < brickElement) {
-		fprintf(stderr, "ajout d'une bombe ");
 		return new Bombe(strenght, (float) x + 0.5, (float) y + 0.5, bombeType, indexPlayerForGame, time, tab);
 	} else {
 		//putABombe = false;
@@ -1176,7 +1174,7 @@ int Player::foundABonus() {
 		}
 	}
 
-	if (GameConfig::Instance().getGameModeType() == NET_SERVER) {
+	if (GameConfig::Instance().getGameModeType() == NET_SERVER && bonusIndex != -1) {
 		BomberNetServer::Instance().sendBonusDisapear(roundX + roundY * sizeX);
 	}
 	if (bonusIndex != -1) {

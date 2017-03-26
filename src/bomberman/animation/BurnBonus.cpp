@@ -10,6 +10,9 @@ BurnBonus::BurnBonus(int posX, int posY) {
 	offsetSprite = 0;
 	nbFrameForAnimation = 6;
 	deleteAnimation = false;
+	if (GameConfig::Instance().getGameModeType() == NET_SERVER) {
+		BomberNetServer::Instance().sendBurnBonus(index);
+	}
 }
 
 BurnBonus::~BurnBonus() {
@@ -35,7 +38,4 @@ void BurnBonus::tick(SDL_Surface * surfaceToDraw) {
 	}
 	frameCounter++;
 	SDL_BlitSurface(Sprite::Instance().getBurnBonus(offsetSprite), NULL, surfaceToDraw, &dstRect);
-	if (GameConfig::Instance().getGameModeType() == NET_SERVER) {
-		BomberNetServer::Instance().sendBurnBonus(index, offsetSprite);
-	}
 }

@@ -509,7 +509,7 @@ void BomberNetServer::sendBuffer() {
 		SDLNet_TCP_Send(bomber[it->first].sock, &buffer, bufferPosition);
 		requestNumber++;
 	}
-	fprintf(stderr, "send buffer %i %i %s\n", bufferElement, bufferPosition, buffer);
+	fprintf(stderr, "send buffer %i %i\n", bufferElement, bufferPosition);
 }
 /***********************
  *   init buffer
@@ -607,56 +607,48 @@ void BomberNetServer::sendButton(int idx, int sprite) {
 	concatBuffer(tmp, 4);
 }
 
-void BomberNetServer::sendBurnLouis(float posX, float posY, int sprite) {
-	char tmp[6];
+void BomberNetServer::sendBurnLouis(float posX, float posY) {
+	char tmp[5];
 	tmp[0] = 12;
 	SDLNet_Write16((int) (posX * 100.0), tmp + 1);
 	SDLNet_Write16((int) (posY * 100.0), tmp + 3);
-	tmp[5] = sprite;
-	concatBuffer(tmp, 6);
-}
-
-void BomberNetServer::sendBurnBonus(int idx, int sprite) {
-	char tmp[4];
-	tmp[0] = 13;
-	SDLNet_Write16(idx, tmp + 1);
-	tmp[3] = sprite;
-	concatBuffer(tmp, 4);
-}
-
-void BomberNetServer::sendburnWall(int idx, int sprite) {
-	fprintf(stderr, "send burn wall %i %i \n", idx, sprite);
-	char tmp[4];
-	tmp[0] = 14;
-	SDLNet_Write16(idx, tmp + 1);
-	tmp[3] = sprite;
-	concatBuffer(tmp, 4);
-}
-
-void BomberNetServer::sendExplosion(int idx, int type, int sprite) {
-	char tmp[5];
-	tmp[0] = 15;
-	SDLNet_Write16(idx, tmp + 1);
-	tmp[3] = type;
-	tmp[4] = sprite;
 	concatBuffer(tmp, 5);
 }
 
-void BomberNetServer::sendPopBonus(int idx, int sprite) {
-	char tmp[4];
-	tmp[0] = 16;
+void BomberNetServer::sendBurnBonus(int idx) {
+	char tmp[3];
+	tmp[0] = 13;
 	SDLNet_Write16(idx, tmp + 1);
-	tmp[3] = sprite;
+	concatBuffer(tmp, 3);
+}
+
+void BomberNetServer::sendburnWall(int idx) {
+	char tmp[3];
+	tmp[0] = 14;
+	SDLNet_Write16(idx, tmp + 1);
+	concatBuffer(tmp, 3);
+}
+
+void BomberNetServer::sendExplosion(int idx, int type) {
+	char tmp[4];
+	tmp[0] = 15;
+	SDLNet_Write16(idx, tmp + 1);
+	tmp[3] = type;
 	concatBuffer(tmp, 4);
 }
 
-void BomberNetServer::sendSuddenDeath(float posX, float posY, int sprite) {
-	char tmp[6];
+void BomberNetServer::sendPopBonus(int idx) {
+	char tmp[3];
+	tmp[0] = 16;
+	SDLNet_Write16(idx, tmp + 1);
+	concatBuffer(tmp, 3);
+}
+
+void BomberNetServer::sendSuddenDeath(int idx) {
+	char tmp[3];
 	tmp[0] = 17;
-	SDLNet_Write16((int) (posX * 100.0), tmp + 1);
-	SDLNet_Write16((int) (posY * 100.0), tmp + 3);
-	tmp[5] = sprite;
-	concatBuffer(tmp, 6);
+	SDLNet_Write16(idx, tmp + 1);
+	concatBuffer(tmp, 3);
 }
 
 void BomberNetServer::sendBombe(float posX, float posY, int type, int sprite) {

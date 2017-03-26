@@ -2,23 +2,16 @@
 
 #define nbFrame 4
 
-PopBonus::PopBonus(int posX, int posY) {
-	this->posX = posX;
-	this->posY = posY;
-	this->idx = posX + posY * 35;
-	frameCounter = 0;
-	offsetSprite = 0;
-	nbFrameForAnimation = 4;
-	deleteAnimation = false;
-}
-
 PopBonus::PopBonus(int index) {
-	this->posX = index % sizeX;
-	this->posY = floor(index / sizeX);
+	this->posX = index % 35;
+	this->posY = (int) (floor(index / 35));
 	frameCounter = 0;
 	offsetSprite = 0;
 	nbFrameForAnimation = 4;
 	deleteAnimation = false;
+	if (GameConfig::Instance().getGameModeType() == NET_SERVER) {
+		BomberNetServer::Instance().sendPopBonus(index);
+	}
 }
 
 PopBonus::~PopBonus() {
@@ -44,7 +37,5 @@ void PopBonus::tick(SDL_Surface * surfaceToDraw) {
 	}
 	frameCounter++;
 	SDL_BlitSurface(Sprite::Instance().getPopBonus(offsetSprite), NULL, surfaceToDraw, &dstRect);
-	if (GameConfig::Instance().getGameModeType() == NET_SERVER) {
-		BomberNetServer::Instance().sendPopBonus(idx, offsetSprite);
-	}
+
 }
