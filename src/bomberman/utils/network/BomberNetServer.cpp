@@ -353,7 +353,7 @@ void BomberNetServer::decode(char data[1024], int which) {
  *********************/
 
 void BomberNetServer::sendChangeScreenCommand(int screen) {
-	fprintf(stderr, "send screen change command %i", screen);
+	//fprintf(stderr, "send screen change command %i\n", screen);
 	char data[9];
 	memset(data, 0, sizeof data);
 	SDLNet_Write32(requestNumber, data);
@@ -509,7 +509,7 @@ void BomberNetServer::sendBuffer() {
 		SDLNet_TCP_Send(bomber[it->first].sock, &buffer, bufferPosition);
 		requestNumber++;
 	}
-	fprintf(stderr, "send buffer %i %i\n", bufferElement, bufferPosition);
+	//fprintf(stderr, "send buffer %i %i\n", bufferElement, bufferPosition);
 }
 /***********************
  *   init buffer

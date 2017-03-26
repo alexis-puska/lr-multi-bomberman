@@ -21,7 +21,7 @@
 #define timeOfGameMin			2
 #define timeOfGameDefault		3
 #define timeOfGameInf			-1
-#define nbClientMax			4
+#define nbClientMax			15
 
 #define sizeX 35
 #define sizeY 21

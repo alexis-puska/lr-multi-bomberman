@@ -57,7 +57,7 @@ class ClientViewer {
 		int playerSprite[16];
 		int playerState[16];
 		int gameOption[4];
-		int levelInfo[19];
+		int levelInfo[20];
 		int gameState;
 		int tickRemaining;
 		bool newCycle;

@@ -12,7 +12,7 @@ ClientViewer::ClientViewer(SDL_Surface * vout_bufLibretro) {
 		playerType[i] = 0;
 		playerSprite[i] = 0;
 	}
-	for (int i = 0; i < 16; i++) {
+	for (int i = 0; i < 4; i++) {
 		gameOption[i] = 0;
 	}
 	for (int i = 0; i < 16; i++) {
