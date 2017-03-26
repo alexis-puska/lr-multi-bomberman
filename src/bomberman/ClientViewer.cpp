@@ -670,6 +670,7 @@ void ClientViewer::mergeScreen(bool mergeResult) {
 }
 
 void ClientViewer::updateGameInfo(int tickRemaining, bool newCycle, int gameState) {
+	fprintf(stderr, "game info %i %i %i\n", tickRemaining, newCycle, gameState);
 	this->gameState = gameState;
 	this->tickRemaining = tickRemaining;
 	this->newCycle = newCycle;
@@ -720,6 +721,7 @@ void ClientViewer::updateTabBonus(int idx, int val) {
 }
 
 void ClientViewer::drawPlayer(float posX, float posY, int sprite, int louisSprite, int spaceShipSprite, bool inverse) {
+	fprintf(stderr, "player %f %f %i %i %i %i\n", posX, posY, sprite, louisSprite, spaceShipSprite, inverse ? 1 : 0);
 	if (sprite != -1) {
 		int sprite_sizeW = 30;
 		int sprite_sizeH = 42;
@@ -764,10 +766,12 @@ void ClientViewer::drawPlayer(float posX, float posY, int sprite, int louisSprit
 }
 
 void ClientViewer::updatePlayerState(int idx, int val) {
+	fprintf(stderr, "player state %i %i\n", idx, val);
 	playerState[idx] = val;
 }
 
 void ClientViewer::clearArea(int idx) {
+	fprintf(stderr, "clear area %i\n",idx);
 	SDL_Rect destTextureRect;
 	destTextureRect.x = idx % 35 * 18;
 	destTextureRect.y = ((int) floor(idx / 35)) * 16;
@@ -782,6 +786,7 @@ void ClientViewer::clearArea(int idx) {
 }
 
 void ClientViewer::drawRail(int idx, int sprite) {
+	fprintf(stderr, "rail %i %i\n", idx, sprite);
 	SDL_Rect dstRect;
 	dstRect.x = (idx % 35) * 18;
 	dstRect.y = ((int) floor(idx / 35)) * 16;
@@ -792,6 +797,7 @@ void ClientViewer::drawRail(int idx, int sprite) {
 }
 
 void ClientViewer::drawTrolley(float posX, float posY, int sprite) {
+	fprintf(stderr, "trolley %f %f %i\n", posX, posY, sprite);
 	SDL_Rect dstRect;
 	dstRect.x = (posX * 18) - (30 / 2);
 	dstRect.y = (posY * 16) - (42 - 10);
@@ -801,6 +807,7 @@ void ClientViewer::drawTrolley(float posX, float posY, int sprite) {
 }
 
 void ClientViewer::drawButton(int idx, int sprite) {
+	fprintf(stderr, "button %i %i\n",idx, sprite);
 	SDL_Rect dstRect;
 	dstRect.x = (idx % 35) * 18;
 	dstRect.y = ((int) floor(idx / 35)) * 16;
@@ -810,31 +817,37 @@ void ClientViewer::drawButton(int idx, int sprite) {
 }
 
 void ClientViewer::drawBurnLouis(float posX, float posY) {
+	fprintf(stderr, "burn louis %f %f\n", posX, posY);
 	louisBurns.push_back(new BurnLouis(posX, posY));
 }
 
 void ClientViewer::drawBurnBonus(int idx) {
+	fprintf(stderr, "burn bonus %i\n", idx);
 	BurnBonusList.push_back(new BurnBonus(idx % 35, ((int) floor(idx / 35))));
 }
 
 void ClientViewer::drawBurnWall(int idx) {
+	fprintf(stderr, "burn wall %i\n", idx);
 	burnWalls.push_back(new BurnWall(idx % 35, ((int) floor(idx / 35)), levelInfo[0]));
 }
 
 void ClientViewer::drawExplosion(int idx, int type) {
+	fprintf(stderr, "explosion %i %i\n", idx, type);
 	explosions.push_back(new Explosion(idx % 35, ((int) floor(idx / 35)), type));
 }
 
 void ClientViewer::drawPopBonus(int idx) {
-	fprintf(stderr, "pop\n");
+	fprintf(stderr, "pop %i\n", idx);
 	PopBonusList.push_back(new PopBonus(idx));
 }
 
 void ClientViewer::drawSuddentDeath(int idx) {
+	fprintf(stderr, "sudden deaht %i \n", idx);
 	suddenDeathAnimations.push_back(new SuddenDeathAnimation(idx, levelInfo[0]));
 }
 
 void ClientViewer::drawBombe(float posX, float posY, int type, int sprite) {
+	fprintf(stderr, "bombe %f %f %i %i \n", posX, posY, type, sprite);
 	SDL_Rect dstRect;
 	dstRect.x = (posX * 18) - 8;
 	dstRect.y = (posY * 16) - 8;
@@ -844,6 +857,7 @@ void ClientViewer::drawBombe(float posX, float posY, int type, int sprite) {
 }
 
 void ClientViewer::drawHole(int idx, int sprite) {
+	fprintf(stderr, "hole %i %i\n",idx, sprite);
 	SDL_Rect dstRect;
 	dstRect.x = (idx % 35) * 18;
 	dstRect.y = ((int) floor(idx / 35)) * 16;
@@ -853,6 +867,7 @@ void ClientViewer::drawHole(int idx, int sprite) {
 }
 
 void ClientViewer::drawMine(int idx, int sprite) {
+	fprintf(stderr, "mine %i %i\n",idx, sprite);
 	SDL_Rect dstRect;
 	dstRect.x = (idx % 35) * 18;
 	dstRect.y = ((int) floor(idx / 35)) * 16;
@@ -863,6 +878,7 @@ void ClientViewer::drawMine(int idx, int sprite) {
 }
 
 void ClientViewer::drawTeleporter(int idx, int sprite) {
+	fprintf(stderr, "teleporter %i %i\n",idx, sprite);
 	SDL_Rect dstRect;
 	dstRect.x = (idx % 35) * 18;
 	dstRect.y = ((int) floor(idx / 35)) * 16;
@@ -872,6 +888,7 @@ void ClientViewer::drawTeleporter(int idx, int sprite) {
 }
 
 void ClientViewer::drawGhost(float posX, float posY) {
+	fprintf(stderr, "ghost %f %f\n",posX, posY);
 	Uint32 rmask, gmask, bmask, amask;
 	amask = 0xff000000;
 	rmask = 0x00ff0000;
@@ -948,6 +965,7 @@ void ClientViewer::playSound(int sound, int channel, int active) {
 }
 
 void ClientViewer::drawBonus(int idx, int type) {
+	fprintf(stderr, "draw bonus %i %i\n",idx, type);
 	SDL_Rect dstrect;
 	dstrect.x = idx % 35 * 18 + 1;
 	dstrect.y = ((int) floor(idx / 35)) * 16;
@@ -957,6 +975,7 @@ void ClientViewer::drawBonus(int idx, int type) {
 }
 
 void ClientViewer::eraseBonus(int idx) {
+	fprintf(stderr, "eraseBonus %i\n",idx);
 	SDL_Rect destTextureRect;
 	destTextureRect.x = idx % 35 * 18;
 	destTextureRect.y = ((int) floor(idx / 35)) * 16;
