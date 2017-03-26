@@ -29,7 +29,6 @@ enum bombeTypeEnum {
 };
 
 enum bonusEnum {
-	noBonus = -1,
 	deathBonus = 0,
 	rollerBonus = 1,
 	fireBonus = 2,
@@ -45,7 +44,7 @@ enum bonusEnum {
 	eggBonus = 12,
 	shieldBonus = 13,
 	lineOfBombeBonus = 14,
-
+	noBonus = 15
 };
 
 enum malusEnum {
