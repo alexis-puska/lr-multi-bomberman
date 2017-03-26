@@ -225,7 +225,7 @@ void Grid::burnABrick(int posX, int posY) {
 void Grid::burnBonus(int posX, int posY) {
 	eraseArea(posX, posY);
 	if (GameConfig::Instance().getGameModeType() == NET_SERVER) {
-		BomberNetServer::Instance().sendBonusDisapear(posX + posY *35);
+		BomberNetServer::Instance().sendBonusDisapear(posX + posY * 35);
 	}
 	if (tabBonus[posX + posY * sizeX] != noBonus) {
 		if (tabBonus[posX + posY * sizeX] == deathBonus) {
@@ -256,6 +256,9 @@ void Grid::drawBonus(int posX, int posY) {
 		dstrect.w = defaultSpriteSize;
 		dstrect.h = defaultSpriteSize;
 		SDL_BlitSurface(Sprite::Instance().getBonus(tabBonus[posX + posY * sizeX]), NULL, brickShadow, &dstrect);
+		if (GameConfig::Instance().getGameModeType() == NET_SERVER) {
+			BomberNetServer::Instance().sendBonusAppear(posX + posY * 35, tabBonus[posX + posY * sizeX]);
+		}
 	}
 }
 

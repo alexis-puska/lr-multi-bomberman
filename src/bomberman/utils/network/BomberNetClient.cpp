@@ -184,7 +184,7 @@ void BomberNetClient::sendKeystate() {
 }
 
 int BomberNetClient::handleNet() {
-	char data[2048];
+	char data[1024];
 	int len;
 
 	int active = SDLNet_CheckSockets(BomberNetClient::socketset, 0);
@@ -192,7 +192,7 @@ int BomberNetClient::handleNet() {
 	if (active > 0) {
 		if (SDLNet_SocketReady(BomberNetClient::tcpsock)) {
 			memset(data, 0, sizeof data);
-			len = SDLNet_TCP_Recv(tcpsock, (char *) data, 2048);
+			len = SDLNet_TCP_Recv(tcpsock, (char *) data, 1024);
 			//fprintf(stderr,"longueur : %i",len);
 			if (len <= 0) {
 				SDLNet_TCP_Close(tcpsock);

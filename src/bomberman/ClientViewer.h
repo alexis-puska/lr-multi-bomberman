@@ -34,7 +34,7 @@ class ClientViewer {
 	public:
 		ClientViewer(SDL_Surface * vout_bufLibretro);
 		~ClientViewer();
-		void decode(char data[2048]);
+		void decode(char data[1024]);
 
 	private:
 

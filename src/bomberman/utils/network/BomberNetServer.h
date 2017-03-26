@@ -77,7 +77,7 @@ class BomberNetServer {
 		static BomberNetServer m_instance;
 
 		//DRAW REQUEST BUFFER
-		char buffer[2048];
+		char buffer[1024];
 		int bufferLenght;
 		int bufferPosition;
 		int bufferElement;

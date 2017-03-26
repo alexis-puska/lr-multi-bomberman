@@ -34,7 +34,8 @@ Bomberman::Bomberman(SDL_Surface * vout_bufLibretro) {
 }
 
 Bomberman::~Bomberman() {
-	//BomberNet::Instance().stopServer();
+	BomberNetServer::Instance().stopServer();
+	BomberNetClient::Instance().disconnectClient();
 	SDL_FreeSurface(screenBuffer);
 	if (game) {
 		if (game->isConfigured()) {

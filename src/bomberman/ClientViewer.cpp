@@ -89,7 +89,7 @@ void ClientViewer::copySurfaceToBackRenderer(SDL_Surface * src, SDL_Surface * de
  *
  ***********************************/
 
-void ClientViewer::decode(char data[2048]) {
+void ClientViewer::decode(char data[1024]) {
 	this->newCycle = false;
 	int positionObjectType = 6;
 	SDL_FillRect(playerBombeExplode, NULL, SDL_MapRGBA(playerBombeExplode->format, 0, 0, 0, 0));
@@ -155,10 +155,6 @@ void ClientViewer::decode(char data[2048]) {
 							levelInfo[j] = data[positionObjectType + 2 + j];
 						}
 						drawLevelInfoScreen();
-						positionObjectType += levelInfoRequest;
-						break;
-					case 6:
-						drawGameScreen();
 						positionObjectType += levelInfoRequest;
 						break;
 				}
