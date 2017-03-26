@@ -551,15 +551,15 @@ void BomberNetServer::sendTabBonus(int * tabBonus) {
 }
 
 void BomberNetServer::sendPlayer(float posX, float posY, int sprite, int louis, int spaceship, bool inverse) {
-	char tmp[11];
+	char tmp[12];
 	tmp[0] = 6;
 	SDLNet_Write16((int) (posX * 100.0), tmp + 1);
 	SDLNet_Write16((int) (posY * 100.0), tmp + 3);
 	SDLNet_Write16(sprite, tmp + 5);
 	SDLNet_Write16(louis, tmp + 7);
 	SDLNet_Write16(spaceship, tmp + 9);
-	tmp[10] = inverse ? 1 : 0;
-	concatBuffer(tmp, 11);
+	tmp[11] = inverse ? 1 : 0;
+	concatBuffer(tmp, 12);
 }
 
 void BomberNetServer::sendPlayerState() {
