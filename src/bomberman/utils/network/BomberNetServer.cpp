@@ -479,7 +479,7 @@ void BomberNetServer::sendLevelInfo() {
  *   concat buffer
  ********************/
 void BomberNetServer::concatBuffer(char * src, int length) {
-	if ((undigned)(bufferPosition + length) > sizeof buffer) {
+	if ((unsigned)(bufferPosition + length) > sizeof buffer) {
 		sendBuffer();
 		initBuffer();
 	}
@@ -557,7 +557,7 @@ void BomberNetServer::sendPlayer(float posX, float posY, int sprite, int louis, 
 	SDLNet_Write16((int) (posY * 100.0), tmp + 3);
 	SDLNet_Write16(sprite, tmp + 5);
 	SDLNet_Write16(louis, tmp + 7);
-	tmp[9] = spaceship;
+	SDLNet_Write16(spaceship, tmp + 9);
 	tmp[10] = inverse ? 1 : 0;
 	concatBuffer(tmp, 11);
 }
