@@ -118,7 +118,6 @@ void Bomberman::tick(unsigned short in_keystateLibretro[16]) {
 			Sound::Instance().playValidSound();
 			if (GameConfig::Instance().getGameModeType() == NET_SERVER) {
 
-
 				BomberNetServer::Instance().sendSound(14, -1, true);
 				BomberNetServer::Instance().sendBuffer();
 			}
@@ -161,6 +160,7 @@ void Bomberman::tick(unsigned short in_keystateLibretro[16]) {
 					currentStep = PlayerTypeMenu;
 					if (GameConfig::Instance().getGameModeType() == NET_SERVER) {
 						BomberNetServer::Instance().sendChangeScreenCommand(1);
+						BomberNetServer::Instance().sendBuffer();
 					}
 					BomberNetServer::Instance().linkKeystate();
 					GameConfig::Instance().generateNetPlayerConfiguration();
@@ -194,6 +194,7 @@ void Bomberman::tick(unsigned short in_keystateLibretro[16]) {
 					if (GameConfig::Instance().getGameModeType() == NET_SERVER) {
 						if (GameConfig::Instance().netPlayerAllSet()) {
 							BomberNetServer::Instance().sendChangeScreenCommand(2);
+							BomberNetServer::Instance().sendBuffer();
 							GameConfig::Instance().generatePlayerSpriteTypeforCPU();
 							cursorPosition = 0;
 							currentStep = PlayerSpriteMenu;
@@ -210,6 +211,7 @@ void Bomberman::tick(unsigned short in_keystateLibretro[16]) {
 				case PlayerSpriteMenu:
 					if (GameConfig::Instance().getGameModeType() == NET_SERVER) {
 						BomberNetServer::Instance().sendChangeScreenCommand(3);
+						BomberNetServer::Instance().sendBuffer();
 					}
 					cursorPosition = 0;
 					currentStep = gameOptionMenu;
@@ -217,6 +219,7 @@ void Bomberman::tick(unsigned short in_keystateLibretro[16]) {
 				case gameOptionMenu:
 					if (GameConfig::Instance().getGameModeType() == NET_SERVER) {
 						BomberNetServer::Instance().sendChangeScreenCommand(4);
+						BomberNetServer::Instance().sendBuffer();
 					}
 					cursorPosition = 0;
 					currentStep = levelSelectionMenu;
@@ -225,6 +228,7 @@ void Bomberman::tick(unsigned short in_keystateLibretro[16]) {
 					cursorPosition = 0;
 					if (GameConfig::Instance().getGameModeType() == NET_SERVER) {
 						BomberNetServer::Instance().sendChangeScreenCommand(5);
+						BomberNetServer::Instance().sendBuffer();
 					}
 					game = new Game(vout_buf, in_keystate, in_keystate_over_net);
 					currentStep = gameStep;
@@ -293,6 +297,7 @@ void Bomberman::tick(unsigned short in_keystateLibretro[16]) {
 				case PlayerSpriteMenu:
 					if (GameConfig::Instance().getGameModeType() == NET_SERVER) {
 						BomberNetServer::Instance().sendChangeScreenCommand(1);
+						BomberNetServer::Instance().sendBuffer();
 					}
 					cursorPosition = 0;
 					currentStep = PlayerTypeMenu;
@@ -300,6 +305,7 @@ void Bomberman::tick(unsigned short in_keystateLibretro[16]) {
 				case gameOptionMenu:
 					if (GameConfig::Instance().getGameModeType() == NET_SERVER) {
 						BomberNetServer::Instance().sendChangeScreenCommand(2);
+						BomberNetServer::Instance().sendBuffer();
 					}
 					cursorPosition = 0;
 					currentStep = PlayerSpriteMenu;
@@ -307,6 +313,7 @@ void Bomberman::tick(unsigned short in_keystateLibretro[16]) {
 				case levelSelectionMenu:
 					if (GameConfig::Instance().getGameModeType() == NET_SERVER) {
 						BomberNetServer::Instance().sendChangeScreenCommand(3);
+						BomberNetServer::Instance().sendBuffer();
 					}
 					cursorPosition = 0;
 					currentStep = gameOptionMenu;
@@ -314,6 +321,7 @@ void Bomberman::tick(unsigned short in_keystateLibretro[16]) {
 				case gameStep:
 					if (GameConfig::Instance().getGameModeType() == NET_SERVER) {
 						BomberNetServer::Instance().sendChangeScreenCommand(4);
+						BomberNetServer::Instance().sendBuffer();
 					}
 					currentStep = levelSelectionMenu;
 					break;

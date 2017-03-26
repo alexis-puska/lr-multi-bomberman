@@ -292,11 +292,16 @@ Game::~Game() {
  */
 void Game::startGame() {
 	if (!isThreadAlive) {
+		if (GameConfig::Instance().getGameModeType() == NET_SERVER) {
+			BomberNetServer::Instance().sendChangeScreenCommand(7);
+			BomberNetServer::Instance().sendChangeScreenCommand(6);
+			BomberNetServer::Instance().sendTab(tab);
+			BomberNetServer::Instance().sendBuffer();
+			BomberNetServer::Instance().sendTabBonus(tabBonus);
+			BomberNetServer::Instance().sendBuffer();
+		}
 		isThreadAlive = true;
 		mainThread = SDL_CreateThread(metronome, "mainThread", this);
-		if (GameConfig::Instance().getGameModeType() == NET_SERVER) {
-			BomberNetServer::Instance().sendChangeScreenCommand(6);
-		}
 	}
 }
 

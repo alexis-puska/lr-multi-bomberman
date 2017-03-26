@@ -89,11 +89,19 @@ void ClientViewer::copySurfaceToBackRenderer(SDL_Surface * src, SDL_Surface * de
  *
  ***********************************/
 
-void ClientViewer::decode(char data[1024]) {
+void ClientViewer::decode(char data[1024], int len) {
 	this->newCycle = false;
 	int positionObjectType = 6;
 	SDL_FillRect(playerBombeExplode, NULL, SDL_MapRGBA(playerBombeExplode->format, 0, 0, 0, 0));
+	if (data[5] < 5) {
+		fprintf(stderr, "nb element dans la requete : %i %i\n", data[5], len);
+	}
+	int id = 0;
 	for (int i = 0; i < data[5]; i++) {
+		if (data[5] < 5) {
+			fprintf(stderr, "element %i pos : %i \n", id, positionObjectType);
+		}
+		id++;
 		switch (data[positionObjectType]) {
 			//draw screen command
 			case 1:
@@ -116,7 +124,9 @@ void ClientViewer::decode(char data[1024]) {
 						break;
 					case gameScreen:
 						drawGameScreen();
-						//positionObjectType += levelInfoRequest;
+						break;
+					case resetScreen:
+						resetAll();
 						break;
 				}
 				positionObjectType += drawScreenRequest;
@@ -165,6 +175,7 @@ void ClientViewer::decode(char data[1024]) {
 				break;
 			case 4:
 				//SDL_FillRect(brickShadow, NULL, SDL_MapRGBA(brickShadow->format, 0, 0, 0, 0));
+				fprintf(stderr, "update tab commande\n");
 				for (int i = 0; i < 735; i++) {
 					updateTab(i, data[i + positionObjectType + 1]);
 				}
@@ -272,8 +283,7 @@ void ClientViewer::decode(char data[1024]) {
 	}
 	switch (gameState) {
 		case menu:
-			SDL_FillRect(brickShadow, NULL, SDL_MapRGBA(brickShadow->format, 0, 0, 0, 0));
-			break;
+
 		case gameViewerStart:
 			tick();
 		case gameViewerPause:
@@ -529,10 +539,16 @@ void ClientViewer::drawLevelInfoScreen() {
 	copySurfaceToBackRenderer(screenBuffer, vout_buf, 0, 0);
 }
 
-void ClientViewer::drawGameScreen() {
-	fprintf(stderr, "draw game screen");
-	SDL_BlitSurface(Sprite::Instance().getBackground(), NULL, vout_buf, NULL);
+void ClientViewer::resetAll() {
+	fprintf(stderr, "reset ALL\n");
+	memset(tab, 0, sizeof tab);
+	memset(tabBonus, noBonus, sizeof tabBonus);
 	clearAnimation();
+}
+
+void ClientViewer::drawGameScreen() {
+	fprintf(stderr, "draw game screen 6\n");
+	SDL_BlitSurface(Sprite::Instance().getBackground(), NULL, vout_buf, NULL);
 	generateGround();
 }
 
@@ -543,8 +559,7 @@ void ClientViewer::drawGameScreen() {
  ***********************************/
 
 void ClientViewer::generateGround() {
-	memset(tab, 0, sizeof tab);
-	memset(tabBonus, noBonus, sizeof tabBonus);
+	fprintf(stderr, "generate ground 6\n");
 	SDL_FillRect(brickShadow, NULL, SDL_MapRGBA(brickShadow->format, 0, 0, 0, 0));
 	SDL_FillRect(ground, NULL, SDL_MapRGBA(ground->format, 0, 0, 0, 0));
 	SDL_FillRect(skyFixe, NULL, SDL_MapRGBA(skyFixe->format, 0, 0, 0, 0));
@@ -666,16 +681,22 @@ void ClientViewer::updateTab(int idx, int val) {
 	srcrect.y = 0;
 	srcrect.w = smallSpriteLevelSizeWidth;
 	srcrect.h = smallSpriteLevelSizeHeight;
+	dstrect.x = idx % 35 * smallSpriteLevelSizeWidth;
+	dstrect.y = ((int) floor(idx / 35)) * smallSpriteLevelSizeHeight;
+	dstrect.w = smallSpriteLevelSizeWidth;
+	dstrect.h = smallSpriteLevelSizeHeight;
 	if (tab[idx] != val) {
 		tab[idx] = val;
 		if (tab[idx] == brickElement) {
-			dstrect.x = idx % 35 * smallSpriteLevelSizeWidth;
-			dstrect.y = ((int) floor(idx / 35)) * smallSpriteLevelSizeHeight;
-			dstrect.w = smallSpriteLevelSizeWidth;
-			dstrect.h = smallSpriteLevelSizeHeight;
+			fprintf(stderr, "+%i", idx);
 			SDL_BlitSurface(Sprite::Instance().getLevel(21, levelInfo[0]), &srcrect, brickShadow, &dstrect);
 		} else if (tab[idx] == emptyElement) {
 			SDL_FillRect(brickShadow, &dstrect, SDL_MapRGBA(brickShadow->format, 0, 0, 0, 0));
+			if(tabBonus[idx] != noBonus) {
+				fprintf(stderr, "draw bonus when refresh tab bonus \n");
+				dstrect.x = idx % 35 * smallSpriteLevelSizeWidth +1;
+				SDL_BlitSurface(Sprite::Instance().getBonus(tabBonus[idx]), NULL, brickShadow, &dstrect);
+			}
 		}
 	}
 }
@@ -938,6 +959,7 @@ void ClientViewer::eraseBonus(int idx) {
 	destTextureRect.y = ((int) floor(idx / 35)) * 16;
 	destTextureRect.w = 18;
 	destTextureRect.h = 16;
+	tabBonus[idx] = noBonus;
 	SDL_FillRect(brickShadow, &destTextureRect, SDL_MapRGBA(brickShadow->format, 0, 0, 0, 0));
 }
 

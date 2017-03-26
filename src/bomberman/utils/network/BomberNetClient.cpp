@@ -245,8 +245,7 @@ int BomberNetClient::handleNet() {
 						}
 						break;
 					case 2:
-						//fprintf(stderr, "Nombre d'element dans la requette : %i", data[5]);
-						BomberNetClient::viewer->decode(data);
+						BomberNetClient::viewer->decode(data, len);
 						return 0;
 						break;
 				}

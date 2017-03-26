@@ -20,11 +20,11 @@
 #define __MYCLASS_CLIENT_VIEWER
 
 enum objectLenght {
-	nbConnectedRequest = 11, drawScreenRequest = 9, playerTypeRequest = 25, spriteTypeRequest = 25, gameOptionRequest = 13, levelInfoRequest = 29,
+	nbConnectedRequest = 11, drawScreenRequest = 2, playerTypeRequest = 25, spriteTypeRequest = 25, gameOptionRequest = 13, levelInfoRequest = 29,
 };
 
 enum screenToDrawEnum {
-	nbConnectedScreen = 1, playerTypeScreen, spriteTypeScreen, gameOptionScreen, levelInfoScreen, gameScreen
+	nbConnectedScreen = 1, playerTypeScreen, spriteTypeScreen, gameOptionScreen, levelInfoScreen, gameScreen, resetScreen
 };
 enum viewerStateEnum {
 	menu= -1, gameViewerStart = 0, gameViewerPause = 1, gameViewerWait = 2, gameViewerEnd = 3, generateViewerResult = 4,
@@ -34,7 +34,7 @@ class ClientViewer {
 	public:
 		ClientViewer(SDL_Surface * vout_bufLibretro);
 		~ClientViewer();
-		void decode(char data[1024]);
+		void decode(char data[1024], int len);
 
 	private:
 
@@ -45,6 +45,7 @@ class ClientViewer {
 		void drawGameOptionScreen();
 		void drawLevelInfoScreen();
 		void drawGameScreen();
+		void resetAll();
 
 		void copySurfaceToBackRenderer(SDL_Surface * src, SDL_Surface * dest, int x, int y);
 		void playSound(int sound, int channel, int active);

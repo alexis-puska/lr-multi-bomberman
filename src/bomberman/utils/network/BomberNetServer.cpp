@@ -354,19 +354,10 @@ void BomberNetServer::decode(char data[1024], int which) {
 
 void BomberNetServer::sendChangeScreenCommand(int screen) {
 	fprintf(stderr, "send screen change command %i\n", screen);
-	char data[9];
-	memset(data, 0, sizeof data);
-	SDLNet_Write32(requestNumber, data);
-	data[4] = 0x02;
-	data[5] = 0x01; //number of object
-	data[6] = 0x01; //screen type
-	data[7] = screen;
-	data[8] = '\0';
-	std::map<int, int>::iterator it;
-	for (it = connexionHuman.begin(); it != connexionHuman.end(); ++it) {
-		SDLNet_TCP_Send(bomber[it->first].sock, &data, 9);
-		requestNumber++;
-	}
+	char data[2];
+	data[0] = 0x01; //screen type
+	data[1] = screen;
+	concatBuffer(data, 2);
 }
 
 void BomberNetServer::sendNbConnected() {
@@ -509,8 +500,11 @@ void BomberNetServer::sendBuffer() {
 		SDLNet_TCP_Send(bomber[it->first].sock, &buffer, bufferPosition);
 		requestNumber++;
 	}
+
+	if(bufferElement < 5){
+		fprintf(stderr, "send buffer %i %i\n", bufferElement, bufferPosition);
+	}
 	initBuffer();
-	//fprintf(stderr, "send buffer %i %i\n", bufferElement, bufferPosition);
 }
 /***********************
  *   init buffer
@@ -538,6 +532,7 @@ void BomberNetServer::sendGameInfo(int time, bool newCycle, int gameState) {
 }
 
 void BomberNetServer::sendTab(int * tab) {
+	fprintf(stderr, "send Tab update request\n");
 	char tmp[736];
 	tmp[0] = 4;
 	for (int i = 0; i < 735; i++) {
