@@ -703,6 +703,7 @@ void ClientViewer::updateTab(int idx, int val) {
 }
 
 void ClientViewer::updateTabBonus(int idx, int val) {
+	fprintf(stderr, "update tabbonus %i %i", idx, val);
 	if (tabBonus[idx] != val) {
 		tabBonus[idx] = val;
 		if (tab[idx] == emptyElement && tabBonus[idx] != noBonus) {
@@ -711,6 +712,7 @@ void ClientViewer::updateTabBonus(int idx, int val) {
 			dstrect.y = ((int) floor(idx / 35)) * 16;
 			dstrect.w = 16;
 			dstrect.h = 16;
+			fprintf(stderr, "draw bonus idx %i", val);
 			SDL_BlitSurface(Sprite::Instance().getBonus(val), NULL, brickShadow, &dstrect);
 		}
 	}
