@@ -541,6 +541,7 @@ void ClientViewer::drawLevelInfoScreen() {
 
 void ClientViewer::resetAll() {
 	fprintf(stderr, "reset ALL\n");
+
 	memset(tab, 0, sizeof tab);
 	memset(tabBonus, noBonus, sizeof tabBonus);
 	clearAnimation();

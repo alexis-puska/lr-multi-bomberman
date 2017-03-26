@@ -479,7 +479,7 @@ void BomberNetServer::sendLevelInfo() {
  *   concat buffer
  ********************/
 void BomberNetServer::concatBuffer(char * src, int length) {
-	if (bufferPosition + length > sizeof buffer) {
+	if ((undigned)(bufferPosition + length) > sizeof buffer) {
 		sendBuffer();
 		initBuffer();
 	}
