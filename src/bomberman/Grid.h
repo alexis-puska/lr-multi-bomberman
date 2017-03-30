@@ -7,6 +7,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
+#include <math.h>
 #include <vector>
 #include "utils/Sprite.h"
 #include "utils/LevelService.h"

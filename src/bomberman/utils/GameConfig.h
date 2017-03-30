@@ -3,6 +3,7 @@
 #include <sys/time.h>
 #include <vector>
 #include <algorithm>
+#include <math.h>
 #include "Sprite.h"
 #include "LevelService.h"
 

@@ -4,6 +4,7 @@
 #include <SDL2_mixer/SDL_mixer.h>
 #endif
 
+#include <string.h>
 #include <stdio.h>
 #include <vector>
 #include <map>
