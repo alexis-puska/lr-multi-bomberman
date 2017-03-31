@@ -59,7 +59,7 @@ target_: $(TARGET)
 
 #LINK
 $(TARGET): $(OBJS)	
-	$(CXX) -o $@ $^ $(LDFLAGS) $(LIBS) $(EXTRA_LDFLAGS) -Wl,--export-all-symbols -Wl,--no-undefined -Wl,--version-script=link.T
+	$(CXX) -shared -o $@ $^ $(LDFLAGS) $(LIBS) $(EXTRA_LDFLAGS) -Wl,--export-all-symbols -Wl,--no-undefined -Wl,--version-script=link.T
 
 #CLEAN
 clean: $(PLAT_CLEAN) 
