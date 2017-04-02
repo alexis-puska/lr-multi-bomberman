@@ -71,7 +71,7 @@ class BomberNetServer {
 		void sendSound(int sound, int channel, bool lect);
 		void sendBonusAppear(int idx, int type);
 		void sendBonusDisapear(int idx);
-
+		void sendColorAndScore();
 
 	private:
 		static BomberNetServer m_instance;

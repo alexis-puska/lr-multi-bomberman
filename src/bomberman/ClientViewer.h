@@ -51,11 +51,15 @@ class ClientViewer {
 		void playSound(int sound, int channel, int active);
 
 		void generateGround();
+		void updateTimeDisplay();
+		void generateHeader();
 
 
 		int nbConnected[2];
 		int playerType[16];
 		int playerSprite[16];
+		int playerColor[16];
+		int playerScore[16];
 		int playerState[16];
 		int gameOption[4];
 		int levelInfo[20];
@@ -95,7 +99,7 @@ class ClientViewer {
 		void updateTab(int idx, int val);
 		void updateTabBonus(int idx, int val);
 		void drawPlayer(float posX, float posY, int sprite, int louisSprite, int spaceShipSprite, bool inverse);
-		void updatePlayerState(int idx, int val);
+		bool updatePlayerState(int idx, int val);
 		void clearArea(int idx);
 		void drawRail(int idx, int sprite);
 		void drawTrolley(float posX, float posY, int sprite);

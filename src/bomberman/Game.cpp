@@ -141,6 +141,10 @@ this	->vout_buf = vout_buf;
 	GameConfig::Instance().generateColorPlayer();
 	GameConfig::Instance().resetPlayerScore();
 
+	if (GameConfig::Instance().getGameModeType() == NET_SERVER) {
+		BomberNetServer::Instance().sendColorAndScore();
+	}
+
 	for (int i = 0; i < 16; i++) {
 		int startCase = LevelService::Instance().getLevel(levelIndex)->getVariantes(variante)->getStart(i);
 
@@ -463,7 +467,7 @@ void Game::generateHeader() {
 			//NO PLAYER
 			char score[4];
 			sprintf(score, "XXX");
-			Sprite::Instance().drawText(vout_buf, i * 36 + offsetScore, 2, score, red, false);
+			Sprite::Instance().drawText(vout_buf, i * 36 + offsetScore, 2, score, red, true);
 		}
 	}
 }
@@ -1215,6 +1219,10 @@ void Game::tick() {
 				initMine();
 				initTrolley();
 				initTeleporter();
+
+				if (GameConfig::Instance().getGameModeType() == NET_SERVER) {
+					BomberNetServer::Instance().sendColorAndScore();
+				}
 
 				for (int i = 0; i < 16; i++) {
 
