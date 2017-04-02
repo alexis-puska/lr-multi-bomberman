@@ -6,6 +6,7 @@ ClientViewer::ClientViewer(SDL_Surface * vout_bufLibretro) {
 	gmask = 0x0000ff00;
 	bmask = 0x000000ff;
 	amask = 0xff000000;
+	battleMusic = false;
 	this->vout_buf = vout_bufLibretro;
 	copySurfaceToBackRenderer(Sprite::Instance().getBackground(), vout_buf, 0, 0);
 	for (int i = 0; i < 16; i++) {
@@ -538,20 +539,28 @@ void ClientViewer::drawLevelInfoScreen() {
 		Sound::Instance().stopMineSound(i);
 	}
 	copySurfaceToBackRenderer(screenBuffer, vout_buf, 0, 0);
+
+	if (battleMusic) {
+		Sound::Instance().stopMusique();
+		Sound::Instance().startMenuMusique();
+		battleMusic = false;
+	}
 }
 
 void ClientViewer::resetAll() {
-	//fprintf(stderr, "reset ALL\n");
-
 	memset(tab, 0, sizeof tab);
 	memset(tabBonus, noBonus, sizeof tabBonus);
 	clearAnimation();
 }
 
 void ClientViewer::drawGameScreen() {
-	//fprintf(stderr, "draw game screen 6\n");
 	SDL_BlitSurface(Sprite::Instance().getBackground(), NULL, vout_buf, NULL);
 	generateGround();
+	if (!battleMusic) {
+		Sound::Instance().stopMusique();
+		Sound::Instance().startBattleMusique();
+		battleMusic = true;
+	}
 }
 
 /***********************************

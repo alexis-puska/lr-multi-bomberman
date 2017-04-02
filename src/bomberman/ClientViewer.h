@@ -68,6 +68,7 @@ class ClientViewer {
 		Uint32 rmask, gmask, bmask, amask;
 
 		bool somethingDrawInSky;
+		bool battleMusic;
 		char tab[735];
 		char tabBonus[735];
 		SDL_Surface * vout_buf;
