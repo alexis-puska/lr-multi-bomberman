@@ -154,3 +154,9 @@ mine sous marine (4)
 sable mouvant (4)
 teleporter (3)
 
+
+
+
+
+sudo apt-get install mxe-x86-64-w64-mingw32.static-sdl2 mxe-x86-64-w64-mingw32.static-sdl2-image mxe-x86-64-w64-mingw32.static-sdl2-ttf mxe-x86-64-w64-mingw32.static-sdl2-mixer mxe-x86-64-w64-mingw32.static-sdl2-gfx mxe-x86-64-w64-mingw32.static-sdl2-net mxe-x86-64-w64-mingw32.static-gcc mxe-x86-64-w64-mingw32.static-mingw-w64
+

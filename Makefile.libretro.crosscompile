@@ -1,11 +1,11 @@
 # Makefile for lr_multi_bomberman (libretro)
 
 TARGET := lr_multi_bomberman_libretro.dll
-CC = x86_64-w64-mingw32-gcc
-CXX = x86_64-w64-mingw32-g++
+CC = x86_64-w64-mingw32.static-g++
+CXX = x86_64-w64-mingw32.static-g++
 MAIN_LDFLAGS += 
-LIBS =-I/usr/x86_64_SDL2/include -L/usr/x86_64_SDL2/lib -lmingw32 -lSDL2main -lSDL2 -lSDL2_image -lSDL2_ttf -lSDL2_mixer -lSDL2_net
-CFLAGS = -I/usr/x86_64_SDL2/include -L/usr/x86_64_SDL2/lib 
+LIBS = `x86_64-w64-mingw32.static-pkg-config --libs sdl2` `x86_64-w64-mingw32.static-pkg-config --libs SDL2_image` `x86_64-w64-mingw32.static-pkg-config --libs SDL2_ttf` `x86_64-w64-mingw32.static-pkg-config --libs SDL2_mixer` `x86_64-w64-mingw32.static-pkg-config --libs SDL2_net` -lmingw32 -liphlpapi -lnetapi32 -lws2_32 -ldpnet
+CFLAGS = `x86_64-w64-mingw32.static-pkg-config --cflags sdl2` `x86_64-w64-mingw32.static-pkg-config --cflags SDL2_image` `x86_64-w64-mingw32.static-pkg-config --cflags SDL2_ttf` `x86_64-w64-mingw32.static-pkg-config --cflags SDL2_mixer` `x86_64-w64-mingw32.static-pkg-config --cflags SDL2_net` 
 
 libretro_all: all 
 CFLAGS += -Wall -ffast-math
@@ -59,7 +59,7 @@ target_: $(TARGET)
 
 #LINK
 $(TARGET): $(OBJS)	
-	$(CXX) -shared -o $@ $^ $(LDFLAGS) $(LIBS) $(EXTRA_LDFLAGS) -Wl,--export-all-symbols -Wl,--no-undefined -Wl,--version-script=link.T
+	$(CXX) -shared -static -o $@ $^ $(LDFLAGS) $(LIBS) $(EXTRA_LDFLAGS) -Wl,--export-all-symbols -Wl,--no-undefined -Wl,--version-script=link.T
 
 #CLEAN
 clean: $(PLAT_CLEAN) 
