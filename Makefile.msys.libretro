@@ -1,0 +1,83 @@
+# Makefile for lr_multi_bomberman (libretro)
+
+CC ?= i686-w64-mingw32-gcc
+CXX ?= i686_64-w64-mingw32-g++
+
+TARGET := lr_multi_bomberman_libretro.dll
+SHARED := -shared -static-libgcc -static-libstdc++ -Wl,-Bstatic
+LIBS = `pkg-config SDL2 --libs --static` `pkg-config SDL2_image --libs --static` `pkg-config SDL2_ttf --libs --static` `pkg-config SDL2_mixer --libs --static` `pkg-config SDL2_net --libs --static` -liconv -lmingw32 -liphlpapi -lnetapi32 -ldpnet -lmad -LC:/msys64/mingw64/lib -lfreetype -lbz2 -lglib-2.0 -lpng16  -ltiff -ljpeg -lz -llzma -lwebp -lmsimg32 -lgdi32 -lharfbuzz -lglib-2.0 -lintl -pthread -lws2_32 -lole32 -lwinmm -lshlwapi -lpcre -lintl -lpcre -lgraphite2 -lm
+
+CFLAGS = `pkg-config SDL2 --cflags --static` `pkg-config SDL2_image --cflags --static` `pkg-config SDL2_ttf --cflags --static` `pkg-config SDL2_mixer --cflags --static` `pkg-config SDL2_net --cflags --static`
+
+MAIN_LDFLAGS += -shared
+MAIN_LDLIBS += $(LIBM) $(LIBZ)
+
+libretro_all: all
+
+# Makefile for Lr-Multi-Bomberman
+# default stuff goes here, so that config can override
+TARGET ?= lr-multi-bomberman
+CFLAGS += -Wall -ggdb -Iinclude -ffast-math
+ifndef DEBUG
+CFLAGS += -O2 -DNDEBUG
+endif
+CXXFLAGS += $(CFLAGS)
+
+all: target_
+
+LDFLAGS += $(MAIN_LDFLAGS)
+EXTRA_LDFLAGS ?= -Wl,-Map=$@.map
+LDLIBS += $(MAIN_LDLIBS)
+ifdef PCNT
+CFLAGS += -DPCNT
+endif
+
+#OBJECT TO COMPILE
+OBJS += src/libretro/libretro.o
+OBJS += src/bomberman/Bomberman.o
+OBJS += src/bomberman/utils/network/BomberNetServer.o
+OBJS += src/bomberman/utils/network/BomberNetClient.o
+OBJS += src/bomberman/MyWrapper.o
+OBJS += src/bomberman/Grid.o
+OBJS += src/bomberman/Hole.o
+OBJS += src/bomberman/Mine.o
+OBJS += src/bomberman/Teleporter.o
+OBJS += src/bomberman/utils/RailSwitch.o
+OBJS += src/bomberman/trolley/Trolley.o
+OBJS += src/bomberman/trolley/Rail.o
+OBJS += src/bomberman/trolley/Button.o
+OBJS += src/bomberman/Game.o
+OBJS += src/bomberman/ClientViewer.o
+OBJS += src/bomberman/Player.o
+OBJS += src/bomberman/Bombe.o
+OBJS += src/bomberman/animation/Explosion.o
+OBJS += src/bomberman/animation/BurnWall.o
+OBJS += src/bomberman/animation/BurnLouis.o
+OBJS += src/bomberman/animation/Cursor.o
+OBJS += src/bomberman/animation/SuddenDeathAnimation.o
+OBJS += src/bomberman/animation/BurnBonus.o
+OBJS += src/bomberman/animation/PopBonus.o
+OBJS += src/bomberman/ia/Brain.o
+OBJS += src/bomberman/ia/AStarCell.o
+OBJS += src/bomberman/ia/AStar.o
+OBJS += src/bomberman/ia/BFS.o
+OBJS += src/bomberman/utils/Sprite.o
+OBJS += src/bomberman/utils/Sound.o
+OBJS += src/bomberman/utils/LevelService.o
+OBJS += src/bomberman/utils/Level.o
+OBJS += src/bomberman/utils/LevelVariante.o
+OBJS += src/bomberman/utils/GameConfig.o
+
+#COMPILATION
+%.o: %.cpp
+	$(CXX) $(CXXFLAGS) $(CFLAGS) -c -o $@ $<
+
+target_: $(TARGET)
+
+#LINK
+$(TARGET): $(OBJS)	
+	$(CXX) -static -shared -o $@ $^ $(LDFLAGS) $(LDLIBS) $(LIBS) $(EXTRA_LDFLAGS) -s -O2
+
+#CLEAN
+clean: $(PLAT_CLEAN) 
+	$(RM) $(TARGET) $(OBJS) $(TARGET).map
