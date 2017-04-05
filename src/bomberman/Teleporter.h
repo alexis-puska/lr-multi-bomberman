@@ -9,6 +9,7 @@
 #include "utils/GameConfig.h"
 #include "utils/Sound.h"
 #include <time.h>
+#include <math.h>
 
 #ifndef __MYCLASS_TELEPORTER
 #define __MYCLASS_TELEPORTER

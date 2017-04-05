@@ -4,6 +4,7 @@
 #include <SDL2_image/SDL_image.h>
 #endif
 
+#include <math.h>
 #include "utils/Sprite.h"
 #include "utils/Sound.h"
 #include "utils/GameConfig.h"

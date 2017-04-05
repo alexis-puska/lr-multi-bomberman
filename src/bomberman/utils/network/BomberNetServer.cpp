@@ -479,7 +479,7 @@ void BomberNetServer::sendLevelInfo() {
  *   concat buffer
  ********************/
 void BomberNetServer::concatBuffer(char * src, int length) {
-	if ((unsigned)(bufferPosition + length) > sizeof buffer) {
+	if ((unsigned) (bufferPosition + length) > sizeof buffer) {
 		sendBuffer();
 		initBuffer();
 	}
@@ -501,7 +501,7 @@ void BomberNetServer::sendBuffer() {
 		requestNumber++;
 	}
 
-	if(bufferElement < 5){
+	if (bufferElement < 5) {
 		fprintf(stderr, "send buffer %i %i\n", bufferElement, bufferPosition);
 	}
 	initBuffer();
@@ -727,4 +727,20 @@ void BomberNetServer::sendBonusDisapear(int idx) {
 	tmp[0] = 26;
 	SDLNet_Write16(idx, tmp + 1);
 	concatBuffer(tmp, 3);
+}
+
+/**********************
+ * color and score
+ *********************/
+void BomberNetServer::sendColorAndScore() {
+	char tmp[33];
+	tmp[0] = 27;
+	int idx = 1;
+	for (int i = 0; i < nbPlayer; i++) {
+		tmp[idx] = GameConfig::Instance().getPlayerColor(i);
+		idx++;
+		tmp[idx] =  GameConfig::Instance().getPlayerScore(i);
+		idx++;
+	}
+	concatBuffer(tmp, 33);
 }

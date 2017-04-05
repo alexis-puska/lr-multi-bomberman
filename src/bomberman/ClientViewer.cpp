@@ -6,6 +6,7 @@ ClientViewer::ClientViewer(SDL_Surface * vout_bufLibretro) {
 	gmask = 0x0000ff00;
 	bmask = 0x000000ff;
 	amask = 0xff000000;
+	battleMusic = false;
 	this->vout_buf = vout_bufLibretro;
 	copySurfaceToBackRenderer(Sprite::Instance().getBackground(), vout_buf, 0, 0);
 	for (int i = 0; i < 16; i++) {
@@ -90,6 +91,7 @@ void ClientViewer::copySurfaceToBackRenderer(SDL_Surface * src, SDL_Surface * de
  ***********************************/
 
 void ClientViewer::decode(char data[1024], int len) {
+	bool needRedraw = false;
 	this->newCycle = false;
 	int positionObjectType = 6;
 	SDL_FillRect(playerBombeExplode, NULL, SDL_MapRGBA(playerBombeExplode->format, 0, 0, 0, 0));
@@ -198,8 +200,15 @@ void ClientViewer::decode(char data[1024], int len) {
 				break;
 
 			case 7:
+				needRedraw = false;
 				for (int i = 0; i < 16; i++) {
-					updatePlayerState(i, SDLNet_Read16(data + positionObjectType + (i * 2) + 1));
+					if (updatePlayerState(i, data[positionObjectType + i + 1])) {
+						needRedraw = true;
+					}
+				}
+				if (needRedraw) {
+					fprintf(stderr, "redraw header");
+					generateHeader();
 				}
 				positionObjectType += 17;
 				break;
@@ -279,6 +288,13 @@ void ClientViewer::decode(char data[1024], int len) {
 			case 26:
 				eraseBonus(SDLNet_Read16(data + positionObjectType + 1));
 				positionObjectType += 3;
+				break;
+			case 27:
+				for (int i = 0; i < nbPlayer; i++) {
+					playerColor[i] = data[i * 2 + positionObjectType + 1];
+					playerScore[i] = data[i * 2 + positionObjectType + 2];
+				}
+				positionObjectType += 33;
 				break;
 		}
 	}
@@ -538,20 +554,28 @@ void ClientViewer::drawLevelInfoScreen() {
 		Sound::Instance().stopMineSound(i);
 	}
 	copySurfaceToBackRenderer(screenBuffer, vout_buf, 0, 0);
+
+	if (battleMusic) {
+		Sound::Instance().stopMusique();
+		Sound::Instance().startMenuMusique();
+		battleMusic = false;
+	}
 }
 
 void ClientViewer::resetAll() {
-	//fprintf(stderr, "reset ALL\n");
-
 	memset(tab, 0, sizeof tab);
 	memset(tabBonus, noBonus, sizeof tabBonus);
 	clearAnimation();
 }
 
 void ClientViewer::drawGameScreen() {
-	//fprintf(stderr, "draw game screen 6\n");
 	SDL_BlitSurface(Sprite::Instance().getBackground(), NULL, vout_buf, NULL);
 	generateGround();
+	if (!battleMusic) {
+		Sound::Instance().stopMusique();
+		Sound::Instance().startBattleMusique();
+		battleMusic = true;
+	}
 }
 
 /***********************************
@@ -675,6 +699,9 @@ void ClientViewer::updateGameInfo(int tickRemaining, bool newCycle, int gameStat
 	this->gameState = gameState;
 	this->tickRemaining = tickRemaining;
 	this->newCycle = newCycle;
+	if (tickRemaining % 50 == 0) {
+		updateTimeDisplay();
+	}
 }
 
 void ClientViewer::updateTab(int idx, int val) {
@@ -766,9 +793,12 @@ void ClientViewer::drawPlayer(float posX, float posY, int sprite, int louisSprit
 	}
 }
 
-void ClientViewer::updatePlayerState(int idx, int val) {
-	//fprintf(stderr, "player state %i %i\n", idx, val);
-	playerState[idx] = val;
+bool ClientViewer::updatePlayerState(int idx, int val) {
+	if (playerState[idx] != val) {
+		playerState[idx] = val;
+		return true;
+	}
+	return false;
 }
 
 void ClientViewer::clearArea(int idx) {
@@ -1018,3 +1048,86 @@ void ClientViewer::clearAnimation() {
 	PopBonusList.clear();
 	BurnBonusList.clear();
 }
+
+/**
+ * Update the remaining time of a game
+ * erase a part of the vout_buffer and write remaining time
+ */
+void ClientViewer::updateTimeDisplay() {
+	SDL_Rect rect;
+	rect.x = 290;
+	rect.y = 2;
+	rect.w = 60;
+	rect.h = 20;
+	SDL_FillRect(vout_buf, &rect, 0x000000);
+
+	char time[7];
+
+	if (tickRemaining != -1) {
+		sprintf(time, "%i", tickRemaining / 50);
+	} else {
+		sprintf(time, "INFINI");
+	}
+	Sprite::Instance().drawText(vout_buf, (640 / 2), 2, time, green, true);
+}
+
+/**
+ GENERATE HEADER Player Score
+ */
+void ClientViewer::generateHeader() {
+	fprintf(stderr, "draw header");
+	//reset background
+	//copySurfaceToBackRenderer(Sprite::Instance().getBackground(), vout_buf, 0, 0);
+
+	int offsetShadow = 2;
+	int offsetHeadPlayer = 4;
+	int offsetScore = 22;
+
+	for (int i = 0; i < 16; i++) {
+		if (i == 8) {
+			offsetShadow += 64;
+			offsetHeadPlayer += 64;
+			offsetScore += 64;
+		}
+
+		fprintf(stderr, "type %i color %i \n", playerType[i], playerColor[i]);
+
+		//shadow rect
+		SDL_Rect rect;
+		rect.x = i * 36 + offsetShadow;
+		rect.y = 2;
+		rect.w = 32;
+		rect.h = 20;
+		SDL_BlitSurface(Sprite::Instance().getBackground(), &rect, vout_buf, &rect);
+		SDL_BlitSurface(Sprite::Instance().getShadowArea(3), NULL, vout_buf, &rect);
+
+		//copy mini head player
+		rect.x = i * 36 + offsetHeadPlayer;
+		rect.y = 4;
+		rect.w = 20;
+		rect.h = 20;
+
+		if (playerType[i] != 2) {
+			//FOR HUMAN PLAYER OR CPU
+			int idx = 0;
+			char score[3];
+			if (playerState[i] == 1) {
+				idx = Sprite::Instance().getHappySprite(playerType[i], playerColor[i], 0);
+				SDL_BlitSurface(Sprite::Instance().getPlayerSprite(idx), NULL, vout_buf, &rect);
+				sprintf(score, "%i", playerScore[i]);
+				Sprite::Instance().drawText(vout_buf, i * 36 + offsetScore, 2, score, green, false);
+			} else {
+				idx = Sprite::Instance().getCryingSprite(playerType[i], playerColor[i], 0);
+				SDL_BlitSurface(Sprite::Instance().getPlayerSprite(idx), NULL, vout_buf, &rect);
+				sprintf(score, "%i", playerScore[i]);
+				Sprite::Instance().drawText(vout_buf, i * 36 + offsetScore, 2, score, red, false);
+			}
+		} else {
+			//NO PLAYER
+			char score[4];
+			sprintf(score, "XXX");
+			Sprite::Instance().drawText(vout_buf, i * 36 + offsetScore, 2, score, red, true);
+		}
+	}
+}
+

@@ -4,6 +4,7 @@
 #include <SDL2_image/SDL_image.h>
 #endif
 #include <map>
+#include <math.h>
 #include "../utils/Sprite.h"
 #include "../utils/network/BomberNetServer.h"
 

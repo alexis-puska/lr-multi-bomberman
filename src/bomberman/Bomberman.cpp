@@ -2,6 +2,13 @@
 
 #include <time.h>
 
+int main(int argc, char** argv){
+
+}
+
+
+
+
 Bomberman::Bomberman(SDL_Surface * vout_bufLibretro) {
 	Sprite::Instance();
 	LevelService::Instance();
