@@ -1,19 +1,36 @@
 # Makefile for lr_multi_bomberman (libretro)
 
-TARGET := lr_multi_bomberman_libretro.dll
-CC = i686-w64-mingw32.static-g++
-CXX = i686-w64-mingw32.static-g++
-MAIN_LDFLAGS += 
-LIBS = `i686-w64-mingw32.static-pkg-config` `i686-w64-mingw32.static-pkg-config --libs sdl2` `i686-w64-mingw32.static-pkg-config --libs SDL2_image` `i686-w64-mingw32.static-pkg-config --libs SDL2_ttf` `i686-w64-mingw32.static-pkg-config --libs SDL2_mixer` `i686-w64-mingw32.static-pkg-config --libs SDL2_net` -lmingw32 -liphlpapi -lnetapi32 -lws2_32 -ldpnet
-CFLAGS = `i686-w64-mingw32.static-pkg-config --cflags sdl2` `i686-w64-mingw32.static-pkg-config --cflags SDL2_image` `i686-w64-mingw32.static-pkg-config --cflags SDL2_ttf` `i686-w64-mingw32.static-pkg-config --cflags SDL2_mixer` `i686-w64-mingw32.static-pkg-config --cflags SDL2_net` 
+CC ?= i686-w64-mingw32-gcc
+CXX ?= i686_64-w64-mingw32-g++
 
-libretro_all: all 
-CFLAGS += -Wall -ffast-math
+TARGET := lr_multi_bomberman_libretro.dll
+SHARED := -shared -static-libgcc -static-libstdc++ -Wl,-Bstatic
+LIBS = `pkg-config SDL2 --libs --static` `pkg-config SDL2_image --libs --static` `pkg-config SDL2_ttf --libs --static` `pkg-config SDL2_mixer --libs --static` `pkg-config SDL2_net --libs --static` -liconv -lmingw32 -liphlpapi -lnetapi32 -ldpnet -lmad -LC:/msys64/mingw64/lib -lfreetype -lbz2 -lglib-2.0 -lpng16  -ltiff -ljpeg -lz -llzma -lwebp -lmsimg32 -lgdi32 -lharfbuzz -lglib-2.0 -lintl -pthread -lws2_32 -lole32 -lwinmm -lshlwapi -lpcre -lintl -lpcre -lgraphite2 -lm
+
+CFLAGS = `pkg-config SDL2 --cflags --static` `pkg-config SDL2_image --cflags --static` `pkg-config SDL2_ttf --cflags --static` `pkg-config SDL2_mixer --cflags --static` `pkg-config SDL2_net --cflags --static`
+
+MAIN_LDFLAGS += -shared
+MAIN_LDLIBS += $(LIBM) $(LIBZ)
+
+libretro_all: all
+
+# Makefile for Lr-Multi-Bomberman
+# default stuff goes here, so that config can override
+TARGET ?= lr-multi-bomberman
+CFLAGS += -Wall -ggdb -Iinclude -ffast-math
+ifndef DEBUG
+CFLAGS += -O2 -DNDEBUG
+endif
 CXXFLAGS += $(CFLAGS)
 
 all: target_
 
 LDFLAGS += $(MAIN_LDFLAGS)
+EXTRA_LDFLAGS ?= -Wl,-Map=$@.map
+LDLIBS += $(MAIN_LDLIBS)
+ifdef PCNT
+CFLAGS += -DPCNT
+endif
 
 #OBJECT TO COMPILE
 OBJS += src/libretro/libretro.o
@@ -59,8 +76,8 @@ target_: $(TARGET)
 
 #LINK
 $(TARGET): $(OBJS)	
-	$(CXX) -lm -shared -static -o $@ $^ $(LDFLAGS) $(LIBS) $(EXTRA_LDFLAGS) -O3 -s -Wl,--export-all-symbols -Wl,--no-undefined -Wl,--version-script=link.T
+	$(CXX) -static -shared -o $@ $^ $(LDFLAGS) $(LDLIBS) $(LIBS) $(EXTRA_LDFLAGS) -s -O2
 
 #CLEAN
 clean: $(PLAT_CLEAN) 
-	$(RM) $(TARGET) $(OBJS) $(TARGET).map	
+	$(RM) $(TARGET) $(OBJS) $(TARGET).map
