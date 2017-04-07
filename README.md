@@ -123,25 +123,25 @@ After this step lr-multi-bomberman is installed, compile, and integrated in emul
 
 **Next step :**
 
-|description								|wait|in progress|done|
+|description                                |wait|in progress|done|
 |-------------------------------------------|:--:|:---------:|:--:|
-|Louis type									|    |           |X   |
-|level variante								|    |           |X   |
-|menu to set number of bonus				|    |           |X   |
-|refactoring of code						|    |           |X   |
-|player underwater							|    |           |X   |
-|button										|    |           |X   |
-|rail										|    |           |X   |
-|Holl in game								|    |           |X   |
-|Teleporter									|    |           |X   |
-|Mine										|	 | 			 |X   |
-|Trolley									|    |           |X   |
-|make level for trolley						|    |           |X   |
-|Game type bad bomber						|    |           |X   |
-|Power(glove)								|    |X          |    |
-|Net (multiplayer over internet)			|X   |           |    |
-|Artificial interlligence 					|X   |           |    |
-|other level design (pirates, ring)			|X   |           |    |
+|Louis type                                 |    |           |X   |
+|level variante                             |    |           |X   |
+|menu to set number of bonus                |    |           |X   |
+|refactoring of code                        |    |           |X   |
+|player underwater                          |    |           |X   |
+|button	                                    |    |           |X   |
+|rail                                       |    |           |X   |
+|Holl in game                               |    |           |X   |
+|Teleporter                                 |    |           |X   |
+|Mine                                       |    |           |X   |
+|Trolley                                    |    |           |X   |
+|make level for trolley	                    |    |           |X   |
+|Game type bad bomber                       |    |           |X   |
+|Power(glove)                               |X   |           |    |
+|Net (multiplayer over internet)            |    |           |X   |
+|Artificial interlligence                   |    |X          |    |
+|other level design (pirates, ring)         |    |X          |    |
 
 convoyeur (3 * 8)
 bouton (2)
