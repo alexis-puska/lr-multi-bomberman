@@ -16,6 +16,8 @@
 #include "utils/network/BomberNetServer.h"
 #include "utils/network/ipify.h"
 
+#define MAX_ADDRESSES 	10
+
 enum bombermanStepEnum {
 	home = 0,			//spashscreen
 	gameMode,
@@ -81,6 +83,9 @@ class Bomberman {
 		bool refreshBuffer;
 		bool refreshWanIp;
 		char addr[256];
+		int nbLocalAddr;
+		char localAddr[MAX_ADDRESSES][16];
+		IPaddress addresses[MAX_ADDRESSES];
 
 		//buffer for draw
 		SDL_Surface *screenBuffer;

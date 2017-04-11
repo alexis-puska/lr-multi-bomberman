@@ -1323,13 +1323,15 @@ void Bomberman::drawServerConfigurationMenu() {
 			sd = ipify_connect();
 			if (sd < 0) {
 				sprintf(addr, "no connection");
-			} else if (!ipify_query(sd, addr, sizeof(addr))){
+			} else if (!ipify_query(sd, addr, sizeof(addr))) {
 
 			}
 			ipify_disconnect(sd);
 			refreshWanIp = false;
-
-
+			nbLocalAddr = SDLNet_GetLocalAddresses(addresses, MAX_ADDRESSES);
+			for (int i = 0; i < nbLocalAddr; ++i) {
+				sprintf(localAddr[i], "%d.%d.%d.%d", (addresses[i].host >> 0) & 0xFF, (addresses[i].host >> 8) & 0xFF, (addresses[i].host >> 16) & 0xFF, (addresses[i].host >> 24) & 0xFF);
+			}
 		}
 
 		SDL_BlitSurface(Sprite::Instance().getMenuBackground(), NULL, screenBuffer, NULL);
@@ -1406,36 +1408,41 @@ void Bomberman::drawServerConfigurationMenu() {
 		}
 		Sprite::Instance().drawText(screenBuffer, (640 / 2), 335, "- - Use LEFT / RIGHT to move cursor, use A / B to change number - -", gold, true);
 
-		Sprite::Instance().drawText(screenBuffer, 160, 214, "Ip server : ", green, false);
-		Sprite::Instance().drawText(screenBuffer, 160, 234, "Number max of Human on this server : ", green, false);
-		Sprite::Instance().drawText(screenBuffer, 160, 254, "Number max of client : ", green, false);
-		Sprite::Instance().drawText(screenBuffer, 160, 274, "Enter Port of LR-MultiBomberman Server : ", green, false);
+		Sprite::Instance().drawText(screenBuffer, 160, 194, "Wan IP : ", green, false);
+		Sprite::Instance().drawText(screenBuffer, 340, 194, "Lan IP : ", green, false);
+		Sprite::Instance().drawText(screenBuffer, 160, 254, "Number max of Human on this server : ", green, false);
+		Sprite::Instance().drawText(screenBuffer, 160, 274, "Number max of client : ", green, false);
+		Sprite::Instance().drawText(screenBuffer, 160, 294, "Enter Port of LR-MultiBomberman Server : ", green, false);
 
 		int cursorPosX = 0;
 		int cursorPosY = 0;
 		char tmp[3];
-		if(strlen(addr) != 0){
-			Sprite::Instance().drawText(screenBuffer, 450, 214, addr, blue, false);
-		}else{
-			Sprite::Instance().drawText(screenBuffer, 450, 214, "No connection", blue, false);
+		if (strlen(addr) != 0) {
+			Sprite::Instance().drawText(screenBuffer, 220, 194, addr, blue, false);
+		} else {
+			Sprite::Instance().drawText(screenBuffer, 220, 194, "No connection", blue, false);
+		}
+
+		for (int i = 1; i < nbLocalAddr; i++) {
+			Sprite::Instance().drawText(screenBuffer, 450, 194 + ((i - 1) * 20), localAddr[i], blue, false);
 		}
 		sprintf(tmp, "%i", GameConfig::Instance().getNbReservedPlayerServer());
-		Sprite::Instance().drawText(screenBuffer, 450, 234, tmp, blue, false);
-		sprintf(tmp, "%i", GameConfig::Instance().getNbClientServer());
 		Sprite::Instance().drawText(screenBuffer, 450, 254, tmp, blue, false);
+		sprintf(tmp, "%i", GameConfig::Instance().getNbClientServer());
+		Sprite::Instance().drawText(screenBuffer, 450, 274, tmp, blue, false);
 		for (int i = 0; i < 5; i++) {
 			sprintf(tmp, "%c", GameConfig::Instance().getPortValueForMenu()[i]);
-			Sprite::Instance().drawText(screenBuffer, 450 + (i * 10), 274, tmp, blue, false);
+			Sprite::Instance().drawText(screenBuffer, 450 + (i * 10), 294, tmp, blue, false);
 		}
 		if (cursorPosition == 0) {
 			cursorPosX = 140;
-			cursorPosY = 234;
+			cursorPosY = 254;
 		} else if (cursorPosition == 1) {
 			cursorPosX = 140;
-			cursorPosY = 254;
+			cursorPosY = 274;
 		} else {
 			cursorPosX = 424 + (cursorPosition * 10);
-			cursorPosY = 290;
+			cursorPosY = 310;
 		}
 
 		copySurfaceToBackRenderer(screenBuffer, vout_buf, 0, 0);
