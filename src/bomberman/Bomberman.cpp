@@ -2,12 +2,9 @@
 
 #include <time.h>
 
-int main(int argc, char** argv){
+int main(int argc, char** argv) {
 
 }
-
-
-
 
 Bomberman::Bomberman(SDL_Surface * vout_bufLibretro) {
 	Sprite::Instance();
@@ -38,6 +35,7 @@ Bomberman::Bomberman(SDL_Surface * vout_bufLibretro) {
 
 	game = NULL;
 	error = false;
+	refreshWanIp = true;
 }
 
 Bomberman::~Bomberman() {
@@ -141,6 +139,7 @@ void Bomberman::tick(unsigned short in_keystateLibretro[16]) {
 							GameConfig::Instance().generateNetPlayerConfiguration();
 							break;
 						case NET_SERVER:
+							refreshWanIp = true;
 							currentStep = serverNumberOfClient;
 							break;
 						case NET_CLIENT:
@@ -269,6 +268,7 @@ void Bomberman::tick(unsigned short in_keystateLibretro[16]) {
 				case serverNumberOfClient:
 					cursorPosition = 0;
 					currentStep = gameMode;
+					refreshWanIp = true;
 					break;
 				case clientNumberPlayerName:
 					cursorPosition = 0;
@@ -1316,6 +1316,22 @@ void Bomberman::drawClientIpMenu() {
 void Bomberman::drawServerConfigurationMenu() {
 
 	if (refreshBuffer || keychange[0]) {
+
+		if (refreshWanIp) {
+			memset(addr, 0, sizeof(addr));
+			int sd;
+			sd = ipify_connect();
+			if (sd < 0) {
+				sprintf(addr, "no connection");
+			} else if (!ipify_query(sd, addr, sizeof(addr))){
+
+			}
+			ipify_disconnect(sd);
+			refreshWanIp = false;
+
+
+		}
+
 		SDL_BlitSurface(Sprite::Instance().getMenuBackground(), NULL, screenBuffer, NULL);
 		if (previousPlayerKeystate[0] & keyPadRight && keychange[0]) {
 			Sound::Instance().playBipSound();
@@ -1389,6 +1405,8 @@ void Bomberman::drawServerConfigurationMenu() {
 			Sprite::Instance().drawText(screenBuffer, (640 / 2), 310, errorString, red, true);
 		}
 		Sprite::Instance().drawText(screenBuffer, (640 / 2), 335, "- - Use LEFT / RIGHT to move cursor, use A / B to change number - -", gold, true);
+
+		Sprite::Instance().drawText(screenBuffer, 160, 214, "Ip server : ", green, false);
 		Sprite::Instance().drawText(screenBuffer, 160, 234, "Number max of Human on this server : ", green, false);
 		Sprite::Instance().drawText(screenBuffer, 160, 254, "Number max of client : ", green, false);
 		Sprite::Instance().drawText(screenBuffer, 160, 274, "Enter Port of LR-MultiBomberman Server : ", green, false);
@@ -1396,6 +1414,11 @@ void Bomberman::drawServerConfigurationMenu() {
 		int cursorPosX = 0;
 		int cursorPosY = 0;
 		char tmp[3];
+		if(strlen(addr) != 0){
+			Sprite::Instance().drawText(screenBuffer, 450, 214, addr, blue, false);
+		}else{
+			Sprite::Instance().drawText(screenBuffer, 450, 214, "No connection", blue, false);
+		}
 		sprintf(tmp, "%i", GameConfig::Instance().getNbReservedPlayerServer());
 		Sprite::Instance().drawText(screenBuffer, 450, 234, tmp, blue, false);
 		sprintf(tmp, "%i", GameConfig::Instance().getNbClientServer());

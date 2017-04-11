@@ -14,6 +14,7 @@
 #include "utils/LevelService.h"
 #include "utils/GameConfig.h"
 #include "utils/network/BomberNetServer.h"
+#include "utils/network/ipify.h"
 
 enum bombermanStepEnum {
 	home = 0,			//spashscreen
@@ -78,6 +79,8 @@ class Bomberman {
 
 		//refreshbuffer, for menu, if need to be full redraw
 		bool refreshBuffer;
+		bool refreshWanIp;
+		char addr[256];
 
 		//buffer for draw
 		SDL_Surface *screenBuffer;
