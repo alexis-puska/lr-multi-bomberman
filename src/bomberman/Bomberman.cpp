@@ -1434,7 +1434,7 @@ void Bomberman::drawServerConfigurationMenu() {
 			cursorPosX = 140;
 			cursorPosY = 254;
 		} else {
-			cursorPosX = 434 + (cursorPosition * 10);
+			cursorPosX = 424 + (cursorPosition * 10);
 			cursorPosY = 290;
 		}
 
