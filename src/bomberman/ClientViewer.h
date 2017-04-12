@@ -66,6 +66,7 @@ class ClientViewer {
 		int gameState;
 		int tickRemaining;
 		bool newCycle;
+		bool needRedraw;
 
 		SDL_Surface * bombeGhost;
 		SDL_Surface *louisMergebuffer;
@@ -93,7 +94,7 @@ class ClientViewer {
 
 		void tick();
 		void clearAnimation();
-		void mergeScreen(bool mergeResult);
+		void mergeScreen(bool mergeResult, bool mergePause);
 
 		void updateGameInfo(int tickRemaining, bool newCycle, int gameState);
 		void updateTab(int idx, int val);
@@ -118,6 +119,7 @@ class ClientViewer {
 		void playMusique(int musique, bool start);
 		void drawBonus(int idx, int type);
 		void eraseBonus(int idx);
+		void drawResultOfGame();
 
 };
 #endif

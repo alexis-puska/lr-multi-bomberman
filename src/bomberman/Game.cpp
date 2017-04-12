@@ -1103,7 +1103,10 @@ void Game::tick() {
 		case generateResult:
 			Sound::Instance().playEndSound();
 			if (GameConfig::Instance().getGameModeType() == NET_SERVER) {
+				BomberNetServer::Instance().sendPlayerState();
+				BomberNetServer::Instance().sendColorAndScore();
 				BomberNetServer::Instance().sendSound(4, -1, true);
+				BomberNetServer::Instance().sendBuffer();
 			}
 			drawResultOfGame();
 			gameState = gameEnd;

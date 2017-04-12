@@ -23,7 +23,14 @@ ClientViewer::ClientViewer(SDL_Surface * vout_bufLibretro) {
 	nbConnected[1] = 0;
 	somethingDrawInSky = false;
 	overlayResult = SDL_CreateRGBSurface(0, 250, 200, 32, rmask, gmask, bmask, amask);
+
+	// create overlay for pause / exit game
 	overlay = SDL_CreateRGBSurface(0, 630, 336, 32, rmask, gmask, bmask, amask);
+	SDL_FillRect(overlay, NULL, SDL_MapRGBA(overlay->format, 0, 0, 0, 120));
+	Sprite::Instance().drawText(overlay, (640 / 2), 114, "--- PAUSE ---", green, true);
+	Sprite::Instance().drawText(overlay, (640 / 2), 154, "Press X/B for exit game", green, true);
+	Sprite::Instance().drawText(overlay, (640 / 2), 194, "Press Select for exit pause", green, true);
+
 	screenBuffer = SDL_CreateRGBSurface(0, 640, 360, 32, rmask, gmask, bmask, amask);
 	playerBombeExplode = SDL_CreateRGBSurface(0, 630, 336, 32, rmask, gmask, bmask, amask);
 	ground = SDL_CreateRGBSurface(0, 630, 336, 32, rmask, gmask, bmask, amask);
@@ -84,6 +91,29 @@ void ClientViewer::copySurfaceToBackRenderer(SDL_Surface * src, SDL_Surface * de
 	SDL_BlitSurface(src, &srcRect, dest, &dstRect);
 }
 
+void ClientViewer::drawResultOfGame() {
+	SDL_FillRect(overlayResult, NULL, SDL_MapRGBA(overlayResult->format, 0, 0, 0, 120));
+	char mess[18];
+	int x = 25;
+	int y = 20;
+	for (unsigned int i = 0; i < 16; i++) {
+		if (playerType[i] != OFF) {
+			if (playerState[i] == 1) {
+				sprintf(mess, "Player %i : ALIVE", i + 1);
+				Sprite::Instance().drawText(overlayResult, x, y, mess, green, false);
+			} else {
+				sprintf(mess, "Player %i : DEAD", i + 1);
+				Sprite::Instance().drawText(overlayResult, x, y, mess, red, false);
+			}
+		}
+		y = y + 20;
+		if (y > 170) {
+			y = 20;
+			x = 145;
+		}
+	}
+}
+
 /***********************************
  *
  * DECODE
@@ -91,7 +121,6 @@ void ClientViewer::copySurfaceToBackRenderer(SDL_Surface * src, SDL_Surface * de
  ***********************************/
 
 void ClientViewer::decode(char data[1024], int len) {
-	bool needRedraw = false;
 	this->newCycle = false;
 	int positionObjectType = 6;
 	SDL_FillRect(playerBombeExplode, NULL, SDL_MapRGBA(playerBombeExplode->format, 0, 0, 0, 0));
@@ -200,7 +229,6 @@ void ClientViewer::decode(char data[1024], int len) {
 				break;
 
 			case 7:
-				needRedraw = false;
 				for (int i = 0; i < 16; i++) {
 					if (updatePlayerState(i, data[positionObjectType + i + 1])) {
 						needRedraw = true;
@@ -209,6 +237,7 @@ void ClientViewer::decode(char data[1024], int len) {
 				if (needRedraw) {
 					fprintf(stderr, "redraw header");
 					generateHeader();
+					needRedraw = false;
 				}
 				positionObjectType += 17;
 				break;
@@ -292,27 +321,37 @@ void ClientViewer::decode(char data[1024], int len) {
 			case 27:
 				for (int i = 0; i < nbPlayer; i++) {
 					playerColor[i] = data[i * 2 + positionObjectType + 1];
-					playerScore[i] = data[i * 2 + positionObjectType + 2];
+					playerScore[i] = data[((i * 2) + 1) + positionObjectType + 1];
+					fprintf(stderr, "update color and score %i %i \n",playerScore[i], playerColor[i]);
 				}
+
+				needRedraw = true;
 				positionObjectType += 33;
 				break;
 		}
 	}
 	switch (gameState) {
-		case menu:
-
-		case gameViewerStart:
 
 		case gameViewerPause:
+			mergeScreen(false, true);
+			break;
+		case menu:
+		case gameViewerStart:
+
 		case gameViewerWait:
+			if (newCycle) {
+				mergeScreen(false, false);
+			}
+			break;
 		case gameViewerEnd:
 			if (newCycle) {
-				mergeScreen(false);
+				mergeScreen(true, false);
+				needRedraw = true;
 			}
 			break;
 		case generateViewerResult:
 			if (newCycle) {
-				mergeScreen(true);
+				mergeScreen(true, false);
 			}
 			break;
 	}
@@ -672,7 +711,7 @@ void ClientViewer::generateGround() {
  * merge the different layers to generate the game frame
  *
  */
-void ClientViewer::mergeScreen(bool mergeResult) {
+void ClientViewer::mergeScreen(bool mergeResult, bool mergePause) {
 	SDL_Rect mergeRect;
 	mergeRect.x = 0;
 	mergeRect.y = 0;
@@ -685,11 +724,20 @@ void ClientViewer::mergeScreen(bool mergeResult) {
 		SDL_BlitSurface(skyFixe, &mergeRect, screenBuffer, &mergeRect);
 	}
 	if (mergeResult) {
+		drawResultOfGame();
 		mergeRect.x = (630 / 2) - (overlayResult->w / 2);
 		mergeRect.y = (360 / 2) - (overlayResult->h / 2);
 		mergeRect.w = overlayResult->w;
 		mergeRect.h = overlayResult->h;
+		needRedraw = true;
 		SDL_BlitSurface(overlayResult, NULL, screenBuffer, &mergeRect);
+	}
+	if (mergePause) {
+		mergeRect.x = (630 / 2) - (overlay->w / 2);
+		mergeRect.y = (360 / 2) - (overlay->h / 2);
+		mergeRect.w = overlay->w;
+		mergeRect.h = overlay->h;
+		SDL_BlitSurface(overlay, &mergeRect, screenBuffer, &mergeRect);
 	}
 	copySurfaceToBackRenderer(screenBuffer, vout_buf, 5, 24);
 }
