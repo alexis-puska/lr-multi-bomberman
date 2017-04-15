@@ -655,7 +655,11 @@ void Sprite::cropPreviewLevelSurface(SDL_Surface * surface) {
 			srcTextureRect.h = levelPreviewSizeHeight;
 			previewLevelSprite[index] = SDL_CreateRGBSurface(0, levelPreviewSizeWidth, levelPreviewSizeHeight, 32, rmask, gmask, bmask, amask);
 			SDL_BlitSurface(surface, &srcTextureRect, previewLevelSprite[index], &destTextureRect);
-			index++;
+			if(index < nbLevel){
+				index++;
+			}else{
+				break;
+			}
 		}
 	}
 	SDL_FreeSurface(surface);

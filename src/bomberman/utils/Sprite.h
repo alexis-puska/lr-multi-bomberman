@@ -29,7 +29,7 @@
 #define spriteLouisSizeHeight		42
 #define nbTypeLouis 			5
 
-#define nbLevel				9
+#define nbLevel				11
 #define defaultSpriteSize		16
 
 #define nbFireSpriteX			4
@@ -55,7 +55,7 @@
 #define levelPreviewSizeWidth		128
 #define levelPreviewSizeHeight	110
 #define nbLevelPreviewX			3
-#define nbLevelPreviewY			3
+#define nbLevelPreviewY			4
 
 
 #define nbSmallSpriteLevelX		5

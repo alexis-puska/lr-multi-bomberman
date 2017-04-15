@@ -138,10 +138,10 @@ After this step lr-multi-bomberman is installed, compile, and integrated in emul
 |Trolley                                    |    |           |X   |
 |make level for trolley	                    |    |           |X   |
 |Game type bad bomber                       |    |           |X   |
-|Power(glove)                               |X   |           |    |
+|other level design                         |    |           |X   |
 |Net (multiplayer over internet)            |    |           |X   |
 |Artificial interlligence                   |    |X          |    |
-|other level design (pirates, ring)         |    |X          |    |
+|Power(glove)                               |X   |           |    |
 
 convoyeur (3 * 8)
 bouton (2)

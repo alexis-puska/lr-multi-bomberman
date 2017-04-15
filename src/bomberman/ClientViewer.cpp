@@ -680,7 +680,7 @@ void ClientViewer::generateGround() {
 				dstrect.w = smallSpriteLevelSizeWidth;
 				dstrect.h = smallSpriteLevelSizeHeight;
 				int textureIndex = LevelService::Instance().getLevel(lvl)->getVariantes(var)->getDefinition(j * sizeX + i);
-				if (textureIndex == 'S' || textureIndex == 'T' || textureIndex == 'U') {
+				if (textureIndex >=83 && textureIndex < 105) {
 					textureIndex -= 65;
 				}
 				SDL_BlitSurface(Sprite::Instance().getLevel(textureIndex, lvl), &srcrect, ground, &dstrect);
@@ -874,7 +874,7 @@ void ClientViewer::drawRail(int idx, int sprite) {
 	dstRect.h = 16;
 	SDL_FillRect(ground, &dstRect, 0x000000);
 	int textureIndex = LevelService::Instance().getLevel(levelInfo[0])->getVariantes(levelInfo[1])->getDefinition(idx);
-	if (textureIndex == 'S' || textureIndex == 'T' || textureIndex == 'U') {
+	if (textureIndex >=83 && textureIndex < 105) {
 		textureIndex -= 65;
 	}
 	SDL_BlitSurface(Sprite::Instance().getLevel(textureIndex, levelInfo[0]), NULL, ground, &dstRect);

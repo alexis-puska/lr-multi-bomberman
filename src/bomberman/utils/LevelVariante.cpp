@@ -22,7 +22,7 @@ LevelVariante::LevelVariante(int number, const char * descriptionLine1, const ch
 
 	int idxStart = 0;
 	for (int i = 0; i < 735; i++) {
-		if (this->definition[i] == 'S' || this->definition[i] == 'T') {
+		if (this->definition[i] >= 83 && this->definition[i] < 105) {
 			start[idxStart] = i;
 			reserved[i] = true;
 			reserved[i - 1] = true;

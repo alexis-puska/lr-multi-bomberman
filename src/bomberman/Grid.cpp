@@ -109,7 +109,7 @@ void Grid::generateGrid() {
 				tab[i + (j * sizeX)] = wallElement;
 
 				int textureIndex = LevelService::Instance().getLevel(lvl)->getVariantes(var)->getDefinition(j * sizeX + i);
-				if (textureIndex != 'W') {
+				if (textureIndex != 'w') {
 					if (textureIndex < 40) {
 						dstrect.x = i * smallSpriteLevelSizeWidth;
 						dstrect.y = j * smallSpriteLevelSizeHeight;
@@ -134,7 +134,7 @@ void Grid::generateGrid() {
 				dstrect.w = smallSpriteLevelSizeWidth;
 				dstrect.h = smallSpriteLevelSizeHeight;
 				int textureIndex = LevelService::Instance().getLevel(lvl)->getVariantes(var)->getDefinition(j * sizeX + i);
-				if (textureIndex == 'S' || textureIndex == 'T' || textureIndex == 'U') {
+				if (textureIndex >= 83 && textureIndex < 105) {
 					textureIndex -= 65;
 				}
 				SDL_BlitSurface(Sprite::Instance().getLevel(textureIndex, lvl), &srcrect, ground, &dstrect);
@@ -165,7 +165,7 @@ void Grid::generateGrid() {
 			if (LevelService::Instance().getLevel(lvl)->getVariantes(var)->isAWall(LevelService::Instance().getLevel(lvl)->getVariantes(var)->getDefinition(j * sizeX + i))) {
 				tab[i + (j * sizeX)] = wallElement;
 				int textureIndex = LevelService::Instance().getLevel(lvl)->getVariantes(var)->getDefinition(j * sizeX + i);
-				if (textureIndex != 'W') {
+				if (textureIndex != 'w') {
 					if (textureIndex >= 40) {
 						dstrect.x = (i - 1) * smallSpriteLevelSizeWidth;
 						dstrect.y = (j - 1) * smallSpriteLevelSizeHeight;

@@ -39,5 +39,7 @@ class LevelService {
 		void createLevel6();
 		void createLevel7();
 		void createLevel8();
+		void createLevel9();
+		void createLevel10();
 };
 #endif
