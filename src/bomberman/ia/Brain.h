@@ -34,6 +34,14 @@ enum brain1step {
 	lvl1CheckCanDropBomb = 0, lvl1DropBomb = 1, lvl1GoSecure = 2, lvl1WaitBombeExplode = 3, lvl1FindNearWall = 4, lvl1WalkToNearWall = 5
 };
 
+enum brain2step {
+	lvl2CheckCanDropBomb = 0, lvl2DropBomb = 1, lvl2GoSecure = 2, lvl2WaitBombeExplode = 3, lvl2FindNearWall = 4, lvl2WalkToNearWall = 5
+};
+
+enum brain3step {
+	lvl3CheckCanDropBomb = 0, lvl3DropBomb = 1, lvl3GoSecure = 2, lvl3WaitBombeExplode = 3, lvl3FindNearWall = 4, lvl3WalkToNearWall = 5
+};
+
 class Brain {
 
 	public:

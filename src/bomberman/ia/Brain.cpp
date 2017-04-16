@@ -17,7 +17,7 @@ Brain::Brain(unsigned short * keystate, int tab[sizeX * sizeY], int playerNumber
 			brainStep = lvl1CheckCanDropBomb;
 			break;
 		case 2:
-			brainStep = lvl1CheckCanDropBomb;
+			brainStep = lvl2CheckCanDropBomb;
 			break;
 		case 3:
 			brainStep = lvl1CheckCanDropBomb;
@@ -49,7 +49,7 @@ void Brain::think() {
 		currentIndex = -1;
 	}
 	if (currentIndex >= 0 && currentIndex < sizeX * sizeY) {
-		if(tab[currentIndex] == wallElement){
+		if (tab[currentIndex] == wallElement) {
 			//player blocked by a hole
 			if (tab[currentIndex + 1] < brickElement) {
 				*keystate += (short) brainKeyRight;
@@ -60,17 +60,17 @@ void Brain::think() {
 			} else if (tab[currentIndex - sizeX] < brickElement) {
 				*keystate += (short) brainKeyUp;
 				prevDir = up;
-			} else if (tab[currentIndex +sizeX] < brickElement) {
+			} else if (tab[currentIndex + sizeX] < brickElement) {
 				*keystate += (short) brainKeyDown;
 				prevDir = down;
 			}
-		}else{
+		} else {
 			switch (GameConfig::Instance().getIALevel()) {
 				case 1:
 					level1();
 					break;
 				case 2:
-					level1();
+					level2();
 					break;
 				case 3:
 					level1();
@@ -195,11 +195,140 @@ void Brain::level1() {
 }
 
 void Brain::level2() {
-	level1();
+	switch (brainStep) {
+		case lvl2CheckCanDropBomb:
+			bfs->resetCheckDropBombe();
+			bfs->reset(false);
+			objectifIndex = bfs->findNextBrick(currentIndex);
+			if (objectifIndex != -1) {
+				brainStep = lvl2WalkToNearWall;
+			} else {
+				if ((rand() % 7 + 1) >= 1) {
+					while (true) {
+						objectifIndex = rand() % (sizeX * sizeY) + 1;
+						if (tab[objectifIndex] == emptyElement) {
+							brainStep = lvl2WalkToNearWall;
+							break;
+						}
+
+					}
+				} else {
+					brainStep = lvl2DropBomb;
+				}
+			}
+			break;
+		case lvl2WalkToNearWall:
+			if (walkToObjectif(objectifIndex) == 1) {
+				if (bfs->checkDropBombe(currentIndex)) {
+					brainStep = lvl2DropBomb;
+				} else {
+					bfs->addIgnoreCase(objectifIndex);
+					objectifIndex = bfs->findNextBrick(currentIndex);
+				}
+			}
+			break;
+		case lvl2DropBomb:
+			*keystate += brainKeyA;
+			idxOwnBombe = currentIndex;
+			brainStep = lvl2GoSecure;
+			break;
+		case lvl2GoSecure:
+			bfs->resetSecure();
+			objectifIndex = bfs->findSecure(currentIndex);
+			if (objectifIndex >= 0) {
+				if (walkToObjectif(objectifIndex) == 0) {
+					brainStep = lvl2WaitBombeExplode;
+				}
+			}
+			break;
+		case lvl2WaitBombeExplode:
+			if (player->getBombeType() == radioBombeType) {
+				player->brainPressButton();
+			}
+			if (tab[idxOwnBombe] == 0) {
+				brainStep = lvl2FindNearWall;
+				break;
+			}
+			bfs->resetSecure();
+			objectifIndex = bfs->findSecure(currentIndex);
+			if (objectifIndex >= 0) {
+				brainStep = lvl2GoSecure;
+			}
+			break;
+		case lvl2FindNearWall:
+			bfs->reset(true);
+			objectifIndex = bfs->findNextBrick(currentIndex);
+			brainStep = lvl2CheckCanDropBomb;
+			break;
+	}
 }
 
 void Brain::level3() {
-	level1();
+	switch (brainStep) {
+		case lvl3CheckCanDropBomb:
+			bfs->resetCheckDropBombe();
+			bfs->reset(false);
+			objectifIndex = bfs->findNextBrick(currentIndex);
+			if (objectifIndex != -1) {
+				brainStep = lvl3WalkToNearWall;
+			} else {
+				if ((rand() % 7 + 1) >= 1) {
+					while (true) {
+						objectifIndex = rand() % (sizeX * sizeY) + 1;
+						if (tab[objectifIndex] == emptyElement) {
+							brainStep = lvl3WalkToNearWall;
+							break;
+						}
+					}
+				} else {
+					brainStep = lvl3DropBomb;
+				}
+			}
+			break;
+		case lvl3WalkToNearWall:
+			if (walkToObjectif(objectifIndex) == 1) {
+				if (bfs->checkDropBombe(currentIndex)) {
+					brainStep = lvl3DropBomb;
+				} else {
+					bfs->addIgnoreCase(objectifIndex);
+					objectifIndex = bfs->findNextBrick(currentIndex);
+				}
+			}
+			break;
+		case lvl3DropBomb:
+			*keystate += brainKeyA;
+			idxOwnBombe = currentIndex;
+			brainStep = lvl3GoSecure;
+			break;
+		case lvl3GoSecure:
+			bfs->resetSecure();
+			objectifIndex = bfs->findSecure(currentIndex);
+			if (objectifIndex >= 0) {
+				if (walkToObjectif(objectifIndex) == 0) {
+					brainStep = lvl3WaitBombeExplode;
+				}
+			}
+			break;
+		case lvl3WaitBombeExplode:
+			if (player->getBombeType() == radioBombeType) {
+				player->brainPressButton();
+			}
+			if (tab[idxOwnBombe] == 0) {
+				brainStep = lvl3FindNearWall;
+				break;
+			}
+			bfs->resetSecure();
+			objectifIndex = bfs->findSecure(currentIndex);
+			if (objectifIndex >= 0) {
+				brainStep = lvl3GoSecure;
+			}
+			break;
+		case lvl3FindNearWall:
+			bfs->reset(true);
+			objectifIndex = bfs->findNextBrick(currentIndex);
+			brainStep = lvl3CheckCanDropBomb;
+			break;
+	}
 }
 
 void Brain::level4() {
@@ -288,7 +417,8 @@ int Brain::findNearPlayer() {
 	for (int i = 0; i < 16; i++) {
 		if (playerNumber != i && GameConfig::Instance().getPlayerPosX(i) != -1) {
 
-			res = calcDistance(GameConfig::Instance().getPlayerPosX(playerNumber), GameConfig::Instance().getPlayerPosY(playerNumber), GameConfig::Instance().getPlayerPosX(i), GameConfig::Instance().getPlayerPosY(i));
+			res = calcDistance(GameConfig::Instance().getPlayerPosX(playerNumber), GameConfig::Instance().getPlayerPosY(playerNumber), GameConfig::Instance().getPlayerPosX(i),
+					GameConfig::Instance().getPlayerPosY(i));
 			if (minDistance == -1.0 || res < minDistance) {
 				minDistance = res;
 				target = i;
