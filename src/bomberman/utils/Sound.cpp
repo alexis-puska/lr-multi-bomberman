@@ -27,14 +27,20 @@ Sound::Sound() {
 	if (Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, MIX_DEFAULT_CHANNELS, 1024) == -1) {
 		printf("%s", Mix_GetError());
 	}
+
+
+	fprintf(stderr, "create sound channel\n");
 	for(int i = 0; i < nbChannelSound; i++){
 		activeChannel[i] = false;
 	}
 
+	fprintf(stderr, "sound channel created\n");
 
+	fprintf(stderr, "load music\n");
 	menu = Mix_LoadMUSType_RW(SDL_RWFromMem(music_menu_mp3, music_menu_mp3_len), MUS_MP3, 0);
 	battle = Mix_LoadMUSType_RW(SDL_RWFromMem(music_battle_mp3, music_battle_mp3_len), MUS_MP3, 0);
 
+	fprintf(stderr, "load sound\n");
 	bipSound = Mix_LoadWAV_RW(SDL_RWFromMem(sound_bip_wav, sound_bip_wav_len), 0);
 	bombeBounceSound = Mix_LoadWAV_RW(SDL_RWFromMem(sound_bounce_wav, sound_bounce_wav_len), 0);
 	playerBurnSound = Mix_LoadWAV_RW(SDL_RWFromMem(sound_burn_wav, sound_burn_wav_len), 0);
@@ -50,6 +56,7 @@ Sound::Sound() {
 	teleporterCloseSound = Mix_LoadWAV_RW(SDL_RWFromMem(sound_teleporter_close_wav, sound_teleporter_close_wav_len), 0);
 	teleporterOpenSound = Mix_LoadWAV_RW(SDL_RWFromMem(sound_teleporter_open_wav, sound_teleporter_open_wav_len), 0);
 	validSound = Mix_LoadWAV_RW(SDL_RWFromMem(sound_valide_wav, sound_valide_wav_len), 0);
+	fprintf(stderr, "play music\n");
 	Mix_PlayMusic(menu, -1);
 	Mix_VolumeMusic (MIX_MAX_VOLUME);
 	Mix_AllocateChannels(nbChannelSound);
