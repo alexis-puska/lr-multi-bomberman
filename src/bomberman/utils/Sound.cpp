@@ -57,6 +57,7 @@ Sound::Sound() {
 	Mix_Volume(3, MIX_MAX_VOLUME / 2);
 
 	mineOffsetChannel = 14;
+	fprintf(stderr, "end init sound system\n");
 }
 
 Sound::~Sound() {
