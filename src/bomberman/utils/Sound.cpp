@@ -27,9 +27,9 @@ Sound::Sound() {
 	fprintf(stderr, "Mix Init\n");
 	Mix_Init(MIX_INIT_MP3|MIX_INIT_MOD);
 	fprintf(stderr, "Init sound system\n");
-	if (Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, MIX_DEFAULT_CHANNELS, 1024) == -1) {
-		printf("%s", Mix_GetError());
-	}
+	//if (Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, MIX_DEFAULT_CHANNELS, 1024) == -1) {
+	//	printf("%s", Mix_GetError());
+	//}
 
 
 	fprintf(stderr, "create sound channel\n");
