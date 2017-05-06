@@ -118,6 +118,19 @@ sudo reboot
 
 After this step lr-multi-bomberman is installed, compile, and integrated in emulation station on retropie distribution. If an update of code is made, you can just launch the UPDATE line in emulation station, COMPILE PI and launch the game with BOMBERMAN :) Enjoy !
 
+===============================
+
+**BUTTON**
+
+```
+Start : pause / next menu
+Select : previous menu
+A : drop a bomb
+B : Trigger the radio bomb
+X : Put Line of Bombe if you have the power
+Y : 
+L1/2 R1/2 increase speed of spaceshio in bad bombermode
+```
 
 ===============================
 
