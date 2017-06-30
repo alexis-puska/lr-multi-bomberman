@@ -26,6 +26,8 @@ endif
 
 
 #OBJECT TO COMPILE
+OBJS += src/bomberman/utils/Sprite.o
+OBJS += src/bomberman/utils/Sound.o
 OBJS += src/libretro/libretro.o
 OBJS += src/bomberman/Bomberman.o
 OBJS += src/bomberman/utils/network/ipify.o
@@ -55,8 +57,6 @@ OBJS += src/bomberman/ia/Brain.o
 OBJS += src/bomberman/ia/AStarCell.o
 OBJS += src/bomberman/ia/AStar.o
 OBJS += src/bomberman/ia/BFS.o
-OBJS += src/bomberman/utils/Sprite.o
-OBJS += src/bomberman/utils/Sound.o
 OBJS += src/bomberman/utils/LevelService.o
 OBJS += src/bomberman/utils/Level.o
 OBJS += src/bomberman/utils/LevelVariante.o
