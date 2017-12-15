@@ -23,7 +23,11 @@
 Sound Sound::m_instance = Sound();
 
 Sound::Sound() {
-
+	
+	if (SDL_Init(SDL_INIT_EVERYTHING) != 0) {
+        SDL_Log("Unable to initialize SDL: %s", SDL_GetError());
+        return;
+    }
 
 	if (Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, MIX_DEFAULT_CHANNELS, 1024) == -1) {
 		printf("%s", Mix_GetError());

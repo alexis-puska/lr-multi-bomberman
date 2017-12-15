@@ -1,3 +1,4 @@
+#include <SDL2/SDL.h>
 #ifndef IS_OSX
 #include <SDL2/SDL_mixer.h>
 #else
