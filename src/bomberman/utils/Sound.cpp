@@ -20,7 +20,7 @@
 #include "resources/sound_teleporter_open.h"
 #include "resources/sound_valide.h"
 
-Sound Sound::m_instance = Sound();
+
 
 Sound::Sound() {
 	
@@ -87,8 +87,10 @@ Sound::~Sound() {
 }
 
 Sound& Sound::Instance() {
-	return m_instance;
+    static Sound m_instance;
+    return m_instance;
 }
+
 
 void Sound::startBattleMusique() {
 	Mix_VolumeMusic(MIX_MAX_VOLUME / 3);

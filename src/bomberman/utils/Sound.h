@@ -15,9 +15,9 @@
 
 class Sound {
 	public:
-		static Sound& Instance();
-		Sound();
-		~Sound();
+        static Sound& Instance();
+        Sound();
+        ~Sound();
 
 		void startBattleMusique();
 		void startMenuMusique();
@@ -42,9 +42,8 @@ class Sound {
 		void stopAllMineChannel();
 
 	private:
-		Sound& operator=(const Sound&);
-		Sound(const Sound&);
-		static Sound m_instance;
+        Sound& operator=(const Sound&);
+        Sound(const Sound&);
 
 		int mineOffsetChannel;
 		bool activeChannel[nbChannelSound];
