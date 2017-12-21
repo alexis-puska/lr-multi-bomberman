@@ -1,0 +1,18 @@
+language: cpp
+cpp:
+  - nightly
+compiler:
+  - gcc
+  - g++
+addons:
+    apt:
+      packages:
+        - libsdl2-dev
+        - libsdl2-image-dev
+        - libsdl2-ttf-dev
+        - libsdl2-net-dev 
+        - libsdl2-mixer-dev 
+        - libsdl2-gfx-dev 
+script:
+  - make clean -f Makefile.libretro
+  - make -f Makefile.libretro
