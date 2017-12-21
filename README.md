@@ -1,4 +1,5 @@
 **Lr-Multi-Bomberman**
+![](https://travis-ci.org/alexis-puska/lr-multi-bomberman.svg?branch=master)
 ===============================
 
 > Bomberman oriented multiplayer (16 players, max of retroarch) Library
