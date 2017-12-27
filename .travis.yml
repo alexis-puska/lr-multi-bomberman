@@ -2,7 +2,6 @@ language: cpp
 cpp:
   - nightly
 compiler:
-  - gcc
   - g++
 addons:
     apt:
