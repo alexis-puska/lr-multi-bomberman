@@ -1,0 +1,6 @@
+./**
+!emulationStationTheme/**
+!src/**
+!resources/**
+!Makefile*
+!*.info
