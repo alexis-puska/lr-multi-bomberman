@@ -1,0 +1,32 @@
+# Software Information
+display_name = "Multi Bomberman"
+authors = "Alexis Puskarczyk"
+corename = "Multi Bomberman"
+categories = "Game"
+license = "GPLv2"
+supported_extensions = "desktop"
+permissions = ""
+display_version = "Git"
+
+# Hardware Information
+systemname = "Multi Bomberman"
+systemid = "multi_bomberman"
+
+# Libretro Features
+supports_no_game = "true"
+single_purpose = "true"
+database = "Multi Bomberman"
+savestate = "true"
+savestate_features = "deterministic"
+cheats = "false"
+input_descriptors = "false"
+memory_descriptors = "false"
+libretro_saves = "false"
+core_options = "true"
+load_subsystem = "false"
+hw_render = "false"
+needs_fullpath = "false"
+disk_control = "false"
+is_experimental = "false"
+
+description = "Bomberman oriented multiplayer (16 players, max of retroarch) Library core for Retroarch emulator."
